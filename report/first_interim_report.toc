@@ -1,0 +1,15 @@
+\babel@toc {english}{}\relax 
+\contentsline {section}{\numberline {1}Introduction}{2}{}%
+\contentsline {section}{\numberline {2}Part I}{2}{}%
+\contentsline {subsection}{\numberline {2.1}Explanation of the different regimes of operation of the device}{2}{}%
+\contentsline {subsection}{\numberline {2.2}Estimation of stray series resistance and lasing wavelength of the device}{2}{}%
+\contentsline {subsection}{\numberline {2.3}Effect of temperature on obtained measurements}{3}{}%
+\contentsline {section}{\numberline {3}Part II}{3}{}%
+\contentsline {subsection}{\numberline {3.1}Plots of obtained optical spectra}{3}{}%
+\contentsline {subsection}{\numberline {3.2}Recorded data on centre wavelength $\lambda _0$, peak output power $P_0$ and 3dB spectral width}{3}{}%
+\contentsline {subsection}{\numberline {3.3}Explanation of the observed differences in recorded spectra and their relation to the fundamental light emission process in semiconductor devices}{3}{}%
+\contentsline {subsection}{\numberline {3.4}Measured mode spacing above and below threshold}{3}{}%
+\contentsline {subsection}{\numberline {3.5}Calculation of refractive index in semiconductor device}{4}{}%
+\contentsline {section}{\numberline {4}Conclusion}{4}{}%
+\contentsline {section}{\numberline {5}Appendix}{4}{}%
+\contentsline {subsection}{\numberline {5.1}Tabulated results for CD laser}{4}{}%
