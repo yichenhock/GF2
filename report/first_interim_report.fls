@@ -320,6 +320,7 @@ INPUT C:\Users\micha\AppData\Local\Programs\MiKTeX\tex\latex\multirow\multirow.s
 INPUT C:\Users\micha\AppData\Local\Programs\MiKTeX\tex\latex\multirow\multirow.sty
 INPUT C:\Users\micha\AppData\Local\Programs\MiKTeX\tex\latex\multirow\multirow.sty
 INPUT C:\Users\micha\AppData\Local\Programs\MiKTeX\tex\latex\multirow\multirow.sty
+INPUT C:\Users\micha\AppData\Local\Programs\MiKTeX\tex\latex\pdfpages\pdfpages.sty
 INPUT C:\Users\micha\AppData\Local\Programs\MiKTeX\tex\generic\babel\babel.sty
 INPUT C:\Users\micha\AppData\Local\Programs\MiKTeX\tex\generic\babel\babel.sty
 INPUT C:\Users\micha\AppData\Local\Programs\MiKTeX\tex\generic\babel\babel.sty
@@ -438,6 +439,12 @@ OUTPUT first_interim_report.pdf
 INPUT C:\Users\micha\AppData\Local\MiKTeX\fonts\map\pdftex\pdftex.map
 INPUT C:\Users\micha\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmr12.tfm
 INPUT C:\Users\micha\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmbx12.tfm
+INPUT .\Gantt Chart.pdf
+INPUT .\Gantt Chart.pdf
+INPUT Gantt Chart.pdf
+INPUT .\Gantt Chart.pdf
+INPUT .\Gantt Chart.pdf
+INPUT .\Gantt Chart.pdf
 INPUT first_interim_report.aux
 INPUT C:\Users\micha\AppData\Local\Programs\MiKTeX\fonts\enc\dvips\lm\lm-ec.enc
 INPUT C:\Users\micha\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmbx10.pfb
