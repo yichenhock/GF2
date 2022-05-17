@@ -1,0 +1,154 @@
+%% LyX 2.2.4 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[english]{article}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage[latin9]{inputenc}
+\usepackage{geometry}
+\geometry{verbose,tmargin=3cm,bmargin=3cm,lmargin=2.5cm,rmargin=2.5cm}
+\usepackage{textcomp}
+\usepackage{amsmath, amstext}
+\usepackage{graphicx, float}
+\usepackage{pdfpages}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{pdfpages}
+
+\makeatletter
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
+%% Because html converters don't know tabularnewline
+\providecommand{\tabularnewline}{\\}
+
+\makeatother
+
+\usepackage{babel}
+\begin{document}
+
+\begin{center}
+
+{\bf ENGINEERING TRIPOS PART IIA}
+\end{center}
+\vspace{0.5cm} {\bf Project GF2 \hfill SOFTWARE}
+\vspace{0.5cm}
+\begin{center}
+{\bf LOGIC SIMULATOR \\\hfill
+\\{\em First Interim Report}\\\hfill
+\\Name: Yi Chen Hock, Michael Stevens, Cindy Wu
+\\College: Queens', Robinson, John's\\\hfill
+\\
+}
+\end{center}
+\rule{15.7cm}{0.5mm}
+
+\vspace{0.5cm}
+\tableofcontents
+
+\newpage
+\section{Introduction}
+%-------INTRODUCTION WRITE HERE-------
+
+\section{General Approach}
+%-------GENERAL APPROACH WRITE HERE-------
+The general approach to the project is to split it into four main sections. The first section involves defining a precise specification for the logic description language, which the client will use to define their logic circuit. The aim of this is to create a simple and coherent language using EBNF notation, which is readable to both the user as well as the computer. In addition, the specification will identify the semantic constraints which apply to the language as well as consider how any error conditions will be handled. The details of this section are outlined in this report.
+
+\noindent\\
+The second section involves developing the individual modules for the bulk of the logic simulator. The scanner and parse modules will directly use the logic description language as well as the specification of error handling as defined in the first section. The approach for this is to create a detailed specification in the first section to allow for easier and efficient development of the code. The user interface will be designed to be straight forward as well as intuitive to use. Throughout this section, unit tests will be implemented to ensure that each module works as expected, even when given unexpected inputs. 
+
+\noindent\\
+The third section is to integrate the various modules together and ensure that the program works as one. The unit tests for each module developed in the previous section will greatly improve the speed and efficiency of integration as they will ensure that any bugs found will be confined to the integration of the modules rather than the modules themselves. Therefore, it is vital that well written and complete unit tests are developed to allow for smooth integration. In addition, clear and easy to read documentation will be produced for the client.
+
+\noindent\\
+Finally, the last section is involved with implementing any modifications to the system which the client proposes. These modifications will not be known until after the logic simulator is developed and hence, the code will be structured with plenty of modularisation. This will allow system modifications to be implemented more efficiently and with less bugs.
+
+\subsection{Teamwork Planning}
+%-------TEAMWORK PLANNING WRITE HERE-------
+The Gantt chart in the Appendix (Figure \ref{fig:Gantt Chart}) shows how the tasks for this project have been split up and allocated to each team member. Note that the allocated person(s) for each task will not necessarily be the only person working on that task since the workload for each task may not be predictable at this stage of the project. The Gantt chart also highlights the deadlines given by the client. It's also to be noted that the aim is to complete the first iteration of the code within the first two weeks of the project, to allow sufficient time for integration and testing of the system. Throughout this project, git is used for collaborative coding and version control. The repository can be found at https://github.com/yichenhock/GF2.
+
+\section{EBNF for Syntax}
+%-------EBNF WRITE HERE-------
+
+\subsection{Example A --- Simple Circuit}
+%-------SIMPLE CIRCUIT WRITE HERE-------
+
+\subsection{Example B --- Complex Circuit}
+%-------COMPLEX CIRCUIT WRITE HERE-------
+
+\section{Errors}
+\subsection{Semantic Error Identification}
+%-------ERROR IDENTIFICATION WRITE HERE-------
+
+\subsection{Error Handling}
+%-------ERROR HANDLING WRITE HERE-------
+
+\newpage
+\section{Appendix}
+%-------APPENDIX WRITE HERE-------
+\vspace{-1cm}
+\begin{figure}[H]
+\includegraphics[width = \paperwidth, angle = -90]{Gantt Chart.pdf}
+\vspace{-0.8cm}
+\caption{Gantt Chart}
+\label{fig:Gantt Chart}
+\end{figure}
+
+%These are for me to reference (Never used latex before)
+
+% \begin{figure}[H]
+% \begin{centering}
+% \includegraphics[width=0.3\paperwidth]{imgs/large14.jpg}\hspace{1cm}\includegraphics[width=0.3\paperwidth]{imgs/large17.jpg}
+% \par\end{centering}
+% \caption{Spectra for 14mA
+% (left) and 17mA (right) using large wavelength span (500nm, 100nm)\label{fig:large} }
+% \end{figure}
+
+
+% \begin{table}[H]
+% \begin{center}
+% \begin{tabular}{@{}l|ll@{}}
+% \textbf{}               & \textbf{Below threshold (14mA)} & \textbf{Above threshold (17mA)} \\ \midrule
+% \textbf{$\lambda_0$ ($\mu$m)}      & 1.558                           & 1.557                          \\
+% \textbf{$P_0$ (dBm)}        & -73.6                           & -30.0                             \\
+% \textbf{3dB width (nm)} & 24                              & 0.06                           
+% \end{tabular}
+% \par\end{center}
+% \caption{Data on spectral characteristics above and below threshold current}
+% \end{table}
+
+
+% \begin{equation*}
+% \frac{m}{2}\lambda_g=L
+% \qquad
+% \lambda_g=\frac{\lambda}{n}
+% \qquad
+% c=f\lambda
+% \end{equation*}
+
+
+% \begin{table}[H]
+% \begin{center}
+% \begin{tabular}{@{}lllll@{}}
+% \toprule
+% \textbf{\begin{tabular}[c]{@{}l@{}}Voltage\\ Monitor/V\\ (CH1)\end{tabular}} & \textbf{\begin{tabular}[c]{@{}l@{}}Current\\ Monitor/V\\ (CH2)\end{tabular}} & \textbf{\begin{tabular}[c]{@{}l@{}}Current/mA\\ (CH2/20$\Omega$)\end{tabular}} & \textbf{\begin{tabular}[c]{@{}l@{}}Voltage/V\\ (CH1-CH2)\end{tabular}} & \textbf{\begin{tabular}[c]{@{}l@{}}Photodiode\\ Output/V\\ (CH3)\end{tabular}} \\ \midrule
+% 2.5                                                                          & 0.88                                                                         & 43.8                                                                   & 1.63                                                                   & 0.00                                                                           \\
+% 2.6                                                                          & 1.00                                                                         & 50.0                                                                   & 1.60                                                                   & 0.13                                                                           \\
+% 2.8                                                                          & 1.06                                                                         & 53.0                                                                   & 1.69                                                                   & 0.30                                                                           \\
+% 2.9                                                                          & 1.13                                                                         & 56.3                                                                   & 1.73                                                                   & 0.45                                                                           \\
+% 3.0                                                                          & 1.19                                                                         & 59.4                                                                   & 1.81                                                                   & 0.55                                                                           \\
+% 3.1                                                                          & 1.25                                                                         & 62.5                                                                   & 1.85                                                                   & 0.70                                                                           \\
+% 3.2                                                                          & 1.30                                                                         & 65.0                                                                   & 1.90                                                                   & 0.88                                                                           \\
+% 3.2                                                                          & 1.38                                                                         & 68.8                                                                   & 1.83                                                                   & 1.00                                                                           \\
+% 3.2                                                                          & 1.44                                                                         & 71.9                                                                   & 1.76                                                                   & 1.13                                                                           \\
+% 3.3                                                                          & 1.50                                                                         & 75.0                                                                   & 1.80                                                                   & 1.24                                                                           \\
+% 3.4                                                                          & 1.56                                                                         & 78.1                                                                   & 1.84                                                                   & 1.38                                                                           \\
+% 3.5                                                                          & 1.63                                                                         & 81.3                                                                   & 1.88                                                                   & 1.50                                                                           \\
+% 3.5                                                                          & 1.69                                                                         & 84.4                                                                   & 1.81                                                                   & 1.63                                                                           \\
+% 3.6                                                                          & 1.75                                                                         & 87.5                                                                   & 1.85                                                                   & 1.63                                                                           \\
+% 3.6                                                                          & 1.81                                                                         & 90.6                                                                   & 1.79                                                                   & 1.68                                                                           \\
+% 3.6                                                                          & 1.88                                                                         & 93.8                                                                   & 1.73                                                                   & 1.68                                                                           \\ \bottomrule
+% \end{tabular}
+% \par\end{center}
+% \caption{Raw data for CD laser}
+% \end{table}
+
+\end{document}

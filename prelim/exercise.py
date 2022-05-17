@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """Preliminary exercises for Part IIA Project GF2."""
+
 import sys
 
 
 def open_file(path):
     """Open and return the file specified by path."""
+    return open(path)
 
 
 def get_next_character(input_file):
@@ -40,11 +42,20 @@ def main():
 
     else:
 
+        path = arguments[0]
         print("\nNow opening file...")
         # Print the path provided and try to open the file for reading
+        try: 
+            file = open_file(path)
+        except: 
+            print("error reading ur file:(")
+            sys.exit()
+
 
         print("\nNow reading file...")
         # Print out all the characters in the file, until the end of file
+        print(file.read())
+
 
         print("\nNow skipping spaces...")
         # Print out all the characters in the file, without spaces
@@ -60,6 +71,9 @@ def main():
         # name = MyNames()
         # bad_name_ids = [name.lookup("Terrible"), name.lookup("Horrid"),
         #                 name.lookup("Ghastly"), name.lookup("Awful")]
+
+        file.close()
+
 
 if __name__ == "__main__":
     main()
