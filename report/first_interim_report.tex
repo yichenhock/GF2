@@ -119,29 +119,29 @@ The logic description language will be specified using EBNF notation. The langua
 
     switch_level = "HIGH" | "LOW" | "TRUE" | "FALSE" | "1" | "0";
 
-    device_definition = {device_name,[comma]}, definition, devices_type, ";";
+    device_definition = {device_name,[comma]}, definition, devices_type, semicolon;
 
-    switch_definition = {switch_name,[comma]}, definition, ("SWITCHES" | "SWITCH"), ";";
+    switch_definition = {switch_name,[comma]}, definition, ("SWITCHES" | "SWITCH"), semicolon;
 
-    clock_definition = {clock_name,[comma]}, definition, ("CLOCK" |"CLOCKS"), ";";
+    clock_definition = {clock_name,[comma]}, definition, ("CLOCK" |"CLOCKS"), semicolon;
 
-    switch_initialisation = {switch_name,[comma]}, definition, switch_level, ";";
+    switch_initialisation = {switch_name,[comma]}, definition, switch_level, semicolon;
 
-    inputs = {device_name,[comma] | switch_name,[comma]}, possession, {digit}, "inputs", ";";
+    inputs = {device_name,[comma] | switch_name,[comma]}, possession, {digit}, "inputs", semicolon;
 
-    clock_frequency = clock_name, "frequency", {digit}, order_factor, ";";
+    clock_frequency = clock_name, "frequency", {digit}, order_factor, semicolon;
 
     connection_definition = (device_name | switch_name), ["BAR"], ("is connected to" | "to" | "connects to" | arrow), 
-    {(device_name | switch_name), dot, port_name}, ";";
+    {(device_name | switch_name), dot, port_name}, semicolon;
 
-    device_block = "device", bracket_open, {device_definition | switch_definition | clock_definition}, bracket_close, ";";
+    device_block = "device", bracket_open, {device_definition | switch_definition | clock_definition}, bracket_close, semicolon;
 
-    initialise_block = "initialise", bracket_open, {switch_initialisation | clock_initialisation}, bracket_close, ";";
+    initialise_block = "initialise", bracket_open, {switch_initialisation | clock_initialisation}, bracket_close, semicolon;
 
     connections_block = "connections", bracket_open, {(device_name | switch_name), bracket_open, 
-    {connection_definition}, bracket_close}, bracket_close, ";";
+    {connection_definition}, bracket_close}, bracket_close, semicolon;
 
-    monitors_block = "monitors", bracket_open, {device_name | switch_name}, bracket_close, ";";
+    monitors_block = "monitors", bracket_open, {device_name | switch_name}, bracket_close, semicolon;
 
     entirety = device_block, initialise_block, connections_block, monitors_block;
 \end{Verbatim}
