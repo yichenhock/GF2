@@ -13,6 +13,7 @@
 \usepackage{booktabs}
 \usepackage{multirow}
 \usepackage{pdfpages}
+\usepackage{fancyvrb}
 
 \makeatletter
 
@@ -68,8 +69,121 @@ The Gantt chart in the Appendix (Figure \ref{fig:Gantt Chart}) shows how the tas
 \section{EBNF for Syntax}
 %-------EBNF WRITE HERE-------
 
+\begin{itemize}
+    \item Define 
+    \item User-defined name
+    \item Specify parameters
+    \item Define device connections 
+    \item Specify output signal to monitor
+\end{itemize}
+
+\begin{Verbatim}
+letter = "a" | "b"
+    | "c" | "d" | "e" | "f" | "g" | "h" | "i"
+    | "j" | "k" | "l" | "m" | "n" | "o" | "p"
+    | "q" | "r" | "s" | "t" | "u" | "v" | "w"
+    | "x" | "y" | "z" ;
+
+digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
+
+device_name = letter, {[letter|digit]};
+
+clock_name = "clk", {[digit]};
+
+switch_name = "sw", {[digit]};
+
+port_name = "IN", {[digit]};
+
+devices_type = "AND" | "ANDS" | "OR" | "ORS" |"NOR" | "NORS" | "XOR" | 
+    "XORS" | "NAND" | "NANDS" |"DTYPE" | "DTYPES";
+
+arrow = "=>" | "->";
+
+definition = "is" | "are";
+
+possession = "has", "have";
+
+bracket_open = "(";
+
+bracket_close = ")";
+
+semicolon = ";";
+
+comma = ",";
+
+dot = ".";
+
+order_factor = "K" | "M" | "G" | "T";
+
+switch_level = "HIGH" | "LOW" | "1" | "0";
+
+device_definition = {device_name,[comma]}, definition, devices_type, ";";
+
+switch_definition = {switch_name,[comma]}, definition, ("SWITCHES" | "SWITCH"), ";";
+
+clock_definition = {clock_name,[comma]}, definition, ("CLOCK" |"CLOCKS"), ";";
+
+switch_initialisation = {switch_name,[comma]}, definition, switch_level, ";";
+
+inputs = {device_name,[comma] | switch_name,[comma]}, possession, {digit}, "inputs", ";";
+
+clock_frequency = clock_name, "frequency", {digit}, order_factor, ";";
+
+
+
+connection_definition = (device_name | switch_name), ["BAR"], ("is connected to" | "to" | "connects to" | arrow), 
+{(device_name | switch_name), dot, port_name}, ";";
+
+device_block = "device", bracket_open, {device_definition | switch_definition | clock_definition}, bracket_close, ";";
+
+initialise_block = "initialise", bracket_open, {switch_initialisation | clock_initialisation}, bracket_close, ";";
+
+connections_block = "connections", bracket_open, {(device_name | switch_name), bracket_open, 
+{connection_definition}, bracket_close}, bracket_close, ";";
+
+monitors_block = "monitors", bracket_open, {device_name | switch_name}, bracket_close, ";";
+\end{Verbatim}
+
+\vspace{0.1in}
+
+"BAR" following a \verb+device_name+ or \verb+switch_name+ denotes the inverse of the output. We do not include comment syntax in EBNF as the scanner removes comments from input file. The syntax for comments will be: \verb+# ;+
+
+where "\#" denotes the start of the comment section, and ";" denotes the end of the comment section. 
+There will be no line comments as line breaks and spaces hold no significance.
+
 \subsection{Example A --- Simple Circuit}
 %-------SIMPLE CIRCUIT WRITE HERE-------
+
+\begin{Verbatim}[numbers=left,xleftmargin=5mm]
+devices(
+    a, b are NANDs;
+    a, b have 2 inputs;
+    sw1, sw2 are SWITCHES;
+    clk1 is CLOCK; 
+);
+
+initialise(
+    sw1, sw2 are LOW;
+    clk1 frequency 10M;
+);
+
+connections(
+    a(
+        sw1 is connected to a.IN1;
+        b is connected to a.IN2;
+    );
+
+    b(  
+        a is connected to b.IN1;
+        sw2 is connected to b.IN2;
+    );
+);
+
+monitors(
+    a, b;
+);
+
+\end{Verbatim}
 
 \subsection{Example B --- Complex Circuit}
 %-------COMPLEX CIRCUIT WRITE HERE-------
@@ -123,32 +237,5 @@ The Gantt chart in the Appendix (Figure \ref{fig:Gantt Chart}) shows how the tas
 % \qquad
 % c=f\lambda
 % \end{equation*}
-
-
-% \begin{table}[H]
-% \begin{center}
-% \begin{tabular}{@{}lllll@{}}
-% \toprule
-% \textbf{\begin{tabular}[c]{@{}l@{}}Voltage\\ Monitor/V\\ (CH1)\end{tabular}} & \textbf{\begin{tabular}[c]{@{}l@{}}Current\\ Monitor/V\\ (CH2)\end{tabular}} & \textbf{\begin{tabular}[c]{@{}l@{}}Current/mA\\ (CH2/20$\Omega$)\end{tabular}} & \textbf{\begin{tabular}[c]{@{}l@{}}Voltage/V\\ (CH1-CH2)\end{tabular}} & \textbf{\begin{tabular}[c]{@{}l@{}}Photodiode\\ Output/V\\ (CH3)\end{tabular}} \\ \midrule
-% 2.5                                                                          & 0.88                                                                         & 43.8                                                                   & 1.63                                                                   & 0.00                                                                           \\
-% 2.6                                                                          & 1.00                                                                         & 50.0                                                                   & 1.60                                                                   & 0.13                                                                           \\
-% 2.8                                                                          & 1.06                                                                         & 53.0                                                                   & 1.69                                                                   & 0.30                                                                           \\
-% 2.9                                                                          & 1.13                                                                         & 56.3                                                                   & 1.73                                                                   & 0.45                                                                           \\
-% 3.0                                                                          & 1.19                                                                         & 59.4                                                                   & 1.81                                                                   & 0.55                                                                           \\
-% 3.1                                                                          & 1.25                                                                         & 62.5                                                                   & 1.85                                                                   & 0.70                                                                           \\
-% 3.2                                                                          & 1.30                                                                         & 65.0                                                                   & 1.90                                                                   & 0.88                                                                           \\
-% 3.2                                                                          & 1.38                                                                         & 68.8                                                                   & 1.83                                                                   & 1.00                                                                           \\
-% 3.2                                                                          & 1.44                                                                         & 71.9                                                                   & 1.76                                                                   & 1.13                                                                           \\
-% 3.3                                                                          & 1.50                                                                         & 75.0                                                                   & 1.80                                                                   & 1.24                                                                           \\
-% 3.4                                                                          & 1.56                                                                         & 78.1                                                                   & 1.84                                                                   & 1.38                                                                           \\
-% 3.5                                                                          & 1.63                                                                         & 81.3                                                                   & 1.88                                                                   & 1.50                                                                           \\
-% 3.5                                                                          & 1.69                                                                         & 84.4                                                                   & 1.81                                                                   & 1.63                                                                           \\
-% 3.6                                                                          & 1.75                                                                         & 87.5                                                                   & 1.85                                                                   & 1.63                                                                           \\
-% 3.6                                                                          & 1.81                                                                         & 90.6                                                                   & 1.79                                                                   & 1.68                                                                           \\
-% 3.6                                                                          & 1.88                                                                         & 93.8                                                                   & 1.73                                                                   & 1.68                                                                           \\ \bottomrule
-% \end{tabular}
-% \par\end{center}
-% \caption{Raw data for CD laser}
-% \end{table}
 
 \end{document}
