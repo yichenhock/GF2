@@ -5,7 +5,7 @@
 \contentsline {section}{\numberline {3}EBNF for Syntax}{2}{}%
 \contentsline {subsection}{\numberline {3.1}Example A --- Simple Circuit}{4}{}%
 \contentsline {subsection}{\numberline {3.2}Example B --- Complex Circuit}{5}{}%
-\contentsline {section}{\numberline {4}Errors}{5}{}%
-\contentsline {subsection}{\numberline {4.1}Semantic Error Identification}{5}{}%
-\contentsline {subsection}{\numberline {4.2}Error Handling}{5}{}%
-\contentsline {section}{\numberline {5}Appendix}{6}{}%
+\contentsline {section}{\numberline {4}Errors}{7}{}%
+\contentsline {subsection}{\numberline {4.1}Semantic Error Identification}{7}{}%
+\contentsline {subsection}{\numberline {4.2}Error Handling}{7}{}%
+\contentsline {section}{\numberline {5}Appendix}{8}{}%

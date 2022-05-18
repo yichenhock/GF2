@@ -80,17 +80,9 @@ The logic description language will be specified using EBNF notation. The langua
 \noindent The following is a formal description using EBNF of the logic description language we will be using in this project: 
 
 \begin{Verbatim}
-<<<<<<< HEAD
 letter = "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" |
          "j" | "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" |
          "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z" ;
-=======
-    letter = "a" | "b"
-        | "c" | "d" | "e" | "f" | "g" | "h" | "i"
-        | "j" | "k" | "l" | "m" | "n" | "o" | "p"
-        | "q" | "r" | "s" | "t" | "u" | "v" | "w"
-        | "x" | "y" | "z" ;
->>>>>>> 0443b2dc2a15c75f2ccb962814978cc2e08d5562
 
     digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
 
@@ -137,17 +129,12 @@ letter = "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" |
 
     clock_frequency = clock_name, "frequency", {digit}, order_factor, semicolon;
 
-<<<<<<< HEAD
-connection_definition = (device_name | switch_name), ["BAR"], ("is connected to" | "to" | "connects to" | arrow), 
-{(device_name | switch_name), dot, port_name}, ";";
-=======
     connection_definition = (device_name | switch_name), ["BAR"], ("is connected to" | "to" | "connects to" | arrow), 
     {(device_name | switch_name), dot, port_name}, semicolon;
 
     device_block = "device", bracket_open, {device_definition | switch_definition | clock_definition}, bracket_close, semicolon;
 
     initialise_block = "initialise", bracket_open, {switch_initialisation | clock_initialisation}, bracket_close, semicolon;
->>>>>>> 0443b2dc2a15c75f2ccb962814978cc2e08d5562
 
     connections_block = "connections", bracket_open, {(device_name | switch_name), bracket_open, 
     {connection_definition}, bracket_close}, bracket_close, semicolon;
@@ -164,39 +151,119 @@ connection_definition = (device_name | switch_name), ["BAR"], ("is connected to"
 \subsection{Example A --- Simple Circuit}
 %-------SIMPLE CIRCUIT WRITE HERE-------
 
+\vspace{-0.4cm}
+\begin{figure}[H]
+    \includegraphics[width = \textwidth]{Simple Circuit.png}
+    \vspace{-1cm}
+    \caption{XOR Gate}
+    \label{fig:Simple Circuit}
+    \end{figure}
+
 \begin{Verbatim}[numbers=left,xleftmargin=5mm]
-devices(
-    a, b are NANDs;
-    a, b have 2 inputs;
-    sw1, sw2 are SWITCHES;
-    clk1 is CLOCK; 
-);
-
-initialise(
-    sw1, sw2 are LOW;
-    clk1 frequency 10M;
-);
-
-connections(
-    a(
-        sw1 is connected to a.IN1;
-        b is connected to a.IN2;
+    devices(
+        a is OR;
+        b is NAND;
+        c is AND;
+        a, b, c have 2 inputs;
+        sw1, sw2 are SWITCHES;
+        clk1 is CLOCK;
     );
-
-    b(  
-        a is connected to b.IN1;
-        sw2 is connected to b.IN2;
+    
+    initialise(
+        sw1, sw2 are HIGH;
     );
-);
-
-monitors(
-    a, b;
-);
-
+    
+    connections(
+        a(
+            sw1 is connected to a.IN1;
+            sw2 is connected to a.IN2;
+        );
+    
+        b(  
+            sw1 is connected to b.IN1;
+            sw2 is connected to b.IN2;
+        );
+    
+        c(  
+            a is connected to c.IN1;
+            b is connected to c.IN2;
+        );
+    );
+    
+    monitors(
+        c;
+    );
 \end{Verbatim}
-
+    
 \subsection{Example B --- Complex Circuit}
 %-------COMPLEX CIRCUIT WRITE HERE-------
+    
+\vspace{-0.4cm}
+\begin{figure}[H]
+\includegraphics[width = \textwidth]{Complex Circuit.png}
+\vspace{-1cm}
+\caption{2 Bit Counter with Outputs XOR}
+\label{fig:Complex Circuit}
+\end{figure}
+
+\begin{Verbatim}[numbers=left,xleftmargin=5mm]
+    devices(
+        a is NOR;
+        b, c, d, e are NANDS;
+        f is DTYPE;
+        g is XOR;
+        a, b, c, d, e, g have 2 inputs;
+        sw1, sw2 are SWITCHES;
+    );
+    
+    initialise(
+        sw1, sw2 are LOW;
+        clk1 frequency 1K;
+    );
+    
+    connections(
+        a(
+            e is connected to a.IN1;
+            e is connected to a.IN2;
+        );
+    
+        b(  
+            e is connected to b.IN1;
+            clk1 is connected to b.IN2;
+        );
+    
+        c(  
+            clk1 is connected to c.IN1;
+            a is connected to c.IN2;
+        );
+    
+        d(
+            b is connected to d.IN1;
+            e is connected to d.IN2;
+        );
+    
+        e(  
+            d is connected to e.IN1;
+            c is connected to e.IN2;
+        );
+    
+        f(  
+            fBAR is connected to f.DATA;
+            d is connected to f.CLK;
+            sw1 is connected to f.SET;
+            sw2 is connected to f.RESET;
+        );
+    
+        g(  
+            d is connected to g.IN1;
+            f is connected to g.IN2;
+        );
+    );
+    
+    monitors(
+        d, f, g;
+    );
+\end{Verbatim}
 
 \section{Errors}
 \subsection{Semantic Error Identification}
