@@ -30,7 +30,7 @@
 
 {\bf ENGINEERING TRIPOS PART IIA}
 \end{center}
-\vspace{0.5cm} {\bf Project GF2 \hfill SOFTWARE}
+\vspace{0.5cm} {\bf PROJECT GF2 \hfill SOFTWARE}
 \vspace{0.5cm}
 \begin{center}
 {\bf LOGIC SIMULATOR \\\hfill
@@ -48,6 +48,7 @@
 \newpage
 \section{Introduction}
 %-------INTRODUCTION WRITE HERE-------
+The aim of this project is to develop a logic circuit simulator in Python. As a team of three, we will work together on the project under a real-life simulation of a professional software development environment. This will involve the five major phases of the software engineering life cycle: specification, design, implementation, testing and maintenance. This report will cover the general approach of the project including teamwork planning; EBNF for syntax; identification of all possible semantic errors; description of error handling; and two example definition files together with diagrams showing the logic circuits they represent. 
 
 \section{General Approach}
 %-------GENERAL APPROACH WRITE HERE-------
@@ -68,84 +69,97 @@ The Gantt chart in the Appendix (Figure \ref{fig:Gantt Chart}) shows how the tas
 
 \section{EBNF for Syntax}
 %-------EBNF WRITE HERE-------
+The logic description language will be specified using EBNF notation. The language was designed with ease of readability in mind, so English keywords and puncuation have been used such that the meaning is clear to a human reader as well as a machine. There are four main sections to the description file: 
+\begin{enumerate}
+    \item \verb+device+: Defines the device and device type by user-defined names and along with the number of input ports for each device and defines any switches or clocks. 
+    \item \verb+initialise+: Sets the state of the switches (which will be the inputs to the logic circuit) and the frequency of the clock. Error handling will be implemented to ensure that 
+    \item \verb+connections+: Defines the connections between switches, devices and input ports. 
+    \item \verb+monitors+: Defines the output signals which  will be monitored. 
+\end{enumerate}
 
-\begin{itemize}
-    \item Define 
-    \item User-defined name
-    \item Specify parameters
-    \item Define device connections 
-    \item Specify output signal to monitor
-\end{itemize}
+\noindent The following is a formal description using EBNF of the logic description language we will be using in this project: 
 
 \begin{Verbatim}
+<<<<<<< HEAD
 letter = "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" |
          "j" | "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" |
          "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z" ;
+=======
+    letter = "a" | "b"
+        | "c" | "d" | "e" | "f" | "g" | "h" | "i"
+        | "j" | "k" | "l" | "m" | "n" | "o" | "p"
+        | "q" | "r" | "s" | "t" | "u" | "v" | "w"
+        | "x" | "y" | "z" ;
+>>>>>>> 0443b2dc2a15c75f2ccb962814978cc2e08d5562
 
-digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
+    digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
 
-device_name = letter, {[letter|digit]};
+    device_name = letter, {[letter|digit]};
 
-clock_name = "clk", {[digit]};
+    clock_name = "clk", {[digit]};
 
-switch_name = "sw", {[digit]};
+    switch_name = "sw", {[digit]};
 
-port_name = "IN", {[digit]};
+    port_name = "IN", {[digit]};
 
-devices_type = "AND" | "ANDS" | "OR" | "ORS" |"NOR" | "NORS" | "XOR" | 
-    "XORS" | "NAND" | "NANDS" |"DTYPE" | "DTYPES";
+    devices_type = "AND" | "ANDS" | "OR" | "ORS" |"NOR" | "NORS" | "XOR" | 
+        "XORS" | "NAND" | "NANDS" |"DTYPE" | "DTYPES";
 
-arrow = "=>" | "->";
+    arrow = "=>" | "->";
 
-definition = "is" | "are";
+    definition = "is" | "are";
 
-possession = "has", "have";
+    possession = "has", "have";
 
-bracket_open = "(";
+    bracket_open = "(";
 
-bracket_close = ")";
+    bracket_close = ")";
 
-semicolon = ";";
+    semicolon = ";";
 
-comma = ",";
+    comma = ",";
 
-dot = ".";
+    dot = ".";
 
-order_factor = "K" | "M" | "G" | "T";
+    order_factor = "K" | "M" | "G" | "T";
 
-switch_level = "HIGH" | "LOW" | "1" | "0";
+    switch_level = "HIGH" | "LOW" | "TRUE" | "FALSE" | "1" | "0";
 
-device_definition = {device_name,[comma]}, definition, devices_type, ";";
+    device_definition = {device_name,[comma]}, definition, devices_type, semicolon;
 
-switch_definition = {switch_name,[comma]}, definition, ("SWITCHES" | "SWITCH"), ";";
+    switch_definition = {switch_name,[comma]}, definition, ("SWITCHES" | "SWITCH"), semicolon;
 
-clock_definition = {clock_name,[comma]}, definition, ("CLOCK" |"CLOCKS"), ";";
+    clock_definition = {clock_name,[comma]}, definition, ("CLOCK" |"CLOCKS"), semicolon;
 
-switch_initialisation = {switch_name,[comma]}, definition, switch_level, ";";
+    switch_initialisation = {switch_name,[comma]}, definition, switch_level, semicolon;
 
-inputs = {device_name,[comma] | switch_name,[comma]}, possession, {digit}, "inputs", ";";
+    inputs = {device_name,[comma] | switch_name,[comma]}, possession, {digit}, "inputs", semicolon;
 
-clock_frequency = clock_name, "frequency", {digit}, order_factor, ";";
+    clock_frequency = clock_name, "frequency", {digit}, order_factor, semicolon;
 
+<<<<<<< HEAD
 connection_definition = (device_name | switch_name), ["BAR"], ("is connected to" | "to" | "connects to" | arrow), 
 {(device_name | switch_name), dot, port_name}, ";";
+=======
+    connection_definition = (device_name | switch_name), ["BAR"], ("is connected to" | "to" | "connects to" | arrow), 
+    {(device_name | switch_name), dot, port_name}, semicolon;
 
-device_block = "device", bracket_open, {device_definition | switch_definition | clock_definition}, bracket_close, ";";
+    device_block = "device", bracket_open, {device_definition | switch_definition | clock_definition}, bracket_close, semicolon;
 
-initialise_block = "initialise", bracket_open, {switch_initialisation | clock_initialisation}, bracket_close, ";";
+    initialise_block = "initialise", bracket_open, {switch_initialisation | clock_initialisation}, bracket_close, semicolon;
+>>>>>>> 0443b2dc2a15c75f2ccb962814978cc2e08d5562
 
-connections_block = "connections", bracket_open, {(device_name | switch_name), bracket_open, 
-{connection_definition}, bracket_close}, bracket_close, ";";
+    connections_block = "connections", bracket_open, {(device_name | switch_name), bracket_open, 
+    {connection_definition}, bracket_close}, bracket_close, semicolon;
 
-monitors_block = "monitors", bracket_open, {device_name | switch_name}, bracket_close, ";";
+    monitors_block = "monitors", bracket_open, {device_name | switch_name}, bracket_close, semicolon;
+
+    entirety = device_block, initialise_block, connections_block, monitors_block;
 \end{Verbatim}
 
 \vspace{0.1in}
 
-"BAR" following a \verb+device_name+ or \verb+switch_name+ denotes the inverse of the output. We do not include comment syntax in EBNF as the scanner removes comments from input file. The syntax for comments will be: \verb+# ;+
-
-where "\#" denotes the start of the comment section, and ";" denotes the end of the comment section. 
-There will be no line comments as line breaks and spaces hold no significance.
+\noindent The word "BAR" following a \verb+device_name+ or \verb+switch_name+ denotes the inverse of the output. We do not include comment syntax in EBNF as the scanner removes comments from input file. The syntax for comments will be "\verb+# ;+", where "\#" denotes the start of the comment section, and ";" denotes the end of the comment section. There will be no line comments as line breaks and spaces hold no significance.
 
 \subsection{Example A --- Simple Circuit}
 %-------SIMPLE CIRCUIT WRITE HERE-------
