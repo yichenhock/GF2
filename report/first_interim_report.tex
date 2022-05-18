@@ -78,11 +78,9 @@ The Gantt chart in the Appendix (Figure \ref{fig:Gantt Chart}) shows how the tas
 \end{itemize}
 
 \begin{Verbatim}
-letter = "a" | "b"
-    | "c" | "d" | "e" | "f" | "g" | "h" | "i"
-    | "j" | "k" | "l" | "m" | "n" | "o" | "p"
-    | "q" | "r" | "s" | "t" | "u" | "v" | "w"
-    | "x" | "y" | "z" ;
+letter = "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" |
+         "j" | "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" |
+         "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z" ;
 
 digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
 
@@ -128,8 +126,6 @@ switch_initialisation = {switch_name,[comma]}, definition, switch_level, ";";
 inputs = {device_name,[comma] | switch_name,[comma]}, possession, {digit}, "inputs", ";";
 
 clock_frequency = clock_name, "frequency", {digit}, order_factor, ";";
-
-
 
 connection_definition = (device_name | switch_name), ["BAR"], ("is connected to" | "to" | "connects to" | arrow), 
 {(device_name | switch_name), dot, port_name}, ";";
