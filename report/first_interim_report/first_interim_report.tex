@@ -80,9 +80,9 @@ The logic description language will be specified using EBNF notation. The langua
 \noindent The following is a formal description using EBNF of the logic description language we will be using in this project: 
 
 \begin{Verbatim}
-letter = "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" |
-         "j" | "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" |
-         "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z" ;
+    letter = "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" |
+             "j" | "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" |
+             "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z" ;
 
     digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
 
@@ -95,7 +95,7 @@ letter = "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" |
     port_name = "IN", {[digit]};
 
     devices_type = "AND" | "ANDS" | "OR" | "ORS" |"NOR" | "NORS" | "XOR" | 
-        "XORS" | "NAND" | "NANDS" |"DTYPE" | "DTYPES";
+                  "XORS" | "NAND" | "NANDS" |"DTYPE" | "DTYPES";
 
     arrow = "=>" | "->";
 
