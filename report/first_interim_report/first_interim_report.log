@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 21.12) (preloaded format=pdflatex 2021.12.8)  20 MAY 2022 18:31
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 21.12) (preloaded format=pdflatex 2021.12.8)  20 MAY 2022 23:28
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -249,6 +249,12 @@ Package: fancyvrb 2021/12/21 4.1b verbatim text (tvz,hv)
 \c@FancyVerbLine=\count284
 \FV@StepNumber=\count285
 \FV@OutFile=\write3
+) (C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex/latex/pdflscape\pdflscape.sty
+Package: pdflscape 2019/12/05 v0.12 Display of landscape pages in PDF (HO)
+ (C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex/latex/graphics\lscape.sty
+Package: lscape 2020/05/28 v3.02 Landscape Pages (DPC)
+)
+Package pdflscape Info: Auto-detected driver: pdftex on input line 81.
 ) (C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex/latex/listings\listings.sty
 \lst@mode=\count286
 \lst@gtempboxa=\box57
@@ -372,20 +378,20 @@ File: l3backend-pdftex.def 2021-08-04 L3 backend support: PDF output (pdfTeX)
 ) (first_interim_report.aux)
 \openout1 = `first_interim_report.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 34.
-LaTeX Font Info:    ... okay on input line 34.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 34.
-LaTeX Font Info:    ... okay on input line 34.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 34.
-LaTeX Font Info:    ... okay on input line 34.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 34.
-LaTeX Font Info:    ... okay on input line 34.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 34.
-LaTeX Font Info:    ... okay on input line 34.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 34.
-LaTeX Font Info:    ... okay on input line 34.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 34.
-LaTeX Font Info:    ... okay on input line 34.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 36.
+LaTeX Font Info:    ... okay on input line 36.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 36.
+LaTeX Font Info:    ... okay on input line 36.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 36.
+LaTeX Font Info:    ... okay on input line 36.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 36.
+LaTeX Font Info:    ... okay on input line 36.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 36.
+LaTeX Font Info:    ... okay on input line 36.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 36.
+LaTeX Font Info:    ... okay on input line 36.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 36.
+LaTeX Font Info:    ... okay on input line 36.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -443,13 +449,7 @@ Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 485.
  (C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex/latex/00miktex\epstopdf-sys.cfg
 File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
-)) (C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex/latex/pdflscape\pdflscape.sty
-Package: pdflscape 2019/12/05 v0.12 Display of landscape pages in PDF (HO)
- (C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex/latex/graphics\lscape.sty
-Package: lscape 2020/05/28 v3.02 Landscape Pages (DPC)
-)
-Package pdflscape Info: Auto-detected driver: pdftex on input line 81.
-)
+))
 \c@lstlisting=\count313
  (first_interim_report.toc
 LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 4.
@@ -481,47 +481,48 @@ LaTeX Font Info:    External font `lmex10' loaded for size
  [1
 
 {C:/Users/Yi Chen/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}] [2]
-LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 81.
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 83.
  (C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex/latex/lm\t1lmtt.fd
 File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
 ) [3]
+LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 169.
+ (C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex/latex/lm\ts1lmr.fd
+File: ts1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
+)
 <Simple Circuit.png, id=17, 461.725pt x 220.825pt>
 File: Simple Circuit.png Graphic file (type png)
 <use Simple Circuit.png>
-Package pdftex.def Info: Simple Circuit.png  used on input line 184.
+Package pdftex.def Info: Simple Circuit.png  used on input line 182.
 (pdftex.def)             Requested size: 330.42041pt x 158.02681pt.
  [4]
-<Complex Circuit.png, id=21, 823.075pt x 301.125pt>
+<Complex Circuit.png, id=23, 823.075pt x 301.125pt>
 File: Complex Circuit.png Graphic file (type png)
 <use Complex Circuit.png>
-Package pdftex.def Info: Complex Circuit.png  used on input line 233.
+Package pdftex.def Info: Complex Circuit.png  used on input line 231.
 (pdftex.def)             Requested size: 472.03123pt x 172.69524pt.
  [5 <./Simple Circuit.png> <./Complex Circuit.png>] [6]
 
 pdfTeX warning: pdflatex (file ./Gantt Chart.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<Gantt Chart.pdf, id=29, 794.97pt x 614.295pt>
+<Gantt Chart.pdf, id=31, 794.97pt x 614.295pt>
 File: Gantt Chart.pdf Graphic file (type pdf)
 <use Gantt Chart.pdf>
-Package pdftex.def Info: Gantt Chart.pdf  used on input line 313.
+Package pdftex.def Info: Gantt Chart.pdf  used on input line 312.
 (pdftex.def)             Requested size: 614.295pt x 474.69582pt.
+[7
 
-Overfull \hbox (2.66458pt too wide) in paragraph at lines 313--315
-[][]
- []
-
-[7 <./Gantt Chart.pdf>] (first_interim_report.aux) ) 
+ <./Gantt Chart.pdf>] (first_interim_report.aux) ) 
 Here is how much of TeX's memory you used:
- 7357 strings out of 478905
- 110029 string characters out of 2850936
- 631249 words of memory out of 3000000
- 25094 multiletter control sequences out of 15000+600000
- 443306 words of font info for 48 fonts, out of 8000000 for 9000
+ 7390 strings out of 478905
+ 110915 string characters out of 2850936
+ 631329 words of memory out of 3000000
+ 25123 multiletter control sequences out of 15000+600000
+ 443671 words of font info for 49 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 62i,8n,75p,908b,1601s stack positions out of 5000i,500n,10000p,200000b,80000s
-{C:/Users/Yi Chen/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-ec.enc}<C:/Users/Yi Chen/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmbx10.pfb><C:/Users/Yi Chen/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmbx12.pfb><C:/Users/Yi Chen/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmbxi10.pfb><C:/Users/Yi Chen/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmr10.pfb><C:/Users/Yi Chen/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmr5.pfb><C:/Users/Yi Chen/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmtt10.pfb><C:/Users/Yi Chen/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmtt9.pfb>
-Output written on first_interim_report.pdf (7 pages, 289394 bytes).
+ 62i,6n,75p,908b,1601s stack positions out of 5000i,500n,10000p,200000b,80000s
+{C:/Users/Yi Chen/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-ec.enc}{C:/Users/Yi Chen/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-mathit.enc}{C:/Users/Yi Chen/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-ts1.enc}<C:/Users/Yi Chen/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmbx10.pfb><C:/Users/Yi Chen/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmbx12.pfb><C:/Users/Yi Chen/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmbxi10.pfb><C:/Users/Yi Chen/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmmi10.pfb><C:/Users/Yi Chen/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmr10.pfb><C:/Users/Yi Chen/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmr5.pfb><C:/Users/Yi Chen/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmtt10.pfb><C:/Users/Yi Chen/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmtt9.pfb>
+Output written on first_interim_report.pdf (7 pages, 295209 bytes).
 PDF statistics:
- 78 PDF objects out of 1000 (max. 8388607)
+ 88 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  16 words of extra memory for PDF output out of 10000 (max. 10000000)
 

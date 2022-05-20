@@ -15,6 +15,8 @@
 \usepackage{pdfpages}
 \usepackage{fancyvrb}
 
+\usepackage{pdflscape}
+
 \usepackage{listings,multicol}
 \lstset{
 basicstyle=\small\ttfamily,
@@ -161,19 +163,15 @@ The logic description language will be specified using EBNF notation. The langua
 
 \vspace{0.1in}
 
-\noindent %The word "BAR" following a \verb+device_name+ or \verb+switch_name+ denotes the inverse of the output.
-We do not include comment syntax in EBNF as the scanner removes comments from input file. The syntax for comments will be "\verb+# ;+", where "\#" denotes the start of the comment section, and ";" denotes the end of the comment section. There will be no line comments as line breaks and spaces hold no significance.
-
-
-NOTES:
-\begin{enumerate}
-    \item AND etc can have up to 16 inputs, XOR only 2 inputs
-    \item Optional Monitor block (user can define it later)
-    \item Talk about short vs long form "Is connected to", example B is short A is long
-    \item clock cycle length is number of simulation cycles for clock to change
-    \item "BAR" now only and always applies to dtype (change above paragraph), mention QBAR is opposite of Q
-    
-\end{enumerate}
+\noindent 
+We do not include comment syntax in EBNF as the scanner removes comments from input file. The syntax for comments will be "\verb+# ;+", where "\#" denotes the start of the comment section, and ";" denotes the end of the comment section. There will be no line comments as line breaks and spaces hold no significance. Additional notes on the ENBF syntax include: 
+\begin{itemize}
+    \item AND, OR, NAND and NOR gates can have up to 16 inputs but XOR only has 2 inputs. 
+    \item The monitor block is optional as the user can define it later as the user does not have to have an output. 
+    \item When specifying connections, both "is connected to" and "to" can be used, e.g. "A is connected to B" or "A to B".  
+    \item The clock cycle length $n$ is number of simulation cycles for clock to change. 
+    \item The DTYPE has two outputs, Q and QBAR, where QBAR is the inverse of Q. 
+\end{itemize}
 
 \subsection{Example A --- Simple Circuit}
 %-------SIMPLE CIRCUIT WRITE HERE-------
@@ -305,47 +303,20 @@ NOTES:
 \subsection{Semantic Error Identification}
 %-------ERROR IDENTIFICATION WRITE HERE-------
 
-\newpage
+\begin{landscape}
 \section{Appendix}
 %-------APPENDIX WRITE HERE-------
-\vspace{-1cm}
+% \vspace{-1cm}
 \begin{figure}[H]
-\includegraphics[width = \paperwidth, angle = -90]{Gantt Chart.pdf}
-\vspace{-0.8cm}
+\begin{center}
+\includegraphics[width = \paperwidth]{Gantt Chart.pdf}
+% \includegraphics[width = \paperwidth]{gantt.png}
+\vspace{-3cm}
 \caption{Gantt Chart}
 \label{fig:Gantt Chart}
+
+\end{center}
 \end{figure}
-
-%These are for me to reference (Never used latex before)
-
-% \begin{figure}[H]
-% \begin{centering}
-% \includegraphics[width=0.3\paperwidth]{imgs/large14.jpg}\hspace{1cm}\includegraphics[width=0.3\paperwidth]{imgs/large17.jpg}
-% \par\end{centering}
-% \caption{Spectra for 14mA
-% (left) and 17mA (right) using large wavelength span (500nm, 100nm)\label{fig:large} }
-% \end{figure}
-
-
-% \begin{table}[H]
-% \begin{center}
-% \begin{tabular}{@{}l|ll@{}}
-% \textbf{}               & \textbf{Below threshold (14mA)} & \textbf{Above threshold (17mA)} \\ \midrule
-% \textbf{$\lambda_0$ ($\mu$m)}      & 1.558                           & 1.557                          \\
-% \textbf{$P_0$ (dBm)}        & -73.6                           & -30.0                             \\
-% \textbf{3dB width (nm)} & 24                              & 0.06                           
-% \end{tabular}
-% \par\end{center}
-% \caption{Data on spectral characteristics above and below threshold current}
-% \end{table}
-
-
-% \begin{equation*}
-% \frac{m}{2}\lambda_g=L
-% \qquad
-% \lambda_g=\frac{\lambda}{n}
-% \qquad
-% c=f\lambda
-% \end{equation*}
+\end{landscape}
 
 \end{document}
