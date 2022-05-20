@@ -15,6 +15,13 @@
 \usepackage{pdfpages}
 \usepackage{fancyvrb}
 
+\usepackage{listings,multicol}
+\lstset{
+basicstyle=\small\ttfamily,
+columns=flexible,
+breaklines=true
+}
+
 \makeatletter
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
@@ -79,7 +86,7 @@ The logic description language will be specified using EBNF notation. The langua
 
 \noindent The following is a formal description using EBNF of the logic description language we will be using in this project: 
 
-\begin{Verbatim}
+\begin{lstlisting}
     circuit_description = device_block, initialise_block, connections_block, [monitors_block];
 
     device_block = "device", bracket_open, {gate_definition | dtype_definition | switch_definition | clock_definition}, bracket_close, semicolon;
@@ -150,7 +157,7 @@ The logic description language will be specified using EBNF notation. The langua
     comma = ",";
 
     dot = ".";
-\end{Verbatim}
+\end{lstlisting}
 
 \vspace{0.1in}
 
@@ -180,6 +187,8 @@ NOTES:
     \end{center}
     \label{fig:Simple Circuit}
     \end{figure}
+
+\begin{multicols}{2}
 \begin{Verbatim}[numbers=left,xleftmargin=5mm]
     devices(
         a is OR;
@@ -214,6 +223,7 @@ NOTES:
         c;
     );
 \end{Verbatim}
+\end{multicols}
     
 \subsection{Example B --- Complex Circuit}
 %-------COMPLEX CIRCUIT WRITE HERE-------
@@ -226,6 +236,7 @@ NOTES:
 \label{fig:Complex Circuit}
 \end{figure}
 
+\begin{multicols}{2}
 \begin{Verbatim}[numbers=left,xleftmargin=5mm]
     devices(
         a is NOR;
@@ -285,6 +296,7 @@ NOTES:
         d, f.Q, g;
     );
 \end{Verbatim}
+\end{multicols}
 
 \section{Errors}
 \subsection{Error Handling}
