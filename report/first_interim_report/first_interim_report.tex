@@ -80,11 +80,39 @@ The logic description language will be specified using EBNF notation. The langua
 \noindent The following is a formal description using EBNF of the logic description language we will be using in this project: 
 
 \begin{Verbatim}
-    letter = "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" |
-             "j" | "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" |
-             "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z" ;
+    circuit_description = device_block, initialise_block, connections_block, [monitors_block];
 
-    digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
+    device_block = "device", bracket_open, {gate_definition | dtype_definition | switch_definition | clock_definition}, bracket_close, semicolon;
+
+    initialise_block = "initialise", bracket_open, {switch_initialisation | clock_initialisation}, bracket_close, semicolon;
+
+    connections_block = "connections", bracket_open, {device_name, bracket_open, 
+    {connection_definition}, bracket_close, semicolon}, bracket_close, semicolon;
+
+    monitors_block = "monitors", bracket_open, {device_name | dtype_output_name | switch_name | clock_name}, bracket_close, semicolon;
+
+    gate_definition = device_name, {[comma, device_name]}, definition, gate_type, semicolon;
+
+    dtype_definition = device_name, {[comma, device_name]}, definition, ("DTYPE" | "DTYPES"), semicolon;
+
+    switch_definition = switch_name, {[comma, switch_name]}, definition, ("SWITCHES" | "SWITCH"), semicolon;
+
+    clock_definition = clock_name, {[comma, clock_name]}, definition, ("CLOCK" | "CLOCKS"), semicolon;
+
+    gate_inputs = device_name, {[comma, device_name]}, possession, {digit}, ("input" | "inputs"), semicolon;
+
+    switch_initialisation = switch_name, {[comma, switch_name]}, definition, switch_level, semicolon;
+    
+    clock_period = clock_name, "cycle length", {digit}, semicolon;
+
+    connection_definition = (device_name | dtype_output_name | switch_name | clock_name), ("is connected to" | "to" | "connects to" | arrow), 
+    {(gate_input_name | dtype_input_name)}, semicolon;
+
+    gate_input_name = device_name, dot, "I", {digit};
+
+    dtype_input_name = device_name, dot, dtype_inputs;
+
+    dtype_output_name = device_name, dot, dtype_outputs;
 
     device_name = letter, {[letter|digit]};
 
@@ -92,16 +120,26 @@ The logic description language will be specified using EBNF notation. The langua
 
     switch_name = "sw", {[digit]};
 
-    port_name = "IN", {[digit]};
+    gate_type = "AND" | "ANDS" | "OR" | "ORS" |"NOR" | "NORS" | "XOR" | 
+               "XORS" | "NAND" | "NANDS";
 
-    devices_type = "AND" | "ANDS" | "OR" | "ORS" |"NOR" | "NORS" | "XOR" | 
-                  "XORS" | "NAND" | "NANDS" |"DTYPE" | "DTYPES";
+    switch_level = "HIGH" | "LOW" | "TRUE" | "FALSE" | "1" | "0";
 
-    arrow = "=>" | "->";
+    dtype_inputs = "DATA" | "CLK" | "SET" | "CLEAR";
+
+    dtype_outputs = "Q" | "QBAR";
+
+    letter = "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" |
+             "j" | "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" |
+             "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z" ;
+
+    digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
 
     definition = "is" | "are";
 
     possession = "has", "have";
+
+    arrow = "=>" | "->";
 
     bracket_open = "(";
 
@@ -112,41 +150,23 @@ The logic description language will be specified using EBNF notation. The langua
     comma = ",";
 
     dot = ".";
-
-    order_factor = "K" | "M" | "G" | "T";
-
-    switch_level = "HIGH" | "LOW" | "TRUE" | "FALSE" | "1" | "0";
-
-    device_definition = {device_name,[comma]}, definition, devices_type, semicolon;
-
-    switch_definition = {switch_name,[comma]}, definition, ("SWITCHES" | "SWITCH"), semicolon;
-
-    clock_definition = {clock_name,[comma]}, definition, ("CLOCK" |"CLOCKS"), semicolon;
-
-    switch_initialisation = {switch_name,[comma]}, definition, switch_level, semicolon;
-
-    inputs = {device_name,[comma] | switch_name,[comma]}, possession, {digit}, "inputs", semicolon;
-
-    clock_frequency = clock_name, "frequency", {digit}, order_factor, semicolon;
-
-    connection_definition = (device_name | switch_name), ["BAR"], ("is connected to" | "to" | "connects to" | arrow), 
-    {(device_name | switch_name), dot, port_name}, semicolon;
-
-    device_block = "device", bracket_open, {device_definition | switch_definition | clock_definition}, bracket_close, semicolon;
-
-    initialise_block = "initialise", bracket_open, {switch_initialisation | clock_initialisation}, bracket_close, semicolon;
-
-    connections_block = "connections", bracket_open, {(device_name | switch_name), bracket_open, 
-    {connection_definition}, bracket_close}, bracket_close, semicolon;
-
-    monitors_block = "monitors", bracket_open, {device_name | switch_name}, bracket_close, semicolon;
-
-    entirety = device_block, initialise_block, connections_block, monitors_block;
 \end{Verbatim}
 
 \vspace{0.1in}
 
-\noindent The word "BAR" following a \verb+device_name+ or \verb+switch_name+ denotes the inverse of the output. We do not include comment syntax in EBNF as the scanner removes comments from input file. The syntax for comments will be "\verb+# ;+", where "\#" denotes the start of the comment section, and ";" denotes the end of the comment section. There will be no line comments as line breaks and spaces hold no significance.
+\noindent %The word "BAR" following a \verb+device_name+ or \verb+switch_name+ denotes the inverse of the output.
+We do not include comment syntax in EBNF as the scanner removes comments from input file. The syntax for comments will be "\verb+# ;+", where "\#" denotes the start of the comment section, and ";" denotes the end of the comment section. There will be no line comments as line breaks and spaces hold no significance.
+
+
+NOTES:
+\begin{enumerate}
+    \item AND etc can have up to 16 inputs, XOR only 2 inputs
+    \item Optional Monitor block (user can define it later)
+    \item Talk about short vs long form "Is connected to", example B is short A is long
+    \item clock cycle length is number of simulation cycles for clock to change
+    \item "BAR" now only and always applies to dtype (change above paragraph), mention QBAR is opposite of Q
+    
+\end{enumerate}
 
 \subsection{Example A --- Simple Circuit}
 %-------SIMPLE CIRCUIT WRITE HERE-------
@@ -167,7 +187,6 @@ The logic description language will be specified using EBNF notation. The langua
         c is AND;
         a, b, c have 2 inputs;
         sw1, sw2 are SWITCHES;
-        clk1 is CLOCK;
     );
     
     initialise(
@@ -176,18 +195,18 @@ The logic description language will be specified using EBNF notation. The langua
     
     connections(
         a(
-            sw1 is connected to a.IN1;
-            sw2 is connected to a.IN2;
+            sw1 is connected to a.I1;
+            sw2 is connected to a.I2;
         );
     
         b(  
-            sw1 is connected to b.IN1;
-            sw2 is connected to b.IN2;
+            sw1 is connected to b.I1;
+            sw2 is connected to b.I2;
         );
     
         c(  
-            a is connected to c.IN1;
-            b is connected to c.IN2;
+            a is connected to c.I1;
+            b is connected to c.I2;
         );
     );
     
@@ -215,63 +234,64 @@ The logic description language will be specified using EBNF notation. The langua
         g is XOR;
         a, b, c, d, e, g have 2 inputs;
         sw1, sw2 are SWITCHES;
+        clk1 is CLOCK;
     );
     
     initialise(
         sw1, sw2 are LOW;
-        clk1 frequency 1K;
+        clk1 cycle length 1000;
     );
     
     connections(
         a(
-            e is connected to a.IN1;
-            e is connected to a.IN2;
+            e to a.I1;
+            e to a.I2;
         );
     
         b(  
-            e is connected to b.IN1;
-            clk1 is connected to b.IN2;
+            e to b.I1;
+            clk1 to b.I2;
         );
     
         c(  
-            clk1 is connected to c.IN1;
-            a is connected to c.IN2;
+            clk1 to c.I1;
+            a to c.I2;
         );
     
         d(
-            b is connected to d.IN1;
-            e is connected to d.IN2;
+            b to d.I1;
+            e to d.I2;
         );
     
         e(  
-            d is connected to e.IN1;
-            c is connected to e.IN2;
+            d to e.I1;
+            c to e.I2;
         );
     
         f(  
-            fBAR is connected to f.DATA;
-            d is connected to f.CLK;
-            sw1 is connected to f.SET;
-            sw2 is connected to f.RESET;
+            f.QBAR to f.DATA;
+            d to f.CLK;
+            sw1 to f.SET;
+            sw2 to f.CLEAR;
         );
     
         g(  
-            d is connected to g.IN1;
-            f is connected to g.IN2;
+            d to g.I1;
+            f.Q to g.I2;
         );
     );
     
     monitors(
-        d, f, g;
+        d, f.Q, g;
     );
 \end{Verbatim}
 
 \section{Errors}
-\subsection{Semantic Error Identification}
-%-------ERROR IDENTIFICATION WRITE HERE-------
-
 \subsection{Error Handling}
 %-------ERROR HANDLING WRITE HERE-------
+
+\subsection{Semantic Error Identification}
+%-------ERROR IDENTIFICATION WRITE HERE-------
 
 \newpage
 \section{Appendix}
