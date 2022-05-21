@@ -5,6 +5,3 @@ def my_function(Wasim):
 
 my_function(96)
 print(my_function(96))
-
-
-
