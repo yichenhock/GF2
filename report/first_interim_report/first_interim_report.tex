@@ -43,7 +43,7 @@ breaklines=true
 {\bf LOGIC SIMULATOR \\\hfill
 \\{\em First Interim Report}\\\hfill
 \\Name: Yi Chen Hock, Michael Stevens, Cindy Wu
-\\College: Queens', Robinson, John's\\\hfill
+\\College: Queens', Robinson, St. John's\\\hfill
 \\
 }
 \end{center}
@@ -118,7 +118,7 @@ In the choosing of the tradeoff between flexibility and complexity, we have give
     
     clock_period = clock_name, ("cycle length" | "cycle"), {digit}, semicolon;
 
-    connection_definition = (device_name | dtype_output_name | switch_name | clock_name), ("is connected to" | "to" | "connects to" | arrow), 
+    connection_definition = (device_name | dtype_output_name | switch_name | clock_name), ("is connected to" | "to" | arrow), 
     {(gate_input_name | dtype_input_name)}, semicolon;
 
     gate_input_name = device_name, dot, "I", {digit};
@@ -169,17 +169,6 @@ In the choosing of the tradeoff between flexibility and complexity, we have give
 
 \noindent %The word "BAR" following a \verb+device_name+ or \verb+switch_name+ denotes the inverse of the output.
 We do not include comment syntax in EBNF as the scanner removes comments from input file. The syntax for comments will be "\verb+# ;+", where "\#" denotes the start of the comment section, and ";" denotes the end of the comment section. There will be no line comments as line breaks and spaces hold no significance.
-
-
-NOTES:
-\begin{enumerate}
-    \item AND etc can have up to 16 inputs, XOR only 2 inputs
-    \item Optional Monitor block (user can define it later)
-    \item Talk about short vs long form "Is connected to", example B is short A is long
-    \item clock cycle length is number of simulation cycles for clock to change
-    \item "BAR" now only and always applies to dtype (change above paragraph), mention QBAR is opposite of Q
-    
-\end{enumerate}
 
 \subsection{Example A --- Simple Circuit}
 %-------SIMPLE CIRCUIT WRITE HERE-------
@@ -330,13 +319,14 @@ AND, NAND, and NOR must have 1 output, 1-16 inputs & &\\
 \hline
 XOR must have 1 output, 2 inputs & 32 $\pm$ 1 & -\\
 \hline
-Leading edge angle $\Xi_1$ & - \\
+Device names must not overlap with reserved phrases in syntax & to is NOR & "Illegal device name specified. Please observe the list of words to be avoided."\\
 \hline
 Trailing edge angle $\Xi_2$ & - \\
 \hline
-
 \end{tabular}
 \end{table*}
+
+Avoided words list: "to", "connected", "is", "are", "have", "has", "inputs", "input", "connections", "initialise", "device", "monitors", "cycle", "length", "
 
 \newpage
 \section{Appendix}
