@@ -83,11 +83,17 @@ The logic description language will be specified using EBNF notation. The langua
 \begin{enumerate}
     \item \verb+device+: Defines the device and device type by user-defined names and along with the number of input ports for each device and defines any switches or clocks. 
     \item \verb+initialise+: Sets the state of the switches (which will be the inputs to the logic circuit) and the frequency of the clock. Error handling will be implemented to ensure that 
-    \item \verb+connections+: Defines the connections between switches, devices and input ports. 
+    \item \verb+connections+: Defines the connections between switches, devices and input ports. This is subdivided into sections which contain all inputs to a given device.
     \item \verb+monitors+: Defines the output signals which  will be monitored. 
 \end{enumerate}
 
-\noindent The following is a formal description using EBNF of the logic description language we will be using in this project: 
+\noindent The following is a formal description using EBNF of the logic description language we will be using in this project. Note the top-down structure starts from the overall file format and finishes at the definition of allowed letters, symbols and numbers. 
+
+The gate and dtype input and output names are defined by the specification set by the customer. The clock is defined by a cycle length, which is the number of simulation cycles for which the output state remains constant. The number of inputs and outputs for different gate types are not defined in the EBNF, instead being classed as semantic errors. The switch output is set by switch\_level. 
+
+Since devices can be named with any combination of letters and numbers, subject to the condition that the start must be a letter, we have chosen lowercase letters only for 'letter', reserving capital letters for fixed keywords and gate types. This avoids common naming clashes.
+
+In the choosing of the tradeoff between flexibility and complexity, we have given three options for defining connections (arrow, 'is connected to' and 'to') which can be ideally chosen for depending on the client's preference, but kept consistent in usage throughout any one file. The same applies for switch levels (1/0 or 'high/low').
 
 \begin{lstlisting}
     circuit_description = device_block, initialise_block, connections_block, [monitors_block];
@@ -132,7 +138,7 @@ The logic description language will be specified using EBNF notation. The langua
     gate_type = "AND" | "ANDS" | "OR" | "ORS" |"NOR" | "NORS" | "XOR" | 
                 "XORS" | "NAND" | "NANDS";
 
-    switch_level = "HIGH" | "LOW" | "TRUE" | "FALSE" | "1" | "0";
+    switch_level = "HIGH" | "LOW" | "1" | "0";
 
     dtype_inputs = "DATA" | "CLK" | "SET" | "CLEAR";
 
@@ -148,7 +154,7 @@ The logic description language will be specified using EBNF notation. The langua
 
     possession = "has", "have";
 
-    arrow = "=>" | "->";
+    arrow = "->";
 
     bracket_open = "(";
 
@@ -298,10 +304,37 @@ We do not include comment syntax in EBNF as the scanner removes comments from in
 
 \section{Errors}
 \subsection{Error Handling}
-%-------ERROR HANDLING WRITE HERE-------
+All errors will be reported with error, function and line. A cursor on a printed current input line shows exactly at which point failure occurs, using a function in the scanner class. A counter of number of errors will be included in an error function. Each line in the specification should be ended by a semicolon, so the parser skips to past the next semicolon and resumes reading from there.
+
+Syntax errors involve errors which do not conform to the format specified by the EBNF grammar.
 
 \subsection{Semantic Error Identification}
-%-------ERROR IDENTIFICATION WRITE HERE-------
+
+The below table summarises types of semantic error, detection and reporting.
+
+\begin{table*}[ht]
+\centering
+\caption{Table of semantic errors.\label{table:rotor}}
+\vspace{\baselineskip}
+
+\begin{tabular}{p{0.4\linewidth}p{0.3\linewidth}p{0.2\linewidth}}
+\hline
+Semantic constraint & Example of error & Reporting error message\\ [0.1ex]
+\hline\hline
+
+Clock and switch must have 1 output, 0 inputs &  $\pm$ \\ 
+\hline
+AND, NAND, and NOR must have 1 output, 1-16 inputs & &\\
+\hline
+XOR must have 1 output, 2 inputs & 32 $\pm$ 1 & -\\
+\hline
+Leading edge angle $\Xi_1$ & - \\
+\hline
+Trailing edge angle $\Xi_2$ & - \\
+\hline
+
+\end{tabular}
+\end{table*}
 
 \begin{landscape}
 \section{Appendix}
