@@ -107,12 +107,3 @@ class Names:
             return self.names[name_id]
         else:
             return None
-
-# name = Names()
-# name.names.append("Hello")
-# name.names.append("hi")
-# print(name.names)
-# print(name.query("hi"))
-# print(name.get_name_string(1))
-# print(name.lookup(["hi", "Whatsup", "hi", "Hello"]))
-# print(name.names)
