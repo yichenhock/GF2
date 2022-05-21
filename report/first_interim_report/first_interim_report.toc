@@ -2,7 +2,7 @@
 \contentsline {section}{\numberline {1}Introduction}{2}{}%
 \contentsline {section}{\numberline {2}General Approach}{2}{}%
 \contentsline {subsection}{\numberline {2.1}Teamwork Planning}{2}{}%
-\contentsline {section}{\numberline {3}EBNF for Syntax}{3}{}%
+\contentsline {section}{\numberline {3}EBNF for Syntax}{2}{}%
 \contentsline {subsection}{\numberline {3.1}Example A --- Simple Circuit}{5}{}%
 \contentsline {subsection}{\numberline {3.2}Example B --- Complex Circuit}{6}{}%
 \contentsline {section}{\numberline {4}Errors}{7}{}%
