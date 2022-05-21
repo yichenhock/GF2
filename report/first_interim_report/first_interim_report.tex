@@ -15,8 +15,6 @@
 \usepackage{pdfpages}
 \usepackage{fancyvrb}
 
-\usepackage{pdflscape}
-
 \usepackage{listings,multicol}
 \lstset{
 basicstyle=\small\ttfamily,
@@ -74,8 +72,7 @@ Finally, the last section is involved with implementing any modifications to the
 
 \subsection{Teamwork Planning}
 %-------TEAMWORK PLANNING WRITE HERE-------
-The Gantt chart in the Appendix (Figure \ref{fig:Gantt Chart}) shows how the tasks for this project have been split up and allocated to each team member. Note that the allocated person(s) for each task will not necessarily be the only person working on that task since the workload for each task may not be predictable at this stage of the project. In particular, the development of unit tests for each module will likely be developed by a different team member than the module's author, however, a single member will be responsible for the overall completion of these unit tests. The Gantt chart also highlights the deadlines given by the client. It's also to be noted that the aim is to complete the first iteration of the code within the first two weeks of the project, to allow sufficient time for integration and testing of the system. Throughout this project, git is used for collaborative coding and version control. The repository can be found at https://github.com/yichenhock/GF2.
-
+The Gantt chart in the Appendix (Figure \ref{fig:Gantt Chart}) shows how the tasks for this project have been split up and allocated to each team member. Note that the allocated person(s) for each task will not necessarily be the only person working on that task since the workload for each task may not be predictable at this stage of the project. The Gantt chart also highlights the deadlines given by the client. It's also to be noted that the aim is to complete the first iteration of the code within the first two weeks of the project, to allow sufficient time for integration and testing of the system. Throughout this project, git is used for collaborative coding and version control. The repository can be found at https://github.com/yichenhock/GF2.
 
 \section{EBNF for Syntax}
 %-------EBNF WRITE HERE-------
@@ -121,7 +118,8 @@ In the choosing of the tradeoff between flexibility and complexity, we have give
     
     clock_period = clock_name, ("cycle length" | "cycle"), {digit}, semicolon;
 
-    connection_definition = (device_name | dtype_output_name | switch_name | clock_name), ("is connected to" | "to" | "connects to" | arrow), {(gate_input_name | dtype_input_name)}, semicolon;
+    connection_definition = (device_name | dtype_output_name | switch_name | clock_name), ("is connected to" | "to" | "connects to" | arrow), 
+    {(gate_input_name | dtype_input_name)}, semicolon;
 
     gate_input_name = device_name, dot, "I", {digit};
 
@@ -136,7 +134,7 @@ In the choosing of the tradeoff between flexibility and complexity, we have give
     switch_name = "sw", {[digit]};
 
     gate_type = "AND" | "ANDS" | "OR" | "ORS" |"NOR" | "NORS" | "XOR" | 
-                "XORS" | "NAND" | "NANDS";
+               "XORS" | "NAND" | "NANDS";
 
     switch_level = "HIGH" | "LOW" | "1" | "0";
 
@@ -145,8 +143,8 @@ In the choosing of the tradeoff between flexibility and complexity, we have give
     dtype_outputs = "Q" | "QBAR";
 
     letter = "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" |
-              "j" | "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" |
-              "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z" ;
+             "j" | "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" |
+             "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z" ;
 
     digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
 
@@ -169,15 +167,19 @@ In the choosing of the tradeoff between flexibility and complexity, we have give
 
 \vspace{0.1in}
 
-\noindent 
-We do not include comment syntax in EBNF as the scanner removes comments from input file. The syntax for comments will be "\verb+# ;+", where "\#" denotes the start of the comment section, and ";" denotes the end of the comment section. There will be no line comments as line breaks and spaces hold no significance. Additional notes on the ENBF syntax include: 
-\begin{itemize}
-    \item AND, OR, NAND and NOR gates can have from 1 to 16 inputs but XOR gates can only have 2 inputs. 
-    \item The monitor block is optional. The user may define it later or they may choose to not monitor any outputs. 
-    \item When defining the circuit, there are a couple of phrase options which may be used. For example, when specifying connections, both "is connected to" and "to" can be used, as shown in Example A and B respectively".  
-    \item The clock cycle length $n$ is number of simulation cycles for clock to change. 
-    \item The DTYPE bistable has two outputs, Q and QBAR, where QBAR is the inverse of Q. 
-\end{itemize}
+\noindent %The word "BAR" following a \verb+device_name+ or \verb+switch_name+ denotes the inverse of the output.
+We do not include comment syntax in EBNF as the scanner removes comments from input file. The syntax for comments will be "\verb+# ;+", where "\#" denotes the start of the comment section, and ";" denotes the end of the comment section. There will be no line comments as line breaks and spaces hold no significance.
+
+
+NOTES:
+\begin{enumerate}
+    \item AND etc can have up to 16 inputs, XOR only 2 inputs
+    \item Optional Monitor block (user can define it later)
+    \item Talk about short vs long form "Is connected to", example B is short A is long
+    \item clock cycle length is number of simulation cycles for clock to change
+    \item "BAR" now only and always applies to dtype (change above paragraph), mention QBAR is opposite of Q
+    
+\end{enumerate}
 
 \subsection{Example A --- Simple Circuit}
 %-------SIMPLE CIRCUIT WRITE HERE-------
@@ -336,20 +338,47 @@ Trailing edge angle $\Xi_2$ & - \\
 \end{tabular}
 \end{table*}
 
-\begin{landscape}
+\newpage
 \section{Appendix}
 %-------APPENDIX WRITE HERE-------
-% \vspace{-1cm}
+\vspace{-1cm}
 \begin{figure}[H]
-\begin{center}
-\includegraphics[width = \paperwidth]{Gantt Chart.pdf}
-%\includegraphics[width = \paperwidth]{gantt.png}
-\vspace{-3cm}
+\includegraphics[width = \paperwidth, angle = -90]{Gantt Chart.pdf}
+\vspace{-0.8cm}
 \caption{Gantt Chart}
 \label{fig:Gantt Chart}
-
-\end{center}
 \end{figure}
-\end{landscape}
+
+%These are for me to reference (Never used latex before)
+
+% \begin{figure}[H]
+% \begin{centering}
+% \includegraphics[width=0.3\paperwidth]{imgs/large14.jpg}\hspace{1cm}\includegraphics[width=0.3\paperwidth]{imgs/large17.jpg}
+% \par\end{centering}
+% \caption{Spectra for 14mA
+% (left) and 17mA (right) using large wavelength span (500nm, 100nm)\label{fig:large} }
+% \end{figure}
+
+
+% \begin{table}[H]
+% \begin{center}
+% \begin{tabular}{@{}l|ll@{}}
+% \textbf{}               & \textbf{Below threshold (14mA)} & \textbf{Above threshold (17mA)} \\ \midrule
+% \textbf{$\lambda_0$ ($\mu$m)}      & 1.558                           & 1.557                          \\
+% \textbf{$P_0$ (dBm)}        & -73.6                           & -30.0                             \\
+% \textbf{3dB width (nm)} & 24                              & 0.06                           
+% \end{tabular}
+% \par\end{center}
+% \caption{Data on spectral characteristics above and below threshold current}
+% \end{table}
+
+
+% \begin{equation*}
+% \frac{m}{2}\lambda_g=L
+% \qquad
+% \lambda_g=\frac{\lambda}{n}
+% \qquad
+% c=f\lambda
+% \end{equation*}
 
 \end{document}
