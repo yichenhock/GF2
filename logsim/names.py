@@ -43,11 +43,13 @@ class Names:
 
     def __init__(self):
         """Initialise names list."""
+
         self.names = []
         self.error_code_count = 0  # how many error codes have been declared
 
     def unique_error_codes(self, num_error_codes):
         """Return a list of unique integer error codes."""
+
         if not isinstance(num_error_codes, int):
             raise TypeError("Expected num_error_codes to be an integer.")
         self.error_code_count += num_error_codes
@@ -56,8 +58,8 @@ class Names:
 
     def query(self, name_string):
         """Return the corresponding name ID for name_string.
-        If the name string is not present in the names list, return None.
-        """
+        If the name string is not present in the names list, return None."""
+
         if not isinstance(name_string, str):
             raise TypeError("Expected name_string to be a string.")
         
@@ -69,8 +71,8 @@ class Names:
 
     def lookup(self, name_string_list):
         """Return a list of name IDs for each name string in name_string_list.
-        If the name string is not present in the names list, add it.
-        """
+        If the name string is not present in the names list, add it."""
+
         if not isinstance(name_string_list, list):
             raise TypeError("Expected name_string_list to be a list.")
 
@@ -96,8 +98,8 @@ class Names:
 
     def get_name_string(self, name_id):
         """Return the corresponding name string for name_id.
-        If the name_id is not an index in the names list, return None.
-        """
+        If the name_id is not an index in the names list, return None."""
+        
         if not isinstance(name_id, int):
             raise TypeError("Expected name_id to be an integer.")
         if name_id < 0:

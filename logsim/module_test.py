@@ -14,8 +14,6 @@ from scanner import Symbol, Scanner
 # print(name.names)
 
 """scanner.py tests"""
-#For Michael
-location = "D:/Files/University/Year 3/Projects/GF2 Software/logsim/GF2/logsim/"
 
 name = Names()
 name.lookup(["Hello", "hi"])
@@ -31,7 +29,7 @@ else:
 
     path = arguments[0]
     print("\nNow opening file...")
-    scanner = Scanner(location+path, name)
+    scanner = Scanner(path, name)
 
 print(scanner.file.read())
 
