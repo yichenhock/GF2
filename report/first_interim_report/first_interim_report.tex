@@ -81,24 +81,24 @@ The Gantt chart in the Appendix (Figure \ref{fig:Gantt Chart}) shows how the tas
 %-------EBNF WRITE HERE-------
 The logic description language will be specified using EBNF notation. The language was designed with ease of readability in mind, so English keywords and puncuation have been used such that the meaning is clear to a human reader as well as a machine. There are four main sections to the description file: 
 \begin{enumerate}
-    \item \verb+device+: Defines the device and device type by user-defined names and along with the number of input ports for each device and defines any switches or clocks. 
+    \item \verb+devices+: Defines the device and device type by user-defined names and along with the number of input ports for each device and defines any switches or clocks. 
     \item \verb+initialise+: Sets the state of the switches (which will be the inputs to the logic circuit) and the frequency of the clock. Error handling will be implemented to ensure that 
-    \item \verb+connections+: Defines the connections between switches, devices and input ports. This is subdivided into sections which contain all inputs to a given device.
+    \item \verb+connections+: Defines the connections between output and input ports of the devices. This is subdivided into sections which contain all inputs to a given device.
     \item \verb+monitors+: Defines the output signals which  will be monitored. 
 \end{enumerate}
 
 \noindent The following is a formal description using EBNF of the logic description language we will be using in this project. Note the top-down structure starts from the overall file format and finishes at the definition of allowed letters, symbols and numbers. 
 
-The gate and dtype input and output names are defined by the specification set by the customer. The clock is defined by a cycle length, which is the number of simulation cycles for which the output state remains constant. The number of inputs and outputs for different gate types are not defined in the EBNF, instead being classed as semantic errors. The switch output is set by switch\_level. 
+The gate and D-type device names are defined by the user, whilst their input and output ports are defined as per the logic description language. The clock is defined by a cycle length, which is the number of simulation cycles for which the output state remains constant. The number of inputs and outputs for different gate types are not defined in the EBNF, instead being classed as semantic errors. The switch output is set by switch\_level. 
 
 Since devices can be named with any combination of letters and numbers, subject to the condition that the start must be a letter, we have chosen lowercase letters only for 'letter', reserving capital letters for fixed keywords and gate types. This avoids common naming clashes.
 
-In the choosing of the tradeoff between flexibility and complexity, we have given three options for defining connections (arrow, 'is connected to' and 'to') which can be ideally chosen for depending on the client's preference, but kept consistent in usage throughout any one file. The same applies for switch levels (1/0 or 'high/low').
+In the choosing of the tradeoff between flexibility and complexity, we have given three options for defining connections (arrow, 'is connected to' and 'to') which can be ideally chosen for depending on the client's preference, but kept consistent in usage throughout any one file. The same applies for switch levels (1/0 or 'high/low') as well as when defining the clock cycle length ('cycle length' or 'cycle').
 
 \begin{lstlisting}
     circuit_description = device_block, initialise_block, connections_block, [monitors_block];
 
-    device_block = "device", bracket_open, {gate_definition | dtype_definition | switch_definition | clock_definition}, bracket_close, semicolon;
+    device_block = "devices", bracket_open, {gate_definition | dtype_definition | switch_definition | clock_definition}, bracket_close, semicolon;
 
     initialise_block = "initialise", bracket_open, {switch_initialisation | clock_initialisation}, bracket_close, semicolon;
 
@@ -121,7 +121,7 @@ In the choosing of the tradeoff between flexibility and complexity, we have give
     
     clock_period = clock_name, ("cycle length" | "cycle"), {digit}, semicolon;
 
-    connection_definition = (device_name | dtype_output_name | switch_name | clock_name), ("is connected to" | "to" | "connects to" | arrow), {(gate_input_name | dtype_input_name)}, semicolon;
+    connection_definition = (device_name | dtype_output_name | switch_name | clock_name), ("is connected to" | "to" | arrow), {(gate_input_name | dtype_input_name)}, semicolon;
 
     gate_input_name = device_name, dot, "I", {digit};
 

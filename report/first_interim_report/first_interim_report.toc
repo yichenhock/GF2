@@ -4,8 +4,8 @@
 \contentsline {subsection}{\numberline {2.1}Teamwork Planning}{2}{}%
 \contentsline {section}{\numberline {3}EBNF for Syntax}{3}{}%
 \contentsline {subsection}{\numberline {3.1}Example A --- Simple Circuit}{5}{}%
-\contentsline {subsection}{\numberline {3.2}Example B --- Complex Circuit}{5}{}%
-\contentsline {section}{\numberline {4}Errors}{6}{}%
-\contentsline {subsection}{\numberline {4.1}Error Handling}{6}{}%
-\contentsline {subsection}{\numberline {4.2}Semantic Error Identification}{6}{}%
-\contentsline {section}{\numberline {5}Appendix}{7}{}%
+\contentsline {subsection}{\numberline {3.2}Example B --- Complex Circuit}{6}{}%
+\contentsline {section}{\numberline {4}Errors}{7}{}%
+\contentsline {subsection}{\numberline {4.1}Error Handling}{7}{}%
+\contentsline {subsection}{\numberline {4.2}Semantic Error Identification}{7}{}%
+\contentsline {section}{\numberline {5}Appendix}{8}{}%
