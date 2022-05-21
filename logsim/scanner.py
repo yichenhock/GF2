@@ -8,7 +8,7 @@ Classes
 Scanner - reads definition file and translates characters into symbols.
 Symbol - encapsulates a symbol and stores its properties.
 """
-
+import sys
 
 class Symbol:
 
@@ -51,6 +51,20 @@ class Scanner:
 
     def __init__(self, path, names):
         """Open specified file and initialise reserved words and IDs."""
+        self.names = names
+        self.symbol_type_list = [self.COMMA, self.DOT, self.SEMICOLON, self.EQUALS, self.BRACKETOPEN, self.BRACKETCLOSE, self.KEYWORD, self.NUMBER, self.NAME, self.EOF] = range(10)
+        self.keywords_list = ["devices", "initialise", "connections", "monitors"]
+        [self.devices_id, self.initialise_id, self.connections_id, self.monitors_id] = self.names.lookup(self.keywords_list)
+        self.current_character = ""
+
+        try: 
+            file = open(path)
+        except OSError: 
+            print("This file could not be opened, perhaps it doesn't exist")
+            sys.exit()
+        self.file = file
 
     def get_symbol(self):
         """Translate the next sequence of characters into a symbol."""
+
+
