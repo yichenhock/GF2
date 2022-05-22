@@ -294,9 +294,9 @@ We do not include comment syntax in EBNF as the scanner removes comments from in
 
 \section{Errors}
 \subsection{Error Handling}
-All errors will be reported with error, function and line. A cursor on a printed current input line shows exactly at which point failure occurs, using a function in the scanner class. A counter of number of errors will be included in an error function. Each line in the specification should be ended by a semicolon, so the parser skips to past the next semicolon and resumes reading from there.
+All errors will be reported with error, function and line. A cursor on a printed current input line shows exactly at which point failure occurs, using a function in the scanner class. A counter of number of errors will be included in an error function. Each line in the specification should be ended by a semicolon, so the parser skips to past the next semicolon and resumes reading from there. Error messages specific to the error type (listed by error code) will be printed, and use of the names module allows the variable associated with the error to be included in the error message.
 
-Syntax errors involve errors which do not conform to the format specified by the EBNF grammar.
+Syntax errors involve errors which do not conform to the format specified by the EBNF grammar. This is caught by the scanner. 
 
 \subsection{Semantic Error Identification}
 
@@ -304,28 +304,42 @@ The below table summarises types of semantic error, detection and reporting.
 
 \begin{table*}[ht]
 \centering
-\caption{Table of semantic errors.\label{table:rotor}}
+\caption{Semantic errors, .\label{table:rotor}}
 \vspace{\baselineskip}
 
-\begin{tabular}{p{0.4\linewidth}p{0.3\linewidth}p{0.2\linewidth}}
+\begin{tabular}{p{0.3\linewidth}p{0.2\linewidth}p{0.4\linewidth}}
 \hline
 Semantic constraint & Example of error & Reporting error message\\ [0.1ex]
 \hline\hline
 
-Clock and switch must have 1 output, 0 inputs &  $\pm$ \\ 
+Clock must have 1 output, 0 inputs & devices: clk1 has 1 input & Incorrect number of inputs specified for clock clk1. 1 specified, but allowed number is 0.\\ 
 \hline
-AND, NAND, and NOR must have 1 output, 1-16 inputs & &\\
+Switch must have 1 output, 0 inputs & connections: sw1 to a.I1, sw1 to b.I1 & Incorrect number of outputs specified for switch sw1. 2 specified, but allowed number is 1.\\ 
 \hline
-XOR must have 1 output, 2 inputs & 32 $\pm$ 1 & -\\
+AND, NAND, and NOR must have 1 output, 1-16 inputs & devices: a is NOR, a has 17 inputs & Incorrect number of inputs specified for NOR gate a. 17 specified, but allowed range is 1-16.\\
 \hline
-Device names must not overlap with reserved phrases in syntax & to is NOR & "Illegal device name specified. Please observe the list of words to be avoided."\\
+XOR must have 1 output, 2 inputs & devices: a is XOR, a has 1 input & Incorrect number of inputs specified for XOR gate a. 1 specified, but allowed number is 2.\\
 \hline
-Trailing edge angle $\Xi_2$ & - \\
+DTYPE gates must have 4 inputs, one each of CLK, DATA, SET and CLEAR & devices: d is DTYPE; connections: a to d.CLK, d.QBAR to d.DATA, sw1 to d.SET & Incomplete set of inputs to DTYPE. Missing CLEAR.\\
+\hline
+Device names must not overlap with reserved phrases in syntax & devices: to is NOR & Illegal device name specified. Please observe the list of words to be avoided.\\
+\hline
+The number of connection inputs defined cannot be different to the number of inputs specified & devices: a has 1 input; connections: sw1 is connected to a.I1, sw2 is connected to a.I2 & Different number of inputs defined in connection section to number of inputs listed in devices section.\\
+\hline 
+The same device name cannot be used for two different devices & devices: a is XOR, a is AND & Device names must be unique.\\
+\hline 
+Each input channel can admit only a connection to one output & inputs: a to b.IN1, c to b.IN1 & Input channel b.IN1 can only connect to one output.\\
+\hline 
+Devices that have not been defined in the devices section cannot be used in other sections & initialise: sw1 is HIGH & Please define the device sw1 before initialisation.\\
+\hline
+Switch initial value is not defined in initialisation & devices: sw1, sw1 are SWITCHES & Please define switches sw1, sw2 initial values.\\
+\hline
+Devices that have been defined in the devices section are not connected to or used later & devices: clk1 is CLOCK & clk1 defined but not used.\\
 \hline
 \end{tabular}
 \end{table*}
 
-Avoided words list: "to", "connected", "is", "are", "have", "has", "inputs", "input", "connections", "initialise", "device", "monitors", "cycle", "length", "
+Avoided words list: "to", "connected", "is", "are", "have", "has", "inputs", "input", "connections", "initialise", "device", "monitors", "cycle", "length".
 
 \newpage
 \section{Appendix}

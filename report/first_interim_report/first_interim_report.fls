@@ -511,8 +511,6 @@ INPUT .\Gantt Chart.pdf
 INPUT .\Gantt Chart.pdf
 INPUT .\Gantt Chart.pdf
 INPUT first_interim_report.aux
-INPUT C:\Users\micha\AppData\Local\Programs\MiKTeX\fonts\enc\dvips\lm\lm-rm.enc
-INPUT C:\Users\micha\AppData\Local\Programs\MiKTeX\fonts\enc\dvips\lm\lm-mathsy.enc
 INPUT C:\Users\micha\AppData\Local\Programs\MiKTeX\fonts\enc\dvips\lm\lm-ec.enc
 INPUT C:\Users\micha\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmbx10.pfb
 INPUT C:\Users\micha\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmbx10.pfb
@@ -524,10 +522,6 @@ INPUT C:\Users\micha\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmr10.p
 INPUT C:\Users\micha\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmr10.pfb
 INPUT C:\Users\micha\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmr5.pfb
 INPUT C:\Users\micha\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmr5.pfb
-INPUT C:\Users\micha\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmr7.pfb
-INPUT C:\Users\micha\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmr7.pfb
-INPUT C:\Users\micha\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmsy10.pfb
-INPUT C:\Users\micha\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmsy10.pfb
 INPUT C:\Users\micha\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmtt10.pfb
 INPUT C:\Users\micha\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmtt10.pfb
 INPUT C:\Users\micha\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmtt9.pfb
