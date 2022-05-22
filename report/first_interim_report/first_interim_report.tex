@@ -296,7 +296,7 @@ We do not include comment syntax in EBNF as the scanner removes comments from in
 \subsection{Error Handling}
 All errors will be reported with error, function and line. A cursor on a printed current input line shows exactly at which point failure occurs, using a function in the scanner class. A counter of number of errors will be included in an error function. Each line in the specification should be ended by a semicolon, so the parser skips to past the next semicolon and resumes reading from there. Error messages specific to the error type (listed by error code) will be printed, and use of the names module allows the variable associated with the error to be included in the error message.
 
-Syntax errors involve errors which do not conform to the format specified by the EBNF grammar. This is caught by the scanner. 
+Syntax errors involve errors which do not conform to the format specified by the EBNF grammar. Below we identify instead semantic errors, which conform to the EBNF grammar but not circuit logic rules.
 
 \subsection{Semantic Error Identification}
 
@@ -312,9 +312,7 @@ The below table summarises types of semantic error, detection and reporting.
 Semantic constraint & Example of error & Reporting error message\\ [0.1ex]
 \hline\hline
 
-Clock must have 1 output, 0 inputs & devices: clk1 has 1 input & Incorrect number of inputs specified for clock clk1. 1 specified, but allowed number is 0.\\ 
-\hline
-Switch must have 1 output, 0 inputs & connections: sw1 to a.I1, sw1 to b.I1 & Incorrect number of outputs specified for switch sw1. 2 specified, but allowed number is 1.\\ 
+Clock/switch must have 1 output, 0 inputs & devices: clk1 has 1 input & Incorrect number of inputs specified for clock clk1. 1 specified, but allowed number is 0.\\ 
 \hline
 AND, NAND, and NOR must have 1 output, 1-16 inputs & devices: a is NOR, a has 17 inputs & Incorrect number of inputs specified for NOR gate a. 17 specified, but allowed range is 1-16.\\
 \hline
@@ -332,14 +330,28 @@ Each input channel can admit only a connection to one output & inputs: a to b.IN
 \hline 
 Devices that have not been defined in the devices section cannot be used in other sections & initialise: sw1 is HIGH & Please define the device sw1 before initialisation.\\
 \hline
-Switch initial value is not defined in initialisation & devices: sw1, sw1 are SWITCHES & Please define switches sw1, sw2 initial values.\\
+Switch initial value or clock cycle length is not defined in initialisation & devices: sw1, sw1 are SWITCHES & Please define switches sw1, sw2 initial values.\\
 \hline
 Devices that have been defined in the devices section are not connected to or used later & devices: clk1 is CLOCK & clk1 defined but not used.\\
+\hline
+Switches initialised in a way that breaks gate logic & devices: a is NOT; connections: sw1 to a, a to sw2; initialise: sw1 is HIGH, sw2 is HIGH & Please check switch initialisation for sw1. Initialisation does not conform to gate logic.\\
 \hline
 \end{tabular}
 \end{table*}
 
 Avoided words list: "to", "connected", "is", "are", "have", "has", "inputs", "input", "connections", "initialise", "device", "monitors", "cycle", "length".
+
+Note that for all devices other than dtype, by definition, the number of outputs is 1. One output can be included in more than one connection, so it is not a semantic error if the same switch is connected as an input to more than one input port.
+
+\subsection{Runtime errors and warnings}
+Circuits may conform to syntax and semantic errors and still generate logic circuits that may break upon simulation. For example:
+
+\begin{enumerate}
+    \item A self-connected 'NOT' gate acts as a clock with an infinitely fast cycle frequency, as no delay is specified for all gates.
+    \item If both SET and CLEAR of dtype are set to 1 at the same time have runtime error
+\end{enumerate}
+
+These errors should be flagged with a runtime error warning pointing to the device that has caused the issue.
 
 \newpage
 \section{Appendix}
