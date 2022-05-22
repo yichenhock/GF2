@@ -316,7 +316,7 @@ Clock must have 1 output, 0 inputs & devices: clk1 has 1 input & Incorrect numbe
 \hline
 Switch must have 1 output, 0 inputs & connections: sw1 to a.I1, sw1 to b.I1 & Incorrect number of outputs specified for switch sw1. 2 specified, but allowed number is 1.\\ 
 \hline
-AND, NAND, and NOR must have 1 output, 1-16 inputs & devices: a is NOR, a has 17 inputs & Incorrect number of outputs specified for NOR gate a. 17 specified, but allowed range is 1-16.\\
+AND, NAND, and NOR must have 1 output, 1-16 inputs & devices: a is NOR, a has 17 inputs & Incorrect number of inputs specified for NOR gate a. 17 specified, but allowed range is 1-16.\\
 \hline
 XOR must have 1 output, 2 inputs & devices: a is XOR, a has 1 input & Incorrect number of inputs specified for XOR gate a. 1 specified, but allowed number is 2.\\
 \hline
@@ -327,6 +327,8 @@ Device names must not overlap with reserved phrases in syntax & devices: to is N
 The number of connection inputs defined cannot be different to the number of inputs specified & devices: a has 1 input; connections: sw1 is connected to a.I1, sw2 is connected to a.I2 & Different number of inputs defined in connection section to number of inputs listed in devices section.\\
 \hline 
 The same device name cannot be used for two different devices & devices: a is XOR, a is AND & Device names must be unique.\\
+\hline 
+Each input channel can admit only a connection to one output & inputs: a to b.IN1, c to b.IN1 & Input channel b.IN1 can only connect to one output.\\
 \hline 
 Devices that have not been defined in the devices section cannot be used in other sections & initialise: sw1 is HIGH & Please define the device sw1 before initialisation.\\
 \hline
