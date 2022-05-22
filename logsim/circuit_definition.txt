@@ -1,10 +1,10 @@
-#Example A - Simple XOR Circuit
+#Example A - Simple XOR Circuit;
     
 devices(
     a is OR;
     b is NAND;
     c is AND;
-    a, b, c have 2 inputs;
+    a, b, c have 21 inputs;
     sw1, sw2 are SWITCHES;
 );
 
@@ -28,7 +28,7 @@ connections(
         b is connected to c.I2;
     );
 );
-
+-
 monitors(
     c;
 );
