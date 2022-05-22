@@ -14,7 +14,7 @@
 \usepackage{multirow}
 \usepackage{pdfpages}
 \usepackage{fancyvrb}
-
+\usepackage{pdflscape}
 \usepackage{listings,multicol}
 \lstset{
 basicstyle=\small\ttfamily,
@@ -49,7 +49,7 @@ breaklines=true
 \end{center}
 \rule{15.7cm}{0.5mm}
 
-\vspace{0.5cm}
+\vspace{2cm}
 \tableofcontents
 
 \newpage
@@ -72,7 +72,7 @@ Finally, the last section is involved with implementing any modifications to the
 
 \subsection{Teamwork Planning}
 %-------TEAMWORK PLANNING WRITE HERE-------
-The Gantt chart in the Appendix (Figure \ref{fig:Gantt Chart}) shows how the tasks for this project have been split up and allocated to each team member. Note that the allocated person(s) for each task will not necessarily be the only person working on that task since the workload for each task may not be predictable at this stage of the project. The Gantt chart also highlights the deadlines given by the client. It's also to be noted that the aim is to complete the first iteration of the code within the first two weeks of the project, to allow sufficient time for integration and testing of the system. Throughout this project, git is used for collaborative coding and version control. The repository can be found at https://github.com/yichenhock/GF2.
+The Gantt chart in the Appendix (Figure \ref{fig:Gantt Chart}) shows how the tasks for this project have been split up and allocated to each team member. Note that the allocated person(s) for each task will not necessarily be the only person working on that task since the workload for each task may not be predictable at this stage of the project. In particular, the development of unit tests for each module will likely be developed by a different team member than the module's author, however, a single member will be responsible for the overall completion of these unit tests. The Gantt chart also highlights the deadlines given by the client. It's also to be noted that the aim is to complete the first iteration of the code within the first two weeks of the project, to allow sufficient time for integration and testing of the system. Throughout this project, git is used for collaborative coding and version control. The repository can be found at https://github.com/yichenhock/GF2.
 
 \section{EBNF for Syntax}
 %-------EBNF WRITE HERE-------
@@ -84,13 +84,7 @@ The logic description language will be specified using EBNF notation. The langua
     \item \verb+monitors+: Defines the output signals which  will be monitored. 
 \end{enumerate}
 
-\noindent The following is a formal description using EBNF of the logic description language we will be using in this project. Note the top-down structure starts from the overall file format and finishes at the definition of allowed letters, symbols and numbers. 
-
-The gate and D-type device names are defined by the user, whilst their input and output ports are defined as per the logic description language. The clock is defined by a cycle length, which is the number of simulation cycles for which the output state remains constant. The number of inputs and outputs for different gate types are not defined in the EBNF, instead being classed as semantic errors. The switch output is set by switch\_level. 
-
-Since devices can be named with any combination of letters and numbers, subject to the condition that the start must be a letter, we have chosen lowercase letters only for 'letter', reserving capital letters for fixed keywords and gate types. This avoids common naming clashes.
-
-In the choosing of the tradeoff between flexibility and complexity, we have given three options for defining connections (arrow, 'is connected to' and 'to') which can be ideally chosen for depending on the client's preference, but kept consistent in usage throughout any one file. The same applies for switch levels (1/0 or 'high/low') as well as when defining the clock cycle length ('cycle length' or 'cycle').
+\noindent The following is a formal description using EBNF of the logic description language we will be using in this project. Note the top-down structure starts from the overall file format and finishes at the definition of allowed letters, symbols and numbers: \\
 
 \begin{lstlisting}
     circuit_description = device_block, initialise_block, connections_block, [monitors_block];
@@ -133,7 +127,7 @@ In the choosing of the tradeoff between flexibility and complexity, we have give
     switch_name = "sw", {[digit]};
 
     gate_type = "AND" | "ANDS" | "OR" | "ORS" |"NOR" | "NORS" | "XOR" | 
-               "XORS" | "NAND" | "NANDS";
+                "XORS" | "NAND" | "NANDS";
 
     switch_level = "HIGH" | "LOW" | "1" | "0";
 
@@ -142,8 +136,8 @@ In the choosing of the tradeoff between flexibility and complexity, we have give
     dtype_outputs = "Q" | "QBAR";
 
     letter = "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" |
-             "j" | "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" |
-             "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z" ;
+              "j" | "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" |
+              "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z" ;
 
     digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
 
@@ -167,7 +161,16 @@ In the choosing of the tradeoff between flexibility and complexity, we have give
 \vspace{0.1in}
 
 \noindent %The word "BAR" following a \verb+device_name+ or \verb+switch_name+ denotes the inverse of the output.
-We do not include comment syntax in EBNF as the scanner removes comments from input file. The syntax for comments will be "\verb+# ;+", where "\#" denotes the start of the comment section, and ";" denotes the end of the comment section. There will be no line comments as line breaks and spaces hold no significance.
+The gate and D-type device names are defined by the user, whilst their input and output ports are defined as per the logic description language. The clock is defined by a cycle length, which is the number of simulation cycles for which the output state remains constant. The number of inputs and outputs for different gate types are not defined in the EBNF, instead being classed as semantic errors. The switch output is set by switch\_level. 
+
+\noindent\\
+Since devices can be named with any combination of letters and numbers, subject to the condition that the start must be a letter, we have chosen lowercase letters only for 'letter', reserving capital letters for fixed keywords and gate types. This avoids common naming clashes.\\
+
+\noindent\\
+In the choosing of the tradeoff between flexibility and complexity, we have given three options for defining connections (arrow, 'is connected to' and 'to') which can be ideally chosen for depending on the client's preference, but kept consistent in usage throughout any one file. The same applies for switch levels (1/0 or 'high/low') as well as when defining the clock cycle length ('cycle length' or 'cycle').
+
+\noindent\\
+We do not include comment syntax in EBNF as the scanner removes comments from input file. The syntax for comments will be "\verb+# ;+", where "\#" denotes the start of the comment section, and ";" denotes the end of the comment section. There will be no line comments as line breaks and spaces hold no significance.\\
 
 \subsection{Example A --- Simple Circuit}
 %-------SIMPLE CIRCUIT WRITE HERE-------
@@ -294,106 +297,87 @@ We do not include comment syntax in EBNF as the scanner removes comments from in
 
 \section{Errors}
 \subsection{Error Handling}
-All errors will be reported with error, function and line. A cursor on a printed current input line shows exactly at which point failure occurs, using a function in the scanner class. A counter of number of errors will be included in an error function. Each line in the specification should be ended by a semicolon, so the parser skips to past the next semicolon and resumes reading from there. Error messages specific to the error type (listed by error code) will be printed, and use of the names module allows the variable associated with the error to be included in the error message.
+All errors encountered when scanning and parsing the circuit definition file as well as during simulation will be reported to the user, indicating the nature of the error. When an error occurs during parsing, a cursor shows exactly at which point in the circuit definition file failure occurs, using a function in the scanner class. A counter of number of errors will be included in an error function to record how many errors have occured. Each line in the specification should be ended by a semicolon, so the parser skips to past the next semicolon and resumes reading from there when an error is encountered. Error messages specific to the error type (listed by error code) will be printed, and use of the names module allows the variable associated with the error to be included in the error message.
 
+\noindent\\
 Syntax errors involve errors which do not conform to the format specified by the EBNF grammar. Below we identify instead semantic errors, which conform to the EBNF grammar but not circuit logic rules.
-
-\subsection{Semantic Error Identification}
-
-The below table summarises types of semantic error, detection and reporting.
-
-\begin{table*}[ht]
-\centering
-\caption{Semantic errors, .\label{table:rotor}}
-\vspace{\baselineskip}
-
-\begin{tabular}{p{0.3\linewidth}p{0.2\linewidth}p{0.4\linewidth}}
-\hline
-Semantic constraint & Example of error & Reporting error message\\ [0.1ex]
-\hline\hline
-
-Clock/switch must have 1 output, 0 inputs & devices: clk1 has 1 input & Incorrect number of inputs specified for clock clk1. 1 specified, but allowed number is 0.\\ 
-\hline
-AND, NAND, and NOR must have 1 output, 1-16 inputs & devices: a is NOR, a has 17 inputs & Incorrect number of inputs specified for NOR gate a. 17 specified, but allowed range is 1-16.\\
-\hline
-XOR must have 1 output, 2 inputs & devices: a is XOR, a has 1 input & Incorrect number of inputs specified for XOR gate a. 1 specified, but allowed number is 2.\\
-\hline
-DTYPE gates must have 4 inputs, one each of CLK, DATA, SET and CLEAR & devices: d is DTYPE; connections: a to d.CLK, d.QBAR to d.DATA, sw1 to d.SET & Incomplete set of inputs to DTYPE. Missing CLEAR.\\
-\hline
-Device names must not overlap with reserved phrases in syntax & devices: to is NOR & Illegal device name specified. Please observe the list of words to be avoided.\\
-\hline
-The number of connection inputs defined cannot be different to the number of inputs specified & devices: a has 1 input; connections: sw1 is connected to a.I1, sw2 is connected to a.I2 & Different number of inputs defined in connection section to number of inputs listed in devices section.\\
-\hline 
-The same device name cannot be used for two different devices & devices: a is XOR, a is AND & Device names must be unique.\\
-\hline 
-Each input channel can admit only a connection to one output & inputs: a to b.IN1, c to b.IN1 & Input channel b.IN1 can only connect to one output.\\
-\hline 
-Devices that have not been defined in the devices section cannot be used in other sections & initialise: sw1 is HIGH & Please define the device sw1 before initialisation.\\
-\hline
-Switch initial value or clock cycle length is not defined in initialisation & devices: sw1, sw1 are SWITCHES & Please define switches sw1, sw2 initial values.\\
-\hline
-Devices that have been defined in the devices section are not connected to or used later & devices: clk1 is CLOCK & clk1 defined but not used.\\
-\hline
-Switches initialised in a way that breaks gate logic & devices: a is NOT; connections: sw1 to a, a to sw2; initialise: sw1 is HIGH, sw2 is HIGH & Please check switch initialisation for sw1. Initialisation does not conform to gate logic.\\
-\hline
-\end{tabular}
-\end{table*}
-
-Avoided words list: "to", "connected", "is", "are", "have", "has", "inputs", "input", "connections", "initialise", "device", "monitors", "cycle", "length".
-
-Note that for all devices other than dtype, by definition, the number of outputs is 1. One output can be included in more than one connection, so it is not a semantic error if the same switch is connected as an input to more than one input port.
 
 \subsection{Runtime errors and warnings}
 Circuits may conform to syntax and semantic errors and still generate logic circuits that may break upon simulation. For example:
 
 \begin{enumerate}
-    \item A self-connected 'NOT' gate acts as a clock with an infinitely fast cycle frequency, as no delay is specified for all gates.
-    \item If both SET and CLEAR of dtype are set to 1 at the same time have runtime error
+    \item A 'NOT' gate (NAND or NOR gate with all input ports connected) with its output fed back to its input acts as a clock with an infinitely fast cycle frequency, as no propagation delay is specified for the simulation of these gates.
+    \item If both SET and CLEAR of D-type are set to 1 at the same time during simulation.
 \end{enumerate}
 
+\noindent
 These errors should be flagged with a runtime error warning pointing to the device that has caused the issue.
 
+\subsection{Semantic Error Identification}
+
+The table below summarises types of semantic error, detection and reporting.
 \newpage
+
+\begin{table*}[ht]
+\centering
+\caption{List of Semantic Errors\label{table:rotor}}
+\vspace{\baselineskip}
+
+\begin{tabular}{p{0.3\linewidth}p{0.25\linewidth}p{0.35\linewidth}}
+\hline
+Semantic constraint & Example of error & Reporting error message\\ [0.1ex]
+\hline\hline
+
+Clock/switch must have 1 output, 0 inputs & devices( clk1 has 1 input; ); & Incorrect number of inputs specified for clock clk1. 1 specified, but allowed number is 0.\\ 
+\hline
+AND, NAND, and NOR must have 1 output, 1-16 inputs & devices( a is NOR; a has 17 inputs; ); & Incorrect number of inputs specified for NOR gate a. 17 specified, but allowed range is 1-16.\\
+\hline
+XOR must have 1 output, 2 inputs & devices(a  is XOR; a has 1 input; ); & Incorrect number of inputs specified for XOR gate a. 1 specified, but allowed number is 2.\\
+\hline
+DTYPE gates must have 4 inputs, one each of CLK, DATA, SET and CLEAR & devices( d is DTYPE; ); connections( a to d.CLK; d.QBAR to d.DATA; sw1 to d.SET; ); & Incomplete set of inputs to DTYPE. Missing CLEAR.\\
+\hline
+DTYPE SET and CLEAR inputs cannot both be logic HIGH at the same time & initialise( sw1, sw2 are HIGH; ); connections( sw1 to d.SET; sw2 to d.CLEAR; ); & SET and CLEAR ports cannot both set to logic high.\\
+\hline
+Device names must not overlap with reserved phrases in syntax & devices( to is NOR; );& Illegal device name specified. Please observe the list of words to be avoided.\\
+\hline
+The number of connection inputs defined cannot be different to the number of inputs specified & devices( a has 1 input; ); connections( sw1 is connected to a.I1; sw2 is connected to a.I2; ); & Different number of inputs defined in connection section to number of inputs listed in devices section.\\
+\hline 
+The same device name cannot be used for two different devices & devices( a is XOR; a is AND; ); & Device names must be unique.\\
+\hline 
+Each input channel can admit only a connection to one output & connections( a to b.IN1; c to b.IN1; ); & Input channel b.IN1 can only connect to one output.\\
+\hline 
+Devices that have not been defined in the devices section cannot be used in other sections & initialise( sw1 is HIGH; ); & Please define the device sw1 before initialisation.\\
+\hline
+Switch initial value or clock cycle length is not defined in initialisation & devices( sw1, sw2 are SWITCHES; ); & Please define switches sw1, sw2 initial values.\\
+\hline
+Devices that have been defined in the devices section are not connected to or used later & devices( clk1 is CLOCK; ); & clk1 defined but not used.\\
+\hline
+\end{tabular}
+\end{table*}
+
+\noindent
+Reserved words list (cannot define these as variable names):\\
+"to", "connected", "is", "are", "have", "has", "inputs", "input", "connections", "initialise", "device", "monitors", "cycle", "length".
+
+\noindent\\
+Note that for all devices other than dtype, by definition, the number of outputs is 1. One output can be included in more than one connection, so it is not a semantic error if the same switch is connected to more than one input port.
+
+
+
+\newpage
+\begin{landscape}
 \section{Appendix}
 %-------APPENDIX WRITE HERE-------
-\vspace{-1cm}
+
 \begin{figure}[H]
-\includegraphics[width = \paperwidth, angle = -90]{Gantt Chart.pdf}
-\vspace{-0.8cm}
+\begin{center}
+\includegraphics[width = \paperwidth]{Gantt Chart.pdf}
+\vspace{-3cm}
 \caption{Gantt Chart}
 \label{fig:Gantt Chart}
+
+\end{center}
 \end{figure}
-
-%These are for me to reference (Never used latex before)
-
-% \begin{figure}[H]
-% \begin{centering}
-% \includegraphics[width=0.3\paperwidth]{imgs/large14.jpg}\hspace{1cm}\includegraphics[width=0.3\paperwidth]{imgs/large17.jpg}
-% \par\end{centering}
-% \caption{Spectra for 14mA
-% (left) and 17mA (right) using large wavelength span (500nm, 100nm)\label{fig:large} }
-% \end{figure}
-
-
-% \begin{table}[H]
-% \begin{center}
-% \begin{tabular}{@{}l|ll@{}}
-% \textbf{}               & \textbf{Below threshold (14mA)} & \textbf{Above threshold (17mA)} \\ \midrule
-% \textbf{$\lambda_0$ ($\mu$m)}      & 1.558                           & 1.557                          \\
-% \textbf{$P_0$ (dBm)}        & -73.6                           & -30.0                             \\
-% \textbf{3dB width (nm)} & 24                              & 0.06                           
-% \end{tabular}
-% \par\end{center}
-% \caption{Data on spectral characteristics above and below threshold current}
-% \end{table}
-
-
-% \begin{equation*}
-% \frac{m}{2}\lambda_g=L
-% \qquad
-% \lambda_g=\frac{\lambda}{n}
-% \qquad
-% c=f\lambda
-% \end{equation*}
+\end{landscape}
 
 \end{document}
