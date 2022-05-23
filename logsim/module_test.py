@@ -40,4 +40,4 @@ while x.type != 10:
     # print(x.type, x.id)
     # print(name.names)
 
-print(type_id_list)
+#print(type_id_list)

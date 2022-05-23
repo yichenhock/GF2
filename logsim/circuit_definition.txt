@@ -20,7 +20,7 @@ connections(
 
     b(  
         sw1 is connected to b.I1;
-        sw2 is connected to b.I2;
+        sw2 - is connected to b.I2;
     );
 
     c(  
@@ -28,7 +28,7 @@ connections(
         b is connected to c.I2;
     );
 );
--
+
 monitors(
     c;
 );

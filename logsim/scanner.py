@@ -47,8 +47,16 @@ class Scanner:
     -------------
     get_symbol(self): Translates the next sequence of characters into a symbol
                       and returns the symbol.
-    """
 
+    print_error_line(self, error_type, error_message = ""): 
+                    Prints the current line when the function is called, with 
+                    a marker ^ showing where in the line the function was 
+                    called (i.e, the location of error). This function accepts
+                    two arguments to output the error type and error message to
+                    the user. The function skips the erroneous line and sets the
+                    file pointer to the next line.
+    """
+    
     def __init__(self, path, names):
         """Open specified file and initialise reserved words and IDs."""
 
@@ -62,6 +70,8 @@ class Scanner:
         [self.devices_id, self.initialise_id, self.connections_id, self.monitors_id, self.has_id, self.have_id, self.is_id, self.are_id, self.to_id, self.connected_id, self.input_id, self.inputs_id, self.cycle_id, self.length_id, self.clk_id, self.sw_id, self.AND_id, self.ANDS_id, self.OR_id, self.ORS_id, self.NOR_id, self.NORS_id, self.XOR_id, self.XORS_id, self.NAND_id, self.NANDS_id, self.DTYPE_id, self.DTYPES_id, self.SWITCH_id, self.SWITCHES_id, self.CLOCK_id, self.CLOCKS_id, self.I_id, self.HIGH_id, self.LOW_id, self.DATA_id, self.CLK_id, self.SET_id, self.CLEAR_id, self.Q_id, self.QBAR] = self.names.lookup(self.keywords_list)
 
         self.current_character = " "
+        self.current_line = 0
+        self.current_character_position = -1
 
 
         try: 
@@ -70,9 +80,16 @@ class Scanner:
             print("This file could not be opened, perhaps it doesn't exist")
             sys.exit()
         self.file = file
+        self.lines = self.file.readlines()
+        self.file.seek(0)
 
     def advance(self): #Reads next character from file
         self.current_character = self.file.read(1)
+        if self.current_character == "\n":
+            self.current_line += 1
+            self.current_character_position = -1
+        else:
+            self.current_character_position += 1
         return
 
     def skip_spaces(self): #Skips until non-space character is reached
@@ -85,6 +102,15 @@ class Scanner:
             self.advance()
         self.advance()
         return
+
+
+    def print_error_line(self, error_type, error_message = ""): #See comments at top of Scanner class
+        print("Error type:", error_type)
+        print(self.lines[self.current_line], end = "")
+        print(" " * (self.current_character_position - 1), "^ Error Here")
+        print(error_message)
+        self.skip_line()
+
 
     def get_name(self): #Reads and returns the next name (word made up of only letters)
         name = ""
@@ -105,7 +131,7 @@ class Scanner:
         symbol = Symbol()
         self.skip_spaces() #Current character is now not whitespace
             
-        print(self.current_character)
+        #print(self.current_character)
 
         if self.current_character == "#":
             symbol.type = self.HASH
@@ -153,9 +179,8 @@ class Scanner:
             symbol.type = self.EOF
         
         else: #Not a valid character
-            print("Not a valid character")
+            # print("Not a valid character")
+            self.print_error_line("Undefined Character", "Not a valid character")
             self.advance()
 
         return symbol
-
-#Method to print out current input line along with market on the folowing line to show where error occured
