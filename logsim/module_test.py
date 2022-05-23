@@ -14,8 +14,6 @@ from scanner import Symbol, Scanner
 # print(name.names)
 
 """scanner.py tests"""
-#For Michael
-location = "D:/Files/University/Year 3/Projects/GF2 Software/logsim/GF2/logsim/"
 
 name = Names()
 name.lookup(["Hello", "hi"])
@@ -28,10 +26,18 @@ if len(arguments) != 1:
     sys.exit()
 
 else:
-
     path = arguments[0]
     print("\nNow opening file...")
-    scanner = Scanner(location+path, name)
+    scanner = Scanner(path, name)
 
 print(scanner.file.read())
+scanner.file.seek(0)
+x = scanner.get_symbol()
+type_id_list = []
+while x.type != 10:
+    x = scanner.get_symbol()
+    type_id_list.append([x.type, x.id])
+    # print(x.type, x.id)
+    # print(name.names)
 
+#print(type_id_list)
