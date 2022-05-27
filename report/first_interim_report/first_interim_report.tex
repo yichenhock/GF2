@@ -166,9 +166,21 @@ We do not include comment syntax in EBNF as the scanner removes comments from in
     \begin{center}
     \includegraphics[width = 0.7\textwidth]{Simple Circuit.png}
     \vspace{-1cm}
-    ialisation.\\
-    \hline
-    Swit  
+    \caption{XOR Gate}
+    \end{center}
+    \label{fig:Simple Circuit}
+    \end{figure}
+
+\begin{multicols}{2}
+\begin{Verbatim}[numbers=left,xleftmargin=5mm]
+    devices(
+        a is OR;
+        b is NAND;
+        c is AND;
+        a, b, c have 2 inputs;
+        sw1, sw2 are SWITCHES;
+    );
+    
     initialise(
         sw1, sw2 are HIGH;
     );
@@ -195,7 +207,8 @@ We do not include comment syntax in EBNF as the scanner removes comments from in
     );
 \end{Verbatim}
 \end{multicols}
-    
+
+\newpage
 \subsection{Example B --- Complex Circuit}
 %-------COMPLEX CIRCUIT WRITE HERE-------
     

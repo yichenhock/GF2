@@ -58,33 +58,33 @@ class Scanner:
 
     def __init__(self, path, names):
         """Open specified file and initialise reserved words and IDs."""
+        if not isinstance(path, str):
+            raise TypeError("Expected path to be a string.")
+
         self.names = names
 
         # Define all symbol types
         self.symbol_type_list = [self.COMMA, self.DOT, self.SEMICOLON,
-                                 self.EQUALS, self.BRACKET_OPEN,
-                                 self.BRACKET_CLOSE, self.HASH, self.KEYWORD,
+                                 self.EQUALS, self.OPEN_BRACKET,
+                                 self.CLOSE_BRACKET, self.HASH, self.KEYWORD,
                                  self.NUMBER, self.NAME, self.EOF] = range(11)
 
         # Define all keywords
         self.keywords_list = ["devices", "initialise", "connections",
                               "monitors", "has", "have", "is", "are", "to",
                               "connected", "input", "inputs", "cycle",
-                              "length", "clk", "sw", "AND", "ANDS", "OR",
-                              "ORS", "NOR", "NORS", "XOR", "XORS", "NAND",
-                              "NANDS", "DTYPE", "DTYPES", "SWITCH", "SWITCHES",
-                              "CLOCK", "CLOCKS", "I", "HIGH", "LOW", "DATA",
-                              "CLK", "SET", "CLEAR", "Q", "QBAR"]
+                              "length", "clk", "sw", "AND", "OR", "NOR",
+                              "XOR", "NAND", "DTYPE", "SWITCH", "CLOCK",
+                              "I", "HIGH", "LOW", "DATA", "CLK", "SET",
+                              "CLEAR", "Q", "QBAR"]
         [self.devices_id, self.initialise_id, self.connections_id,
          self.monitors_id, self.has_id, self.have_id, self.is_id, self.are_id,
          self.to_id, self.connected_id, self.input_id, self.inputs_id,
          self.cycle_id, self.length_id, self.clk_id, self.sw_id, self.AND_id,
-         self.ANDS_id, self.OR_id, self.ORS_id, self.NOR_id, self.NORS_id,
-         self.XOR_id, self.XORS_id, self.NAND_id, self.NANDS_id, self.DTYPE_id,
-         self.DTYPES_id, self.SWITCH_id, self.SWITCHES_id, self.CLOCK_id,
-         self.CLOCKS_id, self.I_id, self.HIGH_id, self.LOW_id, self.DATA_id,
-         self.CLK_id, self.SET_id, self.CLEAR_id, self.Q_id,
-         self.QBAR] = self.names.lookup(self.keywords_list)
+         self.OR_id, self.NOR_id, self.XOR_id, self.NAND_id, self.DTYPE_id,
+         self.SWITCH_id, self.CLOCK_id, self.I_id, self.HIGH_id, self.LOW_id,
+         self.DATA_id, self.CLK_id, self.SET_id, self.CLEAR_id, self.Q_id,
+         self.QBAR_id] = self.names.lookup(self.keywords_list)
 
         self.current_character = " "
         self.current_line = 0
@@ -151,8 +151,6 @@ class Scanner:
         symbol = Symbol()
         self.skip_spaces()  # Current character is now not whitespace
 
-        # print(self.current_character)
-
         if self.current_character == "#":
             symbol.type = self.HASH
             self.skip_line()
@@ -188,18 +186,17 @@ class Scanner:
             self.advance()
 
         elif self.current_character == "(":
-            symbol.type = self.BRACKET_OPEN
+            symbol.type = self.OPEN_BRACKET
             self.advance()
 
         elif self.current_character == ")":
-            symbol.type = self.BRACKET_CLOSE
+            symbol.type = self.CLOSE_BRACKET
             self.advance()
 
         elif self.current_character == "":  # End of File
             symbol.type = self.EOF
 
         else:  # Not a valid character
-            # print("Not a valid character")
             self.print_error_line("Undefined Character", "Invalid character")
             self.advance()
 

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.3) (preloaded format=pdflatex 2022.5.14)  23 MAY 2022 18:22
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.3) (preloaded format=pdflatex 2022.5.14)  27 MAY 2022 17:56
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -486,47 +486,48 @@ Underfull \hbox (badness 10000) in paragraph at lines 87--88
  []
 
 [3]
-Underfull \hbox (badness 10000) in paragraph at lines 166--168
+Underfull \hbox (badness 10000) in paragraph at lines 152--154
 
  []
 
-[4]
-Underfull \hbox (badness 10000) in paragraph at lines 172--174
+
+Underfull \hbox (badness 10000) in paragraph at lines 158--160
 
  []
 
-<Simple Circuit.png, id=20, 461.725pt x 220.825pt>
+<Simple Circuit.png, id=17, 461.725pt x 220.825pt>
 File: Simple Circuit.png Graphic file (type png)
 <use Simple Circuit.png>
-Package pdftex.def Info: Simple Circuit.png  used on input line 181.
+Package pdftex.def Info: Simple Circuit.png  used on input line 167.
 (pdftex.def)             Requested size: 330.42041pt x 158.02681pt.
-<Complex Circuit.png, id=21, 823.075pt x 301.125pt>
+[4] [5 <./Simple Circuit.png>]
+<Complex Circuit.png, id=25, 823.075pt x 301.125pt>
 File: Complex Circuit.png Graphic file (type png)
 <use Complex Circuit.png>
-Package pdftex.def Info: Complex Circuit.png  used on input line 230.
+Package pdftex.def Info: Complex Circuit.png  used on input line 217.
 (pdftex.def)             Requested size: 472.03123pt x 172.69524pt.
-[5 <./Simple Circuit.png>] [6 <./Complex Circuit.png>] [7]
-Underfull \hbox (badness 4254) in paragraph at lines 339--339
+ [6 <./Complex Circuit.png>] [7]
+Underfull \hbox (badness 4254) in paragraph at lines 327--327
 []\T1/lmr/m/n/10 initialise( sw1, sw2 are
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 339--339
+Underfull \hbox (badness 10000) in paragraph at lines 327--327
 \T1/lmr/m/n/10 HIGH; ); con-nec-tions(
  []
 
 
-Underfull \hbox (badness 4582) in paragraph at lines 339--339
+Underfull \hbox (badness 4582) in paragraph at lines 327--327
 \T1/lmr/m/n/10 sw1 to d.SET; sw2 to
  []
 
 
-Underfull \hbox (badness 1478) in paragraph at lines 343--343
+Underfull \hbox (badness 1478) in paragraph at lines 331--331
 \T1/lmr/m/n/10 con-nec-tions( sw1 is con-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 351--351
+Underfull \hbox (badness 10000) in paragraph at lines 339--339
 []\T1/lmr/m/n/10 devices( sw1, sw2 are
  []
 
@@ -534,7 +535,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 351--351
 <Gantt Chart.pdf, id=36, 794.97pt x 614.295pt>
 File: Gantt Chart.pdf Graphic file (type pdf)
 <use Gantt Chart.pdf>
-Package pdftex.def Info: Gantt Chart.pdf  used on input line 374.
+Package pdftex.def Info: Gantt Chart.pdf  used on input line 362.
 (pdftex.def)             Requested size: 614.295pt x 474.69582pt.
  [9
 
@@ -542,13 +543,13 @@ Package pdftex.def Info: Gantt Chart.pdf  used on input line 374.
 Here is how much of TeX's memory you used:
  7718 strings out of 478619
  122009 string characters out of 2843245
- 639011 words of memory out of 3000000
+ 604011 words of memory out of 3000000
  25746 multiletter control sequences out of 15000+600000
  509135 words of font info for 49 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  61i,10n,75p,1125b,1601s stack positions out of 10000i,1000n,20000p,200000b,80000s
 {C:/Users/micha/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-ec.enc}<C:/Users/micha/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmbx10.pfb><C:/Users/micha/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmbx12.pfb><C:/Users/micha/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmbxi10.pfb><C:/Users/micha/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmr10.pfb><C:/Users/micha/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmr5.pfb><C:/Users/micha/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmtt10.pfb><C:/Users/micha/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmtt9.pfb>
-Output written on first_interim_report.pdf (9 pages, 298399 bytes).
+Output written on first_interim_report.pdf (9 pages, 297469 bytes).
 PDF statistics:
  88 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
