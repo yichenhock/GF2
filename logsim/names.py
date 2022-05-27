@@ -52,6 +52,9 @@ class Names:
 
         if not isinstance(num_error_codes, int):
             raise TypeError("Expected num_error_codes to be an integer.")
+        if num_error_codes < 1:
+            raise ValueError("Expected name_id to be positive and non-zero.")
+
         self.error_code_count += num_error_codes
         return range(self.error_code_count - num_error_codes,
                      self.error_code_count)
