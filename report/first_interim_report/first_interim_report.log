@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.3) (preloaded format=pdflatex 2022.5.14)  27 MAY 2022 17:56
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.3) (preloaded format=pdflatex 2022.5.14)  28 MAY 2022 16:48
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -507,27 +507,27 @@ File: Complex Circuit.png Graphic file (type png)
 Package pdftex.def Info: Complex Circuit.png  used on input line 217.
 (pdftex.def)             Requested size: 472.03123pt x 172.69524pt.
  [6 <./Complex Circuit.png>] [7]
-Underfull \hbox (badness 4254) in paragraph at lines 327--327
+Underfull \hbox (badness 4254) in paragraph at lines 326--326
 []\T1/lmr/m/n/10 initialise( sw1, sw2 are
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 327--327
+Underfull \hbox (badness 10000) in paragraph at lines 326--326
 \T1/lmr/m/n/10 HIGH; ); con-nec-tions(
  []
 
 
-Underfull \hbox (badness 4582) in paragraph at lines 327--327
+Underfull \hbox (badness 4582) in paragraph at lines 326--326
 \T1/lmr/m/n/10 sw1 to d.SET; sw2 to
  []
 
 
-Underfull \hbox (badness 1478) in paragraph at lines 331--331
+Underfull \hbox (badness 1478) in paragraph at lines 330--330
 \T1/lmr/m/n/10 con-nec-tions( sw1 is con-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 339--339
+Underfull \hbox (badness 10000) in paragraph at lines 338--338
 []\T1/lmr/m/n/10 devices( sw1, sw2 are
  []
 
@@ -535,7 +535,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 339--339
 <Gantt Chart.pdf, id=36, 794.97pt x 614.295pt>
 File: Gantt Chart.pdf Graphic file (type pdf)
 <use Gantt Chart.pdf>
-Package pdftex.def Info: Gantt Chart.pdf  used on input line 362.
+Package pdftex.def Info: Gantt Chart.pdf  used on input line 361.
 (pdftex.def)             Requested size: 614.295pt x 474.69582pt.
  [9
 
@@ -543,13 +543,13 @@ Package pdftex.def Info: Gantt Chart.pdf  used on input line 362.
 Here is how much of TeX's memory you used:
  7718 strings out of 478619
  122009 string characters out of 2843245
- 604011 words of memory out of 3000000
+ 600011 words of memory out of 3000000
  25746 multiletter control sequences out of 15000+600000
  509135 words of font info for 49 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  61i,10n,75p,1125b,1601s stack positions out of 10000i,1000n,20000p,200000b,80000s
 {C:/Users/micha/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-ec.enc}<C:/Users/micha/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmbx10.pfb><C:/Users/micha/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmbx12.pfb><C:/Users/micha/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmbxi10.pfb><C:/Users/micha/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmr10.pfb><C:/Users/micha/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmr5.pfb><C:/Users/micha/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmtt10.pfb><C:/Users/micha/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmtt9.pfb>
-Output written on first_interim_report.pdf (9 pages, 297469 bytes).
+Output written on first_interim_report.pdf (9 pages, 297203 bytes).
 PDF statistics:
  88 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)

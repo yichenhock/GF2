@@ -91,7 +91,7 @@ The logic description language will be specified using EBNF notation. The langua
 
     device_block = "devices", "(", {gate_definition | dtype_definition | switch_definition | clock_definition}, ")", ";";
 
-    initialise_block = "initialise", "(", {switch_initialisation | clock_initialisation}, ")", ";";
+    initialise_block = "initialise", "(", {gate_initialisation | switch_initialisation | clock_initialisation}, ")", ";";
 
     connections_block = "connections", "(", {device_name, "(", {connection_definition}, ")", ";"}, ")", ";";
 
@@ -105,11 +105,11 @@ The logic description language will be specified using EBNF notation. The langua
 
     clock_definition = clock_name, {[",", clock_name]}, definition, "CLOCK", ";";
 
-    gate_inputs = device_name, {[",", device_name]}, possession, {digit}, ("input" | "inputs"), ";";
+    gate_initialisation = device_name, {[",", device_name]}, possession, {digit}, ("input" | "inputs"), ";";
 
     switch_initialisation = switch_name, {[",", switch_name]}, definition, switch_level, ";";
     
-    clock_period = clock_name, ("cycle length" | "cycle"), {digit}, ";";
+    clock_initialisation = clock_name, ("cycle length" | "cycle"), {digit}, ";";
 
     connection_definition = (device_name | dtype_output_name | switch_name | clock_name), ("is connected to" | "to"), {(gate_input_name | dtype_input_name)}, ";";
 
@@ -177,34 +177,34 @@ We do not include comment syntax in EBNF as the scanner removes comments from in
         a is OR;
         b is NAND;
         c is AND;
-        a, b, c have 2 inputs;
         sw1, sw2 are SWITCHES;
-    );
+    )
     
     initialise(
+        a, b, c have 2 inputs;
         sw1, sw2 are HIGH;
-    );
+    )
     
     connections(
         a(
             sw1 is connected to a.I1;
             sw2 is connected to a.I2;
-        );
+        )
     
         b(  
             sw1 is connected to b.I1;
             sw2 is connected to b.I2;
-        );
+        )
     
         c(  
             a is connected to c.I1;
             b is connected to c.I2;
-        );
-    );
+        )
+    )
     
     monitors(
         c;
-    );
+    )
 \end{Verbatim}
 \end{multicols}
 
@@ -227,59 +227,58 @@ We do not include comment syntax in EBNF as the scanner removes comments from in
         b, c, d, e are NAND;
         f is DTYPE;
         g is XOR;
-        a, b, c, d, e, g have 2 inputs;
         sw1, sw2 are SWITCH;
         clk1 is CLOCK;
-    );
+    )
     
     initialise(
+        a, b, c, d, e, g have 2 inputs;
         sw1, sw2 are LOW;
         clk1 cycle length 1000;
-    );
+    )
     
     connections(
         a(
             e to a.I1;
             e to a.I2;
-        );
+        )
     
         b(  
             e to b.I1;
             clk1 to b.I2;
-        );
+        )
     
         c(  
             clk1 to c.I1;
             a to c.I2;
-        );
+        )
     
         d(
             b to d.I1;
             e to d.I2;
-        );
+        )
     
         e(  
             d to e.I1;
             c to e.I2;
-        );
+        )
     
-        f(  -16.
-        XOR must have 1 
+        f(
             f.QBAR to f.DATA;
             d to f.CLK;
             sw1 to f.SET;
             sw2 to f.CLEAR;
-        );
+        )
     
         g(  
             d to g.I1;
             f.Q to g.I2;
-        );
-    );
+        )
+    )
     
     monitors(
         d, f.Q, g;
-    );
+    )
 \end{Verbatim}
 \end{multicols}
 
