@@ -147,7 +147,11 @@ class Parser:
         Used inside devices for initialisation.
         
         """
-        device_add_name()
+        current_name = self.names.names[self.symbol.id]
+        if current_name[0].islower():
+            # Name does not with lowercase letter
+        else:
+            self.user_object_list.append(current_name)
         while self.symbol.type == self.scanner.COMMA:
             device_add_name()
             self.symbol = self.scanner.get_symbol()
@@ -163,12 +167,12 @@ class Parser:
         return None
     
     def device_add_name(self):
-        if not self.names.names[self.symbol.id].islower():
+        if not self.names.names[self.symbol.id][0].islower():
             # Name does not with lowercase letter
-        current_name = ""
-        current_name += self.names.names[self.symbol.id]
-        while self.symbol.type != self.scanner.COMMA or self.symbol.id not in self.posession_ids:
-            current_name += self.names.names[self.symbol.id]
+        # current_name = ""
+        # current_name += self.names.names[self.symbol.id]
+        # while self.symbol.type != self.scanner.COMMA or self.symbol.id not in self.posession_ids:
+        #     current_name += self.names.names[self.symbol.id]
         self.user_object_list.append(current_name)
         return 
 
