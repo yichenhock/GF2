@@ -9,12 +9,14 @@ Classes
 Parser - parses the definition file and builds the logic network.
 """
 
+from errno import ENOTCONN
+from re import S
 from names import Names
 from scanner import Symbol, Scanner
 from devices import Device, Devices
 from network import Network
 from monitors import Monitors
-from error import OpenParentheses, CloseParentheses, BlockHeader, DeviceName, IllegalDeviceName,
+from error_backup import OpenParentheses, CloseParentheses, BlockHeader, DeviceName, IllegalDeviceName,
 
 class Parser:
 
@@ -48,43 +50,52 @@ class Parser:
         self.monitors = Monitors()
 
         self.block = []
+        self.user_object_dictionary = []
+        self.user_object_type = []
+        
 
-        self.possession_words = self.scanner.keywords_list[4:6]
-        self.definition_words = self.scanner.keywords_list[6:8]
-        self.gate_type = self.scanner.keywords_list[16:21]
-        self.switch_level = ["HIGH", "LOW", 1, 0]
-        self.dtype_inputs = self.scanner.keywords_list[-6:-2]
-        self.dtype_outputs = self.scanner.keywords_list[-2:-1]
+        # T_T
+        self.block_ids = [self.scanner.devices_id, self.scanner.initialise_id, self.scanner.connections_id, self.scanner.monitors_id]
 
-        # Use Python built-in function islower() to check for letters
-        # Use Python built-in function isdigit() to check for digits
+        self.possession_ids = [self.scanner.has_id, self.scanner.have_id]
+
+        self.definition_ids = [self.scanner.is_id, self.scanner.are_id]
+
+        self.other_keywords_ids = [self.scanner.to_id, self.scanner.connected_id, self.scanner.input_id, self.scanner.inputs_id, self.scanner.cycle_id, self.scanner.length_id, self.scanner.clk_id, self.scanner.sw_id, self.scanner.I_id]
+
+        self.gate_type_ids = [self.scanner.AND_id, self.scanner.OR_id, self.scanner.NOR_id, self.scanner.XOR_id, self.scanner.NAND_id, self.scanner.DTYPE_id]
+
+        self.switch_id = [self.scanner.SWITCH_id]
+
+        self.clock_id = [self.scanner.CLOCK_id]
+
+        self.switch_level = [self.scanner.HIGH_id, self.scanner.LOW_id]
+
+        self.dtype_inputs = [self.scanner.DATA_id, self.scanner.CLK_id, self.scanner.CLEAR_id, self.scanner.SET_id]
+
+        self.dtype_outputs = [self.scanner.Q_id, self.scanner.QBAR_id]
     	
-    # def entirety(self):
-    #     """Check that the file main structure follows the form defined in the EBNF."""
-    #     if (self.symbol.type == self.scanner.KEYWORD 
-    #     	and self.symbol.id == self.scanner.devices_id):
-    #         self.block.append('M')
-    #         self.skip_block()
-    #         self.symbol = self.scanner.get_symbol()
-    #         if (self.symbol.type == self.scanner.KEYWORD
-    #             and self.symbol.id == self.scanner.initialise_id):
-    #             self.block.append('I')
-    #             self.skip_block()
-    #             self.symbol = self.scanner.get_symbol()
-    #         else:
-    #             self.error()
-    #     else:
-    #         self.error()
-
-    def skip_block(self):
+    def circuit_description(self):
+        """Check that the file main structure follows the form defined in the EBNF."""
+        if (self.symbol.type == self.scanner.KEYWORD 
+        	and self.symbol.id == self.scanner.devices_id):
+            self.devices_block()
+        else:
+            # Missing device blocl
         self.symbol = self.scanner.get_symbol()
-        if self.symbol.type == self.scanner.BRACKET_OPEN:
-                while self.symbol.type != self.scanner.BRACKET_CLOSE:
-                    self.scanner.skip_line()
-                    # Read symbol at start of each line only to check for bracket close
-                    self.symbol = self.scanner.get_symbol()
-                # Skip the semicolon at the end of the section 
-                self.symbol = self.scanner.get_symbol()
+        if (self.symbol.type == self.scanner.KEYWORD 
+        	and self.symbol.id == self.scanner.initialise_id):
+            self.devices_block()
+
+    # def skip_block(self):
+    #     self.symbol = self.scanner.get_symbol()
+    #     if self.symbol.type == self.scanner.BRACKET_OPEN:
+    #             while self.symbol.type != self.scanner.BRACKET_CLOSE:
+    #                 self.scanner.skip_line()
+    #                 # Read symbol at start of each line only to check for bracket close
+    #                 self.symbol = self.scanner.get_symbol()
+    #             # Skip the semicolon at the end of the section 
+    #             self.symbol = self.scanner.get_symbol()
     
     def devices_block(self):
         self.symbol = self.scanner.get_symbol()
@@ -92,17 +103,17 @@ class Parser:
             and self.symbol.id == self.scanner.devices_id):
             self.symbol = self.scanner.get_symbol()
             if self.symbol != self.scanner.BRACKET_OPEN:
-                raise OpenParentheses
+                # Raise bracket open error
+                pass
             self.symbol = self.scanner.get_symbol()
-            self.line = self.scanner.get_line()
-            self.object_initialisation(self.line)
+            self.device_definition()
             while self.symbol.type == self.scanner.COMMA:
                 self.symbol = self.scanner.get_symbol()
-                self.object_initialisation(device_type)
-            
+                self.device_definition()
         else:
-            raise BlockHeader(self.block[-1])
-        return None
+            # Missing device ID
+            pass
+        return
     
     def initialise_block(self):
         return None
@@ -112,40 +123,46 @@ class Parser:
     
     def monitors_block(self):
         return None
-    
-    def object_initialisation(self, line):
-        """Calls on gate(), dtype() and switch()"""
-        if self.symbol[0].isdigit():
-            raise IllegalDeviceName
-        if not self.symbol[0].isalnum():
-            raise DeviceName
-        if line[-1] in self.gate_type:
-            self.gate()
-        elif line[-1] == self.scanner.keywords_list(21):
-            self.dtype()
-        elif line[-1] == self.scanner.keywords_list(22):
-            self.switch()
-        elif line[-1] == self.scanner.keywords_list(23):
-            self.clock()
-        return None
 
-    def gate(self):
+    def device_definition(self):
         """Parse gate and check gate.
 
         Used inside devices for initialisation.
         
         """
-        return None
-    
-    def dtype(self):
-        """Parse dtype and check dtype
+        if self.symbol.type == self.scanner.NAME:
+            current_name = self.names.names[self.symbol.id]
 
-        Used inside devices for initialisation.
-        
-        """
-        return None
+            for i in current_name:
+                if i.isalpha():
+                    if i.isupper():
+                        # Capital letters in device name
+                self.user_object_list.append(current_name)
+
+            while self.symbol.type == self.scanner.COMMA:
+                current_name = self.names.names[self.symbol.id]
+                self.symbol = self.scanner.get_symbol()
+
+            if self.symbol.type == self.scanner.KEYWORD and self.symbol.id in self.definition_ids:
+                self.symbol = self.scanner.get_symbol()
+                if self.symbol.id not in self.gate_type_ids:
+                    if self.symbol.id in self.switch_id or self.clock_id:
+                        # Semantic error - device type
+                        pass
+                    else:
+                        # Syntax error - device type
+                        pass
+                else:
+                    # Do something to call the device class
+                    pass
+
+        else:
+            # Device name missing
+            pass
+
+        return 1
     
-    def switch(self):
+    def switch_definition(self):
         """Parse switch and check switch
 
         Used inside devices for initialisation.
@@ -153,16 +170,16 @@ class Parser:
         """
         return None
     
-    def clock(self):
+    def clock_definition(self):
         return None
     
-    def inputs(self):
+    def gate_initialisation(self):
         return None
     
     def switch_initialisation(self):
         return None
     
-    def clock_period(self):
+    def clock_initialisation(self):
         return None
     
     def connection_definition(self):

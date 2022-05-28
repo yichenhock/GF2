@@ -110,7 +110,6 @@ class Scanner:
         print(error_message)
         self.skip_line()
 
-
     def get_name(self): #Reads and returns the next name (alphanumeric word)
         name = ""
         while self.current_character.isalnum():
