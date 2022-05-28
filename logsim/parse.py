@@ -16,7 +16,7 @@ from scanner import Symbol, Scanner
 from devices import Device, Devices
 from network import Network
 from monitors import Monitors
-from error_backup import OpenParentheses, CloseParentheses, BlockHeader, DeviceName, IllegalDeviceName,
+from error import SemanticError, SyntaxError
 
 class Parser:
 
@@ -136,7 +136,8 @@ class Parser:
             for i in current_name:
                 if i.isalpha():
                     if i.isupper():
-                        # Capital letters in device name
+                        e = SyntaxError(DEVICE_LETTER_CAPITAL)
+                        e
                 self.user_object_list.append(current_name)
 
             while self.symbol.type == self.scanner.COMMA:

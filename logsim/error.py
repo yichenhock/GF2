@@ -46,7 +46,7 @@ class SemanticError():
 
 class SyntaxError():
 
-    def __init__(self, message, id):
+    def __init__(self, id):
         """Set parameters to report error.
         
         Parameters
@@ -56,12 +56,11 @@ class SyntaxError():
 
         """
 
-        self.id_list = [self.NO_OPEN_BRACKET, self.NO_CLOSE_BRACKET, ]
-        self.id_list = range(len(self.id_list))
+        self.id_list = [self.NO_OPEN_BRACKET, self.NO_CLOSE_BRACKET, self.DEVICE_LETTER_CAPITAL, self.DEVICE_TYPE_ERROR, self.DEVICE_NAME_MISSING] = range(len(self.id_list))
 
         self.message_list = ["Missing open bracket following section or subsection heading.", "Missing close parentheses following section or subsection initialisation."]
 
-        error_type = "SyntaxError: {}".format(self.message_list(self.id))
+        self.message = "SyntaxError: {}".format(self.message_list(self.id))
         
         # Print error to terminal using method in Scanner class.
         # Skip line to resume parsing after the next semicolon.
