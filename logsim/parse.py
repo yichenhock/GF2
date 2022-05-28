@@ -104,12 +104,12 @@ class Parser:
             self.symbol = self.scanner.get_symbol()
             if self.symbol != self.scanner.BRACKET_OPEN:
                 # Raise bracket open error
+                pass
             self.symbol = self.scanner.get_symbol()
-            self.object_initialisation(self.line)
+            self.device_definition()
             while self.symbol.type == self.scanner.COMMA:
                 self.symbol = self.scanner.get_symbol()
-                self.object_initialisation(device_type)
-            
+                self.device_definition()
         else:
             # Missing device ID
             pass
@@ -123,23 +123,6 @@ class Parser:
     
     def monitors_block(self):
         return None
-    
-    def object_initialisation(self, line):
-        """Calls on device_definition(), c() and switch()"""
-        
-        if self.symbol.type == self.scanner.NAME:
-            device_definition()
-
-        elif self.symbol.type == self.scanner.KEYWORD:
-            if self.symbol.id == self.scanner.sw_id:
-                switch_definition()
-
-            elif self.symbol.id == self.scanner.clk_id:
-                clock_definition()
-        
-        else:
-
-            # Missing name
 
     def device_definition(self):
         """Parse gate and check gate.
@@ -147,35 +130,38 @@ class Parser:
         Used inside devices for initialisation.
         
         """
-        current_name = self.names.names[self.symbol.id]
-        if current_name[0].islower():
-            # Name does not with lowercase letter
-        else:
-            self.user_object_list.append(current_name)
-        while self.symbol.type == self.scanner.COMMA:
-            device_add_name()
-            self.symbol = self.scanner.get_symbol()
-        if self.symbol.type == self.scanner.KEYWORD and self.symbol.id in self.definition_ids:
-            self.symbol = self.scanner.get_symbol()
-            if self.symbol.id not in self.gate_type_ids:
-                if self.symbol.id in self.switch_id or self.clock_id:
-                    # Semantic error
-                else:
-                    # Syntax error
-            else:
-                # Do something to call the device class
-        return None
-    
-    def device_add_name(self):
-        if not self.names.names[self.symbol.id][0].islower():
-            # Name does not with lowercase letter
-        # current_name = ""
-        # current_name += self.names.names[self.symbol.id]
-        # while self.symbol.type != self.scanner.COMMA or self.symbol.id not in self.posession_ids:
-        #     current_name += self.names.names[self.symbol.id]
-        self.user_object_list.append(current_name)
-        return 
+        if self.symbol.type == self.scanner.NAME:
+            current_name = self.names.names[self.symbol.id]
 
+            for i in current_name:
+                if i.isalpha():
+                    if i.isupper():
+                        # Capital letters in device name
+                self.user_object_list.append(current_name)
+
+            while self.symbol.type == self.scanner.COMMA:
+                current_name = self.names.names[self.symbol.id]
+                self.symbol = self.scanner.get_symbol()
+
+            if self.symbol.type == self.scanner.KEYWORD and self.symbol.id in self.definition_ids:
+                self.symbol = self.scanner.get_symbol()
+                if self.symbol.id not in self.gate_type_ids:
+                    if self.symbol.id in self.switch_id or self.clock_id:
+                        # Semantic error - device type
+                        pass
+                    else:
+                        # Syntax error - device type
+                        pass
+                else:
+                    # Do something to call the device class
+                    pass
+
+        else:
+            # Device name missing
+            pass
+
+        return 1
+    
     def switch_definition(self):
         """Parse switch and check switch
 
