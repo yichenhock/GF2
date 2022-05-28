@@ -45,7 +45,7 @@ class Names:
         """Initialise names list."""
 
         self.names = []
-        self.error_code_count = 0  # how many error codes have been declared
+        self.error_code_count = 0  # How many error codes have been declared
 
     def unique_error_codes(self, num_error_codes):
         """Return a list of unique integer error codes."""
