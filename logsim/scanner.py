@@ -63,12 +63,11 @@ class Scanner:
         self.names = names
 
         #Define all symbol types
-        self.symbol_type_list = [self.COMMA, self.DOT, self.SEMICOLON, self.EQUALS, self.BRACKET_OPEN, self.BRACKET_CLOSE, self.HASH, self.KEYWORD, self.NUMBER, self.NAME, self.EOF] = range(11)
+        self.symbol_type_list = [self.COMMA, self.DOT, self.SEMICOLON, self.EQUALS, self.BRACKET_OPEN, self.BRACKET_CLOSE, self.HASH, self.NAME, self.KEYWORD, self.NUMBER, self.EOF] = range(11)
 
         #Define all keywords
-        # DO NOT TOUCH AS PARSER WILL BREAK OTHERWISE
-        self.keywords_list = ["devices", "initialise", "connections", "monitors", "has", "have", "is", "are", "to", "connected", "input", "inputs", "cycle", "length", "clk", "sw", "AND", "OR", "NOR", "XOR", "NAND", "DTYPE",  "SWITCH", "CLOCK", "I", "HIGH", "LOW", "DATA", "CLK", "SET", "CLEAR", "Q", "QBAR"]
-        [self.devices_id, self.initialise_id, self.connections_id, self.monitors_id, self.has_id, self.have_id, self.is_id, self.are_id, self.to_id, self.connected_id, self.input_id, self.inputs_id, self.cycle_id, self.length_id, self.clk_id, self.sw_id, self.AND_id, self.OR_id, self.NOR_id, self.XOR_id, self.NAND_id, self.DTYPE_id, self.SWITCH_id, self.CLOCK_id, self.I_id, self.HIGH_id, self.LOW_id, self.DATA_id, self.CLK_id, self.SET_id, self.CLEAR_id, self.Q_id, self.QBAR] = self.names.lookup(self.keywords_list)
+        self.keywords_list = ["devices", "initialise", "connections", "monitors", "has", "have", "is", "are", "to", "connected", "input", "inputs", "cycle", "length", "AND", "OR", "NOR", "XOR", "NAND", "DTYPE",  "SWITCH", "CLOCK", "HIGH", "LOW", "DATA", "CLK", "SET", "CLEAR", "Q", "QBAR"]
+        [self.devices_id, self.initialise_id, self.connections_id, self.monitors_id, self.has_id, self.have_id, self.is_id, self.are_id, self.to_id, self.connected_id, self.input_id, self.inputs_id, self.cycle_id, self.length_id, self.AND_id, self.OR_id, self.NOR_id, self.XOR_id, self.NAND_id, self.DTYPE_id, self.SWITCH_id, self.CLOCK_id, self.HIGH_id, self.LOW_id, self.DATA_id, self.CLK_id, self.SET_id, self.CLEAR_id, self.Q_id, self.QBAR_id] = self.names.lookup(self.keywords_list)
 
         self.current_character = " "
         self.current_line = 0
@@ -98,19 +97,11 @@ class Scanner:
             self.advance()
         return
 
-    def skip_line(self): #Skips until next semicolon
-        while self.current_character != ";":
+    def skip_line(self): #Skips until next semicolon or bracket
+        while self.current_character not in [";", "(", ")"]:
             self.advance()
         self.advance()
         return
-
-    def get_line(self): #Saves symbols next semicolon
-        self.line = []
-        while self.current_character != ";":
-            self.line.append(self.current_character)
-            self.advance()
-        self.advance()
-        return self.line
 
     def print_error_line(self, error_type, error_message = ""): #See comments at top of Scanner class
         print("Error type:", error_type)
@@ -120,9 +111,9 @@ class Scanner:
         self.skip_line()
 
 
-    def get_name(self): #Reads and returns the next name (word made up of only letters)
+    def get_name(self): #Reads and returns the next name (alphanumeric word)
         name = ""
-        while self.current_character.isalpha():
+        while self.current_character.isalnum():
             name += self.current_character
             self.advance()
         return name
