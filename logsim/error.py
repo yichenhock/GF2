@@ -1,6 +1,6 @@
 """Error handling for parser to read circuit definition file.
 
-Used in the Logic Simulator project to provide classes for unique error types, both semantic and syntactic.
+Used in the Logic Simulator project to provide produce custom exceptions using class inheritance from built-in Exception clas, for syntactic and semantic errors.
 
 Classes
 -------
@@ -39,12 +39,12 @@ Classes
 
 from scanner import Scanner
 
-class SemanticError():
+class SemanticError(Exception):
     pass
 
-class SyntaxError():
+class SyntaxError(Exception):
 
-    def __init__(self, message):
+    def __init__(self, message, *args):
         """Set parameters to report error.
         
         Parameters
@@ -61,22 +61,31 @@ class SyntaxError():
         # Skip line to resume parsing after the next semicolon.
         Scanner.print_error_line(error_type, self.message)
 
-class OpenParantheses(SyntaxError):
+class OpenParentheses(SyntaxError):
 
     def __init__(self):
-        def super(CloseBracket, self).__init__(
+        super(CloseBracket, self).__init__(
             "Missing open parentheses following section or subsection heading."
         )
         sub_error_type = "Open Parantheses"
 
-class CloseParantheses(SyntaxError):
+class CloseParentheses(SyntaxError):
 
     def __init__(self):
-        def super(CloseBracket, self).__init__(
+        super(CloseParentheses, self).__init__(
             "Missing close parentheses following section or subsection initialisation."
         )
         sub_error_type = "Close Parantheses"
 
-class 
+class BlockHeader(SyntaxError):
 
+    def __init__(self, section):
+        if section in Scanner.keywords_list [0:4]:
+            super(BlockHeader, self).__init__(
+                "Missing header for section {}".format(section)
+            )
+        else:
+            super(BlockHeader, self).__init__(
+                "Missing header for subsection {}".format(section)
+            )
 

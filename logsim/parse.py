@@ -14,7 +14,7 @@ from scanner import Symbol, Scanner
 from devices import Device, Devices
 from network import Network
 from monitors import Monitors
-from error import 
+from error import OpenParentheses, CloseParentheses, LineEnd, BlockHeader, PosessionKeyword, DefinitionKeyword, DeviceName, DTypeName, SwitchName, ClockName, InputName, ConnectionDefinition, ExtraChars
 
 class Parser:
 
@@ -91,9 +91,11 @@ class Parser:
             and self.symbol.id == self.scanner.devices_id):
             self.symbol = self.scanner.get_symbol()
             if self.symbol != "(":
-                self.error()
+                raise OpenParentheses
+            while self.symbol == 
+            
         else:
-            self.error()
+            raise BlockHeader(self.block[-1])
         return None
     
     def initialise_block(self):
@@ -155,15 +157,15 @@ class Parser:
 
     def parse_network(self):
         """Parse the circuit definition file."""
-    # Main idea: should check overall blocks and append order to self.block. Do a check for self.block at the end to see if the main structure follows
-    self.symbol = self.scanner.get_symbol()
-    # Tree structure: split into blocks
-    if (self.symbol.type == self.scanner.KEYWORD 
-        and self.symbol.id == self.scanner.devices_id):
-        # Append to block lister
-        self.block.append('M')
-        # Skip past open bracket
+        # Main idea: should check overall blocks and append order to self.block. Do a check for self.block at the end to see if the main structure follows
         self.symbol = self.scanner.get_symbol()
-        self.devices_block()
-    return True
+        # Tree structure: split into blocks
+        if (self.symbol.type == self.scanner.KEYWORD 
+            and self.symbol.id == self.scanner.devices_id):
+            # Append to block lister
+            self.block.append('devices')
+            # Skip past open bracket
+            self.symbol = self.scanner.get_symbol()
+            self.devices_block()
+        return True
 
