@@ -14,7 +14,7 @@ from scanner import Symbol, Scanner
 from devices import Device, Devices
 from network import Network
 from monitors import Monitors
-from error import OpenParentheses, CloseParentheses, LineEnd, BlockHeader, PosessionKeyword, DefinitionKeyword, DeviceName, DTypeName, SwitchName, ClockName, InputName, ConnectionDefinition, ExtraChars
+from error import OpenParentheses, CloseParentheses, BlockHeader, DeviceName, IllegalDeviceName,
 
 class Parser:
 
@@ -46,11 +46,12 @@ class Parser:
         self.network = Network()
         self.scanner = Scanner()
         self.monitors = Monitors()
+
         self.block = []
 
         self.possession_words = self.scanner.keywords_list[4:6]
         self.definition_words = self.scanner.keywords_list[6:8]
-        self.gate_type = self.scanner.keywords_list[16:22]
+        self.gate_type = self.scanner.keywords_list[16:21]
         self.switch_level = ["HIGH", "LOW", 1, 0]
         self.dtype_inputs = self.scanner.keywords_list[-6:-2]
         self.dtype_outputs = self.scanner.keywords_list[-2:-1]
@@ -90,9 +91,14 @@ class Parser:
         if (self.symbol.type == self.scanner.KEYWORD 
             and self.symbol.id == self.scanner.devices_id):
             self.symbol = self.scanner.get_symbol()
-            if self.symbol != "(":
+            if self.symbol != self.scanner.BRACKET_OPEN:
                 raise OpenParentheses
-            while self.symbol == 
+            self.symbol = self.scanner.get_symbol()
+            self.line = self.scanner.get_line()
+            self.object_initialisation(self.line)
+            while self.symbol.type == self.scanner.COMMA:
+                self.symbol = self.scanner.get_symbol()
+                self.object_initialisation(device_type)
             
         else:
             raise BlockHeader(self.block[-1])
@@ -106,14 +112,45 @@ class Parser:
     
     def monitors_block(self):
         return None
+    
+    def object_initialisation(self, line):
+        """Calls on gate(), dtype() and switch()"""
+        if self.symbol[0].isdigit():
+            raise IllegalDeviceName
+        if not self.symbol[0].isalnum():
+            raise DeviceName
+        if line[-1] in self.gate_type:
+            self.gate()
+        elif line[-1] == self.scanner.keywords_list(21):
+            self.dtype()
+        elif line[-1] == self.scanner.keywords_list(22):
+            self.switch()
+        elif line[-1] == self.scanner.keywords_list(23):
+            self.clock()
+        return None
 
     def gate(self):
+        """Parse gate and check gate.
+
+        Used inside devices for initialisation.
+        
+        """
         return None
     
     def dtype(self):
+        """Parse dtype and check dtype
+
+        Used inside devices for initialisation.
+        
+        """
         return None
     
     def switch(self):
+        """Parse switch and check switch
+
+        Used inside devices for initialisation.
+        
+        """
         return None
     
     def clock(self):

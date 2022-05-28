@@ -18,17 +18,19 @@ Classes
 
 'DefinitionKeyword': Missing or misspelled definition keyword.
 
-'XName': Skeleton class for gate/dtype/switch/clock name errors.
+'XName': Skeleton class for gate/dtype/switch/clock illegal name errors.
 
-'DeviceName': Missing or illegal device name.
+'DeviceName': Missing device name.
 
-'DTypeName': Missing or illegal dtype name.
+'IllegalDeviceName': Illegal generic device name.
 
-'SwitchName': Missing or illegal switch name.
+'IllegalGateName': Illegal gate name.
 
-'ClockName': Missing or illegal clock name.
+'IllegalSwitchName': Illegal switch name.
 
-'InputName': Missing or illegal input name.
+'IllegalClockName': Illegal clock name.
+
+'IllegalInputName': Illegal input name.
 
 'ConnectionDefinition': Missing 
 
@@ -82,6 +84,18 @@ class BlockHeader(SyntaxError):
     def __init__(self, section):
         if section in Scanner.keywords_list [0:4]:
             super(BlockHeader, self).__init__(
+                "Missing header for section {}".format(section)
+            )
+        else:
+            super(BlockHeader, self).__init__(
+                "Missing header for subsection {}".format(section)
+            )
+
+class DeviceName(SyntaxError):
+
+    def __init__(self, section):
+        if section in Scanner.keywords_list [0:4]:
+            super(DeviceName, self).__init__(
                 "Missing header for section {}".format(section)
             )
         else:
