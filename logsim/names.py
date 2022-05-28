@@ -55,6 +55,7 @@ class Names:
         if num_error_codes < 1:
             raise ValueError("Expected name_id to be positive and non-zero.")
 
+        # Range returns a list of integers that counts up
         self.error_code_count += num_error_codes
         return range(self.error_code_count - num_error_codes,
                      self.error_code_count)
