@@ -33,30 +33,42 @@ def test_scanner_init_raises_exceptions(new_names):
 
 def test_get_symbol(new_test_scanner):
     """Test to see if get_symbol returns the correct symbol."""
-    print(new_test_scanner.devices_id)
+    scanner = new_test_scanner
     # Skip comment 1
-    assert new_test_scanner.get_symbol().type == None # Invalid Character
-    assert new_test_scanner.get_symbol().type == 0 # COMMA
-    assert new_test_scanner.get_symbol().type == 1 # DOT
-    assert new_test_scanner.get_symbol().type == 2 # SEMICOLON
-    assert new_test_scanner.get_symbol().type == 3 # EQUALS
-    assert new_test_scanner.get_symbol().type == 4 # OPEN_BRACKET
-    assert new_test_scanner.get_symbol().type == 5 # CLOSE_BRACKET
-    assert new_test_scanner.get_symbol().type == 7 # NUMBER
-    # Skip comment 2
-    assert new_test_scanner.get_symbol().type == 8 # NAME
-    
+    assert scanner.get_symbol().type == None # Invalid Character
+    assert scanner.get_symbol().type == 0 # COMMA
+    assert scanner.get_symbol().type == 1 # DOT
+    assert scanner.get_symbol().type == 2 # SEMICOLON
+    assert scanner.get_symbol().type == 3 # EQUALS
+    assert scanner.get_symbol().type == 4 # OPEN_BRACKET
+    assert scanner.get_symbol().type == 5 # CLOSE_BRACKET
+    assert scanner.get_symbol().type == 7 # NUMBER
+    assert scanner.get_symbol().type == 8 # NAME
+    # Skip comment 2 and skip spaces + line breaks
 
     for i in range(30): # KEYWORD
-        print(i)
-        assert new_test_scanner.get_symbol().type == 6 
-        assert new_test_scanner.get_symbol().id == i # Invalid Character
+        symbol = scanner.get_symbol()
+        assert symbol.type == 6 
+        assert symbol.id == i # Correct keyword
 
-    assert new_test_scanner.get_symbol().type == 9 # Invalid Character
+    assert scanner.get_symbol().type == None # Invalid Character
+    assert scanner.get_symbol().type == 9 # EOF
+
+    # Check further get_symbol still returns EOF
+    assert scanner.get_symbol().type == 9 
+
 
 def test_print_error_line(new_test_scanner):
-    pass
+    scanner = new_test_scanner
+    safety_counter = 0
+    symbol = scanner.get_symbol()
+    while symbol.type != 9:
+        if safety_counter > 10000: # Prevent infinite loop
+            break
 
+        if symbol.type == None:
+            scanner.print_error_line("Invalid Character")
+            captured = capsys.readouterr()
 
 
 #Check its passing instance of names class

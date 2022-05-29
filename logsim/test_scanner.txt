@@ -1,12 +1,15 @@
-#comment test1;
+#Comment test1;
 -
-,.;=() 29 #comment test2;
-keywords
+,.;=() 29         
+
+#Comment test2 (skip spaces and line breaks);
+            keywords
 devices
 initialise
 connections
 monitors
 has
+#Comment test3 (Check that invalid symbol error isn't called %%%%%%%);
 have
 is
 are
@@ -30,5 +33,5 @@ DATA
 CLK
 SET
 CLEAR
-Q_id
-QBAR
+Q
+QBAR%

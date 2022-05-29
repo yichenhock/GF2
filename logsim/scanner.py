@@ -114,13 +114,13 @@ class Scanner:
         while self.current_character.isspace():
             self.advance()
         if self.current_character == "#":
-            self.skip_line()
+            self.skip_comment()
         while self.current_character.isspace():
             self.advance()
         return
 
-    def skip_line(self):
-        """Skips until next semicolon."""
+    def skip_comment(self):
+        """Skips the current comment (Until next semicolon)."""
         while self.current_character != ";":
             self.advance()
         self.advance()
@@ -134,6 +134,13 @@ class Scanner:
         print(error_message)
         self.skip_line()
 
+    def skip_line(self): 
+        """Skips until next semicolon or bracket."""
+        while self.current_character not in [";", "(", ")"]:
+            self.advance()
+        self.advance()
+        return
+        
     def get_name(self):
         """Read and returns the next name (word made up of only letters)."""
         name = ""
