@@ -1,7 +1,7 @@
 #Example A - Simple XOR Circuit;
     
 devices(
-    a is OR;
+    A is OR;
     b is NAND;
     c is AND;
     a, b, c have 21 inputs;

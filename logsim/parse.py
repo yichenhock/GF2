@@ -48,12 +48,13 @@ class Parser:
         self.network = Network()
         self.scanner = Scanner()
         self.monitors = Monitors()
+        self.syntax = SyntaxError()
+        self.semantic = SemanticError()
 
         self.block = []
         self.user_object_dictionary = []
         self.user_object_type = []
         
-
         # T_T
         self.block_ids = [self.scanner.devices_id, self.scanner.initialise_id, self.scanner.connections_id, self.scanner.monitors_id]
 
@@ -76,45 +77,89 @@ class Parser:
         self.dtype_outputs = [self.scanner.Q_id, self.scanner.QBAR_id]
     	
     def circuit_description(self):
-        """Check that the file main structure follows the form defined in the EBNF."""
+        """Check the header for each block exists, and is not misspelled. 
+
+        Call relevant block function.
+        
+        """
+
+        # Read the first thing of each block
+        self.symbol = self.scanner.get_symbol()
+
+        # Check if first keyword is a devices
         if (self.symbol.type == self.scanner.KEYWORD 
         	and self.symbol.id == self.scanner.devices_id):
+            self.block.append("devices")
             self.devices_block()
-        else:
-            # Missing device blocl
-        self.symbol = self.scanner.get_symbol()
+
+        # Check if next keyword is initialise
         if (self.symbol.type == self.scanner.KEYWORD 
         	and self.symbol.id == self.scanner.initialise_id):
             self.devices_block()
-
-    # def skip_block(self):
-    #     self.symbol = self.scanner.get_symbol()
-    #     if self.symbol.type == self.scanner.BRACKET_OPEN:
-    #             while self.symbol.type != self.scanner.BRACKET_CLOSE:
-    #                 self.scanner.skip_line()
-    #                 # Read symbol at start of each line only to check for bracket close
-    #                 self.symbol = self.scanner.get_symbol()
-    #             # Skip the semicolon at the end of the section 
-    #             self.symbol = self.scanner.get_symbol()
-    
-    def devices_block(self):
-        self.symbol = self.scanner.get_symbol()
+        
+        # Check if next keyword is connections
         if (self.symbol.type == self.scanner.KEYWORD 
-            and self.symbol.id == self.scanner.devices_id):
-            self.symbol = self.scanner.get_symbol()
-            if self.symbol != self.scanner.BRACKET_OPEN:
-                # Raise bracket open error
-                pass
-            self.symbol = self.scanner.get_symbol()
-            self.device_definition()
-            while self.symbol.type == self.scanner.COMMA:
-                self.symbol = self.scanner.get_symbol()
-                self.device_definition()
+        	and self.symbol.id == self.scanner.connections_id):
+            self.devices_block()
+        
+        # Check if next keyword is monitors
+        if (self.symbol.type == self.scanner.KEYWORD 
+        	and self.symbol.id == self.scanner.monitors_id):
+            self.devices_block()
+
+        # If the symbol we expect is any header but we get a bracket, then we can report the header as missing
+        elif self.symbol.type == self.scanner.OPEN_BRACKET:
+            self.syntax.print(self.syntaxerror.NO_HEADER)
+            self.skip_block()
+
+        # Incorrect header
         else:
-            # Missing device ID
-            pass
-        return
-    
+            self.syntax.print(self.syntaxerror.HEADER_NAME_ERROR)
+            self.skip_block() 
+
+    def skip_block(self):
+        """Skip entire block because it is not possible to know what is supposed to be inside, by repeatedly calling skip_line() from the Scanner class.
+
+        For header name errors.
+        """
+
+        while (self.symbol.id not in self.block_ids and self.symbol.type != self.scanner.EOF):
+            self.scanner.skip_line()
+        if len(self.block) <= 4:
+            self.circuit_description()
+
+    def devices_block(self):
+        """Operate at level of parsing a device block."""
+
+        # Fetch next symbol after section heading and check it's a bracket
+        self.symbol = self.scanner.get_symbol()
+
+        if self.symbol != self.scanner.BRACKET_OPEN:
+            # If not a bracket, skip to next character (unique handling method to this error)
+            self.scanner.print_error_line("NO_OPEN_BRACKET", "Missing open parentheses following section or subsection header.")
+            self.scanner.advance
+
+             # Skip device block, end reached
+            if self.symbol == self.scanner.BRACKET_CLOSE:
+                return
+            # If we haven't reached the end of the device block yet, call device_definition() to define another device
+            # This works even if we have no device definition inside the block and the bracket is missing
+            # device_definition() will register a missing device name in this case
+            else:
+                self.device_definition()
+
+        # If bracket exists:
+        else:
+            # Call line-level function as long as end of block not reached
+            while self.symbol.type != self.scanner.BRACKET_CLOSE:
+                self.device_definition()
+                # Read first symbol of next line
+                self.symbol = self.scanner.get_symbol()
+
+            # Exit while loop when symbol stored is a closed bracket
+            # End of functionality of devices_block function
+            return 
+
     def initialise_block(self):
         return None
 
@@ -127,18 +172,12 @@ class Parser:
     def device_definition(self):
         """Parse gate and check gate.
 
-        Used inside devices for initialisation.
+        Used inside devices block for defining the device names and their corresponding types.
         
+        It should be read at the point after the parser gets the first symbol of each line, and finish without having read the first symbol of the next line.
         """
-        if self.symbol.type == self.scanner.NAME:
-            current_name = self.names.names[self.symbol.id]
 
-            for i in current_name:
-                if i.isalpha():
-                    if i.isupper():
-                        e = SyntaxError(DEVICE_LETTER_CAPITAL)
-                        e
-                self.user_object_list.append(current_name)
+        self.device_name()
 
             while self.symbol.type == self.scanner.COMMA:
                 current_name = self.names.names[self.symbol.id]
@@ -151,17 +190,17 @@ class Parser:
                         # Semantic error - device type
                         pass
                     else:
-                        # Syntax error - device type
-                        pass
+                        printerror = SyntaxError(SyntaxError.DEVICE_TYPE_ERROR)
                 else:
                     # Do something to call the device class
                     pass
 
-        else:
-            # Device name missing
-            pass
+        # No device name found at the beginning of the line inside the device class but not reached end of block yet
+        elif self.symbol.id != self.scanner.BRACKET_CLOSE:
+            self.syntax.print(self.syntax.DEVICE_NAME_MISSING)
 
-        return 1
+        elif self.symbol.id == self.scanner.BRACKET_CLOSE:
+            return
     
     def switch_definition(self):
         """Parse switch and check switch
@@ -196,7 +235,22 @@ class Parser:
         return None
     
     def device_name(self):
-        return None
+        # If first symbol is of type NAME (for all gates and DTYPE)
+        if self.symbol.type == self.scanner.NAME:
+            current_name = self.names.names[self.symbol.id]
+
+            self.is_legal_name = True
+
+            # Check if all letters in device name are lowercase
+            for i in current_name:
+                if i.isalpha():
+                    if i.isupper():
+                        self.syntax.print(self.syntax.DEVICE_LETTER_CAPITAL)
+                        self.is_legal_name = False
+
+            # If name is legal, append to name list
+            if self.is_legal_name:
+                self.user_object_list.append(current_name)
     
     def clock_name(self):
         return None
@@ -204,23 +258,12 @@ class Parser:
     def switch_name(self):
         return None
     
-    def error(self):
-        return None
-    
-    def display_error(self, error_type):
-        return None
-
     def parse_network(self):
         """Parse the circuit definition file."""
         # Main idea: should check overall blocks and append order to self.block. Do a check for self.block at the end to see if the main structure follows
-        self.symbol = self.scanner.get_symbol()
+
         # Tree structure: split into blocks
-        if (self.symbol.type == self.scanner.KEYWORD 
-            and self.symbol.id == self.scanner.devices_id):
-            # Append to block lister
-            self.block.append('devices')
-            # Skip past open bracket
-            self.symbol = self.scanner.get_symbol()
-            self.devices_block()
+        while len(self.block) <= 4:
+            self.circuit_description()
         return True
 

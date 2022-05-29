@@ -46,7 +46,7 @@ class SemanticError():
 
 class SyntaxError():
 
-    def __init__(self, id):
+    def __init__(self):
         """Set parameters to report error.
         
         Parameters
@@ -56,15 +56,21 @@ class SyntaxError():
 
         """
 
-        self.id_list = [self.NO_OPEN_BRACKET, self.NO_CLOSE_BRACKET, self.DEVICE_LETTER_CAPITAL, self.DEVICE_TYPE_ERROR, self.DEVICE_NAME_MISSING] = range(len(self.id_list))
+        self.id_list = [self.NO_CLOSE_BRACKET, self.DEVICE_LETTER_CAPITAL, self.DEVICE_TYPE_ERROR, self.DEVICE_NAME_MISSING, self.HEADER_NAME_ERROR] = range(len(self.id_list))
 
-        self.message_list = ["Missing open bracket following section or subsection heading.", "Missing close parentheses following section or subsection initialisation."]
+        self.error_type_list = ["NO_CLOSE_BRACKET", "DEVICE_LETTER_CAPITAL", "DEVICE_TYPE_ERROR", "NO_DEVICE_NAME", "NO_DEVICE_BLOCK", "NO_HEADER", "HEADER_NAME_ERROR"]
 
-        self.message = "SyntaxError: {}".format(self.message_list(self.id))
+        self.message_list = ["Missing close parentheses following section or subsection initialisation.", "Device names must not contain capitalised letters.", "Device name missing. Please provide a valid alphanumeric device name.", "Device block missing. Please provide at least one device inside the device block and a block header.", "Section header missing"]
+
+    def print(self, id, symbol=None):
+
+        self.message = "SyntaxError: {}".format(self.message_list(id))
         
         # Print error to terminal using method in Scanner class.
         # Skip line to resume parsing after the next semicolon.
-        Scanner.print_error_line(error_type, self.message)
+        Scanner.print_error_line(self.error_type_list(id), self.message)
+    
+
 
 # class OpenParentheses(SyntaxError):
 
