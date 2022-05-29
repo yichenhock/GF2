@@ -90,7 +90,7 @@ class Parser:
             eofcheck = self.devices_block()
 
         # If the symbol we expect is any header but we get a bracket, then we can report the header as missing
-        elif self.symbol.type == self.scanner.BRACKET_OPEN:
+        elif self.symbol.type == self.scanner.OPEN_BRACKET:
             self.syntax.printerror(self.syntax.NO_HEADER)
             print('Skipping devices block')
             eofcheck = self.skip_block()
@@ -107,7 +107,7 @@ class Parser:
             eofcheck = self.initialise_block()
 
         # If the symbol we expect is any header but we get a bracket, then we can report the header as missing
-        elif self.symbol.type == self.scanner.BRACKET_OPEN:
+        elif self.symbol.type == self.scanner.OPEN_BRACKET:
             self.syntax.printerror(self.syntax.NO_HEADER)
             eofcheck = self.skip_block()
 
@@ -122,7 +122,7 @@ class Parser:
             eofcheck = self.connections_block()
 
         # If the symbol we expect is any header but we get a bracket, then we can report the header as missing
-        elif self.symbol.type == self.scanner.BRACKET_OPEN:
+        elif self.symbol.type == self.scanner.OPEN_BRACKET:
             self.syntax.printerror(self.syntax.NO_HEADER)
             eofcheck = self.skip_block()
 
@@ -137,7 +137,7 @@ class Parser:
             eofcheck = self.monitors_block()
 
         # If the symbol we expect is any header but we get a bracket, then we can report the header as missing
-        elif self.symbol.type == self.scanner.BRACKET_OPEN:
+        elif self.symbol.type == self.scanner.OPEN_BRACKET:
             self.syntax.printerror(self.syntax.NO_HEADER)
             eofcheck = self.skip_block()
 
@@ -177,7 +177,7 @@ class Parser:
         # Fetch next symbol after section heading and check it's a bracket
         self.symbol = self.scanner.get_symbol()
 
-        if self.symbol != self.scanner.BRACKET_OPEN:
+        if self.symbol != self.scanner.OPEN_BRACKET:
             # If not a bracket, skip to next character (unique handling method to this error)
             self.syntax.printerror(self.syntax.NO_OPEN_BRACKET, self.scanner)
 
@@ -187,12 +187,12 @@ class Parser:
             return
         
         # Skip device block, end reached
-        if self.symbol == self.scanner.BRACKET_CLOSE:
+        if self.symbol == self.scanner.CLOSE_BRACKET:
             eofcheck = False
             return
 
         # Call line-level function as long as end of block not reached
-        while self.symbol.type != self.scanner.BRACKET_CLOSE:
+        while self.symbol.type != self.scanner.CLOSE_BRACKET:
             # Read first name on next line to check if it is a device, switch or clock name
             print("Reading device name inside devices block")
             # Sets name_type and current_name attributes
@@ -510,7 +510,7 @@ class Parser:
                     pass
         
         # No device name found at the beginning of the line inside the device class but not reached end of block yet
-        elif self.symbol.id != self.scanner.BRACKET_CLOSE:
+        elif self.symbol.id != self.scanner.CLOSE_BRACKET:
             self.syntax.printerror(self.syntax.NO_DEVICE_NAME, self.scanner)
 
     def parse_network(self):

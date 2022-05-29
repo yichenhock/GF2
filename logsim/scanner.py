@@ -1,3 +1,4 @@
+
 """Read the circuit definition file and translate the characters into symbols.
 
 Used in the Logic Simulator project to read the characters in the definition
@@ -63,13 +64,29 @@ class Scanner:
 
         self.names = names
 
-        #Define all symbol types
+        # Define all symbol types
         self.symbol_list = [",", ".", ";", "=", "(", ")", "#", "name", "keyword", "number", "eof"]
-        self.symbol_type_list = [self.COMMA, self.DOT, self.SEMICOLON, self.EQUALS, self.BRACKET_OPEN, self.BRACKET_CLOSE, self.HASH, self.NAME, self.KEYWORD, self.NUMBER, self.EOF] = range(11)
+        self.symbol_type_list = [self.COMMA, self.DOT, self.SEMICOLON,
+                                 self.EQUALS, self.OPEN_BRACKET,
+                                 self.CLOSE_BRACKET, self.KEYWORD,
+                                 self.NUMBER, self.NAME, self.EOF] = range(10)
 
-        #Define all keywords
-        self.keywords_list = ["devices", "initialise", "connections", "monitors", "has", "have", "is", "are", "to", "connected", "input", "inputs", "cycle", "length", "AND", "OR", "NOR", "XOR", "NAND", "DTYPE",  "SWITCH", "CLOCK", "HIGH", "LOW", "DATA", "CLK", "SET", "CLEAR", "Q", "QBAR"]
-        [self.devices_id, self.initialise_id, self.connections_id, self.monitors_id, self.has_id, self.have_id, self.is_id, self.are_id, self.to_id, self.connected_id, self.input_id, self.inputs_id, self.cycle_id, self.length_id, self.AND_id, self.OR_id, self.NOR_id, self.XOR_id, self.NAND_id, self.DTYPE_id, self.SWITCH_id, self.CLOCK_id, self.HIGH_id, self.LOW_id, self.DATA_id, self.CLK_id, self.SET_id, self.CLEAR_id, self.Q_id, self.QBAR_id] = self.names.lookup(self.keywords_list)
+        # Define all keywords
+        self.keywords_list = ["devices", "initialise", "connections",
+                              "monitors", "has", "have", "is", "are", "to",
+                              "connected", "input", "inputs", "cycle",
+                              "length", "clk", "sw", "AND", "OR", "NOR",
+                              "XOR", "NAND", "DTYPE", "SWITCH", "CLOCK",
+                              "I", "HIGH", "LOW", "DATA", "CLK", "SET",
+                              "CLEAR", "Q", "QBAR"]
+        [self.devices_id, self.initialise_id, self.connections_id,
+         self.monitors_id, self.has_id, self.have_id, self.is_id, self.are_id,
+         self.to_id, self.connected_id, self.input_id, self.inputs_id,
+         self.cycle_id, self.length_id, self.clk_id, self.sw_id, self.AND_id,
+         self.OR_id, self.NOR_id, self.XOR_id, self.NAND_id, self.DTYPE_id,
+         self.SWITCH_id, self.CLOCK_id, self.I_id, self.HIGH_id, self.LOW_id,
+         self.DATA_id, self.CLK_id, self.SET_id, self.CLEAR_id, self.Q_id,
+         self.QBAR_id] = self.names.lookup(self.keywords_list)
 
         self.current_character = " "
         self.current_line = 0
@@ -122,7 +139,7 @@ class Scanner:
     def get_name(self):
         """Read and returns the next name (word made up of only letters)."""
         name = ""
-        while self.current_character.isalnum():
+        while self.current_character.isalpha():
             name += self.current_character
             self.advance()
         return name
@@ -181,8 +198,7 @@ class Scanner:
         elif self.current_character == "":  # End of File
             symbol.type = self.EOF
 
-        else:  # Not a valid character
-            self.print_error_line("Undefined Character", "Invalid character")
+        else:  # Not a valid character (symbol.type == None)
             self.advance()
 
         return symbol
