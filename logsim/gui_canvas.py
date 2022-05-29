@@ -9,6 +9,7 @@ MyGLCanvas - handles all canvas drawing operations.
 import wx
 import wx.glcanvas as wxcanvas
 from OpenGL import GL, GLUT
+from PIL import Image
 
 class MyGLCanvas(wxcanvas.GLCanvas):
     """Handle all drawing operations.
@@ -64,6 +65,17 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         self.Bind(wx.EVT_SIZE, self.on_size)
         self.Bind(wx.EVT_MOUSE_EVENTS, self.on_mouse)
 
+    def update_dimensions(self) -> None:
+        """
+        Update the canvas dimensions.
+
+        Returns
+        -------
+        `None`
+        """
+        size = self.GetClientSize()
+        self.width, self.height = size.width, size.height
+
     def init_gl(self):
         """Configure and initialise the OpenGL context."""
         size = self.GetClientSize()
@@ -78,6 +90,9 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         GL.glLoadIdentity()
         GL.glTranslated(self.pan_x, self.pan_y, 0.0)
         GL.glScaled(self.zoom, self.zoom, self.zoom)
+
+    def render_waveforms(self):
+        pass
 
     def render(self, text):
         """Handle all drawing operations."""
@@ -196,3 +211,22 @@ class MyGLCanvas(wxcanvas.GLCanvas):
                 GL.glRasterPos2f(x_pos, y_pos)
             else:
                 GLUT.glutBitmapCharacter(font, ord(character))
+
+    def save(self, filename: str) -> None:
+        """
+        Save the current view to a PNG image file.
+
+        Parameters
+        ----------
+        `filename`: filename for the image file
+
+        Returns
+        -------
+        `None`
+        """
+        self.update_dimensions()
+        data = GL.glReadPixels(0, 0, self.width, self.height, GL.GL_RGB,
+                               GL.GL_UNSIGNED_BYTE, None)
+        image = Image.frombytes("RGB", (self.width, self.height), data)
+        image = image.transpose(Image.FLIP_TOP_BOTTOM)
+        image.save(filename, format="png")

@@ -7,7 +7,9 @@ Description of classes
 """
 import sys
 import wx
+import wx.lib.agw.ultimatelistctrl as ULC
 
+from gui_listctrl import ListCtrl
 
 class RedirectText(object):
     def __init__(self,aWxTextCtrl):
@@ -38,10 +40,13 @@ class ConsoleOutTab(wx.Panel):
         font_code = wx.Font(10, wx.MODERN, wx.NORMAL, wx.NORMAL, False, u'Consolas')
         self.log.SetFont(font_code)
         self.commands.SetFont(font_code)
-        self.commands.SetHint('Type commands here')
 
         self.log.SetBackgroundColour("dark grey")
         self.log.SetForegroundColour("white")
+
+        self.commands.SetBackgroundColour("dark grey")
+        self.commands.SetForegroundColour("white")
+        self.commands.SetHint('Type commands here')
 
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(self.log, wx.EXPAND, wx.EXPAND, 0)
@@ -116,12 +121,37 @@ class InputsTab(wx.Panel):
     def __init__(self, parent):
         """"""
         wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
-
-        # txtBox = wx.TextCtrl(self, wx.ID_ANY, "")
-        text1 = wx.TextCtrl(self, -1, "components - table of switches and clocks and their states. Need to allow the states to be toggled by the user", style = wx.NO_BORDER | wx.TE_MULTILINE) 
       
+        switch_list_style = \
+            ULC.ULC_REPORT | ULC.ULC_VRULES | \
+            ULC.ULC_HRULES | ULC.ULC_SINGLE_SEL | \
+            ULC.ULC_HAS_VARIABLE_ROW_HEIGHT
+        self.switch_list = ListCtrl(self, wx.ID_ANY,
+                                      agwStyle=switch_list_style)
+        self.switch_list.InsertColumn(0, "Switch")
+        self.switch_list.InsertColumn(1, "State")
+
+        switch_id = 0
+        initial_state = 0
+        index = self.switch_list.InsertStringItem(switch_id, "switch name")
+        attr = "switch_" + str(switch_id)
+        setattr(self, attr,
+                wx.ToggleButton(self.switch_list, wx.ID_ANY,
+                                str(initial_state)))
+        button = getattr(self, attr)
+        if initial_state == 1:
+            button.SetValue(True)
+
+        # Right cell is the toggle button
+        self.switch_list.SetItemWindow(index, 1, button)
+        # Set switch_id attribute so that event handler can access
+        # the id
+        button.switch_id = switch_id
+        # button.Bind(wx.EVT_TOGGLEBUTTON, self.on_toggle)
+
+
         sizer = wx.BoxSizer(wx.VERTICAL)
-        sizer.Add(text1, wx.EXPAND, wx.EXPAND, 0)
+        sizer.Add(self.switch_list, wx.EXPAND, wx.EXPAND, 0)
 
         self.SetSizer(sizer)
 
@@ -130,14 +160,66 @@ class MonitorsTab(wx.Panel):
     A simple wx.Panel class
     """
     #----------------------------------------------------------------------
-    def __init__(self, parent):
+    def __init__(self, parent, statusbar):
         """"""
         wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
 
-        # txtBox = wx.TextCtrl(self, wx.ID_ANY, "")
-        text1 = wx.TextCtrl(self, -1, "List of devices and whether they are being monitored. Checkboxes to add them to monitor", style = wx.NO_BORDER | wx.TE_MULTILINE) 
-      
+        self.statusbar = statusbar
+
+        switch_list_style = \
+            ULC.ULC_REPORT | ULC.ULC_VRULES | \
+            ULC.ULC_HRULES | ULC.ULC_SINGLE_SEL | \
+            ULC.ULC_HAS_VARIABLE_ROW_HEIGHT
+        self.switch_list = ListCtrl(self, wx.ID_ANY,
+                                      agwStyle=switch_list_style)
+        self.switch_list.InsertColumn(0, "Component")
+        self.switch_list.InsertColumn(1, "") # remove from monitor buttons
+
+        switch_id = 0
+        index = self.switch_list.InsertStringItem(switch_id, "component name")
+        attr = "switch_" + str(switch_id)
+        setattr(self, attr,
+                wx.ToggleButton(self.switch_list, wx.ID_ANY,
+                                str("Remove")))
+        button = getattr(self, attr)
+        
+        # Right cell is the toggle button
+        self.switch_list.SetItemWindow(index, 1, button)
+        # Set switch_id attribute so that event handler can access
+        # the id
+        button.switch_id = switch_id
+        button.Bind(wx.EVT_TOGGLEBUTTON, self.on_remove)
+
+        self.label_types = wx.StaticText(self, wx.ID_ANY, "Type")
+        self.combo_types = wx.ComboBox(self, wx.ID_ANY, choices=['All', 'Device','Switch','Clock'])
+        self.combo_types.SetValue("All")
+        self.label_names = wx.StaticText(self, wx.ID_ANY, "Name")
+        self.combo_names = wx.ComboBox(self, wx.ID_ANY, choices=['A','B','C'])
+        self.add_button = wx.Button(self, wx.ID_ANY, 'Add')
+
+        # Create a sizer.
+        self.grid_sizer = wx.FlexGridSizer(2, 2, (5, 5))
+        self.grid_sizer.Add(self.label_types, flag=wx.EXPAND)
+        self.grid_sizer.Add(self.combo_types, flag=wx.EXPAND)
+        self.grid_sizer.Add(self.label_names, flag=wx.EXPAND)
+        self.grid_sizer.Add(self.combo_names, flag=wx.EXPAND)
+        
+        self.grid_sizer.AddGrowableRow(0, 1)
+        self.grid_sizer.AddGrowableRow(1, 1)
+        self.grid_sizer.AddGrowableCol(0, 1)
+        self.grid_sizer.AddGrowableCol(1, 4)
+
+        # static boxes for layout
+        self.static_box = wx.StaticBox(self, wx.ID_ANY, "Add Component To Monitor")
+        self.bottom_sizer = wx.StaticBoxSizer(self.static_box, wx.VERTICAL)
+        self.bottom_sizer.Add(self.grid_sizer, 0, wx.EXPAND | wx.ALL, 10)
+        self.bottom_sizer.Add(self.add_button, 0, wx.CENTER |wx.ALL, 10)
+
         sizer = wx.BoxSizer(wx.VERTICAL)
-        sizer.Add(text1, wx.EXPAND, wx.EXPAND, 0)
+        sizer.Add(self.switch_list, wx.EXPAND, wx.CENTER | wx.EXPAND | wx.ALL, 0)
+        sizer.Add(self.bottom_sizer, 0, wx.CENTER | wx.EXPAND | wx.ALL, 10)
 
         self.SetSizer(sizer)
+    
+    def on_remove(self, event): 
+        self.statusbar.SetStatusText("Device removed.")

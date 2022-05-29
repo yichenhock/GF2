@@ -46,7 +46,7 @@ class Gui(wx.Frame):
 
     def __init__(self, title, path, names, devices, network, monitors):
         """Initialise widgets and layout."""
-        super().__init__(parent=None, title=title, size=(1000, 800))
+        super().__init__(parent=None, title=title, size=(1024, 768))
 
         self.path = path
 
@@ -65,6 +65,7 @@ class Gui(wx.Frame):
 
         # main monitor part
         self.canvas = MyGLCanvas(self, devices, monitors, self.statusbar)
+
         self.mgr.AddPane(self.canvas, aui.AuiPaneInfo().CenterPane())
 
         # bottom panel 
@@ -73,7 +74,7 @@ class Gui(wx.Frame):
         consoleOutPanel = ConsoleOutTab(notebook)
         circuitDefPanel = CircuitDefTab(notebook, self.path, self.statusbar)
         componentsPanel = InputsTab(notebook)
-        devicesPanel = MonitorsTab(notebook)
+        devicesPanel = MonitorsTab(notebook, self.statusbar)
 
         notebook.AddPage(consoleOutPanel, "Output", True)
         notebook.AddPage(circuitDefPanel, "Circuit Definition", False)
@@ -102,6 +103,11 @@ class Gui(wx.Frame):
         self.Bind(wx.EVT_CLOSE, self.on_close) 
         self.Centre() 
         self.Show(True)
+        
+        self.SetSizeHints(minW=600, minH=400)
+
+        print("Logic Simulator: interactive graphical user interface.\n"
+              "Enter 'h' for help.")
 
     def create_menu(self): 
         fileMenu = wx.Menu()
@@ -137,6 +143,9 @@ class Gui(wx.Frame):
                            wx.BITMAP_TYPE_PNG).ConvertToBitmap(), shortHelp="Reset the simulation") 
         
         self.spin = wx.SpinCtrl(tb, wx.ID_ANY, "10")
+        # Configure spin
+        self.spin.SetMin(1)
+        self.spin.SetMax(1000)
         tb.AddControl(self.spin, 'Cycles')
 
         tb.AddStretchableSpace()
