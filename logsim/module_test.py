@@ -2,6 +2,7 @@
 import sys
 from names import Names
 from scanner import Symbol, Scanner
+from parse import Parser
 
 """names.py tests"""
 
@@ -45,3 +46,6 @@ while x.type != 10:
     # print(name.names)
 
 #print(type_id_list)
+
+"""parser.py tests"""
+parse = Parser()

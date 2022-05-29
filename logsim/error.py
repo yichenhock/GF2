@@ -42,27 +42,48 @@ Classes
 from scanner import Scanner
 
 class SemanticError():
-    pass
-
-class SyntaxError():
 
     def __init__(self):
-        """Set parameters to report error.
+        """Set parameters to report error."""
+
+        self.id_list = [self.WRONG_GATE_FOR_NAME, self.NAME_ALREADY_EXISTS] = range(len(self.id_list))
+
+        self.error_type_list = ["WRONG_GATE_FOR_NAME", "NAME_ALREADY_EXISTS"]
+
+    def print(self, id, symbol1=None, symbol2=None):
+        """Print error message to terminal and skip line.
         
         Parameters
         -------
 
-        'message': Output to be printed to terminal.
+        'message': Output to be printed to terminal."""
 
-        """
+        self.message_list = ["Wrong gate type provided for device name chosen. Given {}, expected {}".format(symbol1, symbol2), "Device name {} defined has already been used above.".format(symbol1)]
 
-        self.id_list = [self.NO_CLOSE_BRACKET, self.DEVICE_LETTER_CAPITAL, self.NO_DEVICE_NAME, self.NO_DEVICE_BLOCK, self.NO_HEADER, self.HEADER_NAME_ERROR, self.NO_DEFINITION_KEYWORD, self.NO_POSSESSION_KEYWORD, self.DEVICE_TYPE_ERROR] = range(len(self.id_list))
+        self.message = "SyntaxError: {}".format(self.message_list(id))
+        
+        # Print error to terminal using method in Scanner class.
+        # Skip line to resume parsing after the next semicolon.
+        Scanner.print_error_line(self.error_type_list(id), self.message)
+        
+class SyntaxError():
 
-        self.error_type_list = ["NO_CLOSE_BRACKET", "DEVICE_LETTER_CAPITAL", "NO_DEVICE_NAME", "NO_DEVICE_BLOCK", "NO_HEADER", "HEADER_NAME_ERROR", "NO_DEFINITION_KEYWORD", "NO_POSSESSION_KEYWORD", "DEVICE_TYPE_ERROR"]
+    def __init__(self):
+        """Set parameters to report error."""
 
-        self.message_list = ["Missing close parentheses following section or subsection initialisation.", "Device names must not contain capitalised letters.", "Device name missing. Please provide a valid alphanumeric device name.", "Device block missing. Please provide at least one device inside the device block and a block header.", "Section header missing", "Section header name is not legal.", "Missing definition keyword.", "Missing possession keyword.", "Device type is not legal."]
+        self.id_list = [self.NO_OPEN_BRACKET, self.NO_CLOSE_BRACKET, self.DEVICE_LETTER_CAPITAL, self.NO_DEVICE_NAME, self.NO_DEVICE_BLOCK, self.NO_HEADER, self.HEADER_NAME_ERROR, self.NO_DEFINITION_KEYWORD, self.NO_POSSESSION_KEYWORD, self.DEVICE_TYPE_ERROR, self.INCORRECT_CLOCK_NAME, self.NO_SEMICOLON, self.INCONSISTENT_DEVICE_NAMES] = range(len(self.id_list))
 
-    def print(self, id, symbol=None):
+        self.error_type_list = ["NO_OPEN_BRACKET","NO_CLOSE_BRACKET", "DEVICE_LETTER_CAPITAL", "NO_DEVICE_NAME", "NO_DEVICE_BLOCK", "NO_HEADER", "HEADER_NAME_ERROR", "NO_DEFINITION_KEYWORD", "NO_POSSESSION_KEYWORD", "DEVICE_TYPE_ERROR", "INCORRECT_SWITCH_NAME", "INCORRECT_CLOCK_NAME", "NO_SEMICOLON", "INCONSISTENT_DEVICE_NAMES"]
+
+        self.message_list = ["Missing close parentheses following section or subsection initialisation.", "Device names must not contain capitalised letters.", "Device name missing. Please provide a valid alphanumeric device name.", "Device block missing. Please provide at least one device inside the device block and a block header.", "Section header missing", "Section header name is not legal.", "Missing definition keyword.", "Missing possession keyword.", "Device type is not legal.", "'sw' must be followed by a number only. 'sw' at the start of a name is a reserved device naming keyword indicating a switch.", "'clk' must be followed by a number only. 'clk' at the start of a name is a reserved device naming keyword indicating a clock.", "Semicolon expected at line end, but none found.", "Inconsistent device name types on each line. Switches, clocks and devices must be grouped separately."]
+
+    def printerror(self, id, symbol=None):
+        """Print error message to terminal and skip line.
+        
+        Parameters
+        -------
+
+        'message': Output to be printed to terminal."""
 
         self.message = "SyntaxError: {}".format(self.message_list(id))
         

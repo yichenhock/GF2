@@ -103,6 +103,7 @@ class Scanner:
         self.advance()
         return
 
+    @staticmethod
     def print_error_line(self, error_type, error_message = ""): #See comments at top of Scanner class
         print("Error type:", error_type)
         print(self.lines[self.current_line], end = "")

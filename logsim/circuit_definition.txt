@@ -1,15 +1,15 @@
 #Example A - Simple XOR Circuit;
     
-devices(
+devi(
     A is OR;
     b is NAND;
     c is AND;
-    a, b, c have 21 inputs;
     sw1, sw2 are SWITCHES;
 );
 
 initialise(
     sw1, sw2 are HIGH;
+    a, b, c have 2 inputs;
 );
 
 connections(
