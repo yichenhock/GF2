@@ -170,14 +170,14 @@ class Parser:
         """
 
         print("Entered device block")
-        print("Symbol type:", self.scanner.symbol_list[self.symbol.type])
+
         if self.scanner.symbol_list[self.symbol.type] == "keyword":
             print("Keyword: ", self.scanner.keywords_list[self.symbol.id])
 
         # Fetch next symbol after section heading and check it's a bracket
         self.symbol = self.scanner.get_symbol()
-
-        if self.symbol != self.scanner.OPEN_BRACKET:
+        print("Symbol type:", self.scanner.symbol_list[self.symbol.type]) # Bracket
+        if self.symbol.type != self.scanner.OPEN_BRACKET:
             # If not a bracket, skip to next character (unique handling method to this error)
             self.syntax.printerror(self.syntax.NO_OPEN_BRACKET, self.scanner)
 
@@ -187,7 +187,7 @@ class Parser:
             return
         
         # Skip device block, end reached
-        if self.symbol == self.scanner.CLOSE_BRACKET:
+        if self.symbol.type == self.scanner.CLOSE_BRACKET:
             eofcheck = False
             return
 
@@ -484,7 +484,7 @@ class Parser:
                 for i in self.current_name:
                     if i.isalpha():
                         if i.isupper():
-                            self.syntax.printerror(self.syntax.DEVICE_LETTER_CAPITAL)
+                            self.syntax.printerror(self.syntax.DEVICE_LETTER_CAPITAL, self.scanner)
                             self.is_legal_name = False
                 # If error is not thrown:
                 self.name_type = "device"
@@ -523,7 +523,7 @@ class Parser:
 
         if self.eofcheck == True:
             print("end of file reached")
-            return
+            self.scanner.file.close()
 
         return
 

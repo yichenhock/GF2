@@ -57,3 +57,5 @@ monitors = Monitors(names, devices, network)
 
 parse = Parser(names, devices, network, monitors, scanner)
 parse.parse_network()
+
+scanner.file.close()
