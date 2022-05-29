@@ -523,7 +523,7 @@ class Parser:
         """Parse the circuit definition file."""
 
         # Main idea: should check overall blocks and append order to self.block. Do a check for self.block at the end to see if the main structure follows
-
+        
         # Tree structure: split into blocks
         while self.eofcheck != True:
             self.eofcheck = self.circuit_description()

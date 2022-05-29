@@ -3,6 +3,9 @@ import sys
 from names import Names
 from scanner import Symbol, Scanner
 from parse import Parser
+from devices import Devices, Device
+from network import Network
+from monitors import Monitors
 
 """names.py tests"""
 
@@ -20,8 +23,8 @@ from parse import Parser
 
 """scanner.py tests"""
 
-name = Names()
-name.lookup(["Hello", "hi"])
+names = Names()
+names.lookup(["Hello", "hi"])
 
 
 # Check command line arguments
@@ -33,7 +36,7 @@ if len(arguments) != 1:
 else:
     path = arguments[0]
     print("\nNow opening file...")
-    scanner = Scanner(path, name)
+    scanner = Scanner(path, names)
 
 print(scanner.file.read())
 scanner.file.seek(0)
@@ -45,7 +48,12 @@ while x.type != 10:
     # print(x.type, x.id)
     # print(name.names)
 
-#print(type_id_list)
+# #print(type_id_list)
 
 """parser.py tests"""
+devices = Devices()
+network = Network()
+monitors = Monitors()
+
 parse = Parser()
+parse.parse_network(names, devices, network, monitors, scanner)
