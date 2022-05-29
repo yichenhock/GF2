@@ -10,6 +10,7 @@ from monitors import Monitors
 """names.py tests"""
 
 # name = Names()
+# print(type(name))
 # name.lookup(["Hello", "hi"])
 # print(name.names)
 # print(name.unique_error_codes(1))
@@ -25,7 +26,6 @@ from monitors import Monitors
 
 names = Names()
 names.lookup(["Hello", "hi"])
-
 
 # Check command line arguments
 arguments = sys.argv[1:]

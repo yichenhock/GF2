@@ -91,7 +91,7 @@ The logic description language will be specified using EBNF notation. The langua
 
     device_block = "devices", "(", {gate_definition | dtype_definition | switch_definition | clock_definition}, ")", ";";
 
-    initialise_block = "initialise", "(", {switch_initialisation | clock_initialisation}, ")", ";";
+    initialise_block = "initialise", "(", {gate_initialisation | switch_initialisation | clock_initialisation}, ")", ";";
 
     connections_block = "connections", "(", {device_name, "(", {connection_definition}, ")", ";"}, ")", ";";
 
@@ -105,11 +105,11 @@ The logic description language will be specified using EBNF notation. The langua
 
     clock_definition = clock_name, {[",", clock_name]}, definition, "CLOCK", ";";
 
-    gate_inputs = device_name, {[",", device_name]}, possession, {digit}, ("input" | "inputs"), ";";
+    gate_initialisation = device_name, {[",", device_name]}, possession, {digit}, ("input" | "inputs"), ";";
 
     switch_initialisation = switch_name, {[",", switch_name]}, definition, switch_level, ";";
     
-    clock_period = clock_name, ("cycle length" | "cycle"), {digit}, ";";
+    clock_initialisation = clock_name, ("cycle length" | "cycle"), {digit}, ";";
 
     connection_definition = (device_name | dtype_output_name | switch_name | clock_name), ("is connected to" | "to"), {(gate_input_name | dtype_input_name)}, ";";
 
@@ -127,7 +127,7 @@ The logic description language will be specified using EBNF notation. The langua
 
     gate_type = "AND" | "OR" | "NOR" | "XOR" | "NAND";
 
-    switch_level = "HIGH" | "LOW" | "1" | "0";
+    switch_level = "HIGH" | "LOW";
 
     dtype_inputs = "DATA" | "CLK" | "SET" | "CLEAR";
 
@@ -153,7 +153,7 @@ The gate and D-type device names are defined by the user, whilst their input and
 Since devices can be named with any combination of letters and numbers, subject to the condition that the start must be a letter, we have chosen lowercase letters only for 'letter', reserving capital letters for fixed keywords and gate types. This avoids common naming clashes.\\
 
 \noindent\\
-In the choosing of the tradeoff between flexibility and complexity, we have given three options for defining connections (arrow, 'is connected to' and 'to') which can be ideally chosen for depending on the client's preference, but kept consistent in usage throughout any one file. The same applies for switch levels (1/0 or 'high/low') as well as when defining the clock cycle length ('cycle length' or 'cycle').
+In the choosing of the tradeoff between flexibility and complexity, we have given three options for defining connections (arrow, 'is connected to' and 'to') which can be ideally chosen for depending on the client's preference, but kept consistent in usage throughout any one file. The same applies when defining the clock cycle length ('cycle length' or 'cycle').
 
 \noindent\\
 We do not include comment syntax in EBNF as the scanner removes comments from input file. The syntax for comments will be "\verb+# ;+", where "\#" denotes the start of the comment section, and ";" denotes the end of the comment section. There will be no line comments as line breaks and spaces hold no significance.\\
@@ -166,34 +166,53 @@ We do not include comment syntax in EBNF as the scanner removes comments from in
     \begin{center}
     \includegraphics[width = 0.7\textwidth]{Simple Circuit.png}
     \vspace{-1cm}
+<<<<<<< HEAD
     \hline 
+=======
+    \caption{XOR Gate}
+    \end{center}
+    \label{fig:Simple Circuit}
+    \end{figure}
+
+\begin{multicols}{2}
+\begin{Verbatim}[numbers=left,xleftmargin=5mm]
+    devices(
+        a is OR;
+        b is NAND;
+        c is AND;
+        sw1, sw2 are SWITCHES;
+    )
+    
+>>>>>>> michael/scanner_pytests
     initialise(
+        a, b, c have 2 inputs;
         sw1, sw2 are HIGH;
-    );
+    )
     
     connections(
         a(
             sw1 is connected to a.I1;
             sw2 is connected to a.I2;
-        );
+        )
     
         b(  
             sw1 is connected to b.I1;
             sw2 is connected to b.I2;
-        );
+        )
     
         c(  
             a is connected to c.I1;
             b is connected to c.I2;
-        );
-    );
+        )
+    )
     
     monitors(
         c;
-    );
+    )
 \end{Verbatim}
 \end{multicols}
-    
+
+\newpage
 \subsection{Example B --- Complex Circuit}
 %-------COMPLEX CIRCUIT WRITE HERE-------
     
@@ -212,59 +231,58 @@ We do not include comment syntax in EBNF as the scanner removes comments from in
         b, c, d, e are NAND;
         f is DTYPE;
         g is XOR;
-        a, b, c, d, e, g have 2 inputs;
         sw1, sw2 are SWITCH;
         clk1 is CLOCK;
-    );
+    )
     
     initialise(
+        a, b, c, d, e, g have 2 inputs;
         sw1, sw2 are LOW;
         clk1 cycle length 1000;
-    );
+    )
     
     connections(
         a(
             e to a.I1;
             e to a.I2;
-        );
+        )
     
         b(  
             e to b.I1;
             clk1 to b.I2;
-        );
+        )
     
         c(  
             clk1 to c.I1;
             a to c.I2;
-        );
+        )
     
         d(
             b to d.I1;
             e to d.I2;
-        );
+        )
     
         e(  
             d to e.I1;
             c to e.I2;
-        );
+        )
     
-        f(  -16.
-        XOR must have 1 
+        f(
             f.QBAR to f.DATA;
             d to f.CLK;
             sw1 to f.SET;
             sw2 to f.CLEAR;
-        );
+        )
     
         g(  
             d to g.I1;
             f.Q to g.I2;
-        );
-    );
+        )
+    )
     
     monitors(
         d, f.Q, g;
-    );
+    )
 \end{Verbatim}
 \end{multicols}
 
