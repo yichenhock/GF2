@@ -33,7 +33,26 @@ def test_scanner_init_raises_exceptions(new_names):
 
 def test_get_symbol(new_test_scanner):
     """Test to see if get_symbol returns the correct symbol."""
-    pass
+    print(new_test_scanner.devices_id)
+    # Skip comment 1
+    assert new_test_scanner.get_symbol().type == None # Invalid Character
+    assert new_test_scanner.get_symbol().type == 0 # COMMA
+    assert new_test_scanner.get_symbol().type == 1 # DOT
+    assert new_test_scanner.get_symbol().type == 2 # SEMICOLON
+    assert new_test_scanner.get_symbol().type == 3 # EQUALS
+    assert new_test_scanner.get_symbol().type == 4 # OPEN_BRACKET
+    assert new_test_scanner.get_symbol().type == 5 # CLOSE_BRACKET
+    assert new_test_scanner.get_symbol().type == 7 # NUMBER
+    # Skip comment 2
+    assert new_test_scanner.get_symbol().type == 8 # NAME
+    
+
+    for i in range(30): # KEYWORD
+        print(i)
+        assert new_test_scanner.get_symbol().type == 6 
+        assert new_test_scanner.get_symbol().id == i # Invalid Character
+
+    assert new_test_scanner.get_symbol().type == 9 # Invalid Character
 
 def test_print_error_line(new_test_scanner):
     pass

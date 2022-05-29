@@ -1,7 +1,7 @@
-hello 29,
-#comment test;
--.=
-
+#comment test1;
+-
+,.;=() 29 #comment test2;
+keywords
 devices
 initialise
 connections
