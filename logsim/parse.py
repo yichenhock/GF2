@@ -179,28 +179,34 @@ class Parser:
 
         self.device_name()
 
-            while self.symbol.type == self.scanner.COMMA:
-                current_name = self.names.names[self.symbol.id]
-                self.symbol = self.scanner.get_symbol()
+        while self.symbol.type == self.scanner.COMMA:
+            # If we have a comma, then we expect a device name afterwards
+            self.device_name()
+            # Get next symbol after device name to check if it's a comma
+            self.symbol = self.scanner.get_symbol()
 
-            if self.symbol.type == self.scanner.KEYWORD and self.symbol.id in self.definition_ids:
-                self.symbol = self.scanner.get_symbol()
-                if self.symbol.id not in self.gate_type_ids:
-                    if self.symbol.id in self.switch_id or self.clock_id:
-                        # Semantic error - device type
-                        pass
-                    else:
-                        printerror = SyntaxError(SyntaxError.DEVICE_TYPE_ERROR)
-                else:
-                    # Do something to call the device class
+        # Expect definition keyword to be current symbol
+        # Check if symbol type is keyword and symbol ID is that for definition
+        if self.symbol.type == self.scanner.KEYWORD and self.symbol.id in self.definition_ids:
+
+            self.symbol = self.scanner.get_symbol()
+
+            if self.symbol.id not in self.gate_type_ids:
+                if self.symbol.id in self.switch_id or self.clock_id:
+                    # Semantic error - device type
                     pass
-
-        # No device name found at the beginning of the line inside the device class but not reached end of block yet
-        elif self.symbol.id != self.scanner.BRACKET_CLOSE:
-            self.syntax.print(self.syntax.DEVICE_NAME_MISSING)
-
-        elif self.symbol.id == self.scanner.BRACKET_CLOSE:
+                else:
+                    self.syntax.print(self.syntax.DEVICE_TYPE_ERROR)
+            else:
+                # Do something to call the device class
+                pass
+        
+        # If next symbol is not a definition keyword, throw error        
+        else:
+            self.syntax.print(self.syntax.NO_DEFINITION_KEYWORD)
             return
+        
+        # =================PICK UP BACK HERE
     
     def switch_definition(self):
         """Parse switch and check switch
@@ -235,6 +241,8 @@ class Parser:
         return None
     
     def device_name(self):
+        """Parse one device name only."""
+
         # If first symbol is of type NAME (for all gates and DTYPE)
         if self.symbol.type == self.scanner.NAME:
             current_name = self.names.names[self.symbol.id]
@@ -251,6 +259,12 @@ class Parser:
             # If name is legal, append to name list
             if self.is_legal_name:
                 self.user_object_list.append(current_name)
+            return
+
+        # No device name found at the beginning of the line inside the device class but not reached end of block yet
+        elif self.symbol.id != self.scanner.BRACKET_CLOSE:
+            self.syntax.print(self.syntax.DEVICE_NAME_MISSING)
+            return
     
     def clock_name(self):
         return None

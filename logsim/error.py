@@ -56,11 +56,11 @@ class SyntaxError():
 
         """
 
-        self.id_list = [self.NO_CLOSE_BRACKET, self.DEVICE_LETTER_CAPITAL, self.DEVICE_TYPE_ERROR, self.DEVICE_NAME_MISSING, self.HEADER_NAME_ERROR] = range(len(self.id_list))
+        self.id_list = [self.NO_CLOSE_BRACKET, self.DEVICE_LETTER_CAPITAL, self.NO_DEVICE_NAME, self.NO_DEVICE_BLOCK, self.NO_HEADER, self.HEADER_NAME_ERROR, self.NO_DEFINITION_KEYWORD, self.NO_POSSESSION_KEYWORD, self.DEVICE_TYPE_ERROR] = range(len(self.id_list))
 
-        self.error_type_list = ["NO_CLOSE_BRACKET", "DEVICE_LETTER_CAPITAL", "DEVICE_TYPE_ERROR", "NO_DEVICE_NAME", "NO_DEVICE_BLOCK", "NO_HEADER", "HEADER_NAME_ERROR"]
+        self.error_type_list = ["NO_CLOSE_BRACKET", "DEVICE_LETTER_CAPITAL", "NO_DEVICE_NAME", "NO_DEVICE_BLOCK", "NO_HEADER", "HEADER_NAME_ERROR", "NO_DEFINITION_KEYWORD", "NO_POSSESSION_KEYWORD", "DEVICE_TYPE_ERROR"]
 
-        self.message_list = ["Missing close parentheses following section or subsection initialisation.", "Device names must not contain capitalised letters.", "Device name missing. Please provide a valid alphanumeric device name.", "Device block missing. Please provide at least one device inside the device block and a block header.", "Section header missing"]
+        self.message_list = ["Missing close parentheses following section or subsection initialisation.", "Device names must not contain capitalised letters.", "Device name missing. Please provide a valid alphanumeric device name.", "Device block missing. Please provide at least one device inside the device block and a block header.", "Section header missing", "Section header name is not legal.", "Missing definition keyword.", "Missing possession keyword.", "Device type is not legal."]
 
     def print(self, id, symbol=None):
 
