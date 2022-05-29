@@ -38,15 +38,14 @@ Classes
 
 'SemanticError': Skeleton class for semantic errors.
 """
-
 from scanner import Scanner
 
-class SemanticError():
+class SemanticError(Scanner):
 
     def __init__(self):
         """Set parameters to report error."""
 
-        self.id_list = [self.WRONG_GATE_FOR_NAME, self.NAME_ALREADY_EXISTS] = range(len(self.id_list))
+        self.id_list = [self.WRONG_GATE_FOR_NAME, self.NAME_ALREADY_EXISTS] = range(2)
 
         self.error_type_list = ["WRONG_GATE_FOR_NAME", "NAME_ALREADY_EXISTS"]
 
@@ -60,18 +59,18 @@ class SemanticError():
 
         self.message_list = ["Wrong gate type provided for device name chosen. Given {}, expected {}".format(symbol1, symbol2), "Device name {} defined has already been used above.".format(symbol1)]
 
-        self.message = "SyntaxError: {}".format(self.message_list(id))
+        self.message = "SyntaxError: {}".format(self.message_list[id])
         
         # Print error to terminal using method in Scanner class.
         # Skip line to resume parsing after the next semicolon.
-        Scanner.print_error_line(self.error_type_list(id), self.message)
+        Scanner.print_error_line(self.error_type_list[id], self.message)
         
-class SyntaxError():
+class SyntaxError(Scanner):
 
     def __init__(self):
         """Set parameters to report error."""
 
-        self.id_list = [self.NO_OPEN_BRACKET, self.NO_CLOSE_BRACKET, self.DEVICE_LETTER_CAPITAL, self.NO_DEVICE_NAME, self.NO_DEVICE_BLOCK, self.NO_HEADER, self.HEADER_NAME_ERROR, self.NO_DEFINITION_KEYWORD, self.NO_POSSESSION_KEYWORD, self.DEVICE_TYPE_ERROR, self.INCORRECT_CLOCK_NAME, self.NO_SEMICOLON, self.INCONSISTENT_DEVICE_NAMES] = range(len(self.id_list))
+        self.id_list = [self.NO_OPEN_BRACKET, self.NO_CLOSE_BRACKET, self.DEVICE_LETTER_CAPITAL, self.NO_DEVICE_NAME, self.NO_DEVICE_BLOCK, self.NO_HEADER, self.HEADER_NAME_ERROR, self.NO_DEFINITION_KEYWORD, self.NO_POSSESSION_KEYWORD, self.DEVICE_TYPE_ERROR, self.INCORRECT_CLOCK_NAME, self.NO_SEMICOLON, self.INCONSISTENT_DEVICE_NAMES] = range(13)
 
         self.error_type_list = ["NO_OPEN_BRACKET","NO_CLOSE_BRACKET", "DEVICE_LETTER_CAPITAL", "NO_DEVICE_NAME", "NO_DEVICE_BLOCK", "NO_HEADER", "HEADER_NAME_ERROR", "NO_DEFINITION_KEYWORD", "NO_POSSESSION_KEYWORD", "DEVICE_TYPE_ERROR", "INCORRECT_SWITCH_NAME", "INCORRECT_CLOCK_NAME", "NO_SEMICOLON", "INCONSISTENT_DEVICE_NAMES"]
 
@@ -85,11 +84,11 @@ class SyntaxError():
 
         'message': Output to be printed to terminal."""
 
-        self.message = "SyntaxError: {}".format(self.message_list(id))
+        self.message = "SyntaxError: {}".format(self.message_list[id])
         
         # Print error to terminal using method in Scanner class.
         # Skip line to resume parsing after the next semicolon.
-        Scanner.print_error_line(self.error_type_list(id), self.message)
+        Scanner.print_error_line(self.error_type_list[id], self.message)
     
 
 

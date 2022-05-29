@@ -65,7 +65,7 @@ class Parser:
 
         self.definition_ids = [self.scanner.is_id, self.scanner.are_id]
 
-        self.other_keywords_ids = [self.scanner.to_id, self.scanner.connected_id, self.scanner.input_id, self.scanner.inputs_id, self.scanner.cycle_id, self.scanner.length_id, self.scanner.clk_id, self.scanner.sw_id, self.scanner.I_id]
+        self.other_keywords_ids = [self.scanner.to_id, self.scanner.connected_id, self.scanner.input_id, self.scanner.inputs_id, self.scanner.cycle_id, self.scanner.length_id]
 
         self.gate_type_ids = [self.scanner.AND_id, self.scanner.OR_id, self.scanner.NOR_id, self.scanner.XOR_id, self.scanner.NAND_id, self.scanner.DTYPE_id]
 
@@ -107,13 +107,13 @@ class Parser:
             eofcheck = self.monitors_block()
 
         # If the symbol we expect is any header but we get a bracket, then we can report the header as missing
-        elif self.symbol.type == self.scanner.OPEN_BRACKET:
-            self.syntax.printerror(self.syntaxerror.NO_HEADER)
+        elif self.symbol.type == self.scanner.BRACKET_OPEN:
+            self.syntax.printerror(self.syntax.NO_HEADER)
             eofcheck = self.skip_block()
 
         # Incorrect header
         else:
-            self.syntax.printerror(self.syntaxerror.HEADER_NAME_ERROR)
+            self.syntax.printerror(self.syntax.HEADER_NAME_ERROR)
             eofcheck = self.skip_block() 
         
         return eofcheck
@@ -523,7 +523,8 @@ class Parser:
         """Parse the circuit definition file."""
 
         # Main idea: should check overall blocks and append order to self.block. Do a check for self.block at the end to see if the main structure follows
-        
+
+        self.eofcheck = False
         # Tree structure: split into blocks
         while self.eofcheck != True:
             self.eofcheck = self.circuit_description()
