@@ -195,7 +195,8 @@ class Parser:
         while self.symbol.type != self.scanner.BRACKET_CLOSE:
             # Read first name on next line to check if it is a device, switch or clock name
             print("Reading device name inside devices block")
-            self.current_name, self.name_type = self.read_name("devices")
+            # Sets name_type and current_name attributes
+            self.read_name("devices")
             if self.name_type == "device":
                 eofcheck = self.device_definition(self.current_name)
             elif self.name_type == "switch":
@@ -211,18 +212,6 @@ class Parser:
         # Exit the above while loop when symbol stored is a closed bracket
         # End of functionality of devices_block function
         return eofcheck
-
-    def initialise_block(self):
-        """Initialises devices, switches and clocks.
-        
-        Devices are given input number. Switches are given high or low at start. Clocks are given a cycle length.
-        """
-
-    def connections_block(self):
-        return None
-    
-    def monitors_block(self):
-        return None
 
     def device_definition(self, currentname):
         """Parse one line of device definition.
@@ -249,7 +238,7 @@ class Parser:
 
         while self.symbol.type == self.scanner.COMMA:
             # If comma, expect a device name afterwards
-            self.current_name, self.name_type = self.get_name("devices")
+            self.read_name("devices")
             if self.name_type != "device":
                 # If you mix up device types, syntax error
                 self.syntax.printerror(self.syntax.INCONSISTENT_DEVICE_NAMES, self.scanner)
@@ -281,7 +270,7 @@ class Parser:
             # To create a linked list with the device names
             # This should be updated with functionality from the devices class once testing on parser alone is complete
             else:
-                self.user_object_type_list += self.keywords_list[self.symbol.id]*i
+                self.user_object_type_list += self.scanner.keywords_list[self.symbol.id]*i
 
                 self.symbol = self.scanner.get_symbol()
                 if self.symbol == self.scanner.EOF:
@@ -324,7 +313,7 @@ class Parser:
 
         while self.symbol.type == self.scanner.COMMA:
             # If comma, expect a device name afterwards
-            self.current_name, self.name_type = self.get_name("devices")
+            self.read_name("devices")
             if self.name_type != "switch":
                 # If you mix up device types, syntax error
                 self.syntax.printerror(self.syntax.INCONSISTENT_DEVICE_NAMES, self.scanner)
@@ -402,7 +391,7 @@ class Parser:
             # If comma, expect a device name afterwards
             if self.symbol_type == self.scanner.EOF:
                 return True
-            self.current_name, self.name_type = self.get_name("devices")
+            self.read_name("devices")
             if self.name_type != "clock":
                 # If you mix up device types, syntax error
                 self.syntax.printerror(self.syntax.INCONSISTENT_DEVICE_NAMES, self.scanner)
@@ -451,30 +440,6 @@ class Parser:
 
         return False
     
-    def gate_initialisation(self):
-        """Parse one line inside initialise block specific to gates.
-        
-        Starts at point where the first symbol has already been read and is confirmed to be a device type name.
-        """
-    
-    def switch_initialisation(self):
-        return None
-    
-    def clock_initialisation(self):
-        return None
-    
-    def connection_definition(self):
-        return None
-    
-    def gate_input_name(self):
-        return None
-    
-    def dtype_input_name(self):
-        return None
-    
-    def dtype_output_name(self):
-        return None
-    
     def read_name(self, block):
         """Read a generic name. Handles case for all devices - gate, dtype, switch and clock.
 
@@ -491,7 +456,6 @@ class Parser:
         # If first symbol is of type NAME (for all gates and DTYPE)
         if self.symbol.type == self.scanner.NAME:
             self.current_name = self.names.names[self.symbol.id]
-
             self.is_legal_name = True
             self.name_type = ""
 
@@ -530,8 +494,7 @@ class Parser:
                 # If name is legal and does not exist in list yet, append to name list
                 if self.is_legal_name and self.current_name not in self.user_object_name_list:
                     self.user_object_name_list.append(self.current_name)
-                    return
-                
+                    return self.current_name, self.name_type
                 # If trying to initialise a device using existing name, throw semantic error
                 elif self.is_legal_name and self.current_name in self.user_object_name_list:
                     # self.semantic.printerror(self.semantic.NAME_ALREADY_EXISTS, self.current_name)
@@ -544,15 +507,11 @@ class Parser:
                     pass
                 # Parse existing name
                 elif self.is_legal_name and self.current_name in self.user_object_name_list:
-                    # self.semantic.printerror(self.semantic.NAME_ALREADY_EXISTS, self.current_name)
-                    pass              
+                    pass
         
         # No device name found at the beginning of the line inside the device class but not reached end of block yet
         elif self.symbol.id != self.scanner.BRACKET_CLOSE:
             self.syntax.printerror(self.syntax.NO_DEVICE_NAME, self.scanner)
-            return
-
-        return self.current_name, self.name_type
 
     def parse_network(self):
         """Parse the circuit definition file."""
@@ -567,3 +526,38 @@ class Parser:
             return
 
         return
+
+    def initialise_block(self):
+        """Initialises devices, switches and clocks.
+        
+        Devices are given input number. Switches are given high or low at start. Clocks are given a cycle length.
+        """
+
+    def connections_block(self):
+        return None
+    
+    def monitors_block(self):
+        return None
+    def gate_initialisation(self):
+        """Parse one line inside initialise block specific to gates.
+        
+        Starts at point where the first symbol has already been read and is confirmed to be a device type name.
+        """
+    
+    def switch_initialisation(self):
+        return None
+    
+    def clock_initialisation(self):
+        return None
+    
+    def connection_definition(self):
+        return None
+    
+    def gate_input_name(self):
+        return None
+    
+    def dtype_input_name(self):
+        return None
+    
+    def dtype_output_name(self):
+        return None
