@@ -1,0 +1,34 @@
+hello 29,
+#comment test;
+-.=
+
+devices
+initialise
+connections
+monitors
+has
+have
+is
+are
+to
+connected
+input
+inputs
+cycle
+length
+AND
+OR
+NOR
+XOR
+NAND
+DTYPE
+SWITCH
+CLOCK
+HIGH
+LOW
+DATA
+CLK
+SET
+CLEAR
+Q_id
+QBAR

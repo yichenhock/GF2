@@ -66,8 +66,8 @@ class Scanner:
         # Define all symbol types
         self.symbol_type_list = [self.COMMA, self.DOT, self.SEMICOLON,
                                  self.EQUALS, self.OPEN_BRACKET,
-                                 self.CLOSE_BRACKET, self.HASH, self.KEYWORD,
-                                 self.NUMBER, self.NAME, self.EOF] = range(11)
+                                 self.CLOSE_BRACKET, self.KEYWORD,
+                                 self.NUMBER, self.NAME, self.EOF] = range(10)
 
         # Define all keywords
         self.keywords_list = ["devices", "initialise", "connections",
@@ -110,7 +110,11 @@ class Scanner:
         return
 
     def skip_spaces(self):
-        """Skips until non-space character is reached."""
+        """Skips until non-space character is reached, also skips comments."""
+        while self.current_character.isspace():
+            self.advance()
+        if self.current_character == "#":
+            self.skip_line()
         while self.current_character.isspace():
             self.advance()
         return
@@ -151,11 +155,7 @@ class Scanner:
         symbol = Symbol()
         self.skip_spaces()  # Current character is now not whitespace
 
-        if self.current_character == "#":
-            symbol.type = self.HASH
-            self.skip_line()
-
-        elif self.current_character.isalpha():  # Name
+        if self.current_character.isalpha():  # Name
             name_string = self.get_name()
             print(name_string)
             if name_string in self.keywords_list:
