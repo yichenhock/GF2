@@ -63,6 +63,7 @@ class Scanner:
         self.names = names
 
         #Define all symbol types
+        self.symbol_list = [",", ".", ";", "=", "(", ")", "#", "name", "keyword", "number", "eof"]
         self.symbol_type_list = [self.COMMA, self.DOT, self.SEMICOLON, self.EQUALS, self.BRACKET_OPEN, self.BRACKET_CLOSE, self.HASH, self.NAME, self.KEYWORD, self.NUMBER, self.EOF] = range(11)
 
         #Define all keywords

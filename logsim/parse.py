@@ -53,7 +53,6 @@ class Parser:
         self.syntax = SyntaxError()
         self.semantic = SemanticError()
 
-        self.block = []
         self.user_object_name_list = []
         self.user_object_type_list = []
         self.user_object_input_num_list = []
@@ -82,24 +81,55 @@ class Parser:
     def circuit_description(self):
         """Check the header for each block exists, and is not misspelled. Call relevant block function."""
 
-        # Read the first thing of each block
-        self.symbol = self.scanner.get_symbol()
+        print("Symbol type:", self.scanner.symbol_list[self.symbol.type])
 
         # Check if first keyword is a devices
         if (self.symbol.type == self.scanner.KEYWORD 
         	and self.symbol.id == self.scanner.devices_id):
-            self.block.append("devices")
+            print('Entering devices block')
             eofcheck = self.devices_block()
+
+        # If the symbol we expect is any header but we get a bracket, then we can report the header as missing
+        elif self.symbol.type == self.scanner.BRACKET_OPEN:
+            self.syntax.printerror(self.syntax.NO_HEADER)
+            print('Skipping devices block')
+            eofcheck = self.skip_block()
+        
+        # Incorrect header
+        else:
+            self.syntax.printerror(self.syntax.HEADER_NAME_ERROR, self.scanner)
+            print('Skipping devices block')
+            eofcheck = self.skip_block() 
 
         # Check if next keyword is initialise
         if (self.symbol.type == self.scanner.KEYWORD 
         	and self.symbol.id == self.scanner.initialise_id):
             eofcheck = self.initialise_block()
+
+        # If the symbol we expect is any header but we get a bracket, then we can report the header as missing
+        elif self.symbol.type == self.scanner.BRACKET_OPEN:
+            self.syntax.printerror(self.syntax.NO_HEADER)
+            eofcheck = self.skip_block()
+
+        # Incorrect header
+        else:
+            self.syntax.printerror(self.syntax.HEADER_NAME_ERROR, self.scanner)
+            eofcheck = self.skip_block() 
         
         # Check if next keyword is connections
         if (self.symbol.type == self.scanner.KEYWORD 
         	and self.symbol.id == self.scanner.connections_id):
             eofcheck = self.connections_block()
+
+        # If the symbol we expect is any header but we get a bracket, then we can report the header as missing
+        elif self.symbol.type == self.scanner.BRACKET_OPEN:
+            self.syntax.printerror(self.syntax.NO_HEADER)
+            eofcheck = self.skip_block()
+
+        # Incorrect header
+        else:
+            self.syntax.printerror(self.syntax.HEADER_NAME_ERROR, self.scanner)
+            eofcheck = self.skip_block() 
         
         # Check if next keyword is monitors
         if (self.symbol.type == self.scanner.KEYWORD 
@@ -113,39 +143,43 @@ class Parser:
 
         # Incorrect header
         else:
-            self.syntax.printerror(self.syntax.HEADER_NAME_ERROR)
+            self.syntax.printerror(self.syntax.HEADER_NAME_ERROR, self.scanner)
             eofcheck = self.skip_block() 
-        
+
         return eofcheck
 
     def skip_block(self):
         """Skip entire block because it is not possible to know what is supposed to be inside, by repeatedly calling skip_line() from the Scanner class.
 
-        For header name errors.
+        For header name errors. Finishes after having read the first symbol of the next line.
         """
 
         while (self.symbol.id not in self.block_ids and self.symbol.type != self.scanner.EOF):
             self.scanner.skip_line()
+            self.symbol = self.scanner.get_symbol()
             if self.symbol.type == self.scanner.EOF:
                 return True
-
-        if len(self.block) <= 4:
-            self.circuit_description()
-
-        if self.symbol.type == self.scanner.EOF:
-            return True
         
         return False
 
     def devices_block(self):
-        """Operate at level of parsing a device block."""
+        """Operate at level of parsing a device block.
+
+        Should finish after reading the first symbol of the next line.
+        
+        """
+
+        print("Entered device block")
+        print("Symbol type:", self.scanner.symbol_list[self.symbol.type])
+        if self.scanner.symbol_list[self.symbol.type] == "keyword":
+            print("Keyword: ", self.scanner.keywords_list[self.symbol.id])
 
         # Fetch next symbol after section heading and check it's a bracket
         self.symbol = self.scanner.get_symbol()
 
         if self.symbol != self.scanner.BRACKET_OPEN:
             # If not a bracket, skip to next character (unique handling method to this error)
-            self.syntax.printerror(self.syntax.NO_OPEN_BRACKET)
+            self.syntax.printerror(self.syntax.NO_OPEN_BRACKET, self.scanner)
 
         self.symbol = self.scanner.get_symbol()
         if self.symbol.type == self.scanner.EOF:
@@ -160,6 +194,7 @@ class Parser:
         # Call line-level function as long as end of block not reached
         while self.symbol.type != self.scanner.BRACKET_CLOSE:
             # Read first name on next line to check if it is a device, switch or clock name
+            print("Reading device name inside devices block")
             self.current_name, self.name_type = self.read_name("devices")
             if self.name_type == "device":
                 eofcheck = self.device_definition(self.current_name)
@@ -217,7 +252,7 @@ class Parser:
             self.current_name, self.name_type = self.get_name("devices")
             if self.name_type != "device":
                 # If you mix up device types, syntax error
-                self.syntax.printerror(self.syntax.INCONSISTENT_DEVICE_NAMES)
+                self.syntax.printerror(self.syntax.INCONSISTENT_DEVICE_NAMES, self.scanner)
             i += 1
             # Get next symbol after device name to check if it's a comma
             self.symbol = self.scanner.get_symbol()
@@ -240,7 +275,7 @@ class Parser:
                     pass
                 #If symbol is not a valid gate type
                 else:
-                    self.syntax.printerror(self.syntax.DEVICE_TYPE_ERROR)
+                    self.syntax.printerror(self.syntax.DEVICE_TYPE_ERROR, self.scanner)
             
             # If next symbol is gate type id, append i times the device name to the type list
             # To create a linked list with the device names
@@ -253,13 +288,13 @@ class Parser:
                     return True
 
                 if self.symbol.id != self.scanner.SEMICOLON:
-                    self.syntax.printerror(self.syntax.NO_SEMICOLON)
+                    self.syntax.printerror(self.syntax.NO_SEMICOLON, self.scanner)
                 
                 return False
         
         # If next symbol is not a definition keyword, throw error        
         else:
-            self.syntax.printerror(self.syntax.NO_DEFINITION_KEYWORD)
+            self.syntax.printerror(self.syntax.NO_DEFINITION_KEYWORD, self.scanner)
         
         return False
         
@@ -292,7 +327,7 @@ class Parser:
             self.current_name, self.name_type = self.get_name("devices")
             if self.name_type != "switch":
                 # If you mix up device types, syntax error
-                self.syntax.printerror(self.syntax.INCONSISTENT_DEVICE_NAMES)
+                self.syntax.printerror(self.syntax.INCONSISTENT_DEVICE_NAMES, self.scanner)
             i += 1
             # Get next symbol after device name to check if it's a comma
             self.symbol = self.scanner.get_symbol()
@@ -313,7 +348,7 @@ class Parser:
                 # If symbol is type but not switch
                 if self.symbol.id in (self.gate_type_ids or self.clock_id):
                     # Skip to next line and exit function
-                    self.semantic.printerror(self.semantic.WRONG_GATE_FOR_NAME, self.scanner.keywords_list(self.symbol.id),  "SWITCH")
+                    self.semantic.printerror(self.semantic.WRONG_GATE_FOR_NAME, self.scanner, self.scanner.keywords_list(self.symbol.id),  "SWITCH")
                     return
                 #If symbol is not a valid gate type
                 else:
@@ -330,13 +365,13 @@ class Parser:
                     return True
 
                 if self.symbol.id != self.scanner.SEMICOLON:
-                    self.syntax.printerror(self.syntax.NO_SEMICOLON)
+                    self.syntax.printerror(self.syntax.NO_SEMICOLON, self.scanner)
                 
                 return False
         
         # If next symbol is not a definition keyword, throw error        
         else:
-            self.syntax.printerror(self.syntax.NO_DEFINITION_KEYWORD)
+            self.syntax.printerror(self.syntax.NO_DEFINITION_KEYWORD, self.scanner)
 
         return False
 
@@ -370,7 +405,7 @@ class Parser:
             self.current_name, self.name_type = self.get_name("devices")
             if self.name_type != "clock":
                 # If you mix up device types, syntax error
-                self.syntax.printerror(self.syntax.INCONSISTENT_DEVICE_NAMES)
+                self.syntax.printerror(self.syntax.INCONSISTENT_DEVICE_NAMES, self.scanner)
             i += 1
             # Get next symbol after device name to check if it's a comma
             self.symbol = self.scanner.get_symbol()
@@ -393,7 +428,7 @@ class Parser:
                     return
                 #If symbol is not a valid gate type
                 else:
-                    self.syntax.printerror(self.syntax.DEVICE_TYPE_ERROR)
+                    self.syntax.printerror(self.syntax.DEVICE_TYPE_ERROR, self.scanner)
             
             # If next symbol is gate type id, append i times the device name to the type list
             # To create a linked list with the device names
@@ -406,13 +441,13 @@ class Parser:
                     return True
 
                 if self.symbol.id != self.scanner.SEMICOLON:
-                    self.syntax.printerror(self.syntax.NO_SEMICOLON)
+                    self.syntax.printerror(self.syntax.NO_SEMICOLON, self.scanner)
                 
                 return False
         
         # If next symbol is not a definition keyword, throw error        
         else:
-            self.syntax.printerror(self.syntax.NO_DEFINITION_KEYWORD)
+            self.syntax.printerror(self.syntax.NO_DEFINITION_KEYWORD, self.scanner)
 
         return False
     
@@ -465,7 +500,7 @@ class Parser:
                 for i in self.current_name[2:len(self.current_name)]:
                     if not i.isdigit():
                         # Syntax error - invalid name
-                        self.syntax.printerror(self.syntax.INCORRECT_SWITCH_NAME)
+                        self.syntax.printerror(self.syntax.INCORRECT_SWITCH_NAME, self.scanner)
                         self.is_legal_name = False
                 # If error is not thrown:
                 self.name_type = "switch"
@@ -475,7 +510,7 @@ class Parser:
                 for i in self.current_name[3:len(self.current_name)]:
                     if not i.isdigit():
                         # Syntax error - invalid name
-                        self.syntax.printerror(self.syntax.INCORRECT_CLOCK_NAME)
+                        self.syntax.printerror(self.syntax.INCORRECT_CLOCK_NAME, self.scanner)
                         self.is_legal_name = False
                 # If error is not thrown:
                 self.name_type = "clock"
@@ -514,7 +549,7 @@ class Parser:
         
         # No device name found at the beginning of the line inside the device class but not reached end of block yet
         elif self.symbol.id != self.scanner.BRACKET_CLOSE:
-            self.syntax.printerror(self.syntax.DEVICE_NAME_MISSING)
+            self.syntax.printerror(self.syntax.NO_DEVICE_NAME, self.scanner)
             return
 
         return self.current_name, self.name_type
@@ -522,12 +557,13 @@ class Parser:
     def parse_network(self):
         """Parse the circuit definition file."""
 
-        # Main idea: should check overall blocks and append order to self.block. Do a check for self.block at the end to see if the main structure follows
-
         self.eofcheck = False
+        self.symbol = self.scanner.get_symbol()
         # Tree structure: split into blocks
-        while self.eofcheck != True:
-            self.eofcheck = self.circuit_description()
+        self.eofcheck = self.circuit_description()
 
-        return True
+        if self.eofcheck == True:
+            print("end of file reached")
+            return
 
+        return
