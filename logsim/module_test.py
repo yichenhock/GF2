@@ -39,21 +39,21 @@ else:
     scanner = Scanner(path, names)
 
 print(scanner.file.read())
-scanner.file.seek(0)
-x = scanner.get_symbol()
-type_id_list = []
-while x.type != 10:
-    x = scanner.get_symbol()
-    type_id_list.append([x.type, x.id])
-    # print(x.type, x.id)
-    # print(name.names)
+# scanner.file.seek(0)
+# x = scanner.get_symbol()
+# type_id_list = []
+# while x.type != 10:
+#     x = scanner.get_symbol()
+#     type_id_list.append([x.type, x.id])
+#     # print(x.type, x.id)
+#     # print(name.names)
 
-# #print(type_id_list)
+# # #print(type_id_list)
 
 """parser.py tests"""
-devices = Devices()
-network = Network()
-monitors = Monitors()
+devices = Devices(names)
+network = Network(names, devices)
+monitors = Monitors(names, devices, network)
 
-parse = Parser()
-parse.parse_network(names, devices, network, monitors, scanner)
+parse = Parser(names, devices, network, monitors, scanner)
+parse.parse_network()
