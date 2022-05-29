@@ -65,9 +65,11 @@ class CircuitDefTab(wx.Panel):
     A simple wx.Panel class
     """
     #----------------------------------------------------------------------
-    def __init__(self, parent, path):
+    def __init__(self, parent, path, statusbar):
         """"""
         wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
+        self.statusbar = statusbar#
+        self.enabled = False
 
         # read circuit_definition file and populate the text control
         text = self.read_file(path)
@@ -77,10 +79,18 @@ class CircuitDefTab(wx.Panel):
         font_code = wx.Font(10, wx.MODERN, wx.NORMAL, wx.NORMAL, False, u'Consolas')
         textBox.SetFont(font_code)
 
+        textBox.Enable(self.enabled)
+
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(textBox, wx.EXPAND, wx.EXPAND, 0)
 
         self.SetSizer(sizer)
+
+        self.Bind(wx.EVT_LEFT_DOWN, self.on_click)
+    
+    def on_click(self, event): 
+        if not self.enabled: 
+            self.statusbar.SetStatusText('Reset the simulation first to edit!')
 
     def read_file(self, path): 
         try: 
@@ -98,7 +108,7 @@ class CircuitDefTab(wx.Panel):
 
         return text
 
-class ComponentsTab(wx.Panel):
+class InputsTab(wx.Panel):
     """
     A simple wx.Panel class
     """
@@ -115,7 +125,7 @@ class ComponentsTab(wx.Panel):
 
         self.SetSizer(sizer)
 
-class DevicesTab(wx.Panel):
+class MonitorsTab(wx.Panel):
     """
     A simple wx.Panel class
     """
