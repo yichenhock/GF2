@@ -7,7 +7,17 @@ Description of classes
 """
 import sys
 import wx
-import wx.lib.agw.aui as aui
+
+
+class RedirectText(object):
+    def __init__(self,aWxTextCtrl):
+        self.out = aWxTextCtrl
+
+    def write(self,string):
+        self.out.AppendText(string)
+
+    def flush(self):
+        pass
 
 class ConsoleOutTab(wx.Panel):
     """
@@ -18,14 +28,37 @@ class ConsoleOutTab(wx.Panel):
         """"""
         wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
 
-        txtOne = wx.TextCtrl(self, wx.ID_ANY, "Console output appears here", style = wx.NO_BORDER | wx.TE_MULTILINE | wx.TOP)
-        txtTwo = wx.TextCtrl(self, wx.ID_ANY, "Type commands here", size = (wx.MAXIMIZE,22), style = wx.BORDER_DOUBLE | wx.BOTTOM )
+        self.log = wx.TextCtrl(self, wx.ID_ANY, "", style = wx.NO_BORDER | wx.TE_MULTILINE | wx.TOP | wx.TE_READONLY )
+        self.commands = wx.TextCtrl(self, wx.ID_ANY, "", size = (wx.MAXIMIZE,22), style = wx.BORDER_DEFAULT | wx.BOTTOM | wx.TE_PROCESS_ENTER)
+
+        redir = RedirectText(self.log)
+        sys.stdout = redir
+
+        # format the font in the text controls
+        font_code = wx.Font(10, wx.MODERN, wx.NORMAL, wx.NORMAL, False, u'Consolas')
+        self.log.SetFont(font_code)
+        self.commands.SetFont(font_code)
+        self.commands.SetHint('Type commands here')
+
+        self.log.SetBackgroundColour("dark grey")
+        self.log.SetForegroundColour("white")
 
         sizer = wx.BoxSizer(wx.VERTICAL)
-        sizer.Add(txtOne, wx.EXPAND, wx.EXPAND, 0)
-        sizer.Add(txtTwo, 0, wx.EXPAND, 0)
+        sizer.Add(self.log, wx.EXPAND, wx.EXPAND, 0)
+        sizer.Add(self.commands, 0, wx.EXPAND, 0)
 
         self.SetSizer(sizer)
+
+        self.commands.Bind(wx.EVT_TEXT_ENTER, self.on_command_entered)
+
+    
+    def on_command_entered(self, event):
+        """Handle the event when the user enters text."""
+        text_box_value = self.commands.GetValue()
+        text = "".join(["New text box value: ", text_box_value])
+        self.commands.Clear()
+        # self.canvas.render(text)
+        print(text)
 
 class CircuitDefTab(wx.Panel):
     """
@@ -41,6 +74,9 @@ class CircuitDefTab(wx.Panel):
         
         textBox = wx.TextCtrl(self, -1, text, style = wx.NO_BORDER | wx.TE_MULTILINE) 
       
+        font_code = wx.Font(10, wx.MODERN, wx.NORMAL, wx.NORMAL, False, u'Consolas')
+        textBox.SetFont(font_code)
+
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(textBox, wx.EXPAND, wx.EXPAND, 0)
 

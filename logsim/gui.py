@@ -47,13 +47,9 @@ class Gui(wx.Frame):
         """Initialise widgets and layout."""
         super().__init__(parent=None, title=title, size=(1000, 800))
 
-        # Configure the file menu
+        # Create the menu, toolbar and statusbar
         self.create_menu()
-
-        # Set up the tool bar
         self.create_tb()
-
-        # add status bar at the bottom
         self.statusbar = self.CreateStatusBar(1)
 
         # create an AuiManager object
@@ -64,7 +60,7 @@ class Gui(wx.Frame):
 
         # main monitor part
         self.canvas = MyGLCanvas(self, devices, monitors, self.statusbar)
-        self.mgr.AddPane(self.canvas, aui.AuiPaneInfo().CenterPane().Caption("pane center"))
+        self.mgr.AddPane(self.canvas, aui.AuiPaneInfo().CenterPane())
 
         # bottom panel 
         notebook = aui.AuiNotebook(self, wx.ID_ANY, agwStyle=aui.AUI_NB_CLOSE_ON_ALL_TABS )
@@ -86,8 +82,8 @@ class Gui(wx.Frame):
         notebook.SetCloseButton(3, False)
 
         self.mgr.AddPane(notebook,
-                          aui.AuiPaneInfo().CaptionVisible(True).
-                          Bottom().PaneBorder(False).Floatable(False).GripperTop(True).MinSize(330,150).CloseButton(False))
+                          aui.AuiPaneInfo().CaptionVisible(False).
+                          Right().PaneBorder(False).Floatable(False).GripperTop(False).MinSize(330,150).CloseButton(False))
 
         # setting docking guides fixes docking issue (problem with wxTimer)
         agwFlags = self.mgr.GetAGWFlags()
@@ -102,7 +98,7 @@ class Gui(wx.Frame):
         self.Centre() 
         self.Show(True)
 
-################################
+################################ Original code :)
         # # Canvas for drawing signals
         # self.canvas = MyGLCanvas(self, devices, monitors)
 
@@ -140,6 +136,9 @@ class Gui(wx.Frame):
         fileMenu.Append(wx.ID_ABOUT, "&About")
         fileMenu.Append(wx.ID_EXIT, "&Exit")
         
+        # viewMenu = wx.Menu()
+        # viewMenu.Append(wx.ID_)
+
         menuBar = wx.MenuBar()
         menuBar.Append(fileMenu, "&File")
 
@@ -148,23 +147,29 @@ class Gui(wx.Frame):
         self.Bind(wx.EVT_MENU, self.on_menu)
     
     def create_tb(self): 
-        tb = wx.ToolBar(self,- 1)
+        tb = wx.ToolBar(self,- 1, style=wx.TB_TEXT)
         self.ToolBar = tb
+
         tb.AddTool( 1, 'Run', wx.Image("./logsim/imgs/run.png",
                            wx.BITMAP_TYPE_PNG).ConvertToBitmap(), shortHelp="Run the simulation") 
         tb.AddTool( 2, 'Stop', wx.Image("./logsim/imgs/stop.png",
                            wx.BITMAP_TYPE_PNG).ConvertToBitmap(), shortHelp="Stop the simulation") 
-        tb.AddStretchableSpace()
-        self.text = wx.StaticText(tb, wx.ID_ANY, "Cycles")
-        tb.AddControl(self.text)
-        self.spin = wx.SpinCtrl(tb, wx.ID_ANY, "10")
-        tb.AddControl(self.spin)
-
-        # tb.Bind(wx.EVT_TOOL, lambda evt:self.on_run_button(), id=1)
         
-        self.spin.Bind(wx.EVT_SPINCTRL, self.on_spin)
+        # self.text = wx.StaticText(tb, wx.ID_ANY, "Cycles")
+        # tb.AddControl(self.text)
+        self.spin = wx.SpinCtrl(tb, wx.ID_ANY, "10")
+        tb.AddControl(self.spin, 'Cycles')
+        tb.AddStretchableSpace()
+        tb.AddTool( 3, 'Help', wx.Image("./logsim/imgs/help.png",
+                           wx.BITMAP_TYPE_PNG).ConvertToBitmap(), shortHelp="Help") 
+
         # tb.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_MENUBAR))
         tb.Realize()
+
+        self.spin.Bind(wx.EVT_SPINCTRL, self.on_spin)
+        self.Bind(wx.EVT_TOOL, self.on_tool_click, id=1)
+        self.Bind(wx.EVT_TOOL, self.on_tool_click, id=2)
+        self.Bind(wx.EVT_TOOL, self.on_tool_click, id=3)
 
     def update_statusbar(self, text): 
         self.statusbar.SetStatusText(text)
@@ -185,16 +190,29 @@ class Gui(wx.Frame):
         self.canvas.render(text)
         self.update_statusbar(text)
 
-    def on_run_button(self, event):
-        """Handle the event when the user clicks the run button."""
-        text = "Run button pressed."
-        self.canvas.render(text)
+    def on_tool_click(self, event):
+        # print("tool %s clicked" % event.GetId())
 
-    # def on_text_box(self, event):
-    #     """Handle the event when the user enters text."""
-    #     text_box_value = self.text_box.GetValue()
-    #     text = "".join(["New text box value: ", text_box_value])
-    #     self.canvas.render(text)
+        if event.GetId() == 1: # run
+            print("Running the simulation...")
+            text = "Run button pressed."
+            # self.canvas.render(text)
+            self.update_statusbar(text)
+        elif event.GetId() == 2: # stop
+            print("Simulation stopped.")
+            text = "Stop button pressed."
+            self.update_statusbar(text)
+        elif event.GetId() == 3: # help
+            print("User commands:")
+            print("r N       - run the simulation for N cycles")
+            print("c N       - continue the simulation for N cycles")
+            print("s X N     - set switch X to N (0 or 1)")
+            print("m X       - set a monitor on signal X")
+            print("z X       - zap the monitor on signal X")
+            print("h         - help (this command)")
+            print("q         - quit the program")
+            text = "Help button pressed."
+            self.update_statusbar(text)
 
     def on_close(self, event):
         # deinitialize the frame manager

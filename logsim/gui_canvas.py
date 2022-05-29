@@ -124,6 +124,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         text = "".join(["Canvas redrawn on paint event, size is ",
                         str(size.width), ", ", str(size.height)])
         self.render(text)
+        self.statusbar.SetStatusText(text)
 
     def on_size(self, event):
         """Handle the canvas resize event."""
