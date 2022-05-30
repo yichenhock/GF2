@@ -2,7 +2,7 @@
 import sys
 from names import Names
 from scanner import Symbol, Scanner
-from parse import Parser
+from parsefordebug import Parser
 from devices import Devices, Device
 from network import Network
 from monitors import Monitors
@@ -57,5 +57,3 @@ monitors = Monitors(names, devices, network)
 
 parse = Parser(names, devices, network, monitors, scanner)
 parse.parse_network()
-
-scanner.file.close()
