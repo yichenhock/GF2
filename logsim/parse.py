@@ -361,11 +361,18 @@ class Parser:
                 print("Connections block is empty.")
                 return
             
+            # Move to connection definition method
             while self.symbol.type != self.scanner.CLOSE_BRACKET:
                 print("Reading device name inside {} subsection in connections".format(self.current_subsection))
 
                 # Read next symbol and check it's a name
                 self.read_name("connections")
+
+                # Read first symbol of next line
+                self.symbol = self.scanner.get_symbol()
+                print("First symbol of next line: ", self.scanner.symbol_list[self.symbol.type])
+                if self.symbol == self.scanner.EOF:
+                    return True
 
             # Read first symbol of next line
             self.symbol = self.scanner.get_symbol()
