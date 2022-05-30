@@ -58,7 +58,7 @@ class Parser:
         self.object_dict = {}
 
         # Dictionary for device kind. Used in Device.make_device()
-        self.device_kind_dict = {"XOR": self.devices.XOR, "AND": self.devices.AND, "OR": self.devices.OR, "NOR": self.devices.NOR, "NAND": self.devices.NAND, "D_TYPE": self.devices.D_TYPE}
+        self.device_kind_dict = {"XOR": self.devices.XOR, "AND": self.devices.AND, "OR": self.devices.OR, "NOR": self.devices.NOR, "NAND": self.devices.NAND, "DTYPE": self.devices.D_TYPE, "SWITCH": self.devices.SWITCH, "CLOCK": self.devices.CLOCK}
 
         self.block_ids = [self.scanner.devices_id, self.scanner.initialise_id, self.scanner.connections_id, self.scanner.monitors_id]
 
@@ -368,6 +368,8 @@ class Parser:
                 # Read next symbol and check it's a name
                 self.read_name("connections")
 
+                self.connection_definition(self.current_name)
+
                 # Read first symbol of next line
                 self.symbol = self.scanner.get_symbol()
                 print("First symbol of next line: ", self.scanner.symbol_list[self.symbol.type])
@@ -389,11 +391,11 @@ class Parser:
 #===========================================================================================================
 #===========================================================================================================
 
-    def gate_connection_definition(self, currentname):
+    def connection_definition(self, currentname):
         """Parse one line of connection definition for a gate subsection.
 
         Used inside connections block for defining inputs.
-        It should be read at the point after we have obtained the (expected) first name on each line, and finish without having read the first symbol of the next line.
+        It should be read at the point after we have obtained the (expected) first name on each line, and finish with the cursor at, but without having read, the first symbol of the next line.
 
         Parameters
         -------
@@ -401,7 +403,16 @@ class Parser:
         'currentname': the current name read from calling read_name() inside the devices block.
         """
 
-        self.current_name = currentname
+        print("Entered connection definition method. Current name: ", self.current_name)
+        if self.name_type == "device":
+            print("Output type is device")
+
+        elif self.name_type == "switch":
+            print("Output type is switch")
+            self.switch_initialisation(self.current_name)
+        elif self.name_type == "clock":
+            print("Output type is clock")
+            self.clock_initialisation(self.current_name)
 
         return False
 
@@ -432,7 +443,6 @@ class Parser:
 
         while self.symbol.type == self.scanner.COMMA:
             # If comma, expect a device name afterwards
-            print("Found a comma, checking for device afterwards")
             # Fetch next thing after comma
             self.symbol = self.scanner.get_symbol()
             # Feed into name reader
@@ -447,17 +457,13 @@ class Parser:
 
             # Get next symbol after device name to check if it's a comma
             self.symbol = self.scanner.get_symbol()
-            print("First symbol type after name:", self.scanner.symbol_list[self.symbol.type], self.names.get_name_string(self.symbol.id))
 
         # If next symbol is definition keyword:
         # Check if symbol type is keyword and symbol ID is that for definition
         if self.symbol.type == self.scanner.KEYWORD and self.symbol.id in self.definition_ids:
-            
-            print("Found definition keyword in right place.")
 
             # Get next symbol
             self.symbol = self.scanner.get_symbol()
-            print("Fetched gate name type. Now checking if it is a valid gate type.")
 
             # Check if next symbol is gate type id
             if self.symbol.id not in self.gate_type_ids:
@@ -475,9 +481,8 @@ class Parser:
             else:
                 for device in devices_to_add:
                     self.object_dict[device] = self.scanner.keywords_list[self.symbol.id]
-                print("Successfully appended device type. Now fetching what should be semicolon.")
+                print("Successfully appended device type {}".format(self.names.get_name_string(self.symbol.id)))
                 self.symbol = self.scanner.get_symbol()
-                print("Symbol in position of semicolon:", self.scanner.symbol_list[self.symbol.type])
 
                 if self.symbol == self.scanner.EOF:
                     return True
@@ -799,7 +804,6 @@ class Parser:
             if self.name_type != "device":
                 # If you mix up device types, syntax error
                 self.syntax.printerror(self.syntax.INCONSISTENT_DEVICE_NAMES, self.scanner)
-            i += 1
             # Get next symbol after device name to check if it's a comma
             self.symbol = self.scanner.get_symbol()
 
@@ -953,7 +957,7 @@ class Parser:
                         self.semantic.printerror(self.semantic.NEGATIVE_NUMBER_ILLEGAL)
 
                     # Make and initialise clock device
-                    self.devices.make_device(self.name.query(self.current_name), self.devices.CLOCK, self.symbol.id/2)
+                    self.devices.make_device(self.names.query(self.current_name), self.devices.CLOCK, int(self.symbol.id/2))
 
                     print("Successfully added clock cycle length. Now fetching what should be semicolon.")
                     self.symbol = self.scanner.get_symbol()

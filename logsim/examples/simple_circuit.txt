@@ -1,7 +1,3 @@
-<<<<<<< HEAD:logsim/circuit_definition.txt
-devices(
-    a, b are OR;
-=======
 #Example circuit - Simple circuit (As per first interim report);
 #XOR gate;
 
@@ -9,17 +5,13 @@ devices(
     a is OR;
     b is NAND;
     c is AND;
->>>>>>> 039ab8870da91459daa0cb5ab4211d00077844ff:logsim/examples/simple_circuit.txt
     sw1, sw2 are SWITCH;
 )
 
 initialise(
     a has 2 inputs;
     sw1, sw2 are HIGH;
-<<<<<<< HEAD:logsim/circuit_definition.txt
-=======
     a, b, c have 2 inputs;
->>>>>>> 039ab8870da91459daa0cb5ab4211d00077844ff:logsim/examples/simple_circuit.txt
 )
 
 connections(
@@ -27,9 +19,6 @@ connections(
         sw1 is connected to a.I1;
         sw2 is connected to a.I2;
     )
-<<<<<<< HEAD:logsim/circuit_definition.txt
-
-=======
 
     b(  
         sw1 is connected to b.I1;
@@ -40,16 +29,8 @@ connections(
         a is connected to c.I1;
         b is connected to c.I2;
     )
->>>>>>> 039ab8870da91459daa0cb5ab4211d00077844ff:logsim/examples/simple_circuit.txt
 )
 
 monitors(
     c;
-<<<<<<< HEAD:logsim/circuit_definition.txt
 )
-
-#Example A - Simple XOR Circuit;
-    
-=======
-)
->>>>>>> 039ab8870da91459daa0cb5ab4211d00077844ff:logsim/examples/simple_circuit.txt
