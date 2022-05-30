@@ -5,8 +5,9 @@ devices(
 )
 
 initialise(
-    sw1, sw2 are HIGH;
     a has 2 inputs;
+    sw1, sw2 are HIGH;
+    clk1 cycle length 100;
 )
 
 connections(

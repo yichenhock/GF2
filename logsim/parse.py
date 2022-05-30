@@ -57,7 +57,7 @@ class Parser:
         self.user_object_type_list = []
         self.user_object_input_num_list = []
         
-        # T_T
+        # DO NOT TOUCH THESE
         self.block_ids = [self.scanner.devices_id, self.scanner.initialise_id, self.scanner.connections_id, self.scanner.monitors_id]
 
         self.possession_ids = [self.scanner.has_id, self.scanner.have_id]
