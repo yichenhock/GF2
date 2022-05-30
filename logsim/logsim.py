@@ -24,6 +24,7 @@ from parse import Parser
 from userint import UserInterface
 from gui import Gui
 
+from dum import DummyParser
 
 def main(arg_list):
     """Parse the command line options and arguments specified in arg_list.
@@ -59,6 +60,7 @@ def main(arg_list):
         elif option == "-c":  # use the command line user interface
             scanner = Scanner(path, names)
             parser = Parser(names, devices, network, monitors, scanner)
+            dum_parser = DummyParser(names, devices, network, monitors, scanner)
             if parser.parse_network():
                 # Initialise an instance of the userint.UserInterface() class
                 userint = UserInterface(names, devices, network, monitors)
@@ -74,6 +76,7 @@ def main(arg_list):
         [path] = arguments
         scanner = Scanner(path, names)
         parser = Parser(names, devices, network, monitors, scanner)
+        dum_parser = DummyParser(names, devices, network, monitors, scanner)
         if parser.parse_network():
             # Initialise an instance of the gui.Gui() class
             app = wx.App()

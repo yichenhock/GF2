@@ -98,7 +98,7 @@ class Scanner:
             print("This file could not be opened, perhaps it doesn't exist")
             sys.exit()
         self.file = file
-        self.lines = self.file.readlines()
+        self.lines = self.file.read().splitlines()
         self.file.seek(0)
 
     def advance(self):
@@ -116,14 +116,14 @@ class Scanner:
         while self.current_character.isspace():
             self.advance()
         if self.current_character == "#":
-            self.skip_line()
+            self.skip_comment()
         while self.current_character.isspace():
             self.advance()
         return
 
-    def skip_line(self):
-        """Skips until next semicolon."""
-        while self.current_character != ";":
+    def skip_comment(self):
+        """Skips the current comment (Until next semicolon or newline)."""
+        while self.current_character not in [";", "\n", ""]:
             self.advance()
         self.advance()
         return
@@ -131,11 +131,18 @@ class Scanner:
     def print_error_line(self, error_type, error_message=""):
         """Print current line with marker pointing where the error is."""
         print("Error type:", error_type)
-        print(self.lines[self.current_line], end="")
-        print(" " * (self.current_character_position - 1), "^ Error Here")
+        print(self.lines[self.current_line])
+        print(" " * (self.current_character_position - 1) + "^ Error Here")
         print(error_message)
         self.skip_line()
 
+    def skip_line(self): 
+        """Skips until next semicolon, bracket or EOF."""
+        while self.current_character not in [";", "(", ")", ""]:
+            self.advance()
+        self.advance()
+        return
+        
     def get_name(self):
         """Read and returns the next name (word made up of only letters)."""
         name = ""
@@ -159,7 +166,7 @@ class Scanner:
 
         if self.current_character.isalpha():  # Name
             name_string = self.get_name()
-            #print(name_string)
+            # print(name_string) # For tests
             if name_string in self.keywords_list:
                 symbol.type = self.KEYWORD
             else:
@@ -168,7 +175,7 @@ class Scanner:
 
         elif self.current_character.isdigit():  # Number
             symbol.id = self.get_number()
-            # print(symbol.id)
+            # print(symbol.id) # For tests
             symbol.type = self.NUMBER
 
         elif self.current_character == ",":  # Punctuation

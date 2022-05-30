@@ -7,6 +7,7 @@ Classes:
 --------
 Gui - configures the main window and all the widgets.
 """
+from ast import Pass
 import wx
 import wx.lib.agw.aui as aui
 
@@ -17,7 +18,7 @@ from monitors import Monitors
 from scanner import Scanner
 from parse import Parser
 
-from gui_tabs import ConsoleOutTab, CircuitDefTab, ComponentsTab, DevicesTab
+from gui_tabs import ConsoleOutTab, CircuitDefTab, InputsTab, MonitorsTab
 from gui_canvas import MyGLCanvas # not used yet. needed for outputting the signals!
 
 class Gui(wx.Frame):
@@ -45,16 +46,16 @@ class Gui(wx.Frame):
 
     def __init__(self, title, path, names, devices, network, monitors):
         """Initialise widgets and layout."""
-        super().__init__(parent=None, title=title, size=(1000, 800))
+        super().__init__(parent=None, title=title, size=(1024, 768))
 
-        # Configure the file menu
+        self.path = path
+
+        # Create the menu, toolbar and statusbar
         self.create_menu()
-
-        # Set up the tool bar
         self.create_tb()
-
-        # add status bar at the bottom
-        self.statusbar = self.CreateStatusBar(1)
+        self.statusbar = self.CreateStatusBar(2)
+        self.statusbar.SetStatusWidths([-3,-1])
+        self.statusbar.SetStatusText(self.path,1)
 
         # create an AuiManager object
         self.mgr = aui.AuiManager()
@@ -64,20 +65,21 @@ class Gui(wx.Frame):
 
         # main monitor part
         self.canvas = MyGLCanvas(self, devices, monitors, self.statusbar)
-        self.mgr.AddPane(self.canvas, aui.AuiPaneInfo().CenterPane().Caption("pane center"))
+
+        self.mgr.AddPane(self.canvas, aui.AuiPaneInfo().CenterPane())
 
         # bottom panel 
         notebook = aui.AuiNotebook(self, wx.ID_ANY, agwStyle=aui.AUI_NB_CLOSE_ON_ALL_TABS )
 
         consoleOutPanel = ConsoleOutTab(notebook)
-        circuitDefPanel = CircuitDefTab(notebook, path)
-        componentsPanel = ComponentsTab(notebook)
-        devicesPanel = DevicesTab(notebook)
+        circuitDefPanel = CircuitDefTab(notebook, self.path, self.statusbar)
+        componentsPanel = InputsTab(notebook)
+        devicesPanel = MonitorsTab(notebook, self.statusbar)
 
         notebook.AddPage(consoleOutPanel, "Output", True)
         notebook.AddPage(circuitDefPanel, "Circuit Definition", False)
-        notebook.AddPage(componentsPanel, "Components", False)
-        notebook.AddPage(devicesPanel, "Devices", False)
+        notebook.AddPage(componentsPanel, "Inputs", False)
+        notebook.AddPage(devicesPanel, "Monitors", False)
 
         # disable close buttons
         notebook.SetCloseButton(0, False)
@@ -86,8 +88,8 @@ class Gui(wx.Frame):
         notebook.SetCloseButton(3, False)
 
         self.mgr.AddPane(notebook,
-                          aui.AuiPaneInfo().CaptionVisible(True).
-                          Bottom().PaneBorder(False).Floatable(False).GripperTop(True).MinSize(330,150).CloseButton(False))
+                          aui.AuiPaneInfo().CaptionVisible(False).
+                          Right().PaneBorder(False).Floatable(False).GripperTop(False).MinSize(330,150).CloseButton(False))
 
         # setting docking guides fixes docking issue (problem with wxTimer)
         agwFlags = self.mgr.GetAGWFlags()
@@ -101,45 +103,20 @@ class Gui(wx.Frame):
         self.Bind(wx.EVT_CLOSE, self.on_close) 
         self.Centre() 
         self.Show(True)
+        
+        self.SetSizeHints(minW=600, minH=400)
 
-################################
-        # # Canvas for drawing signals
-        # self.canvas = MyGLCanvas(self, devices, monitors)
-
-        # # Configure the widgets
-        # self.text = wx.StaticText(self, wx.ID_ANY, "Cycles")
-        # self.spin = wx.SpinCtrl(self, wx.ID_ANY, "10")
-        # self.run_button = wx.Button(self, wx.ID_ANY, "Run")
-        # self.text_box = wx.TextCtrl(self, wx.ID_ANY, "",
-        #                             style=wx.TE_PROCESS_ENTER)
-
-        # # Bind events to widgets
-        # self.Bind(wx.EVT_MENU, self.on_menu)
-        # self.spin.Bind(wx.EVT_SPINCTRL, self.on_spin)
-        # self.run_button.Bind(wx.EVT_BUTTON, self.on_run_button)
-        # self.text_box.Bind(wx.EVT_TEXT_ENTER, self.on_text_box)
-
-        # # Configure sizers for layout
-        # main_sizer = wx.BoxSizer(wx.HORIZONTAL)
-        # side_sizer = wx.BoxSizer(wx.VERTICAL)
-
-        # main_sizer.Add(self.canvas, 5, wx.EXPAND | wx.ALL, 5)
-        # main_sizer.Add(side_sizer, 1, wx.ALL, 5)
-
-        # side_sizer.Add(self.text, 1, wx.TOP, 10)
-        # side_sizer.Add(self.spin, 1, wx.ALL, 5)
-        # side_sizer.Add(self.run_button, 1, wx.ALL, 5)
-        # side_sizer.Add(self.text_box, 1, wx.ALL, 5)
-
-        # self.SetSizeHints(600, 600)
-        # self.SetSizer(main_sizer)
-################################
+        print("Logic Simulator: interactive graphical user interface.\n"
+              "Enter 'h' for help.")
 
     def create_menu(self): 
         fileMenu = wx.Menu()
         fileMenu.Append(wx.ID_ABOUT, "&About")
         fileMenu.Append(wx.ID_EXIT, "&Exit")
         
+        # viewMenu = wx.Menu()
+        # viewMenu.Append(wx.ID_)
+
         menuBar = wx.MenuBar()
         menuBar.Append(fileMenu, "&File")
 
@@ -148,23 +125,49 @@ class Gui(wx.Frame):
         self.Bind(wx.EVT_MENU, self.on_menu)
     
     def create_tb(self): 
-        tb = wx.ToolBar(self,- 1)
+        tb = wx.ToolBar(self,- 1, style=wx.TB_TEXT)
         self.ToolBar = tb
-        tb.AddTool( 1, 'Run', wx.Image("./logsim/imgs/run.png",
-                           wx.BITMAP_TYPE_PNG).ConvertToBitmap(), shortHelp="Run the simulation") 
-        tb.AddTool( 2, 'Stop', wx.Image("./logsim/imgs/stop.png",
-                           wx.BITMAP_TYPE_PNG).ConvertToBitmap(), shortHelp="Stop the simulation") 
-        tb.AddStretchableSpace()
-        self.text = wx.StaticText(tb, wx.ID_ANY, "Cycles")
-        tb.AddControl(self.text)
-        self.spin = wx.SpinCtrl(tb, wx.ID_ANY, "10")
-        tb.AddControl(self.spin)
 
-        # tb.Bind(wx.EVT_TOOL, lambda evt:self.on_run_button(), id=1)
+        tb.AddTool( 1, 'Browse', wx.Image("./logsim/imgs/browse.png",
+                           wx.BITMAP_TYPE_PNG).ConvertToBitmap(), shortHelp="Browse for a file") 
+        tb.AddTool( 2, 'Save', wx.Image("./logsim/imgs/save.png",
+                           wx.BITMAP_TYPE_PNG).ConvertToBitmap(), shortHelp="Save the file") 
+        tb.AddTool( 3, 'New', wx.Image("./logsim/imgs/new file.png",
+                           wx.BITMAP_TYPE_PNG).ConvertToBitmap(), shortHelp="Create a new file") 
+        tb.AddStretchableSpace()
+        tb.AddTool( 4, 'Run', wx.Image("./logsim/imgs/run.png",
+                           wx.BITMAP_TYPE_PNG).ConvertToBitmap(), shortHelp="Run the simulation") 
+        tb.AddTool( 5, 'Continue', wx.Image("./logsim/imgs/continue.png",
+                           wx.BITMAP_TYPE_PNG).ConvertToBitmap(), shortHelp="Continue the simulation") 
+        tb.AddTool( 6, 'Reset', wx.Image("./logsim/imgs/reset.png",
+                           wx.BITMAP_TYPE_PNG).ConvertToBitmap(), shortHelp="Reset the simulation") 
         
-        self.spin.Bind(wx.EVT_SPINCTRL, self.on_spin)
-        # tb.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_MENUBAR))
+        self.spin = wx.SpinCtrl(tb, wx.ID_ANY, "10")
+        # Configure spin
+        self.spin.SetMin(1)
+        self.spin.SetMax(1000)
+        tb.AddControl(self.spin, 'Cycles')
+
+        tb.AddStretchableSpace()
+        tb.AddTool( 7, 'Save Plot', wx.Image("./logsim/imgs/save image.png",
+                           wx.BITMAP_TYPE_PNG).ConvertToBitmap(), shortHelp="Save signal trace as an image") 
+        tb.AddTool( 8, 'Help', wx.Image("./logsim/imgs/help.png",
+                           wx.BITMAP_TYPE_PNG).ConvertToBitmap(), shortHelp="Help") 
+        tb.AddTool( 9, 'Quit', wx.Image("./logsim/imgs/quit.png",
+                           wx.BITMAP_TYPE_PNG).ConvertToBitmap(), shortHelp="Quit Logic Simulator") 
+
         tb.Realize()
+
+        self.spin.Bind(wx.EVT_SPINCTRL, self.on_spin)
+        self.Bind(wx.EVT_TOOL, self.on_tool_click, id=1)
+        self.Bind(wx.EVT_TOOL, self.on_tool_click, id=2)
+        self.Bind(wx.EVT_TOOL, self.on_tool_click, id=3)
+        self.Bind(wx.EVT_TOOL, self.on_tool_click, id=4)
+        self.Bind(wx.EVT_TOOL, self.on_tool_click, id=5)
+        self.Bind(wx.EVT_TOOL, self.on_tool_click, id=6)
+        self.Bind(wx.EVT_TOOL, self.on_tool_click, id=7)
+        self.Bind(wx.EVT_TOOL, self.on_tool_click, id=8)
+        self.Bind(wx.EVT_TOOL, self.on_tool_click, id=9)
 
     def update_statusbar(self, text): 
         self.statusbar.SetStatusText(text)
@@ -185,18 +188,115 @@ class Gui(wx.Frame):
         self.canvas.render(text)
         self.update_statusbar(text)
 
-    def on_run_button(self, event):
-        """Handle the event when the user clicks the run button."""
-        text = "Run button pressed."
-        self.canvas.render(text)
+    def on_tool_click(self, event):
+        # print("tool %s clicked" % event.GetId())
 
-    # def on_text_box(self, event):
-    #     """Handle the event when the user enters text."""
-    #     text_box_value = self.text_box.GetValue()
-    #     text = "".join(["New text box value: ", text_box_value])
-    #     self.canvas.render(text)
+        if event.GetId() == 1: # browse
+            self.open_file()
+
+        elif event.GetId() == 2: # save
+            self.save_file()
+
+        elif event.GetId() == 3: # new file
+            self.create_file()
+
+        elif event.GetId() == 4: # run
+            print("Simulation ran for {} cycles.".format(self.spin.GetValue()))
+            self.update_statusbar("Run button pressed.")
+
+        elif event.GetId() == 5: # continue
+            print("Simulation continued for {} cycles.".format(self.spin.GetValue()))
+            self.update_statusbar("Continue button pressed.")
+
+        elif event.GetId() == 6: # reset 
+            print("Simulation reset.")
+            self.update_statusbar("Reset button pressed.")
+
+        elif event.GetId() == 7: # save plot
+            self.save_plot()
+
+        elif event.GetId() == 8: # help
+            print("User commands:")
+            print("r N       - run the simulation for N cycles")
+            print("c N       - continue the simulation for N cycles")
+            print("s X N     - set switch X to N (0 or 1)")
+            print("m X       - set a monitor on signal X")
+            print("z X       - zap the monitor on signal X")
+            print("h         - help (this command)")
+            print("q         - quit the program")
+            self.update_statusbar("List of commands displayed in 'Output'.")
+
+        elif event.GetId() == 9: # quit
+            self.Close(True)
 
     def on_close(self, event):
         # deinitialize the frame manager
         self.mgr.UnInit()
         self.Destroy()
+    
+    def open_file(self): 
+        
+        """
+        Launch a dialog for the user to select and open a file.
+
+        Returns
+        -------
+        `None`
+        """
+        with wx.FileDialog(self, "Open File",
+                           wildcard="Text documents (*.txt)|*.txt",
+                           style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST) as \
+                file_dialog:
+            if file_dialog.ShowModal() == wx.ID_CANCEL:
+                return  # the user changed their mind
+
+            # Proceed loading the file chosen by the user
+            pathname = file_dialog.GetPath()
+            self.load_file(pathname)
+
+    def load_file(self): 
+        pass
+
+    def create_file(self): 
+        """
+        Launch a dialog for the user to select and create a new file in that directory.
+
+        Returns
+        -------
+        `None`
+        """
+        with wx.FileDialog(self, "Save File",
+                           defaultFile="image.png",
+                           wildcard="Text documents (*.txt)|*.txt",
+                           style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT) as \
+                file_dialog:
+            if file_dialog.ShowModal() == wx.ID_CANCEL:
+                return  # the user changed their mind
+
+            # Proceed saving the file chosen by the user
+            pathname = file_dialog.GetPath()
+            # CREATE A NEW FILE HERE AND SET THAT AS THE NEW PATH!
+
+    def save_plot(self): 
+        """
+        Launch a dialog for the user to select and save a file.
+
+        Returns
+        -------
+        `None`
+        """
+        with wx.FileDialog(self, "Save File",
+                           defaultFile="image.png",
+                           wildcard="PNG files (*.png)|*.png",
+                           style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT) as \
+                file_dialog:
+            if file_dialog.ShowModal() == wx.ID_CANCEL:
+                return  # the user changed their mind
+
+            # Proceed saving the file chosen by the user
+            pathname = file_dialog.GetPath()
+            # self.canvas.save(pathname)
+    
+    def save_file(self): 
+        pass # save whatever is in the circuit def file into the current loaded path (overwrite!)
+        # get the value of whatever is in the textbox and then save :)
