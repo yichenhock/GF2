@@ -1,4 +1,5 @@
-#Example circuit - Simple Circuit;
+#Example circuit - Simple circuit (As per first interim report);
+#XOR gate;
 
 devices(
     a is OR;
