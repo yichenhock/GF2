@@ -1,5 +1,4 @@
 #Comment test1 (Test file for get_symbol method);
-%
 ,.;=() 29         
 
 #Comment test2 (skip spaces and line breaks);
@@ -9,7 +8,7 @@ initialise
 connections
 monitors
 has
-#Comment test3 (Check that invalid symbol error isn't called %%%%%%%);
+#Comment test3 (Check that invalid symbol error isn't called -------);
 have
 is
 are
@@ -34,4 +33,6 @@ CLK
 SET
 CLEAR
 Q
-QBAR%
+QBAR
+this - error;
+.
