@@ -45,6 +45,7 @@ class Parser:
     def __init__(self, names, devices, network, monitors, scanner):
         """Initialise constants."""
 
+        # names class object
         self.names = names
         self.devices = devices
         self.network = network
@@ -53,11 +54,12 @@ class Parser:
         self.syntax = SyntaxError()
         self.semantic = SemanticError()
 
-        self.user_object_name_list = []
-        self.user_object_type_list = []
-        self.user_object_input_num_list = []
+        # Required to store names and type associated with each name, since make_device() is only called in the initialisation section
+        self.object_dict = {}
 
-        # T_T
+        # Dictionary for device kind. Used in Device.make_device()
+        self.device_kind_dict = {"XOR": self.devices.XOR, "AND": self.devices.AND, "OR": self.devices.OR, "NOR": self.devices.NOR, "NAND": self.devices.NAND, "D_TYPE": self.devices.D_TYPE}
+
         self.block_ids = [self.scanner.devices_id, self.scanner.initialise_id, self.scanner.connections_id, self.scanner.monitors_id]
 
         self.possession_ids = [self.scanner.has_id, self.scanner.have_id]
@@ -234,375 +236,6 @@ class Parser:
         # End of functionality of devices_block function
         return eofcheck
 
-    def device_definition(self, currentname):
-        """Parse one line of device definition.
-
-        Used inside devices block for defining the device names and their corresponding types. Devices are AND, OR, NOR, XOR, NAND, DTYPE only.
-        
-        It should be read at the point after we have obtained the (expected) first name on each line, and finish without having read the first symbol of the next line.
-
-        Parameters
-        -------
-
-        'currentname': the current name read from calling read_name() inside the devices block.
-        """
-
-        self.current_name = currentname
-        print("Inside device definition method. Current symbol:", self.scanner.symbol_list[self.symbol.type])
-        print("Current name: ", self.current_name)
-        # Number of different devices initialised on this line
-        i = 1
-
-        self.symbol = self.scanner.get_symbol()
-
-        print("First symbol type after device name:", self.scanner.symbol_list[self.symbol.type])
-        if self.symbol.type == self.scanner.EOF:
-            return True
-
-        while self.symbol.type == self.scanner.COMMA:
-            # If comma, expect a device name afterwards
-            print("Found a comma, checking for device afterwards")
-            # Fetch next thing after comma
-            self.symbol = self.scanner.get_symbol()
-            # Feed into name reader
-            self.read_name("devices")
-            print("Symbol type after reading name after comma:", self.scanner.symbol_list[self.symbol.type], self.names.get_name_string(self.symbol.id))
-            if self.name_type != "device":
-                # If you mix up device types, syntax error
-                self.syntax.printerror(self.syntax.INCONSISTENT_DEVICE_NAMES, self.scanner)
-            i += 1
-            # Get next symbol after device name to check if it's a comma
-            self.symbol = self.scanner.get_symbol()
-            print("First symbol type after name:", self.scanner.symbol_list[self.symbol.type], self.names.get_name_string(self.symbol.id))
-
-        # If next symbol is definition keyword:
-        # Check if symbol type is keyword and symbol ID is that for definition
-        if self.symbol.type == self.scanner.KEYWORD and self.symbol.id in self.definition_ids:
-            
-            print("Found definition keyword in right place.")
-
-            # Get next symbol
-            self.symbol = self.scanner.get_symbol()
-            print("Fetched gate name type. Now checking if it is a valid gate type.")
-
-            # Check if next symbol is gate type id
-            if self.symbol.id not in self.gate_type_ids:
-                # If symbol is an id but not valid gate type (gate or dtype)
-                if self.symbol.id in (self.switch_id or self.clock_id):
-                    # Skip to next line and exit function
-                    # self.semantic.printerror(self.semantic.WRONG_GATE_FOR_NAME, self.scanner.keywords_list(self.symbol.id),  "AND, OR, NOR, XOR, NAND, or DTYPE")
-                    # return
-                    print("Semantic error to be implemented")
-                    self.scanner.skip_line()
-                    return False
-                #If symbol is not a valid gate type
-                else:
-                    self.syntax.printerror(self.syntax.DEVICE_TYPE_ERROR, self.scanner)
-            
-            # If next symbol is gate type id, append i times the device name to the type list
-            # To create a linked list with the device names
-            # This should be updated with functionality from the devices class once testing on parser alone is complete
-            else:
-                self.user_object_type_list += self.scanner.keywords_list[self.symbol.id]*i
-                print("Successfully appended device type. Now fetching what should be semicolon.")
-                self.symbol = self.scanner.get_symbol()
-                print("Symbol in position of semicolon:", self.scanner.symbol_list[self.symbol.type])
-
-                if self.symbol == self.scanner.EOF:
-                    return True
-
-                if self.scanner.symbol_list[self.symbol.type] != ";":
-                    self.syntax.printerror(self.syntax.NO_SEMICOLON, self.scanner)
-                
-                return False
-        
-        # If next symbol is not a definition keyword, throw error        
-        else:
-            self.syntax.printerror(self.syntax.NO_DEFINITION_KEYWORD, self.scanner)
-        
-        return False
-    
-    def switch_definition(self, currentname):
-        """Parse one line of switch definition.
-
-        Used inside devices block for defining the switch names and their corresponding types. Switches are SWITCH only.
-        
-        It should be read at the point after we have obtained the (expected) first name on each line, and finish without having read the first symbol of the next line.
-
-        Parameters
-        -------
-
-        'currentname': the current name read from calling read_name() inside the devices block.
-        """
-
-        self.current_name = currentname
-        print("Inside switch definition method. Current name: ", self.current_name)
-        # Number of different devices initialised on this line
-        i = 1
-
-        self.symbol = self.scanner.get_symbol()
-
-        print("First symbol type after switch name:", self.scanner.symbol_list[self.symbol.type])
-        if self.symbol.type == self.scanner.EOF:
-            return True
-
-        while self.symbol.type == self.scanner.COMMA:
-            # If comma, expect a device name afterwards
-            # Fetch next thing after comma
-            self.symbol = self.scanner.get_symbol()
-            print("Found a comma, checking for switch afterwards. Symbol type after comma:", self.scanner.symbol_list[self.symbol.type])
-            # Feed into name reader
-            self.read_name("devices")
-            if self.name_type != "switch":
-                # If you mix up device types, syntax error
-                self.syntax.printerror(self.syntax.INCONSISTENT_DEVICE_NAMES, self.scanner)
-            i += 1
-            # Get next symbol after device name to check if it's a comma
-            self.symbol = self.scanner.get_symbol()
-            print("First symbol type after name:", self.scanner.symbol_list[self.symbol.type])
-
-        # If next symbol is definition keyword:
-        # Check if symbol type is keyword and symbol ID is that for definition
-        if self.symbol.type == self.scanner.KEYWORD and self.symbol.id in self.definition_ids:
-            
-            print("Found definition keyword in right place.")
-
-            # Get next symbol
-            self.symbol = self.scanner.get_symbol()
-            print("Fetched gate name type. Now checking if it is a valid gate type. Symbol type:", self.scanner.symbol_list[self.symbol.type], self.names.get_name_string(self.symbol.id))
-
-            # Check if next symbol is gate type id
-            if self.symbol.id not in self.switch_id:
-                # If symbol is an id but not valid gate type (gate or dtype)
-                if self.symbol.id in (self.device_ids or self.clock_id):
-                    # Skip to next line and exit function
-                    # self.semantic.printerror(self.semantic.WRONG_GATE_FOR_NAME, self.scanner.keywords_list(self.symbol.id),  "AND, OR, NOR, XOR, NAND, or DTYPE")
-                    # return
-                    print("Semantic error to be implemented")
-                    self.scanner.skip_line()
-                    return False
-                #If symbol is not a valid gate type
-                else:
-                    self.syntax.printerror(self.syntax.DEVICE_TYPE_ERROR, self.scanner)
-            
-            # If next symbol is gate type id, append i times the device name to the type list
-            # To create a linked list with the device names
-            # This should be updated with functionality from the devices class once testing on parser alone is complete
-            else:
-                self.user_object_type_list += self.scanner.keywords_list[self.symbol.id]*i
-                print("Successfully appended switch type. Now fetching what should be semicolon.")
-                self.symbol = self.scanner.get_symbol()
-                print("Symbol in position of semicolon:", self.scanner.symbol_list[self.symbol.type])
-
-                if self.symbol == self.scanner.EOF:
-                    return True
-
-                if self.scanner.symbol_list[self.symbol.type] != ";":
-                    self.syntax.printerror(self.syntax.NO_SEMICOLON, self.scanner)
-                
-                return False
-        
-        # If next symbol is not a definition keyword, throw error        
-        else:
-            self.syntax.printerror(self.syntax.NO_DEFINITION_KEYWORD, self.scanner)
-        
-        return False
-        
-    def clock_definition(self, currentname):
-        """Parse one line of clock definition.
-
-        Used inside devices block for defining the clock names and their corresponding types. Clocks are CLOCK only.
-        
-        It should be read at the point after we have obtained the (expected) first name on each line, and finish without having read the first symbol of the next line.
-
-        Parameters
-        -------
-
-        'currentname': the current name read from calling read_name() inside the devices block.
-        """
-
-        self.current_name = currentname
-        print("Inside clock definition method. Current name: ", self.current_name)
-        # Number of different devices initialised on this line
-        i = 1
-
-        self.symbol = self.scanner.get_symbol()
-
-        print("First symbol type after switch name:", self.scanner.symbol_list[self.symbol.type])
-        if self.symbol.type == self.scanner.EOF:
-            return True
-
-        while self.symbol.type == self.scanner.COMMA:
-            # If comma, expect a device name afterwards
-            # Fetch next thing after comma
-            self.symbol = self.scanner.get_symbol()
-            print("Found a comma, checking for clock afterwards. Symbol type after comma:", self.scanner.symbol_list[self.symbol.type])
-            # Feed into name reader
-            self.read_name("devices")
-            if self.name_type != "clock":
-                # If you mix up device types, syntax error
-                self.syntax.printerror(self.syntax.INCONSISTENT_DEVICE_NAMES, self.scanner)
-            i += 1
-            # Get next symbol after device name to check if it's a comma
-            self.symbol = self.scanner.get_symbol()
-            print("First symbol type after name:", self.scanner.symbol_list[self.symbol.type])
-
-        # If next symbol is definition keyword:
-        # Check if symbol type is keyword and symbol ID is that for definition
-        if self.symbol.type == self.scanner.KEYWORD and self.symbol.id in self.definition_ids:
-            
-            print("Found definition keyword in right place.")
-
-            # Get next symbol
-            self.symbol = self.scanner.get_symbol()
-            print("Fetched gate name type. Now checking if it is a valid gate type. Symbol type:", self.scanner.symbol_list[self.symbol.type], self.names.get_name_string(self.symbol.id))
-
-            # Check if next symbol is clock type id
-            if self.symbol.id not in self.clock_id:
-                # If symbol is an id but not valid clock type
-                if self.symbol.id in (self.device_ids or self.switch_id):
-                    # Skip to next line and exit function
-                    # self.semantic.printerror(self.semantic.WRONG_GATE_FOR_NAME, self.scanner.keywords_list(self.symbol.id),  "AND, OR, NOR, XOR, NAND, or DTYPE")
-                    print("Semantic error to be implemented")
-                    self.scanner.skip_line()
-                    return False
-                #If symbol is not a valid gate type
-                else:
-                    self.syntax.printerror(self.syntax.DEVICE_TYPE_ERROR, self.scanner)
-            
-            # If next symbol is gate type id, append i times the device name to the type list
-            # To create a linked list with the device names
-            # This should be updated with functionality from the devices class once testing on parser alone is complete
-            else:
-                self.user_object_type_list += self.scanner.keywords_list[self.symbol.id]*i
-                print("Successfully appended clock type. Now fetching what should be semicolon.")
-                self.symbol = self.scanner.get_symbol()
-                print("Symbol in position of semicolon:", self.scanner.symbol_list[self.symbol.type])
-
-                if self.symbol == self.scanner.EOF:
-                    return True
-
-                if self.scanner.symbol_list[self.symbol.type] != ";":
-                    self.syntax.printerror(self.syntax.NO_SEMICOLON, self.scanner)
-                
-                return False
-        
-        # If next symbol is not a definition keyword, throw error        
-        else:
-            self.syntax.printerror(self.syntax.NO_DEFINITION_KEYWORD, self.scanner)
-        
-        return False
-    
-    def read_name(self, block):
-        """Read a generic name. Handles case for all devices - gate, dtype, switch and clock.
-
-        It should be called at the point where the first symbol of each line, or the symbol that should be the name, has already been obtained from the scanner.
-        
-        Parameters
-        -------
-        
-        'block': The block in which this function is called. This is important to check as new device names should not be initialised anywhere other than in the devices block.
-
-        Return current read name.
-        """
-        print("Entered read name function")
-
-        print("Symbol type:", self.scanner.symbol_list[self.symbol.type])
-
-        # If first symbol is of type NAME (for all gates and DTYPE)
-        if self.symbol.type == self.scanner.NAME:
-            self.current_name = self.names.names[self.symbol.id]
-
-            print("Current name in read_name() function:", self.current_name)
-            self.is_legal_name = True
-            self.name_type = ""
-
-            # Check name type - if it's switch 
-            if self.current_name[0:2] == "sw":
-                print("Checking if valid switch name")
-                for i in self.current_name[2:len(self.current_name)]:
-                    if not i.isdigit():
-                        # Syntax error - invalid name
-                        self.syntax.printerror(self.syntax.INCORRECT_SWITCH_NAME, self.scanner)
-                        self.is_legal_name = False
-                        self.symbol = self.scanner.get_symbol()
-                        if self.symbol.type == self.scanner.NAME:
-                            self.current_name = self.names.names[self.symbol.id]
-                # If error is not thrown:
-                self.name_type = "switch"
-                print("Switch found. Name type:", self.name_type)
-
-            # Check name type - if it's clock
-            elif self.current_name[0:3] == "clk":
-                for i in self.current_name[3:len(self.current_name)]:
-                    if not i.isdigit():
-                        # Syntax error - invalid name
-                        self.syntax.printerror(self.syntax.INCORRECT_CLOCK_NAME, self.scanner)
-                        self.is_legal_name = False
-                        # If we skip a line, I want the names() function to store the next name as the one on the next line down
-                        self.symbol = self.scanner.get_symbol()
-                        if self.symbol.type == self.scanner.NAME:
-                            self.current_name = self.names.names[self.symbol.id]
-                # If error is not thrown:
-                print("Clock found")
-                self.name_type = "clock"
-
-            # Check if all letters in device name are lowercase
-            else:
-                for i in self.current_name:
-                    if i.isalpha():
-                        if i.isupper():
-                            self.syntax.printerror(self.syntax.DEVICE_LETTER_CAPITAL, self.scanner)
-                            self.is_legal_name = False
-                            self.symbol = self.scanner.get_symbol()
-                            if self.symbol.type == self.scanner.NAME:
-                                self.current_name = self.names.names[self.symbol.id]
-                # If error is not thrown:
-                self.name_type = "device"
-
-            # If block is devices block
-            if block == "devices":
-                # If name is legal and does not exist in list yet, append to name list
-                if self.is_legal_name and self.current_name not in self.user_object_name_list:
-                    self.user_object_name_list.append(self.current_name)
-                    return 
-                # If trying to initialise a device using existing name, throw semantic error
-                elif self.is_legal_name and self.current_name in self.user_object_name_list:
-                    # self.semantic.printerror(self.semantic.NAME_ALREADY_EXISTS, self.current_name)
-                    self.scanner.skip_line()
-                    return
-            
-            # If block is initialise block
-            if block == "initialise":
-                # If name is legal and does not exist in list yet, throw semantic error
-                if self.is_legal_name and self.current_name not in self.user_object_name_list:
-                    self.scanner.skip_line()
-                    return
-                # Parse existing name
-                elif self.is_legal_name and self.current_name in self.user_object_name_list:
-                    return 
-        
-        # No device name found at the beginning of the line inside the device class but not reached end of block yet
-        elif self.symbol.id != self.scanner.CLOSE_BRACKET and self.symbol.type != self.scanner.NAME:
-            self.syntax.printerror(self.syntax.NO_DEVICE_NAME, self.scanner)
-            self.symbol = self.scanner.get_symbol()
-            if self.symbol.type == self.scanner.NAME:
-                self.current_name = self.names.names[self.symbol.id]
-    
-    def parse_network(self):
-        """Parse the circuit definition file."""
-
-        self.eofcheck = False
-        self.symbol = self.scanner.get_symbol()
-        # Tree structure: split into blocks
-        self.eofcheck = self.circuit_description()
-
-        if self.eofcheck == True:
-            print("end of file reached")
-            self.scanner.file.close()
-
-        return
-    
     def initialise_block(self):
         """Initialises devices, switches and clocks.
         
@@ -663,6 +296,468 @@ class Parser:
         # End of functionality of devices_block function
         return eofcheck
 
+    def connections_block(self):
+        """Operate at level of parsing a device block.
+
+        Should finish after reading the first symbol of the next line.
+        
+        """
+
+        print("Entered device block")
+
+        if self.symbol.type == self.scanner.KEYWORD:
+            print("Keyword at start of connections block: ", self.names.get_name_string(self.symbol.id))
+
+        # Fetch next symbol after section heading and check it's a bracket
+        self.symbol = self.scanner.get_symbol()
+        print("Symbol type:", self.scanner.symbol_list[self.symbol.type]) # Bracket
+        if self.symbol.type != self.scanner.OPEN_BRACKET:
+            # If not a bracket, skip to next character (unique handling method to this error)
+            self.syntax.printerror(self.syntax.NO_OPEN_BRACKET, self.scanner)
+
+        print("Checked for open bracket. Fetching next symbol. Expect device name subheader.")
+        self.previous_block = "connections"
+
+        self.symbol = self.scanner.get_symbol()
+        if self.symbol.type == self.scanner.EOF:
+            eofcheck = True
+            return
+        
+        # Skip device block, end reached
+        if self.symbol.type == self.scanner.CLOSE_BRACKET:
+            eofcheck = False
+            print("Connections block is empty.")
+            return
+
+        # Outer while loop for different device subsections
+        # Call line-level function as long as end of block not reached
+        while self.symbol.type != self.scanner.CLOSE_BRACKET:
+            # Read first name on next line to check if it is a device, switch or clock name
+            print("Reading device sub block header inside devices block")
+
+            # Sets name_type and current_name attributes
+            self.read_name("connections")
+            # Set subsection name header
+            self.current_subsection = self.current_name
+
+            # Fetch next symbol after section subheading and check it's a bracket
+            self.symbol = self.scanner.get_symbol()
+            print("Symbol type:", self.scanner.symbol_list[self.symbol.type]) # Bracket
+            if self.symbol.type != self.scanner.OPEN_BRACKET:
+                # If not a bracket, skip to next character (unique handling method to this error)
+                self.syntax.printerror(self.syntax.NO_OPEN_BRACKET, self.scanner)
+
+            print("Checked for open bracket for subsection inside connections. Fetching next symbol. Expect device name.")
+            
+            # Fetch device name
+            self.symbol = self.scanner.get_symbol()
+            if self.symbol.type == self.scanner.EOF:
+                eofcheck = True
+                return
+            
+            # Skip device block, end reached
+            if self.symbol.type == self.scanner.CLOSE_BRACKET:
+                eofcheck = False
+                print("Connections block is empty.")
+                return
+            
+            while self.symbol.type != self.scanner.CLOSE_BRACKET:
+                print("Reading device name inside {} subsection in connections".format(self.current_subsection))
+
+                # Read next symbol and check it's a name
+                self.read_name("connections")
+
+            # Read first symbol of next line
+            self.symbol = self.scanner.get_symbol()
+            print("First symbol of next line: ", self.scanner.symbol_list[self.symbol.type])
+            if self.symbol == self.scanner.EOF:
+                return True
+
+        self.symbol = self.scanner.get_symbol()
+        print("End of device block found using bracket. Setting of checking parameter previous_block:", self.previous_block)
+        # Exit the above while loop when symbol stored is a closed bracket
+        # End of functionality of devices_block function
+        return eofcheck
+
+#===========================================================================================================
+#===========================================================================================================
+
+    def gate_connection_definition(self, currentname):
+        """Parse one line of connection definition for a gate subsection.
+
+        Used inside connections block for defining inputs.
+        It should be read at the point after we have obtained the (expected) first name on each line, and finish without having read the first symbol of the next line.
+
+        Parameters
+        -------
+
+        'currentname': the current name read from calling read_name() inside the devices block.
+        """
+
+        self.current_name = currentname
+
+        return False
+
+    def device_definition(self, currentname):
+        """Parse one line of device definition.
+
+        Used inside devices block for defining the device names and their corresponding types. Devices are AND, OR, NOR, XOR, NAND, DTYPE only.
+        
+        It should be read at the point after we have obtained the (expected) first name on each line, and finish without having read the first symbol of the next line.
+
+        Parameters
+        -------
+
+        'currentname': the current name read from calling read_name() inside the devices block.
+        """
+
+        self.current_name = currentname
+        devices_to_add = [currentname]
+        
+        print("Inside device definition method. Current symbol:", self.scanner.symbol_list[self.symbol.type])
+        print("Current name: ", self.current_name)
+
+        self.symbol = self.scanner.get_symbol()
+
+        print("First symbol type after device name:", self.scanner.symbol_list[self.symbol.type])
+        if self.symbol.type == self.scanner.EOF:
+            return True
+
+        while self.symbol.type == self.scanner.COMMA:
+            # If comma, expect a device name afterwards
+            print("Found a comma, checking for device afterwards")
+            # Fetch next thing after comma
+            self.symbol = self.scanner.get_symbol()
+            # Feed into name reader
+            self.read_name("devices")
+            # Append to list at top of this method
+            devices_to_add.append(self.current_name)
+            print("Symbol type after reading name after comma:", self.scanner.symbol_list[self.symbol.type], self.names.get_name_string(self.symbol.id))
+            
+            if self.name_type != "device":
+                # If you mix up device types, syntax error
+                self.syntax.printerror(self.syntax.INCONSISTENT_DEVICE_NAMES, self.scanner)
+
+            # Get next symbol after device name to check if it's a comma
+            self.symbol = self.scanner.get_symbol()
+            print("First symbol type after name:", self.scanner.symbol_list[self.symbol.type], self.names.get_name_string(self.symbol.id))
+
+        # If next symbol is definition keyword:
+        # Check if symbol type is keyword and symbol ID is that for definition
+        if self.symbol.type == self.scanner.KEYWORD and self.symbol.id in self.definition_ids:
+            
+            print("Found definition keyword in right place.")
+
+            # Get next symbol
+            self.symbol = self.scanner.get_symbol()
+            print("Fetched gate name type. Now checking if it is a valid gate type.")
+
+            # Check if next symbol is gate type id
+            if self.symbol.id not in self.gate_type_ids:
+                # If symbol is an id but not valid gate type (gate or dtype)
+                if self.symbol.id in (self.switch_id or self.clock_id):
+                    # Skip to next line and exit function
+                    self.semantic.printerror(self.semantic.WRONG_GATE_FOR_NAME, self.scanner.keywords_list(self.symbol.id),  "AND, OR, NOR, XOR, NAND, or DTYPE")
+                    return False
+                #If symbol is not a valid gate type
+                else:
+                    self.syntax.printerror(self.syntax.DEVICE_TYPE_ERROR, self.scanner)
+            
+            # If next symbol is gate type id, add to dictionary
+            # For testing purposes, also append to list in Parse class
+            else:
+                for device in devices_to_add:
+                    self.object_dict[device] = self.scanner.keywords_list[self.symbol.id]
+                print("Successfully appended device type. Now fetching what should be semicolon.")
+                self.symbol = self.scanner.get_symbol()
+                print("Symbol in position of semicolon:", self.scanner.symbol_list[self.symbol.type])
+
+                if self.symbol == self.scanner.EOF:
+                    return True
+
+                if self.scanner.symbol_list[self.symbol.type] != ";":
+                    self.syntax.printerror(self.syntax.NO_SEMICOLON, self.scanner)
+                
+                return False
+        
+        # If next symbol is not a definition keyword, throw error        
+        else:
+            self.syntax.printerror(self.syntax.NO_DEFINITION_KEYWORD, self.scanner)
+        
+        return False
+    
+    def switch_definition(self, currentname):
+        """Parse one line of switch definition.
+
+        Used inside devices block for defining the switch names and their corresponding types. Switches are SWITCH only.
+        
+        It should be read at the point after we have obtained the (expected) first name on each line, and finish without having read the first symbol of the next line.
+
+        Parameters
+        -------
+
+        'currentname': the current name read from calling read_name() inside the devices block.
+        """
+
+        self.current_name = currentname
+        print("Inside switch definition method. Current name: ", self.current_name)
+        devices_to_add = [currentname]
+
+        self.symbol = self.scanner.get_symbol()
+
+        print("First symbol type after switch name:", self.scanner.symbol_list[self.symbol.type])
+        if self.symbol.type == self.scanner.EOF:
+            return True
+
+        while self.symbol.type == self.scanner.COMMA:
+            # If comma, expect a device name afterwards
+            # Fetch next thing after comma
+            self.symbol = self.scanner.get_symbol()
+            print("Found a comma, checking for switch afterwards. Symbol type after comma:", self.scanner.symbol_list[self.symbol.type])
+            # Feed into name reader
+            self.read_name("devices")
+            devices_to_add.append(self.current_name)
+            if self.name_type != "switch":
+                # If you mix up device types, syntax error
+                self.syntax.printerror(self.syntax.INCONSISTENT_DEVICE_NAMES, self.scanner)
+            # Get next symbol after device name to check if it's a comma
+            self.symbol = self.scanner.get_symbol()
+
+        # If next symbol is definition keyword:
+        # Check if symbol type is keyword and symbol ID is that for definition
+        if self.symbol.type == self.scanner.KEYWORD and self.symbol.id in self.definition_ids:
+            
+            print("Found definition keyword in right place.")
+
+            # Get next symbol
+            self.symbol = self.scanner.get_symbol()
+            print("Fetched gate name type. Now checking if it is a valid gate type. Symbol type:", self.scanner.symbol_list[self.symbol.type], self.names.get_name_string(self.symbol.id))
+
+            # Check if next symbol is gate type id
+            if self.symbol.id not in self.switch_id:
+                # If symbol is an id but not valid gate type 
+                if self.symbol.id in (self.device_ids or self.clock_id):
+                    # Skip to next line and exit function
+                    self.semantic.printerror(self.semantic.WRONG_GATE_FOR_NAME, self.scanner.keywords_list(self.symbol.id),  "SWITCH")
+                    return False
+                #If symbol is not a valid gate type
+                else:
+                    self.syntax.printerror(self.syntax.DEVICE_TYPE_ERROR, self.scanner)
+            
+            else:
+                for device in devices_to_add:
+                    self.object_dict[device] = self.scanner.keywords_list[self.symbol.id]
+                print("Successfully appended switch type. Now fetching what should be semicolon.")
+                self.symbol = self.scanner.get_symbol()
+
+                if self.symbol == self.scanner.EOF:
+                    return True
+
+                if self.scanner.symbol_list[self.symbol.type] != ";":
+                    self.syntax.printerror(self.syntax.NO_SEMICOLON, self.scanner)
+                
+                return False
+        
+        # If next symbol is not a definition keyword, throw error        
+        else:
+            self.syntax.printerror(self.syntax.NO_DEFINITION_KEYWORD, self.scanner)
+        
+        return False
+        
+    def clock_definition(self, currentname):
+        """Parse one line of clock definition.
+
+        Used inside devices block for defining the clock names and their corresponding types. Clocks are CLOCK only.
+        
+        It should be read at the point after we have obtained the (expected) first name on each line, and finish without having read the first symbol of the next line.
+
+        Parameters
+        -------
+
+        'currentname': the current name read from calling read_name() inside the devices block.
+        """
+
+        self.current_name = currentname
+        print("Inside clock definition method. Current name: ", self.current_name)
+        devices_to_add = [currentname]
+
+        self.symbol = self.scanner.get_symbol()
+        print("First symbol type after switch name:", self.scanner.symbol_list[self.symbol.type])
+
+        if self.symbol.type == self.scanner.EOF:
+            return True
+
+        while self.symbol.type == self.scanner.COMMA:
+            # If comma, expect a device name afterwards
+            # Fetch next thing after comma
+            self.symbol = self.scanner.get_symbol()
+            print("Found a comma, checking for clock afterwards. Symbol type after comma:", self.scanner.symbol_list[self.symbol.type])
+            # Feed into name reader
+            self.read_name("devices")
+            devices_to_add.append(self.current_name)
+            if self.name_type != "clock":
+                # If you mix up device types, syntax error
+                self.syntax.printerror(self.syntax.INCONSISTENT_DEVICE_NAMES, self.scanner)
+            i += 1
+            # Get next symbol after device name to check if it's a comma
+            self.symbol = self.scanner.get_symbol()
+
+        # If next symbol is definition keyword:
+        # Check if symbol type is keyword and symbol ID is that for definition
+        if self.symbol.type == self.scanner.KEYWORD and self.symbol.id in self.definition_ids:
+            
+            print("Found definition keyword in right place.")
+
+            # Get next symbol
+            self.symbol = self.scanner.get_symbol()
+            print("Fetched gate name type. Now checking if it is a valid gate type. Symbol type:", self.scanner.symbol_list[self.symbol.type], self.names.get_name_string(self.symbol.id))
+
+            # Check if next symbol is clock type id
+            if self.symbol.id not in self.clock_id:
+                # If symbol is an id but not valid clock type
+                if self.symbol.id in (self.device_ids or self.switch_id):
+                    # Skip to next line and exit function
+                    self.semantic.printerror(self.semantic.WRONG_GATE_FOR_NAME, self.scanner.keywords_list(self.symbol.id),  "CLOCK")
+                    return False
+                #If symbol is not a valid gate type
+                else:
+                    self.syntax.printerror(self.syntax.DEVICE_TYPE_ERROR, self.scanner)
+            
+            else:
+                for device in devices_to_add:
+                    self.object_dict[device] = self.scanner.keywords_list[self.symbol.id]
+                print("Successfully appended clock type. Now fetching what should be semicolon.")
+                self.symbol = self.scanner.get_symbol()
+
+                if self.symbol == self.scanner.EOF:
+                    return True
+
+                if self.scanner.symbol_list[self.symbol.type] != ";":
+                    self.syntax.printerror(self.syntax.NO_SEMICOLON, self.scanner)
+                
+                return False
+        
+        # If next symbol is not a definition keyword, throw error        
+        else:
+            self.syntax.printerror(self.syntax.NO_DEFINITION_KEYWORD, self.scanner)
+        
+        return False
+
+#===========================================================================================================
+#===========================================================================================================
+
+    def read_name(self, block):
+        """Read a generic name. Handles case for all devices - gate, dtype, switch and clock.
+
+        Handles syntax errors for where a valid name is expected but not given, and incorrect switch and clock names. Handles semantic errors for devices already named (for definitions) or devices not already named (for initialise, connections). It should be called at the point where the first symbol of each line, or the symbol that should be the name, has already been obtained from the scanner.
+        
+        Parameters
+        -------
+        
+        'block': The block in which this function is called. This is important to check as new device names should not be initialised anywhere other than in the devices block.
+
+        Return current read name.
+        """
+        print("Entered read name function")
+
+        print("Symbol type:", self.scanner.symbol_list[self.symbol.type])
+
+        # If first symbol is of type NAME (for all gates and DTYPE)
+        if self.symbol.type == self.scanner.NAME:
+            self.current_name = self.names.names[self.symbol.id]
+
+            print("Current name in read_name() function:", self.current_name)
+            self.is_legal_name = True
+            self.name_type = ""
+
+            # Check name type - if it's switch 
+            if self.current_name[0:2] == "sw":
+                print("Checking if valid switch name")
+                for i in self.current_name[2:len(self.current_name)]:
+                    if not i.isdigit():
+                        # Syntax error - invalid name
+                        self.syntax.printerror(self.syntax.INCORRECT_SWITCH_NAME, self.scanner)
+                        self.is_legal_name = False
+                # If error is not thrown:
+                self.name_type = "switch"
+                print("Switch found. Name type:", self.name_type)
+
+            # Check name type - if it's clock
+            elif self.current_name[0:3] == "clk":
+                for i in self.current_name[3:len(self.current_name)]:
+                    if not i.isdigit():
+                        # Syntax error - invalid name
+                        self.syntax.printerror(self.syntax.INCORRECT_CLOCK_NAME, self.scanner)
+                        self.is_legal_name = False
+                # If error is not thrown:
+                print("Clock found")
+                self.name_type = "clock"
+
+            # Check if all letters in device name are lowercase
+            else:
+                for i in self.current_name:
+                    if i.isalpha():
+                        if i.isupper():
+                            self.syntax.printerror(self.syntax.DEVICE_LETTER_CAPITAL, self.scanner)
+                            self.is_legal_name = False
+                # If error is not thrown:
+                self.name_type = "device"
+
+            # If block is devices block
+            if block == "devices" and self.is_legal_name:
+                # If name is legal and does not exist in list yet, append to name list and call Device() to create device
+                if self.current_name not in self.object_dict:
+                    return 
+                # If trying to initialise a device using existing name, throw semantic error
+                elif self.current_name in self.object_dict:
+                    self.semantic.printerror(self.semantic.NAME_ALREADY_EXISTS, self.scanner, self.current_name)
+                    return
+            
+            # If block is initialise block
+            if block == "initialise":
+                # If name is legal and does not exist in list yet, throw semantic error
+                if self.is_legal_name and self.current_name not in self.devices.names.names:
+                    self.semantic.printerror(self.semantic.NAME_FOR_INITIALISE_NOT_DEFINED, self.scanner, self.current_name)
+                    return
+                elif self.is_legal_name and self.current_name in self.devices.names.names:
+                    return
+            
+            # If block is connections block
+            if block == "connections":
+                # If name is legal and does not exist in list yet, throw semantic error
+                if self.is_legal_name and self.current_name not in self.object_dict:
+                    self.semantic.printerror(self.semantic.NAME_FOR_CONNECTIONS_NOT_DEFINED, self.scanner, self.current_name)
+                    return
+                elif self.is_legal_name and self.current_name in self.object_dict:
+                # Don't return anything - whole point is to update current name
+                    return 
+        
+        # No device name found at the beginning of the line inside the device class but not reached end of block yet
+        elif self.symbol.id != self.scanner.CLOSE_BRACKET and self.symbol.type != self.scanner.NAME:
+            self.syntax.printerror(self.syntax.NO_DEVICE_NAME, self.scanner)
+            self.symbol = self.scanner.get_symbol()
+            if self.symbol.type == self.scanner.NAME:
+                self.current_name = self.names.names[self.symbol.id]
+                return
+            return
+    
+    def parse_network(self):
+        """Parse the circuit definition file."""
+
+        self.eofcheck = False
+        self.symbol = self.scanner.get_symbol()
+        # Tree structure: split into blocks
+        self.eofcheck = self.circuit_description()
+
+        if self.eofcheck == True:
+            print("end of file reached")
+            self.scanner.file.close()
+
+        return
+
+#===========================================================================================================
+#===========================================================================================================
+
     def device_initialisation(self, currentname):
         """Parse one line of device initialisation.
 
@@ -674,11 +769,12 @@ class Parser:
         'currentname': the current name read from calling read_name() inside the devices block.
         """
 
+        # Store names of devices to be initialised
+        devices_to_be_initialised = [currentname]
+
         self.current_name = currentname
         print("Inside device initialisation method. Current symbol:", self.scanner.symbol_list[self.symbol.type])
         print("Current name: ", self.current_name)
-        # Number of different devices initialised on this line
-        i = 1
 
         self.symbol = self.scanner.get_symbol()
 
@@ -692,6 +788,7 @@ class Parser:
             self.symbol = self.scanner.get_symbol()
             # Feed into name reader
             self.read_name("initialisation")
+            devices_to_be_initialised.append(self.current_name)
             if self.name_type != "device":
                 # If you mix up device types, syntax error
                 self.syntax.printerror(self.syntax.INCONSISTENT_DEVICE_NAMES, self.scanner)
@@ -710,23 +807,25 @@ class Parser:
             if self.symbol.type != self.scanner.NUMBER:
                 self.syntax.printerror(self.syntax.INPUT_NUMBER_ERROR, self.scanner)
             
-            # If next symbol says 'input' or 'input', append the right number of inputs
-            # To create a linked list with the device names
-            # This should be updated with functionality from the devices class once testing on parser alone is complete
             else:
                 
+                # Get number
+                temp_inputs = self.symbol.id
+                print("Checking devices dictionary at this point", self.object_dict)
                 # Fetch and check what should be 'input' or 'inputs'
                 self.symbol = self.scanner.get_symbol()
                 if self.symbol.id not in self.other_keywords_ids[2:4]:
                     self.syntax.printerror(self.syntax.INPUTS_KEYWORD_ERROR)
-
+                
+                # If next symbol says 'input' or 'input', update the relevant attributes
                 else:
-                    self.user_object_input_num_list += self.scanner.keywords_list[self.symbol.id]*i
-                    self.symbol = self.scanner.get_symbol()
+                    for device in devices_to_be_initialised:
+                        # Make device: args device_id, device_kind, input number
+                        self.devices.make_device(self.names.query(device), self.device_kind_dict[self.object_dict[device]], temp_inputs)
 
+                    self.symbol = self.scanner.get_symbol()
                     if self.symbol == self.scanner.EOF:
                         return True
-
                     if self.scanner.symbol_list[self.symbol.type] != ";":
                         self.syntax.printerror(self.syntax.NO_SEMICOLON, self.scanner)
                     
@@ -748,11 +847,12 @@ class Parser:
 
         'currentname': the current name read from calling read_name() inside the devices block.
         """
+        
+        # List of switch names to initialise
+        switches_to_be_initialised = [currentname]
 
         self.current_name = currentname
         print("Inside switch initialisation method. Current symbol:", self.scanner.symbol_list[self.symbol.type])
-        # Number of different devices initialised on this line
-        i = 1
 
         self.symbol = self.scanner.get_symbol()
 
@@ -766,10 +866,10 @@ class Parser:
             self.symbol = self.scanner.get_symbol()
             # Feed into name reader
             self.read_name("initialisation")
+            switches_to_be_initialised.append(self.current_name)
             if self.name_type != "switch":
                 # If you mix up device types, syntax error
                 self.syntax.printerror(self.syntax.INCONSISTENT_DEVICE_NAMES, self.scanner)
-            i += 1
             # Get next symbol after device name to check if it's a comma
             self.symbol = self.scanner.get_symbol()
 
@@ -780,18 +880,21 @@ class Parser:
             # Get next symbol
             self.symbol = self.scanner.get_symbol()
             
-            # Check if next symbol is number
+            # Check if next symbol is switch level
             if self.symbol.id not in self.switch_level:
                 self.syntax.printerror(self.syntax.SWITCH_LEVEL_ERROR, self.scanner)
 
             else:
-                # Some functionality from network class needed here+++++++++++++++++++++++++++++++++++++++
+                # Set switch state property for object in Device class
+                # String, capitalised
+                for switch in switches_to_be_initialised:
+                    # Make device: args device_id, device_kind, switch level
+                    self.devices.make_device(self.names.query(switch), self.devices.SWITCH, self.scanner.keywords_list[self.symbol.id])
+
                 print("Successfully added switch levels. Now fetching what should be semicolon.")
                 self.symbol = self.scanner.get_symbol()
-
                 if self.symbol == self.scanner.EOF:
                     return True
-
                 if self.scanner.symbol_list[self.symbol.type] != ";":
                     self.syntax.printerror(self.syntax.NO_SEMICOLON, self.scanner)
                 
@@ -816,8 +919,6 @@ class Parser:
 
         self.current_name = currentname
         print("Inside clock initialisation method. Current symbol:", self.scanner.symbol_list[self.symbol.type])
-        # Number of different devices initialised on this line
-        i = 1
 
         self.symbol = self.scanner.get_symbol()
 
@@ -839,15 +940,18 @@ class Parser:
                 self.symbol = self.scanner.get_symbol()
                 
                 if self.symbol.type == self.scanner.NUMBER:
-                    # Some functionality from network class needed here+++++++++++++++++++++++++++++++++++++++
-                    # To add a cycle length to the relevant clock
+                    
+                    # Check that number is >0
+                    if self.symbol.id <= 0:
+                        self.semantic.printerror(self.semantic.NEGATIVE_NUMBER_ILLEGAL)
 
-                    print("Successfully added switch levels. Now fetching what should be semicolon.")
+                    # Make and initialise clock device
+                    self.devices.make_device(self.name.query(self.current_name), self.devices.CLOCK, self.symbol.id/2)
+
+                    print("Successfully added clock cycle length. Now fetching what should be semicolon.")
                     self.symbol = self.scanner.get_symbol()
-
                     if self.symbol == self.scanner.EOF:
                         return True
-
                     if self.scanner.symbol_list[self.symbol.type] != ";":
                         self.syntax.printerror(self.syntax.NO_SEMICOLON, self.scanner)
                     
@@ -865,12 +969,6 @@ class Parser:
         
         return False
     
-    def connection_definition(self):
-        return None
-
-    def connections_block(self):
-        self.previous_block == "connections"
-
     def monitors_block(self):
         return None
     

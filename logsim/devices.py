@@ -36,6 +36,7 @@ class Device:
         # outputs dictionary stores {output_id: output_signal}
         self.outputs = {}
 
+        self.input_number = None
         self.device_kind = None
         self.clock_half_period = None
         self.clock_counter = None
@@ -100,8 +101,11 @@ class Devices:
     def __init__(self, names):
         """Initialise devices list and constants."""
 
+        # List of names imported from names module
+        # Read in from scanner
         self.names = names
 
+        # List of Device type objects - can assign attributes
         self.devices_list = []
 
         gate_strings = ["AND", "OR", "NAND", "NOR", "XOR"]

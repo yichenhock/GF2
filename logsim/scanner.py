@@ -168,7 +168,7 @@ class Scanner:
 
         elif self.current_character.isdigit():  # Number
             symbol.id = self.get_number()
-            print(symbol.id)
+            # print(symbol.id)
             symbol.type = self.NUMBER
 
         elif self.current_character == ",":  # Punctuation

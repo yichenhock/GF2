@@ -1,13 +1,11 @@
 devices(
     a, b are OR;
     sw1, sw2 are SWITCH;
-    clk1 is CLOCK;
 )
 
 initialise(
     a has 2 inputs;
     sw1, sw2 are HIGH;
-    clk1 cycle length 100;
 )
 
 connections(

@@ -4,39 +4,9 @@ Used in the Logic Simulator project to provide produce custom exceptions using c
 
 Classes
 -------
-'SyntaxError': Skeleton class for syntax errors.
+'SyntaxError': Class for syntax errors. 
 
-'OpenParentheses': Missing open bracket.
-
-'CloseParentheses': Missing close bracket.
-
-'LineEnd': Missing semicolon or open bracket (in case of block header)
-
-'BlockHeader': Missing or misspelled block header.
-
-'PossessionKeyword': Missing or misspelled possession keyword.
-
-'DefinitionKeyword': Missing or misspelled definition keyword.
-
-'XName': Skeleton class for gate/dtype/switch/clock illegal name errors.
-
-'DeviceName': Missing device name.
-
-'IllegalDeviceName': Illegal generic device name.
-
-'IllegalGateName': Illegal gate name.
-
-'IllegalSwitchName': Illegal switch name.
-
-'IllegalClockName': Illegal clock name.
-
-'IllegalInputName': Illegal input name.
-
-'ConnectionDefinition': Missing 
-
-'ExtraChars': Extra characters not expected in location specified.
-
-'SemanticError': Skeleton class for semantic errors.
+'SemanticError': Class for semantic errors.
 """
 from scanner import Scanner
 
@@ -45,11 +15,11 @@ class SemanticError(Scanner):
     def __init__(self):
         """Set parameters to report error."""
 
-        self.id_list = [self.WRONG_GATE_FOR_NAME, self.NAME_ALREADY_EXISTS] = range(2)
+        self.id_list = [self.WRONG_GATE_FOR_NAME, self.NAME_ALREADY_EXISTS, self.NAME_FOR_INITIALISE_NOT_DEFINED, self.NAME_FOR_CONNECTIONS_NOT_DEFINED, self.NEGATIVE_NUMBER_ILLEGAL] = range(5)
 
-        self.error_type_list = ["WRONG_GATE_FOR_NAME", "NAME_ALREADY_EXISTS"]
+        self.error_type_list = ["WRONG_GATE_FOR_NAME", "NAME_ALREADY_EXISTS", "EXISTING_DEVICE_NAME", "NAME_FOR_INITIALISE_NOT_DEFINED", "NAME_FOR_CONNECTIONS_NOT_DEFINED", "NEGATIVE_NUMBER_ILLEGAL"]
 
-    def print(self, id, scanner, symbol1=None, symbol2=None):
+    def printerror(self, id, scanner, symbol1=None, symbol2=None):
         """Print error message to terminal and skip line.
         
         Parameters
@@ -58,7 +28,7 @@ class SemanticError(Scanner):
         'message': Output to be printed to terminal."""
         self.scanner = scanner
 
-        self.message_list = ["Wrong gate type provided for device name chosen. Given {}, expected {}".format(symbol1, symbol2), "Device name {} defined has already been used above.".format(symbol1)]
+        self.message_list = ["Wrong gate type provided for device name chosen. Given {}, expected {}".format(symbol1, symbol2), "Device name {} defined has already been used above.".format(symbol1), "The device name {} provided in the initialisation section has not been defined in the devices section.".format(symbol1), "The device name {} provided in the connections section has not been defined in the devices section.".format(symbol1), "Please enter a positive, nonzero value."]
 
         self.message = "SyntaxError: {}".format(self.message_list[id])
         
