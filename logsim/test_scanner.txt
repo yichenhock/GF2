@@ -1,0 +1,38 @@
+#Comment test1 (Test file for get_symbol method);
+,.;=() 29         
+
+#Comment test2 (skip spaces and line breaks);
+            keywords
+devices
+initialise
+connections
+monitors
+has
+#Comment test3 (Check that invalid symbol error isn't called -------);
+have
+is
+are
+to
+connected
+input
+inputs
+cycle
+length
+AND
+OR
+NOR
+XOR
+NAND
+DTYPE
+SWITCH
+CLOCK
+HIGH
+LOW
+DATA
+CLK
+SET
+CLEAR
+Q
+QBAR
+this - error;
+.
