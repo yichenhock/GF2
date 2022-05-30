@@ -1,0 +1,5 @@
+#Comment test 1 (Test file for print_error_line method);
+
+%incorrect symbol;
+incorrect % symbol(
+incorrect symbol% )

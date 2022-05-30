@@ -13,10 +13,19 @@ def new_names():
 
 
 @pytest.fixture
-def new_test_scanner():
+def new_test_scanner_get_symbol():
     """Return a new instance of the Scanner class with predefined path."""
     new_names = Names()
-    path = "logsim/test_scanner.txt" # Text file containing scanner tests
+    path = "logsim/test_scanner_get_symbol.txt" # Text file containing scanner tests for get_symbol
+
+    return Scanner(path, new_names)
+
+
+@pytest.fixture
+def new_test_scanner_print_error_line():
+    """Return a new instance of the Scanner class with predefined path."""
+    new_names = Names()
+    path = "logsim/test_scanner_print_error_line.txt" # Text file containing scanner tests for print_error_line
 
     return Scanner(path, new_names)
 
@@ -31,9 +40,9 @@ def test_scanner_init_raises_exceptions(new_names):
         Scanner(True, new_names)
 
 
-def test_get_symbol(new_test_scanner):
+def test_get_symbol(new_test_scanner_get_symbol):
     """Test to see if get_symbol returns the correct symbol."""
-    scanner = new_test_scanner
+    scanner = new_test_scanner_get_symbol
     # Skip comment 1
     assert scanner.get_symbol().type == None # Invalid Character
     assert scanner.get_symbol().type == 0 # COMMA
@@ -58,17 +67,19 @@ def test_get_symbol(new_test_scanner):
     assert scanner.get_symbol().type == 9 
 
 
-def test_print_error_line(new_test_scanner):
-    scanner = new_test_scanner
+def test_print_error_line(new_test_scanner_print_error_line):
+    scanner = new_test_scanner_print_error_line
     safety_counter = 0
     symbol = scanner.get_symbol()
+    print(symbol.type)
     while symbol.type != 9:
         if safety_counter > 10000: # Prevent infinite loop
             break
-
+        print(symbol.type)
         if symbol.type == None:
             scanner.print_error_line("Invalid Character")
-            captured = capsys.readouterr()
+            #captured = capsys.readouterr()
+        symbol = scanner.get_symbol()
+        safety_counter += 1
 
-
-#Check its passing instance of names class
+# Check its passing instance of names class

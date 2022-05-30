@@ -1,5 +1,5 @@
-#Comment test1;
--
+#Comment test1 (Test file for get_symbol method);
+%
 ,.;=() 29         
 
 #Comment test2 (skip spaces and line breaks);
