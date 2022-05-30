@@ -39,10 +39,10 @@ print(scanner.file.read())
 scanner.file.seek(0)
 x = scanner.get_symbol()
 type_id_list = []
-while x.type != 10:
+while x.type != 9:
     x = scanner.get_symbol()
     type_id_list.append([x.type, x.id])
-    # print(x.type, x.id)
-    # print(name.names)
+    print(x.type, x.id)
+    #print(name.names)
 
 #print(type_id_list)

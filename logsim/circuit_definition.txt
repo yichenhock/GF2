@@ -1,6 +1,6 @@
-#Example A - Simple XOR Circuit;
-    
-devices(
+-#Example A - Simple XOR Circuit;-
+    -
+-devices(
     a is OR;
     b is NAND;
     c is AND;
@@ -28,7 +28,8 @@ connections(
         b is connected to c.I2;
     );
 );
-
+-
 monitors(
     c;
 );
+-
