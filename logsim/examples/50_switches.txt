@@ -1,0 +1,17 @@
+#Example circuit - 50 switches;
+
+devices(
+    sw1, sw2, sw3, sw4, sw5, sw6, sw7, sw8, sw9, sw10, sw11, sw12, sw13, sw14, sw15, sw16, sw17, sw18, sw19, sw20, sw21, sw22, sw23, sw24, sw25, sw26, sw27, sw28, sw29, sw30, sw31, sw32, sw33, sw34, sw35, sw36, sw37, sw38, sw39, sw40, sw41, sw42, sw43, sw44, sw45, sw46, sw47, sw48, sw49, sw50 are SWITCH;
+)
+
+initialise(
+    sw1, sw2, sw3, sw4, sw5, sw6, sw7, sw8, sw9, sw10, sw11, sw12, sw13, sw14, sw15, sw16, sw17, sw18, sw19, sw20, sw21, sw22, sw23, sw24, sw25 are LOW;
+    sw26, sw27, sw28, sw29, sw30, sw31, sw32, sw33, sw34, sw35, sw36, sw37, sw38, sw39, sw40, sw41, sw42, sw43, sw44, sw45, sw46, sw47, sw48, sw49, sw50 are HIGH;
+)
+
+connections(
+)
+
+monitors(
+    sw1, sw2, sw3, sw4, sw5, sw6, sw7, sw8, sw9, sw10, sw11, sw12, sw13, sw14, sw15, sw16, sw17, sw18, sw19, sw20, sw21, sw22, sw23, sw24, sw25, sw26, sw27, sw28, sw29, sw30, sw31, sw32, sw33, sw34, sw35, sw36, sw37, sw38, sw39, sw40, sw41, sw42, sw43, sw44, sw45, sw46, sw47, sw48, sw49, sw50;
+)

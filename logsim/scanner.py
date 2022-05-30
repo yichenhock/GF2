@@ -120,8 +120,8 @@ class Scanner:
         return
 
     def skip_comment(self):
-        """Skips the current comment (Until next semicolon)."""
-        while self.current_character != ";":
+        """Skips the current comment (Until next semicolon or newline)."""
+        while self.current_character not in [";", "\n", ""]:
             self.advance()
         self.advance()
         return
@@ -130,9 +130,6 @@ class Scanner:
         """Print current line with marker pointing where the error is."""
         print("Error type:", error_type)
         print(self.lines[self.current_line])
-        # for i in self.lines:
-        #     print(i)
-        # print(self.lines)
         print(" " * (self.current_character_position - 1) + "^ Error Here")
         print(error_message)
         self.skip_line()
