@@ -66,8 +66,8 @@ class Scanner:
         # Define all symbol types
         self.symbol_type_list = [self.COMMA, self.DOT, self.SEMICOLON,
                                  self.EQUALS, self.OPEN_BRACKET,
-                                 self.CLOSE_BRACKET, self.HASH, self.KEYWORD,
-                                 self.NUMBER, self.NAME, self.EOF] = range(11)
+                                 self.CLOSE_BRACKET, self.KEYWORD,
+                                 self.NUMBER, self.NAME, self.EOF] = range(10)
 
         # Define all keywords
         self.keywords_list = ["devices", "initialise", "connections",
