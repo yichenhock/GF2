@@ -24,7 +24,7 @@ class ConsoleOutTab(wx.Panel):
     """
     #----------------------------------------------------------------------
     def __init__(self, parent, path, names, devices, network,
-                      monitors, inputsPanel):
+                      monitors, inputsPanel, set_gui_state):
         """"""
         wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
 
@@ -33,6 +33,7 @@ class ConsoleOutTab(wx.Panel):
         self.monitors = monitors
         self.network = network
         self.inputsPanel = inputsPanel
+        self.set_gui_state = set_gui_state # function
 
         self.cycles_completed = 0  # number of simulation cycles completed
 
@@ -51,10 +52,10 @@ class ConsoleOutTab(wx.Panel):
         self.log.SetFont(font_code)
         self.commands.SetFont(font_code)
 
-        self.log.SetBackgroundColour("dark grey")
+        self.log.SetBackgroundColour(wx.Colour(50,50,50))
         self.log.SetForegroundColour("white")
 
-        self.commands.SetBackgroundColour("dark grey")
+        self.commands.SetBackgroundColour(wx.Colour(50,50,50))
         self.commands.SetForegroundColour("white")
         self.commands.SetHint('Type commands here')
 
@@ -125,15 +126,15 @@ class ConsoleOutTab(wx.Panel):
     #         else:
     #             print("Error! Could not make monitor.")
 
-    def zap_command(self):
-        """Remove the specified monitor."""
-        monitor = self.read_signal_name()
-        if monitor is not None:
-            [device, port] = monitor
-            if self.monitors.remove_monitor(device, port):
-                print("Successfully zapped monitor")
-            else:
-                print("Error! Could not zap monitor.")
+    # def zap_command(self):
+    #     """Remove the specified monitor."""
+    #     monitor = self.read_signal_name()
+    #     if monitor is not None:
+    #         [device, port] = monitor
+    #         if self.monitors.remove_monitor(device, port):
+    #             print("Successfully zapped monitor")
+    #         else:
+    #             print("Error! Could not zap monitor.")
 
     def run_network(self, cycles):
         """Run the network for the specified number of simulation cycles.
@@ -146,7 +147,7 @@ class ConsoleOutTab(wx.Panel):
             else:
                 print("Error! Network oscillating.")
                 return False
-        self.monitors.display_signals()
+        # self.monitors.display_signals()
         return True
 
     def run_command(self, gui=False, gui_cycles=None):
@@ -163,6 +164,7 @@ class ConsoleOutTab(wx.Panel):
             self.devices.cold_startup()
             if self.run_network(cycles):
                 self.cycles_completed += cycles
+            self.set_gui_state(True)
 
     def continue_command(self, gui=False, gui_cycles=None):
         """Continue a previously run simulation."""
@@ -178,6 +180,7 @@ class ConsoleOutTab(wx.Panel):
                 self.cycles_completed += cycles
                 print(" ".join(["Continuing for", str(cycles), "cycles.",
                                 "Total:", str(self.cycles_completed)]))
+                
 
     def read_command(self):
         """Return the first non-whitespace character."""

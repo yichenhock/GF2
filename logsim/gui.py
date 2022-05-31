@@ -72,10 +72,32 @@ class Gui(wx.Frame):
         # notify AUI which frame to use
         self.mgr.SetManagedWindow(self)
 
-        # main monitor part
-        self.canvas = MyGLCanvas(self, devices, monitors, self.statusbar)
+        # # main monitor part
+        self.main_panel = wx.Panel(self, wx.ID_ANY, size=(wx.EXPAND, wx.EXPAND))
+        self.main_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        self.canvas_sizer = wx.BoxSizer(wx.VERTICAL)
 
-        self.mgr.AddPane(self.canvas, aui.AuiPaneInfo().CenterPane())
+        # self.button = wx.Button(self, wx.ID_ANY, 'testing')
+
+        self.canvas = MyGLCanvas(self.main_panel, devices, monitors)
+        self.y_scroll = wx.ScrollBar(self.main_panel, style=wx.SB_VERTICAL)
+        self.x_scroll = wx.ScrollBar(self.main_panel, style=wx.SB_HORIZONTAL)
+        self.y_scroll.Disable()
+        self.x_scroll.Disable()
+
+        # self.main_sizer.Add(self.canvas, 1, wx.EXPAND | wx.ALL , 0)
+        self.main_sizer.Add(self.canvas_sizer, 1,
+                            wx.EXPAND | wx.ALL | wx.TOP | wx.LEFT | wx.BOTTOM, 0)
+        self.main_sizer.Add(self.y_scroll, 0,
+                            wx.EXPAND | wx.TOP | wx.BOTTOM, 0)
+
+        self.canvas_sizer.Add(self.canvas, wx.EXPAND, wx.EXPAND | wx.LEFT, 0)
+        self.canvas_sizer.Add(self.x_scroll, 0, wx.EXPAND | wx.ALL, 0)
+        
+        self.main_panel.SetSizerAndFit(self.main_sizer)
+        print(self.main_panel.GetSize())
+
+        self.mgr.AddPane(self.main_panel, aui.AuiPaneInfo().CenterPane())
 
         # bottom panel 
         notebook = aui.AuiNotebook(self, wx.ID_ANY, agwStyle=aui.AUI_NB_CLOSE_ON_ALL_TABS )
@@ -85,7 +107,7 @@ class Gui(wx.Frame):
         self.monitorsPanel = MonitorsTab(notebook, names, devices, monitors, self.statusbar)
         
         self.consoleOutPanel = ConsoleOutTab(notebook, self.path, names, devices, network,
-                      monitors, self.inputsPanel)
+                      monitors, self.inputsPanel, self.set_gui_state)
 
         notebook.AddPage(self.consoleOutPanel, "Output", True)
         notebook.AddPage(self.circuitDefPanel, "Circuit Definition", False)
@@ -110,6 +132,11 @@ class Gui(wx.Frame):
         )
 
         self.mgr.Update() 
+
+        # self.y_scroll.Bind(wx.EVT_SCROLL, self.on_y_scroll)
+        # self.y_scroll.Bind(wx.EVT_SIZE, self.set_scroll)  # when window resizes
+        # self.x_scroll.Bind(wx.EVT_SCROLL, self.on_x_scroll)
+        # self.x_scroll.Bind(wx.EVT_SIZE, self.set_scroll)  # when window resizes
 
         self.Bind(wx.EVT_CLOSE, self.on_close) 
         self.Centre() 
@@ -262,15 +289,8 @@ class Gui(wx.Frame):
         self.circuitDefPanel.set_textbox_state(not sim_running) # text box only editable when the simulation is not running
 
     def on_help_button(self): 
-        print("User commands:")
-        print("r N       - run the simulation for N cycles")
-        print("c N       - continue the simulation for N cycles")
-        print("s X N     - set switch X to N (0 or 1)")
-        print("m X       - set a monitor on signal X")
-        print("z X       - zap the monitor on signal X")
-        print("h         - help (this command)")
-        print("q         - quit the program")
-        self.update_statusbar("List of commands displayed in 'Output'.")
+        wx.MessageBox("Press the buttons :D",
+                          "Help", wx.ICON_INFORMATION | wx.OK)
 
 
     def on_close(self, event):
@@ -345,3 +365,55 @@ class Gui(wx.Frame):
     def save_file(self): 
         pass # save whatever is in the circuit def file into the current loaded path (overwrite!)
         # get the value of whatever is in the textbox and then save :)
+    
+    def set_scroll(self, event = None):
+        """
+        Set the scrollbar position based on the canvas position.
+
+        Parameters
+        ----------
+        `event`: Optional triggering event, default is `None`
+
+        Returns
+        -------
+        `None`
+        """
+        self.canvas.update_dimensions()
+        y_scroll_width, y_scroll_height = self.y_scroll.GetSize()
+        x_scroll_width, x_scroll_height = self.x_scroll.GetSize()
+        self.y_scroll.SetSize(wx.Size(y_scroll_width, self.canvas.height))
+        self.x_scroll.SetSize(wx.Size(self.canvas.width, x_scroll_height))
+
+        drawing_width = int(self.canvas.drawing_width)
+        drawing_height = int(self.canvas.drawing_height)
+
+        if drawing_height <= self.canvas.height:
+            self.y_scroll.Disable()
+        else:
+            position = drawing_height + self.canvas.pan_y - self.canvas.height
+            self.y_scroll.SetScrollbar(position, self.canvas.height,
+                                       drawing_height, 0)
+            self.y_scroll.Enable()
+
+        if drawing_width <= self.canvas.width:
+            self.x_scroll.Disable()
+        else:
+            x_position = -1 * self.canvas.pan_x
+            self.x_scroll.SetScrollbar(x_position, self.canvas.width,
+                                       drawing_width, 0)
+            self.x_scroll.Enable()
+
+        self.Refresh()
+
+    def on_y_scroll(self, event: wx.Event) -> None:
+        position = self.y_scroll.GetThumbPosition()
+        self.canvas.pan_y = -(
+            self.canvas.drawing_height - self.canvas.height - position)
+        self.canvas.init = False
+        self.canvas.render_waveforms(set_scroll=False)
+
+    def on_x_scroll(self, event: wx.Event) -> None:
+        x_position = self.x_scroll.GetThumbPosition()
+        self.canvas.pan_x = -1 * x_position
+        self.canvas.init = False
+        self.canvas.render_waveforms(set_scroll=False)

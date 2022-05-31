@@ -39,7 +39,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
                                            operations.
     """
 
-    def __init__(self, parent, devices, monitors, statusbar):
+    def __init__(self, parent, devices, monitors):
         """Initialise canvas properties and useful variables."""
         super().__init__(parent, -1,
                          attribList=[wxcanvas.WX_GL_RGBA,
@@ -48,8 +48,6 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         GLUT.glutInit()
         self.init = False
         self.context = wxcanvas.GLContext(self)
-
-        self.statusbar = statusbar
 
         # Initialise variables for panning
         self.pan_x = 0
@@ -91,7 +89,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         GL.glTranslated(self.pan_x, self.pan_y, 0.0)
         GL.glScaled(self.zoom, self.zoom, self.zoom)
 
-    def render_signals(self):
+    def render_waveforms(self):
         pass
 
     def render(self, text):
@@ -139,7 +137,6 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         text = "".join(["Canvas redrawn on paint event, size is ",
                         str(size.width), ", ", str(size.height)])
         self.render(text)
-        self.statusbar.SetStatusText(text)
 
     def on_size(self, event):
         """Handle the canvas resize event."""
@@ -195,7 +192,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
                             str(self.zoom)])
         if text:
             self.render(text)
-            self.statusbar.SetStatusText(text)
+            # self.statusbar.SetStatusText(text)
         else:
             self.Refresh()  # triggers the paint event
 
