@@ -17,7 +17,7 @@ class SemanticError(Scanner):
 
         self.id_list = [self.WRONG_GATE_FOR_NAME, self.NAME_ALREADY_EXISTS, self.NAME_FOR_INITIALISE_NOT_DEFINED, self.NAME_FOR_CONNECTIONS_NOT_DEFINED, self.NEGATIVE_NUMBER_ILLEGAL, self.WRONG_INPUT_GATE_NAME, self.NAME_FOR_MONITORS_NOT_DEFINED] = range(7)
 
-        self.error_type_list = ["WRONG_GATE_FOR_NAME", "NAME_ALREADY_EXISTS", "UNDEFINED_DEVICE_NAME", "NAME_FOR_INITIALISE_NOT_DEFINED", "NAME_FOR_CONNECTIONS_NOT_DEFINED", "NEGATIVE_NUMBER_ILLEGAL", "WRONG_INPUT_GATE_NAME", "NAME_FOR_MONITORS_NOT_DEFINED"]
+        self.error_type_list = ["WRONG_GATE_FOR_NAME", "NAME_ALREADY_EXISTS", "NAME_FOR_INITIALISE_NOT_DEFINED", "NAME_FOR_INITIALISE_NOT_DEFINED", "NAME_FOR_CONNECTIONS_NOT_DEFINED", "NEGATIVE_NUMBER_ILLEGAL", "WRONG_INPUT_GATE_NAME", "NAME_FOR_MONITORS_NOT_DEFINED"]
 
     def printerror(self, id, scanner, symbol1=None, symbol2=None):
         """Print error message to terminal and skip line.
@@ -43,15 +43,15 @@ class SyntaxError(Scanner):
 
         self.id_list = [self.NO_OPEN_BRACKET, self.NO_CLOSE_BRACKET, self.DEVICE_LETTER_CAPITAL, self.NO_DEVICE_NAME, self.NO_HEADER, self.HEADER_NAME_ERROR, self.NO_DEFINITION_KEYWORD, self.NO_POSSESSION_KEYWORD, self.DEVICE_TYPE_ERROR, self.INCORRECT_SWITCH_NAME, self.INCORRECT_CLOCK_NAME, self.NO_SEMICOLON, self.INCONSISTENT_DEVICE_NAMES, self.MISSING_SECTION,
 
-        self.INPUT_NUMBER_ERROR, self.INPUTS_KEYWORD_ERROR, self.SWITCH_LEVEL_ERROR, self.NO_CYCLE_KEYWORD, self.NO_LENGTH_KEYWORD, self.NO_CYCLE_LENGTH, 
+        self.INPUT_NUMBER_ERROR, self.INPUTS_KEYWORD_ERROR, self.SWITCH_LEVEL_ERROR, self.NO_CYCLE_KEYWORD, self.NO_LENGTH_KEYWORD, self.NO_CYCLE_LENGTH, self.DASH_UNEXPECTED,
 
         self.NO_CONNECTION_KEYWORD, self.NO_INPUT_GATE_NAME, self.NO_INPUT_PORT_NAME, self.MISSING_DOT_INPUT, self.PORT_NAME_ERROR, self.CONNECTION_SUBHEADER_NAME_ERROR,
 
-        self.NO_MONITOR_NAME] = range(27)
+        self.NO_MONITOR_NAME] = range(28)
 
         self.error_type_list = ["NO_OPEN_BRACKET", "NO_CLOSE_BRACKET", "DEVICE_LETTER_CAPITAL", "NO_DEVICE_NAME", "NO_HEADER", "HEADER_NAME_ERROR", "NO_DEFINITION_KEYWORD", "NO_POSSESSION_KEYWORD", "DEVICE_TYPE_ERROR", "INCORRECT_SWITCH_NAME", "INCORRECT_CLOCK_NAME", "NO_SEMICOLON", "INCONSISTENT_DEVICE_NAMES", "MISSING_SECTION"
 
-        "INPUT_NUMBER_ERROR", "INPUTS_KEYWORD_ERROR", "SWITCH_LEVEL_ERROR", "NO_CYCLE_KEYWORD", "NO_LENGTH_KEYWORD", "NO_CYCLE_LENGTH", 
+        "INPUT_NUMBER_ERROR", "INPUTS_KEYWORD_ERROR", "SWITCH_LEVEL_ERROR", "NO_CYCLE_KEYWORD", "NO_LENGTH_KEYWORD", "NO_CYCLE_LENGTH", "DASH_UNEXPECTED",
 
         "NO_CONNECTION_KEYWORD", "NO_INPUT_GATE_NAME", "NO_INPUT_PORT_NAME", "MISSING_DOT_INPUT", 
         "PORT_NAME_ERROR", "CONNECTION_SUBHEADER_NAME_ERROR",
@@ -67,9 +67,7 @@ class SyntaxError(Scanner):
         'message': Output to be printed to terminal.
         """
         
-        self.message_list = ["Missing open parentheses following section header. Parser will skip next line of code. Please fix and rerun.", "Missing close parentheses following section or subsection initialisation.", "Device names must not contain capitalised letters.", "Device, switch or clock name missing. Please provide a valid alphanumeric name.", "Section header missing", "Section header name {} is not legal.".format(symbol1), "Missing definition keyword.", "Missing possession keyword.", "Device type is not legal.", "'sw' must be followed by a number only. 'sw' at the start of a name is a reserved device naming keyword indicating a switch.", "'clk' must be followed by a number only. 'clk' at the start of a name is a reserved device naming keyword indicating a clock.", "Semicolon expected at line end, but none found.", "Inconsistent device name types on each line. Switches, clocks and devices must be grouped separately.", "Section {} missing where expected.".format(symbol1), 
-
-        "Input number missing where expected.", "Initialisation line for devices should end in keyword 'input' or 'inputs'.", "Switch level may only be HIGH or LOW.", "Keyword 'cycle' missing from clock cycle length definition.", "Keyword 'length' missing from clock cycle length definition.", "Cycle length (number) missing from clock cycle length definition.", 
+        self.message_list = ["Missing open parentheses following section header. Parser will skip next line of code. Please fix and rerun.", "Missing close parentheses following section or subsection initialisation.", "Device names must not contain capitalised letters.", "Device, switch or clock name missing. Please provide a valid alphanumeric name.", "Section header missing", "Section header name {} is not legal.".format(symbol1), "Missing definition keyword.", "Missing possession keyword.", "Device type is not legal.", "'sw' must be followed by a number only. 'sw' at the start of a name is a reserved device naming keyword indicating a switch.", "'clk' must be followed by a number only. 'clk' at the start of a name is a reserved device naming keyword indicating a clock.", "Semicolon expected at line end, but none found.", "Inconsistent device name types on each line. Switches, clocks and devices must be grouped separately.", "Section {} missing where expected.".format(symbol1), "Input number missing where expected.", "Initialisation line for devices should end in keyword 'input' or 'inputs'.", "Switch level may only be HIGH or LOW.", "Keyword 'cycle' missing from clock cycle length definition.", "Keyword 'length' missing from clock cycle length definition.", "Cycle length (number) missing from clock cycle length definition.", "Unexpected dash '-' symbol found.",
 
         "Connection keyword missing. Check that connections are made using the phrases 'is connected to' or 'to' only. Expected {}.".format(symbol1), "No input gate name given in connection section. Check that a valid gate has been specified.", "Missing input port name. Check that a valid name is used - of form 'IN' followed by a number.", "Missing dot in input name. Names should be of form e.g. 'a.I1'.", "Port names need to be of form 'IN' followed by a number.", "Subheaders are devices to receive inputs. These cannot be switches or clocks.",
 
@@ -84,7 +82,7 @@ class SyntaxError(Scanner):
         if id == self.NO_CLOSE_BRACKET:
             print("Error type: NO_CLOSE_BRACKET")
             print(self.scanner.lines[self.scanner.current_line])
-            print(" " * (self.current_character_position - 1) + "^ Error here")
+            print("^ Error before this line")
             print(self.message)
             
         # Print error to terminal using method in Scanner class.
