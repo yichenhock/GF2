@@ -41,16 +41,21 @@ class DummyParser:
         sw2.id = self.names.query('sw2')
         sw2.type = self.scanner.NAME
 
+        # d = Symbol()
+        # d.id = self.names.query('d')
+        # d.type = self.scanner.NAME
+
         # parser
         self.devices.make_device(a.id, self.devices.AND, 2)
         self.devices.make_device(sw1.id, self.devices.SWITCH, init_state1)
         self.devices.make_device(sw2.id, self.devices.SWITCH, init_state2)
+        # self.devices.make_device(d.id, self.devices.D_TYPE)
 
-        device = self.devices.get_device(a.id)
-        print(sw1.id, sw2.id)
+        # device = self.devices.get_device(a.id)
+        # print(sw1.id, sw2.id)
 
         self.network.make_connection(a.id, self.names.query('I1'), sw1.id, None)
         self.network.make_connection(a.id, self.names.query('I2'), sw2.id, None)
-        print(device.inputs)
+        # print(device.inputs)
 
         self.monitors.make_monitor(a.id, None)

@@ -80,15 +80,17 @@ class Gui(wx.Frame):
         # bottom panel 
         notebook = aui.AuiNotebook(self, wx.ID_ANY, agwStyle=aui.AUI_NB_CLOSE_ON_ALL_TABS )
 
-        self.consoleOutPanel = ConsoleOutTab(notebook)
         self.circuitDefPanel = CircuitDefTab(notebook, self.path, self.statusbar)
-        self.componentsPanel = InputsTab(notebook)
-        self.devicesPanel = MonitorsTab(notebook, names, devices, monitors, self.statusbar)
+        self.inputsPanel = InputsTab(notebook, names, devices, self.statusbar)
+        self.monitorsPanel = MonitorsTab(notebook, names, devices, monitors, self.statusbar)
+        
+        self.consoleOutPanel = ConsoleOutTab(notebook, self.path, names, devices, network,
+                      monitors, self.inputsPanel)
 
         notebook.AddPage(self.consoleOutPanel, "Output", True)
         notebook.AddPage(self.circuitDefPanel, "Circuit Definition", False)
-        notebook.AddPage(self.componentsPanel, "Inputs", False)
-        notebook.AddPage(self.devicesPanel, "Monitors", False)
+        notebook.AddPage(self.inputsPanel, "Inputs", False)
+        notebook.AddPage(self.monitorsPanel, "Monitors", False)
 
         # disable close buttons
         notebook.SetCloseButton(0, False)
@@ -233,18 +235,23 @@ class Gui(wx.Frame):
     def on_run_button(self):
 
         if not self.monitors.monitors_dictionary:
-            self.statusbar.SetStatusText(_("No monitors."))
+            self.statusbar.SetStatusText("No monitors.")
             return
 
-        print("Simulation ran for {} cycles.".format(self.spin.GetValue()))
+        self.consoleOutPanel.run_command(True, self.spin.GetValue())
+        self.cycles_completed = self.consoleOutPanel.cycles_completed
+        
         self.update_statusbar("Run button pressed.")
         self.set_gui_state(sim_running=True)
     
     def on_cont_button(self):
-        print("Simulation continued for {} cycles.".format(self.spin.GetValue()))
+        self.consoleOutPanel.continue_command(True, self.spin.GetValue())
+        self.cycles_completed = self.consoleOutPanel.cycles_completed
         self.update_statusbar("Continue button pressed.")
     
     def on_reset_button(self):
+        self.cycles_completed = 0
+        self.consoleOutPanel.cycles_completed = 0
         print("Simulation reset.")
         self.update_statusbar("Reset button pressed.")
         self.set_gui_state(sim_running=False)

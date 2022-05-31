@@ -91,7 +91,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         GL.glTranslated(self.pan_x, self.pan_y, 0.0)
         GL.glScaled(self.zoom, self.zoom, self.zoom)
 
-    def render_waveforms(self):
+    def render_signals(self):
         pass
 
     def render(self, text):

@@ -20,9 +20,9 @@ class MonitorsTab(wx.Panel):
         self.displayed_signals = [] # list of signal ids of signals currently being displayed
 
         monitors_list_style = \
-            ULC.ULC_REPORT | ULC.ULC_VRULES | \
+            ULC.ULC_REPORT | \
             ULC.ULC_HRULES | ULC.ULC_SINGLE_SEL | \
-            ULC.ULC_HAS_VARIABLE_ROW_HEIGHT
+            ULC.ULC_HAS_VARIABLE_ROW_HEIGHT | ULC.ULC_NO_HEADER | ULC.ULC_SHOW_TOOLTIPS
         self.monitors_list = ListCtrl(self, wx.ID_ANY,
                                       agwStyle=monitors_list_style)
         self.monitors_list.InsertColumn(0, "Component")
@@ -89,9 +89,14 @@ class MonitorsTab(wx.Panel):
             clock_ids = self.devices.find_devices(self.devices.CLOCK)
             self.refresh_combo_names([self.names.get_name_string(id) for id in clock_ids])
 
-        elif self.combo_types.GetValue() == 'D-Type':
-            dtype_ids = self.devices.find_devices(self.devices.CLOCK)
-            self.refresh_combo_names([self.names.get_name_string(id) for id in dtype_ids])
+        elif self.combo_types.GetValue() == 'D-Type': # DTYPE IS SPECIAL!
+            pass
+            # dtype_ids = self.devices.find_devices(self.devices.D_TYPE)
+            # input_types = ['CLK', 'SET', 'CLEAR', 'DATA']
+            # new_list = []
+            # for id in dtype_ids: 
+            #     new_list.extend(['.'.join([self.names.get_name_string(id),i]) for i in input_types])
+            # self.refresh_combo_names(new_list)
 
     def initialise_monitor_list(self): # initialise the stuff that is monitored from the start
         monitored_signals = self.monitors.get_signal_names()[0]
@@ -117,6 +122,7 @@ class MonitorsTab(wx.Panel):
         self.displayed_signals.append(signal_id)
 
     def initialise_combo_names(self):
+        # THIS DOES NOT WORK WITH DTYPES YET!
         self.refresh_combo_names([self.names.get_name_string(device.device_id) for device in self.devices.devices_list])
 
     def refresh_combo_names(self, names_list):
@@ -136,10 +142,12 @@ class MonitorsTab(wx.Panel):
                 # add the component to the monitor
                 name_id = self.names.query(name_to_add) 
                 # IF THIS IS DTYPE, THERE NEEDS TO BE A SECOND ARGUMENT!
+
                 self.monitors.make_monitor(name_id, None) 
                 # append the component to the list
                 self.append_to_monitors_list(name_to_add)
                 self.statusbar.SetStatusText('Added component to monitor.')
+                print('{} added to monitor.'.format(name_to_add))
 
     def on_remove(self, event): 
         signal_id = event.GetEventObject().signal_id
@@ -149,4 +157,5 @@ class MonitorsTab(wx.Panel):
         # remove the signal from the monitors list
         self.monitors_list.DeleteItem(self.displayed_signals.index(signal_id))
         self.displayed_signals.remove(signal_id)
-        self.statusbar.SetStatusText("Device removed.")
+        self.statusbar.SetStatusText("Component removed from monitor.")
+        print('{} removed from monitor.'.format(self.names.get_name_string(signal_id)))
