@@ -2,7 +2,7 @@
 #XOR gate;
 
 devices(
-    a is OR;
+     is OR;
     b is NAND;
     c is AND;
     sw1, sw2 are SWITCH;

@@ -132,7 +132,7 @@ class Scanner:
         """Print current line with marker pointing where the error is."""
         print("Error type:", error_type)
         print(self.lines[self.current_line])
-        print(" " * (self.current_character_position - 1) + "^ Error Here")
+        print(" " * (self.current_character_position - 1) + "^ Error here")
         print(error_message)
         self.skip_line()
 
@@ -204,6 +204,10 @@ class Scanner:
 
         elif self.current_character == "":  # End of File
             symbol.type = self.EOF
+        
+        elif self.current_character == "#":
+            self.skip_comment()
+            symbol = self.get_symbol()
 
         else:  # Not a valid character (symbol.type == None)
             self.advance()

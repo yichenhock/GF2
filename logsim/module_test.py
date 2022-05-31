@@ -1,9 +1,9 @@
 #This file is for testing various functions developed in each module
 import sys
 from names import Names
-from scanner import Symbol, Scanner
-from parse import Parser
-from devices import Devices, Device
+from scanner import Scanner
+from parsefordebug import Parser
+from devices import Devices
 from network import Network
 from monitors import Monitors
 
