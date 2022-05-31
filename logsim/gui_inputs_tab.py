@@ -21,7 +21,7 @@ class InputsTab(wx.Panel):
             ULC.ULC_REPORT | \
             ULC.ULC_HRULES | ULC.ULC_SINGLE_SEL | \
             ULC.ULC_HAS_VARIABLE_ROW_HEIGHT | ULC.ULC_NO_HIGHLIGHT | \
-            ULC.ULC_NO_ITEM_DRAG | ULC.ULC_SHOW_TOOLTIPS | ULC.ULC_NO_HEADER
+            ULC.ULC_SHOW_TOOLTIPS | ULC.ULC_NO_HEADER
         self.switch_list = ListCtrl(self, wx.ID_ANY,
                                       agwStyle=switch_list_style)
         self.switch_list.InsertColumn(0, "Switch")

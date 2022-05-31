@@ -55,8 +55,8 @@ class ConsoleOutTab(wx.Panel):
         self.log.SetBackgroundColour(wx.Colour(50,50,50))
         self.log.SetForegroundColour("white")
 
-        self.commands.SetBackgroundColour(wx.Colour(50,50,50))
-        self.commands.SetForegroundColour("white")
+        # self.commands.SetBackgroundColour("black")
+        # self.commands.SetForegroundColour("white")
         self.commands.SetHint('Type commands here')
 
         sizer = wx.BoxSizer(wx.VERTICAL)
@@ -88,7 +88,8 @@ class ConsoleOutTab(wx.Panel):
         elif command == "c":
             self.continue_command()
         else:
-            pass
+            if command: 
+                print("Error! Invalid command!")
 
     def help_command(self):
         """Print a list of valid commands."""
