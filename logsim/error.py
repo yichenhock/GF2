@@ -15,9 +15,9 @@ class SemanticError(Scanner):
     def __init__(self):
         """Set parameters to report error."""
 
-        self.id_list = [self.WRONG_GATE_FOR_NAME, self.NAME_ALREADY_EXISTS, self.NAME_FOR_INITIALISE_NOT_DEFINED, self.NAME_FOR_CONNECTIONS_NOT_DEFINED, self.NEGATIVE_NUMBER_ILLEGAL] = range(5)
+        self.id_list = [self.WRONG_GATE_FOR_NAME, self.NAME_ALREADY_EXISTS, self.NAME_FOR_INITIALISE_NOT_DEFINED, self.NAME_FOR_CONNECTIONS_NOT_DEFINED, self.NEGATIVE_NUMBER_ILLEGAL, self.WRONG_INPUT_GATE_NAME] = range(6)
 
-        self.error_type_list = ["WRONG_GATE_FOR_NAME", "NAME_ALREADY_EXISTS", "EXISTING_DEVICE_NAME", "NAME_FOR_INITIALISE_NOT_DEFINED", "NAME_FOR_CONNECTIONS_NOT_DEFINED", "NEGATIVE_NUMBER_ILLEGAL"]
+        self.error_type_list = ["WRONG_GATE_FOR_NAME", "NAME_ALREADY_EXISTS", "EXISTING_DEVICE_NAME", "NAME_FOR_INITIALISE_NOT_DEFINED", "NAME_FOR_CONNECTIONS_NOT_DEFINED", "NEGATIVE_NUMBER_ILLEGAL", "WRONG_INPUT_GATE_NAME"]
 
     def printerror(self, id, scanner, symbol1=None, symbol2=None):
         """Print error message to terminal and skip line.
@@ -28,7 +28,7 @@ class SemanticError(Scanner):
         'message': Output to be printed to terminal."""
         self.scanner = scanner
 
-        self.message_list = ["Wrong gate type provided for device name chosen. Given {}, expected {}".format(symbol1, symbol2), "Device name {} defined has already been used above.".format(symbol1), "The device name {} provided in the initialisation section has not been defined in the devices section.".format(symbol1), "The device name {} provided in the connections section has not been defined in the devices section.".format(symbol1), "Please enter a positive, nonzero value."]
+        self.message_list = ["Wrong gate type provided for device name chosen. Given {}, expected {}".format(symbol1, symbol2), "Device name {} defined has already been used above.".format(symbol1), "The device name {} provided in the initialisation section has not been defined in the devices section.".format(symbol1), "The device name {} provided in the connections section has not been defined in the devices section.".format(symbol1), "Please enter a positive, nonzero value.", "Wrong input gate name for connection section subheader. The subheader name should be the name of the device receiving inputs. Expected {}, got {}.".format(symbol1, symbol2)]
 
         self.message = "SyntaxError: {}".format(self.message_list[id])
         
@@ -42,10 +42,10 @@ class SyntaxError(Scanner):
         """Set parameters to report error."""
 
         self.id_list = [self.NO_OPEN_BRACKET, self.NO_CLOSE_BRACKET, self.DEVICE_LETTER_CAPITAL, self.NO_DEVICE_NAME, self.NO_HEADER, self.HEADER_NAME_ERROR, self.NO_DEFINITION_KEYWORD, self.NO_POSSESSION_KEYWORD, self.DEVICE_TYPE_ERROR, self.INCORRECT_SWITCH_NAME, self.INCORRECT_CLOCK_NAME, self.NO_SEMICOLON, self.INCONSISTENT_DEVICE_NAMES, self.MISSING_SECTION,
-        self.INPUT_NUMBER_ERROR, self.INPUTS_KEYWORD_ERROR, self.SWITCH_LEVEL_ERROR, self.NO_CYCLE_KEYWORD, self.NO_LENGTH_KEYWORD, self.NO_CYCLE_LENGTH] = range(20)
+        self.INPUT_NUMBER_ERROR, self.INPUTS_KEYWORD_ERROR, self.SWITCH_LEVEL_ERROR, self.NO_CYCLE_KEYWORD, self.NO_LENGTH_KEYWORD, self.NO_CYCLE_LENGTH, self.NO_CONNECTION_KEYWORD, self.NO_INPUT_GATE_NAME, self.NO_INPUT_PORT_NAME, self.MISSING_DOT_INPUT, self.PORT_NAME_ERROR] = range(22)
 
         self.error_type_list = ["NO_OPEN_BRACKET", "NO_CLOSE_BRACKET", "DEVICE_LETTER_CAPITAL", "NO_DEVICE_NAME", "NO_HEADER", "HEADER_NAME_ERROR", "NO_DEFINITION_KEYWORD", "NO_POSSESSION_KEYWORD", "DEVICE_TYPE_ERROR", "INCORRECT_SWITCH_NAME", "INCORRECT_CLOCK_NAME", "NO_SEMICOLON", "INCONSISTENT_DEVICE_NAMES", "MISSING_SECTION"
-        "INPUT_NUMBER_ERROR", "INPUTS_KEYWORD_ERROR", "SWITCH_LEVEL_ERROR", "NO_CYCLE_KEYWORD", "NO_LENGTH_KEYWORD", "NO_CYCLE_LENGTH"]
+        "INPUT_NUMBER_ERROR", "INPUTS_KEYWORD_ERROR", "SWITCH_LEVEL_ERROR", "NO_CYCLE_KEYWORD", "NO_LENGTH_KEYWORD", "NO_CYCLE_LENGTH", "NO_CONNECTION_KEYWORD", "NO_INPUT_GATE_NAME", "NO_INPUT_PORT_NAME", "MISSING_DOT_INPUT", "PORT_NAME_ERROR"]
 
     def printerror(self, id, scanner, symbol1=None):
         """Print error message to terminal and skip line.
@@ -57,7 +57,7 @@ class SyntaxError(Scanner):
         """
         
         self.message_list = ["Missing open parentheses following section header.", "Missing close parentheses following section or subsection initialisation.", "Device names must not contain capitalised letters.", "Device name missing. Please provide a valid alphanumeric device name.", "Section header missing", "Section header name {} is not legal.".format(symbol1), "Missing definition keyword.", "Missing possession keyword.", "Device type is not legal.", "'sw' must be followed by a number only. 'sw' at the start of a name is a reserved device naming keyword indicating a switch.", "'clk' must be followed by a number only. 'clk' at the start of a name is a reserved device naming keyword indicating a clock.", "Semicolon expected at line end, but none found.", "Inconsistent device name types on each line. Switches, clocks and devices must be grouped separately.", "Section {} missing where expected.".format(symbol1), 
-        "Input number missing where expected.", "Initialisation line for devices should end in keyword 'input' or 'inputs'.", "Switch level may only be HIGH or LOW.", "Keyword 'cycle' missing from clock cycle length definition.", "Keyword 'length' missing from clock cycle length definition.", "Cycle length (number) missing from clock cycle length definition."]
+        "Input number missing where expected.", "Initialisation line for devices should end in keyword 'input' or 'inputs'.", "Switch level may only be HIGH or LOW.", "Keyword 'cycle' missing from clock cycle length definition.", "Keyword 'length' missing from clock cycle length definition.", "Cycle length (number) missing from clock cycle length definition.", "Connection keyword missing. Check that connections are made using the phrases 'is connected to' or 'to' only. Expected {}.".format(symbol1), "No input gate name given in connection section. Check that a valid gate has been specified.", "Missing input port name. Check that a valid name is used - of form 'IN' followed by a number.", "Missing dot in input name. Names should be of form e.g. 'a.I1'.", "Port names need to be of form 'IN' followed by a number."]
 
         self.scanner = scanner
 

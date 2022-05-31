@@ -1,3 +1,5 @@
+#Example circuit - Complex circuit (As per first interim report);
+
 devices(
     a is NOR;
     b, c, d, e are NAND;
@@ -56,5 +58,5 @@ monitors(
     d, f.Q, g;
 )
 
-#Example circuit - Complex circuit (As per first interim report);
+
 #2 bit counter with outputs XOR;
