@@ -18,8 +18,11 @@ from monitors import Monitors
 from scanner import Scanner
 from parse import Parser
 
-from gui_tabs import ConsoleOutTab, CircuitDefTab, InputsTab, MonitorsTab
-from gui_canvas import MyGLCanvas # not used yet. needed for outputting the signals!
+from gui_consoleout_tab import ConsoleOutTab
+from gui_circuitdef_tab import CircuitDefTab
+from gui_inputs_tab import InputsTab
+from gui_monitors_tab import MonitorsTab
+from gui_canvas import MyGLCanvas 
 
 class Gui(wx.Frame):
     """Configure the main window and all the widgets.
@@ -49,12 +52,18 @@ class Gui(wx.Frame):
         super().__init__(parent=None, title=title, size=(1024, 768))
 
         self.path = path
+        self.names = names
+        self.devices = devices
+        self.network = network
+        self.monitors = monitors
+
+        self.cycles_completed = 0  # number of simulation cycles completed
 
         # Create the menu, toolbar and statusbar
         self.create_menu()
         self.create_tb()
         self.statusbar = self.CreateStatusBar(2)
-        self.statusbar.SetStatusWidths([-3,-1])
+        self.statusbar.SetStatusWidths([-2,-1])
         self.statusbar.SetStatusText(self.path,1)
 
         # create an AuiManager object
@@ -71,15 +80,15 @@ class Gui(wx.Frame):
         # bottom panel 
         notebook = aui.AuiNotebook(self, wx.ID_ANY, agwStyle=aui.AUI_NB_CLOSE_ON_ALL_TABS )
 
-        consoleOutPanel = ConsoleOutTab(notebook)
-        circuitDefPanel = CircuitDefTab(notebook, self.path, self.statusbar)
-        componentsPanel = InputsTab(notebook)
-        devicesPanel = MonitorsTab(notebook, self.statusbar)
+        self.consoleOutPanel = ConsoleOutTab(notebook)
+        self.circuitDefPanel = CircuitDefTab(notebook, self.path, self.statusbar)
+        self.componentsPanel = InputsTab(notebook)
+        self.devicesPanel = MonitorsTab(notebook, names, devices, monitors, self.statusbar)
 
-        notebook.AddPage(consoleOutPanel, "Output", True)
-        notebook.AddPage(circuitDefPanel, "Circuit Definition", False)
-        notebook.AddPage(componentsPanel, "Inputs", False)
-        notebook.AddPage(devicesPanel, "Monitors", False)
+        notebook.AddPage(self.consoleOutPanel, "Output", True)
+        notebook.AddPage(self.circuitDefPanel, "Circuit Definition", False)
+        notebook.AddPage(self.componentsPanel, "Inputs", False)
+        notebook.AddPage(self.devicesPanel, "Monitors", False)
 
         # disable close buttons
         notebook.SetCloseButton(0, False)
@@ -105,6 +114,8 @@ class Gui(wx.Frame):
         self.Show(True)
         
         self.SetSizeHints(minW=600, minH=400)
+
+        self.set_gui_state(sim_running=False)
 
         print("Logic Simulator: interactive graphical user interface.\n"
               "Enter 'h' for help.")
@@ -201,33 +212,59 @@ class Gui(wx.Frame):
             self.create_file()
 
         elif event.GetId() == 4: # run
-            print("Simulation ran for {} cycles.".format(self.spin.GetValue()))
-            self.update_statusbar("Run button pressed.")
+            self.on_run_button()
 
         elif event.GetId() == 5: # continue
-            print("Simulation continued for {} cycles.".format(self.spin.GetValue()))
-            self.update_statusbar("Continue button pressed.")
+            self.on_cont_button()
 
         elif event.GetId() == 6: # reset 
-            print("Simulation reset.")
-            self.update_statusbar("Reset button pressed.")
+            self.on_reset_button()
 
         elif event.GetId() == 7: # save plot
             self.save_plot()
 
         elif event.GetId() == 8: # help
-            print("User commands:")
-            print("r N       - run the simulation for N cycles")
-            print("c N       - continue the simulation for N cycles")
-            print("s X N     - set switch X to N (0 or 1)")
-            print("m X       - set a monitor on signal X")
-            print("z X       - zap the monitor on signal X")
-            print("h         - help (this command)")
-            print("q         - quit the program")
-            self.update_statusbar("List of commands displayed in 'Output'.")
+            self.on_help_button()
 
         elif event.GetId() == 9: # quit
+            # check first if user has any unsaved changes!!
             self.Close(True)
+
+    def on_run_button(self):
+
+        if not self.monitors.monitors_dictionary:
+            self.statusbar.SetStatusText(_("No monitors."))
+            return
+
+        print("Simulation ran for {} cycles.".format(self.spin.GetValue()))
+        self.update_statusbar("Run button pressed.")
+        self.set_gui_state(sim_running=True)
+    
+    def on_cont_button(self):
+        print("Simulation continued for {} cycles.".format(self.spin.GetValue()))
+        self.update_statusbar("Continue button pressed.")
+    
+    def on_reset_button(self):
+        print("Simulation reset.")
+        self.update_statusbar("Reset button pressed.")
+        self.set_gui_state(sim_running=False)
+    
+    def set_gui_state(self, sim_running): 
+        self.ToolBar.EnableTool(4, not sim_running) # disable run button
+        self.ToolBar.EnableTool(5, sim_running) # enable continue button
+        self.circuitDefPanel.set_textbox_state(not sim_running) # text box only editable when the simulation is not running
+
+    def on_help_button(self): 
+        print("User commands:")
+        print("r N       - run the simulation for N cycles")
+        print("c N       - continue the simulation for N cycles")
+        print("s X N     - set switch X to N (0 or 1)")
+        print("m X       - set a monitor on signal X")
+        print("z X       - zap the monitor on signal X")
+        print("h         - help (this command)")
+        print("q         - quit the program")
+        self.update_statusbar("List of commands displayed in 'Output'.")
+
 
     def on_close(self, event):
         # deinitialize the frame manager
@@ -254,8 +291,9 @@ class Gui(wx.Frame):
             pathname = file_dialog.GetPath()
             self.load_file(pathname)
 
-    def load_file(self): 
-        pass
+    def load_file(self, pathname): 
+        self.path = pathname
+        self.statusbar.SetStatusText(pathname, 1)
 
     def create_file(self): 
         """
@@ -266,7 +304,7 @@ class Gui(wx.Frame):
         `None`
         """
         with wx.FileDialog(self, "Save File",
-                           defaultFile="image.png",
+                           defaultFile="new_circuit_definition_file.txt",
                            wildcard="Text documents (*.txt)|*.txt",
                            style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT) as \
                 file_dialog:
@@ -279,7 +317,7 @@ class Gui(wx.Frame):
 
     def save_plot(self): 
         """
-        Launch a dialog for the user to select and save a file.
+        Launch a dialog for the user to select and save the signal trace as an image.
 
         Returns
         -------
