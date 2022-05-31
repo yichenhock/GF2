@@ -112,11 +112,7 @@ class Scanner:
         return
 
     def skip_spaces(self):
-        """Skips until non-space character is reached, also skips comments."""
-        while self.current_character.isspace():
-            self.advance()
-        if self.current_character == "#":
-            self.skip_comment()
+        """Skips until non-space character is reached."""
         while self.current_character.isspace():
             self.advance()
         return
