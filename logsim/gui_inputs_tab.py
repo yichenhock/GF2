@@ -9,12 +9,13 @@ class InputsTab(wx.Panel):
     A simple wx.Panel class
     """
     #----------------------------------------------------------------------
-    def __init__(self, parent, names, devices, statusbar):
+    def __init__(self, parent, names, devices, canvas, statusbar):
         """"""
         wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
 
         self.names = names
         self.devices = devices
+        self.canvas = canvas
         self.statusbar = statusbar
 
         switch_list_style = \
@@ -74,6 +75,8 @@ class InputsTab(wx.Panel):
         # the id
         button.switch_id = switch_id
         button.Bind(wx.EVT_TOGGLEBUTTON, self.on_toggle)
+
+        self.canvas.render_signals(flush_pan=True)
     
     def on_toggle(self, event):
         state = event.GetEventObject().GetValue()

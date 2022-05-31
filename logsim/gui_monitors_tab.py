@@ -8,13 +8,14 @@ class MonitorsTab(wx.Panel):
     A simple wx.Panel class
     """
     #----------------------------------------------------------------------
-    def __init__(self, parent, names, devices, monitors, statusbar):
+    def __init__(self, parent, names, devices, monitors, canvas, statusbar):
         """"""
         wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
 
         self.names = names
         self.devices = devices
         self.monitors = monitors
+        self.canvas = canvas
         self.statusbar = statusbar
 
         self.displayed_signals = [] # list of signal ids of signals currently being displayed
@@ -34,6 +35,7 @@ class MonitorsTab(wx.Panel):
         self.label_names = wx.StaticText(self, wx.ID_ANY, "Name")
         self.combo_names = wx.ComboBox(self, wx.ID_ANY, choices=[], style = wx.CB_READONLY)
         self.add_button = wx.Button(self, wx.ID_ANY, 'Add')
+        self.add_all_button = wx.Button(self, wx.ID_ANY, 'Add All')
 
         # initialise the combo boxes with default values
         self.combo_types.SetValue("All")
@@ -52,11 +54,21 @@ class MonitorsTab(wx.Panel):
         self.grid_sizer.AddGrowableCol(0, 1)
         self.grid_sizer.AddGrowableCol(1, 4)
 
+        self.btn_grid_sizer = wx.FlexGridSizer(1, 2, (5, 5))
+        self.btn_grid_sizer.Add(self.add_button, flag=wx.EXPAND)
+        self.btn_grid_sizer.Add(self.add_all_button, flag=wx.EXPAND)
+        self.btn_grid_sizer.AddGrowableRow(0, 1)
+        self.btn_grid_sizer.AddGrowableCol(0, 1)
+
+        self.warning_text = wx.StaticText(self,wx.ID_ANY,"")
+        self.warning_text.SetForegroundColour("red")
+
         # static boxes for layout
         self.static_box = wx.StaticBox(self, wx.ID_ANY, "Add Component To Monitor")
         self.bottom_sizer = wx.StaticBoxSizer(self.static_box, wx.VERTICAL)
+        self.bottom_sizer.Add(self.warning_text, 0, wx.ALL, 3)
         self.bottom_sizer.Add(self.grid_sizer, 0, wx.EXPAND | wx.ALL, 10)
-        self.bottom_sizer.Add(self.add_button, 0, wx.CENTER |wx.ALL, 10)
+        self.bottom_sizer.Add(self.btn_grid_sizer, 0, wx.CENTER |wx.ALL, 10)
 
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(self.monitors_list, wx.EXPAND, wx.CENTER | wx.EXPAND | wx.ALL, 0)
@@ -66,6 +78,7 @@ class MonitorsTab(wx.Panel):
         
         self.combo_types.Bind(wx.EVT_COMBOBOX, self.on_combo_type_select)
         self.add_button.Bind(wx.EVT_LEFT_DOWN, self.on_add_button)
+        self.add_all_button.Bind(wx.EVT_LEFT_DOWN, self.on_add_all_button)
 
     def on_combo_type_select(self, event):
         if self.combo_types.GetValue() == 'All':
@@ -120,6 +133,7 @@ class MonitorsTab(wx.Panel):
         button.Bind(wx.EVT_TOGGLEBUTTON, self.on_remove)
 
         self.displayed_signals.append(signal_id)
+        self.canvas.render_signals(flush_pan=True)
 
     def initialise_combo_names(self):
         # THIS DOES NOT WORK WITH DTYPES YET!
@@ -149,6 +163,9 @@ class MonitorsTab(wx.Panel):
                 self.statusbar.SetStatusText('Added component to monitor.')
                 print('{} added to monitor.'.format(name_to_add))
 
+    def on_add_all_button(self,event):
+        pass
+
     def on_remove(self, event): 
         signal_id = event.GetEventObject().signal_id
         # remove the signal from monitors
@@ -159,3 +176,15 @@ class MonitorsTab(wx.Panel):
         self.displayed_signals.remove(signal_id)
         self.statusbar.SetStatusText("Component removed from monitor.")
         print('{} removed from monitor.'.format(self.names.get_name_string(signal_id)))
+        self.canvas.render_signals(flush_pan=True)
+
+    def enable_monitor(self, state): 
+        self.combo_types.Enable(state)
+        self.combo_names.Enable(state)
+        self.add_button.Enable(state)
+        self.add_all_button.Enable(state)
+        if state: 
+            self.warning_text.SetLabel('')
+        else:
+            self.warning_text.SetLabel("*Reset simulation to add components to monitor!")
+        

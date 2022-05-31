@@ -24,10 +24,11 @@ class ConsoleOutTab(wx.Panel):
     """
     #----------------------------------------------------------------------
     def __init__(self, parent, path, names, devices, network,
-                      monitors, inputsPanel, set_gui_state):
+                      monitors, inputsPanel, set_gui_state,  global_vars, canvas):
         """"""
         wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
 
+        self.parent = parent
         self.names = names
         self.devices = devices
         self.monitors = monitors
@@ -35,7 +36,10 @@ class ConsoleOutTab(wx.Panel):
         self.inputsPanel = inputsPanel
         self.set_gui_state = set_gui_state # function
 
-        self.cycles_completed = 0  # number of simulation cycles completed
+        self.canvas = canvas
+
+        self.global_vars = global_vars
+        # self.cycles_completed = 0  # number of simulation cycles completed
 
         self.character = ""  # current character
         self.line = ""  # current string entered by the user
@@ -79,10 +83,10 @@ class ConsoleOutTab(wx.Panel):
             self.help_command()
         elif command == "s":
             self.switch_command()
-        elif command == "m":
-            self.monitor_command()
-        elif command == "z":
-            self.zap_command()
+        # elif command == "m":
+        #     self.monitor_command()
+        # elif command == "z":
+        #     self.zap_command()
         elif command == "r":
             self.run_command()
         elif command == "c":
@@ -99,8 +103,6 @@ class ConsoleOutTab(wx.Panel):
         print("c N       - continue the simulation for N")
         print("            cycles")
         print("s X N     - set switch X to N (0 or 1)")
-        # print("m X       - set a monitor on signal X")
-        # print("z X       - zap the monitor on signal X")
         print("h         - help (this command)")
 
     def switch_command(self):
@@ -115,28 +117,6 @@ class ConsoleOutTab(wx.Panel):
                 else:
                     print("Error! Invalid switch.")
 
-    # def monitor_command(self):
-    #     """Set the specified monitor."""
-    #     monitor = self.read_signal_name()
-    #     if monitor is not None:
-    #         [device, port] = monitor
-    #         monitor_error = self.monitors.make_monitor(device, port,
-    #                                                    self.cycles_completed)
-    #         if monitor_error == self.monitors.NO_ERROR:
-    #             print("Successfully made monitor.")
-    #         else:
-    #             print("Error! Could not make monitor.")
-
-    # def zap_command(self):
-    #     """Remove the specified monitor."""
-    #     monitor = self.read_signal_name()
-    #     if monitor is not None:
-    #         [device, port] = monitor
-    #         if self.monitors.remove_monitor(device, port):
-    #             print("Successfully zapped monitor")
-    #         else:
-    #             print("Error! Could not zap monitor.")
-
     def run_network(self, cycles):
         """Run the network for the specified number of simulation cycles.
 
@@ -146,6 +126,7 @@ class ConsoleOutTab(wx.Panel):
             if self.network.execute_network():
                 self.monitors.record_signals()
             else:
+                self.parent.GetParent().statusbar.SetStatusText("Error! Network oscillating.")
                 print("Error! Network oscillating.")
                 return False
         # self.monitors.display_signals()
@@ -153,7 +134,7 @@ class ConsoleOutTab(wx.Panel):
 
     def run_command(self, gui=False, gui_cycles=None):
         """Run the simulation from scratch."""
-        self.cycles_completed = 0
+        self.global_vars.cycles_completed = 0
         if gui:
             cycles = gui_cycles
         else:
@@ -164,8 +145,9 @@ class ConsoleOutTab(wx.Panel):
             print("".join(["Running for ", str(cycles), " cycle(s)"]))
             self.devices.cold_startup()
             if self.run_network(cycles):
-                self.cycles_completed += cycles
+                self.global_vars.cycles_completed += cycles
             self.set_gui_state(True)
+            self.canvas.render_signals()
 
     def continue_command(self, gui=False, gui_cycles=None):
         """Continue a previously run simulation."""
@@ -175,12 +157,13 @@ class ConsoleOutTab(wx.Panel):
             cycles = self.read_number(0, None)
 
         if cycles is not None:  # if the number of cycles provided is valid
-            if self.cycles_completed == 0:
+            if self.global_vars.cycles_completed == 0:
                 print("Error! Nothing to continue. Run first.")
             elif self.run_network(cycles):
-                self.cycles_completed += cycles
+                self.global_vars.cycles_completed += cycles
                 print(" ".join(["Continuing for", str(cycles), "cycles.",
-                                "Total:", str(self.cycles_completed)]))
+                                "Total:", str(self.global_vars.cycles_completed)]))
+                self.canvas.render_signals()
                 
 
     def read_command(self):

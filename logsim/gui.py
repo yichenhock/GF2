@@ -7,7 +7,7 @@ Classes:
 --------
 Gui - configures the main window and all the widgets.
 """
-from ast import Pass
+from ast import Global
 import wx
 import wx.lib.agw.aui as aui
 
@@ -23,6 +23,7 @@ from gui_circuitdef_tab import CircuitDefTab
 from gui_inputs_tab import InputsTab
 from gui_monitors_tab import MonitorsTab
 from gui_canvas import MyGLCanvas 
+from global_vars import GlobalVars
 
 class Gui(wx.Frame):
     """Configure the main window and all the widgets.
@@ -57,7 +58,8 @@ class Gui(wx.Frame):
         self.network = network
         self.monitors = monitors
 
-        self.cycles_completed = 0  # number of simulation cycles completed
+        self.global_vars = GlobalVars()
+        # self.cycles_completed = self.global_vars.cycles_completed  # number of simulation cycles completed
 
         # Create the menu, toolbar and statusbar
         self.create_menu()
@@ -79,7 +81,7 @@ class Gui(wx.Frame):
 
         # self.button = wx.Button(self, wx.ID_ANY, 'testing')
 
-        self.canvas = MyGLCanvas(self.main_panel, devices, monitors)
+        self.canvas = MyGLCanvas(self.main_panel, devices, monitors, self.global_vars)
         self.y_scroll = wx.ScrollBar(self.main_panel, style=wx.SB_VERTICAL)
         self.x_scroll = wx.ScrollBar(self.main_panel, style=wx.SB_HORIZONTAL)
         self.y_scroll.Disable()
@@ -95,19 +97,17 @@ class Gui(wx.Frame):
         self.canvas_sizer.Add(self.x_scroll, 0, wx.EXPAND | wx.ALL, 0)
         
         self.main_panel.SetSizerAndFit(self.main_sizer)
-        print(self.main_panel.GetSize())
 
         self.mgr.AddPane(self.main_panel, aui.AuiPaneInfo().CenterPane())
 
         # bottom panel 
         notebook = aui.AuiNotebook(self, wx.ID_ANY, agwStyle=aui.AUI_NB_CLOSE_ON_ALL_TABS )
-
         self.circuitDefPanel = CircuitDefTab(notebook, self.path, self.statusbar)
-        self.inputsPanel = InputsTab(notebook, names, devices, self.statusbar)
-        self.monitorsPanel = MonitorsTab(notebook, names, devices, monitors, self.statusbar)
+        self.inputsPanel = InputsTab(notebook, names, devices, self.canvas, self.statusbar)
+        self.monitorsPanel = MonitorsTab(notebook, names, devices, monitors, self.canvas, self.statusbar)
         
         self.consoleOutPanel = ConsoleOutTab(notebook, self.path, names, devices, network,
-                      monitors, self.inputsPanel, self.set_gui_state)
+                      monitors, self.inputsPanel, self.set_gui_state, self.global_vars, self.canvas)
 
         notebook.AddPage(self.consoleOutPanel, "Output", True)
         notebook.AddPage(self.circuitDefPanel, "Circuit Definition", False)
@@ -133,10 +133,10 @@ class Gui(wx.Frame):
 
         self.mgr.Update() 
 
-        # self.y_scroll.Bind(wx.EVT_SCROLL, self.on_y_scroll)
-        # self.y_scroll.Bind(wx.EVT_SIZE, self.set_scroll)  # when window resizes
-        # self.x_scroll.Bind(wx.EVT_SCROLL, self.on_x_scroll)
-        # self.x_scroll.Bind(wx.EVT_SIZE, self.set_scroll)  # when window resizes
+        self.y_scroll.Bind(wx.EVT_SCROLL, self.on_y_scroll)
+        self.y_scroll.Bind(wx.EVT_SIZE, self.set_scroll)  # when window resizes
+        self.x_scroll.Bind(wx.EVT_SCROLL, self.on_x_scroll)
+        self.x_scroll.Bind(wx.EVT_SIZE, self.set_scroll)  # when window resizes
 
         self.Bind(wx.EVT_CLOSE, self.on_close) 
         self.Centre() 
@@ -152,10 +152,8 @@ class Gui(wx.Frame):
     def create_menu(self): 
         fileMenu = wx.Menu()
         fileMenu.Append(wx.ID_ABOUT, "&About")
+        fileMenu.Append(wx.ID_SAVEAS, "&Save As")
         fileMenu.Append(wx.ID_EXIT, "&Exit")
-        
-        # viewMenu = wx.Menu()
-        # viewMenu.Append(wx.ID_)
 
         menuBar = wx.MenuBar()
         menuBar.Append(fileMenu, "&File")
@@ -220,13 +218,13 @@ class Gui(wx.Frame):
         if Id == wx.ID_ABOUT:
             wx.MessageBox("Logic Simulator\nCreated by Yi Chen Hock, Michael Stevens and Cindy Wu\n2022",
                           "About Logsim", wx.ICON_INFORMATION | wx.OK)
+        if Id == wx.ID_SAVEAS:
+            self.save_file_as()
 
     def on_spin(self, event):
         """Handle the event when the user changes the spin control value."""
         spin_value = self.spin.GetValue()
-        text = "".join(["New spin control value: ", str(spin_value)])
-        self.canvas.render(text)
-        self.update_statusbar(text)
+        self.update_statusbar("Number of simulation cycles set to: {}".format(spin_value))
 
     def on_tool_click(self, event):
         # print("tool %s clicked" % event.GetId())
@@ -266,27 +264,30 @@ class Gui(wx.Frame):
             return
 
         self.consoleOutPanel.run_command(True, self.spin.GetValue())
-        self.cycles_completed = self.consoleOutPanel.cycles_completed
-        
         self.update_statusbar("Run button pressed.")
         self.set_gui_state(sim_running=True)
+        self.canvas.render_signals(flush_pan=True)
     
     def on_cont_button(self):
         self.consoleOutPanel.continue_command(True, self.spin.GetValue())
-        self.cycles_completed = self.consoleOutPanel.cycles_completed
         self.update_statusbar("Continue button pressed.")
+        self.canvas.render_signals(flush_pan=True)
     
     def on_reset_button(self):
-        self.cycles_completed = 0
-        self.consoleOutPanel.cycles_completed = 0
+        # self.cycles_completed = 0
+        self.global_vars.cycles_completed = 0
+
+        self.monitors.reset_monitors()
         print("Simulation reset.")
         self.update_statusbar("Reset button pressed.")
         self.set_gui_state(sim_running=False)
+        self.canvas.render_signals(flush_pan=True)
     
     def set_gui_state(self, sim_running): 
         self.ToolBar.EnableTool(4, not sim_running) # disable run button
         self.ToolBar.EnableTool(5, sim_running) # enable continue button
         self.circuitDefPanel.set_textbox_state(not sim_running) # text box only editable when the simulation is not running
+        self.monitorsPanel.enable_monitor(not sim_running)
 
     def on_help_button(self): 
         wx.MessageBox("Press the buttons :D",
@@ -366,41 +367,33 @@ class Gui(wx.Frame):
         pass # save whatever is in the circuit def file into the current loaded path (overwrite!)
         # get the value of whatever is in the textbox and then save :)
     
+    def save_file_as(self):
+        print('save file as')
+
     def set_scroll(self, event = None):
-        """
-        Set the scrollbar position based on the canvas position.
-
-        Parameters
-        ----------
-        `event`: Optional triggering event, default is `None`
-
-        Returns
-        -------
-        `None`
-        """
         self.canvas.update_dimensions()
         y_scroll_width, y_scroll_height = self.y_scroll.GetSize()
         x_scroll_width, x_scroll_height = self.x_scroll.GetSize()
         self.y_scroll.SetSize(wx.Size(y_scroll_width, self.canvas.height))
         self.x_scroll.SetSize(wx.Size(self.canvas.width, x_scroll_height))
 
-        drawing_width = int(self.canvas.drawing_width)
-        drawing_height = int(self.canvas.drawing_height)
+        plot_width = int(self.canvas.plot_width)
+        plot_height = int(self.canvas.plot_height)
 
-        if drawing_height <= self.canvas.height:
+        if plot_height <= self.canvas.height:
             self.y_scroll.Disable()
         else:
-            position = drawing_height + self.canvas.pan_y - self.canvas.height
+            position = plot_height + self.canvas.pan_y - self.canvas.height
             self.y_scroll.SetScrollbar(position, self.canvas.height,
-                                       drawing_height, 0)
+                                       plot_height, 0)
             self.y_scroll.Enable()
 
-        if drawing_width <= self.canvas.width:
+        if plot_width <= self.canvas.width:
             self.x_scroll.Disable()
         else:
             x_position = -1 * self.canvas.pan_x
             self.x_scroll.SetScrollbar(x_position, self.canvas.width,
-                                       drawing_width, 0)
+                                       plot_width, 0)
             self.x_scroll.Enable()
 
         self.Refresh()
@@ -408,12 +401,12 @@ class Gui(wx.Frame):
     def on_y_scroll(self, event: wx.Event) -> None:
         position = self.y_scroll.GetThumbPosition()
         self.canvas.pan_y = -(
-            self.canvas.drawing_height - self.canvas.height - position)
+            self.canvas.plot_height - self.canvas.height - position)
         self.canvas.init = False
-        self.canvas.render_waveforms(set_scroll=False)
+        self.canvas.render_signals(set_scroll=False)
 
     def on_x_scroll(self, event: wx.Event) -> None:
         x_position = self.x_scroll.GetThumbPosition()
         self.canvas.pan_x = -1 * x_position
         self.canvas.init = False
-        self.canvas.render_waveforms(set_scroll=False)
+        self.canvas.render_signals(set_scroll=False)
