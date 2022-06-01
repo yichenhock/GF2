@@ -10,14 +10,16 @@ Classes
 """
 from scanner import Scanner
 
-class SemanticError(Scanner):
+class SemanticError():
 
     def __init__(self):
         """Set parameters to report error."""
 
-        self.id_list = [self.WRONG_GATE_FOR_NAME, self.NAME_ALREADY_EXISTS, self.NAME_FOR_INITIALISE_NOT_DEFINED, self.NAME_FOR_CONNECTIONS_NOT_DEFINED, self.WRONG_INPUT_GATE_NAME, self.NAME_FOR_MONITORS_NOT_DEFINED] = range(6)
+        self.id_list = [self.WRONG_GATE_FOR_NAME, self.NAME_ALREADY_EXISTS, self.NAME_FOR_INITIALISE_NOT_DEFINED, self.NAME_FOR_CONNECTIONS_NOT_DEFINED, self.WRONG_INPUT_GATE_NAME, self.NAME_FOR_MONITORS_NOT_DEFINED, self.SIGNAL_ALREADY_EXISTS] = range(7)
 
-        self.error_type_list = ["WRONG_GATE_FOR_NAME", "NAME_ALREADY_EXISTS", "NAME_FOR_INITIALISE_NOT_DEFINED", "NAME_FOR_CONNECTIONS_NOT_DEFINED", "WRONG_INPUT_GATE_NAME", "NAME_FOR_MONITORS_NOT_DEFINED"]
+        self.error_type_list = ["WRONG_GATE_FOR_NAME", "NAME_ALREADY_EXISTS", "NAME_FOR_INITIALISE_NOT_DEFINED", "NAME_FOR_CONNECTIONS_NOT_DEFINED", "WRONG_INPUT_GATE_NAME", "NAME_FOR_MONITORS_NOT_DEFINED", "SIGNAL_ALREADY_EXISTS"]
+
+        self.error_code_count = 0
 
     def printerror(self, id, scanner, symbol1=None, symbol2=None):
         """Print error message to terminal and skip line.
@@ -25,7 +27,9 @@ class SemanticError(Scanner):
         Parameters
         -------
 
-        'message': Output to be printed to terminal."""
+        'message': Output to be printed to terminal.
+        """
+        
         self.scanner = scanner
 
         self.message_list = ["Wrong gate type provided for device name chosen. Given {}, expected {}".format(symbol1, symbol2),
@@ -33,15 +37,17 @@ class SemanticError(Scanner):
         "The device name {} provided in the initialisation section has not been defined in the devices section.".format(symbol1), 
         "The device name {} provided in the connections section has not been defined in the devices section.".format(symbol1), 
         "Wrong input gate name for connection section subheader. The subheader name should be the name of the device receiving inputs. Expected {}, got {}.".format(symbol1, symbol2), 
-        "The device name {} provided in the monitors section has not been defined in the devices section.".format(symbol1)]
+        "The device name {} provided in the monitors section has not been defined in the devices section.".format(symbol1), 
+        "The signal name defined in connections section already exists."]
 
-        self.message = "SyntaxError: {}".format(self.message_list[id])
+        self.message = "ParserSemanticError: {}".format(self.message_list[id])
         
         # Print error to terminal using method in Scanner class.
         # Skip line to resume parsing after the next semicolon.
         self.scanner.print_error_line(self.error_type_list[id], self.message)
+        self.error_code_count += 1
         
-class SyntaxError(Scanner):
+class SyntaxError():
 
     def __init__(self):
         """Set parameters to report error."""
@@ -63,6 +69,8 @@ class SyntaxError(Scanner):
 
         "NO_MONITOR_NAME", "EXTRA_INFORMATION_AFTER_MONITORS"]
 
+        self.error_code_count = 0
+
     def printerror(self, id, scanner, symbol1=None):
         """Print error message to terminal and skip line.
         
@@ -71,6 +79,8 @@ class SyntaxError(Scanner):
 
         'message': Output to be printed to terminal.
         """
+
+        self.scanner = scanner
         
         self.message_list = ["Missing open parentheses following section header. Parser will skip next line of code. Please fix and rerun.", 
         "Missing close parentheses following section or subsection initialisation.", 
@@ -106,9 +116,7 @@ class SyntaxError(Scanner):
         "Missing name in monitor section.", 
         "Extra information provided in circuit definition file after end of the monitors block. Please ensure that this is moved elsewhere if it is important as it will not be read."]
 
-        self.scanner = scanner
-
-        self.message = "SyntaxError: {}".format(self.message_list[id])
+        self.message = "ParserSyntaxError: {}".format(self.message_list[id])
         
         # Print error
         # Do not skip line
@@ -117,8 +125,10 @@ class SyntaxError(Scanner):
             print(self.scanner.lines[self.scanner.current_line])
             print("^ Error before this line")
             print(self.message)
+            self.error_code_count += 1
             
         # Print error to terminal using method in Scanner class.
         # Skip line to resume parsing after the next semicolon.
         else:
             self.scanner.print_error_line(self.error_type_list[id], self.message)
+            self.error_code_count += 1
