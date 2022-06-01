@@ -275,15 +275,24 @@ class Gui(wx.Frame):
                     self.Close(True)
 
     def on_run_button(self):
+        # save the file first
+        self.save_file(self.path)
 
-        if not self.monitors.monitors_dictionary:
-            self.statusbar.SetStatusText("No monitors.")
-            return
+        # parse the network 
+        if self.parser.parse_network(): 
+            if not self.monitors.monitors_dictionary:
+                self.statusbar.SetStatusText("No monitors.")
+                return
 
-        self.consoleOutPanel.run_command(True, self.spin.GetValue())
-        self.update_statusbar("Run button pressed.")
-        self.set_gui_state(sim_running=True)
-        self.canvas.render_signals(flush_pan=True)
+            self.consoleOutPanel.run_command(True, self.spin.GetValue())
+            self.update_statusbar("Run button pressed.")
+            self.set_gui_state(sim_running=True)
+            self.canvas.render_signals(flush_pan=True)
+        else: 
+            # error has occured while parsing 
+            wx.MessageBox("Error while parsing circuit definition. See error log in Output.",
+                          "Simulation Failed", wx.ICON_ERROR | wx.OK)
+
     
     def on_cont_button(self):
         self.consoleOutPanel.continue_command(True, self.spin.GetValue())

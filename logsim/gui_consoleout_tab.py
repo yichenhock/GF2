@@ -6,6 +6,7 @@ Description of classes
 
 """
 import sys
+from numpy import save
 import wx
 
 class RedirectText(object):
@@ -24,7 +25,7 @@ class ConsoleOutTab(wx.Panel):
     """
     #----------------------------------------------------------------------
     def __init__(self, parent, path, names, devices, network,
-                      monitors, inputsPanel, set_gui_state,  global_vars, canvas):
+                      monitors, parser, inputsPanel, set_gui_state,  global_vars, canvas, save_file):
         """"""
         wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
 
@@ -35,6 +36,10 @@ class ConsoleOutTab(wx.Panel):
         self.network = network
         self.inputsPanel = inputsPanel
         self.set_gui_state = set_gui_state # function
+
+        self.path = path
+        self.parser = parser 
+        self.save_file = save_file
 
         self.canvas = canvas
 
@@ -134,20 +139,29 @@ class ConsoleOutTab(wx.Panel):
 
     def run_command(self, gui=False, gui_cycles=None):
         """Run the simulation from scratch."""
-        self.global_vars.cycles_completed = 0
-        if gui:
-            cycles = gui_cycles
-        else:
-            cycles = self.read_number(0, None)
+        # save file first 
+        self.save_file(self.path)
 
-        if cycles is not None:  # if the number of cycles provided is valid
-            self.monitors.reset_monitors()
-            print("".join(["Running for ", str(cycles), " cycle(s)"]))
-            self.devices.cold_startup()
-            if self.run_network(cycles):
-                self.global_vars.cycles_completed += cycles
-            self.set_gui_state(True)
-            self.canvas.render_signals()
+        if self.parser.parse_network(): 
+
+            self.global_vars.cycles_completed = 0
+            if gui:
+                cycles = gui_cycles
+            else:
+                cycles = self.read_number(0, None)
+
+            if cycles is not None:  # if the number of cycles provided is valid
+                self.monitors.reset_monitors()
+                print("".join(["Running for ", str(cycles), " cycle(s)"]))
+                self.devices.cold_startup()
+                if self.run_network(cycles):
+                    self.global_vars.cycles_completed += cycles
+                self.set_gui_state(True)
+                self.canvas.render_signals()
+        else: 
+            # error has occured while parsing 
+            wx.MessageBox("Error while parsing circuit definition. See error log in Output.",
+                          "Simulation Failed", wx.ICON_ERROR | wx.OK)
 
     def continue_command(self, gui=False, gui_cycles=None):
         """Continue a previously run simulation."""
