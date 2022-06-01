@@ -65,11 +65,11 @@ class Scanner:
         self.names = names
 
         # Define all symbol types
-        self.symbol_list = [",", ".", ";", "=", "(", ")", "-", "keyword", "number", "name", "eof"]
+        self.symbol_list = [",", ".", ";", "=", "(", ")", "keyword", "number", "name", "eof"]
         self.symbol_type_list = [self.COMMA, self.DOT, self.SEMICOLON,
                                  self.EQUALS, self.OPEN_BRACKET,
-                                 self.CLOSE_BRACKET, self.DASH, self.KEYWORD,
-                                 self.NUMBER, self.NAME, self.EOF] = range(11)
+                                 self.CLOSE_BRACKET, self.KEYWORD,
+                                 self.NUMBER, self.NAME, self.EOF] = range(10)
 
         # Define all keywords
         self.keywords_list = ["devices", "initialise", "connections",
@@ -204,10 +204,6 @@ class Scanner:
         elif self.current_character == "#":
             self.skip_comment()
             symbol = self.get_symbol()
-
-        elif self.current_character == "-":
-            symbol.type = self.DASH
-            self.advance()
 
         else:  # Not a valid character (symbol.type == None)
             self.advance()

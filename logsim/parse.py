@@ -89,7 +89,6 @@ class Parser:
         # Check if first keyword is a devices
         if (self.symbol.type == self.scanner.KEYWORD 
         	and self.symbol.id == self.scanner.devices_id and self.previous_block == ""):
-            print("Entering devices block")
             eofcheck = self.devices_block()
             if eofcheck == True:
                 return eofcheck
@@ -116,7 +115,6 @@ class Parser:
         # Check if next keyword is initialise
         if (self.symbol.type == self.scanner.KEYWORD 
         	and self.symbol.id == self.scanner.initialise_id and self.previous_block == "devices"):
-            print("Entering initialise block")
             eofcheck = self.initialise_block()
             if eofcheck == True:
                 return eofcheck
@@ -124,7 +122,7 @@ class Parser:
         # If the symbol we expect is any header but we get a bracket, then we can report the header as missing
         elif self.symbol.type == self.scanner.OPEN_BRACKET and self.previous_block == "devices":
             self.syntax.printerror(self.syntax.NO_HEADER)
-            print("Skipping initialise block")
+
             eofcheck = self.skip_block(self.previous_block)
             if eofcheck == True:
                 return eofcheck
@@ -143,7 +141,6 @@ class Parser:
         # Check if next keyword is connections
         if (self.symbol.type == self.scanner.KEYWORD 
         	and self.symbol.id == self.scanner.connections_id and self.previous_block == "initialise"):
-            print("Entering connections block")
             eofcheck = self.connections_block()
             if eofcheck == True:
                 return eofcheck
@@ -187,7 +184,6 @@ class Parser:
                 print("User opted to not include monitors block.")
             else:
                 self.syntax.printerror(self.syntax.HEADER_NAME_ERROR, self.scanner)
-            print("Skipping connections block.")
             eofcheck = self.skip_block(self.previous_block) 
             if eofcheck == True:
                 return eofcheck
@@ -241,11 +237,10 @@ class Parser:
 
         # Fetch next symbol after section heading and check it's a bracket
         self.symbol = self.scanner.get_symbol()
-        print("Symbol type after bracket:", self.scanner.symbol_list[self.symbol.type]) # Bracket
+
         if self.symbol.type != self.scanner.OPEN_BRACKET:
             self.syntax.printerror(self.syntax.NO_OPEN_BRACKET, self.scanner)
         
-        print("Checked for open bracket. Fetching next symbol. Expect name.")
         self.previous_block = "devices"
 
         self.symbol = self.scanner.get_symbol()
@@ -274,7 +269,7 @@ class Parser:
                     self.symbol = self.scanner.get_symbol()
                     return False
                 self.read_name("devices")
-            print("Name type to determine which definition method runs:", self.current_name, self.name_type)
+
             if self.name_type == "device":
                 print("Entering device definition method")
                 eofcheck = self.device_definition(self.current_name)
@@ -287,18 +282,12 @@ class Parser:
 
             # Read first symbol of next line
             self.symbol = self.scanner.get_symbol()
-            print("First symbol of next line: ", self.scanner.symbol_list[self.symbol.type])
+
             if self.symbol == self.scanner.EOF:
                 return True
 
         if self.symbol.type == self.scanner.CLOSE_BRACKET:
-
-            # Get symbol after close bracket
             self.symbol = self.scanner.get_symbol()
-            
-            print("End of device block found using bracket. Setting of checking parameter previous_block:", self.previous_block)
-            # Exit the above while loop when symbol stored is a closed bracket
-            # End of functionality of devices_block function
             return eofcheck
 
         # Expect to be reading a block header if missing close bracket
@@ -315,11 +304,10 @@ class Parser:
 
         # Fetch next symbol after section heading and check it's a bracket
         self.symbol = self.scanner.get_symbol()
-        print("Symbol type:", self.scanner.symbol_list[self.symbol.type]) # Bracket
+
         if self.symbol.type != self.scanner.OPEN_BRACKET:
             self.syntax.printerror(self.syntax.NO_OPEN_BRACKET, self.scanner)
 
-        print("Checked for open bracket. Fetching next symbol. Expect name.")
         self.previous_block = "initialise"
 
         self.symbol = self.scanner.get_symbol()
@@ -346,7 +334,7 @@ class Parser:
                     self.symbol = self.scanner.get_symbol()
                     return False
                 self.read_name("devices")
-            print("Device name read inside initialise block as:", self.current_name)
+
             # Error recovery: for if first name on each line is not valid
             while self.is_legal_name == False:
                 # Get next symbol on next line but also check it's not a close bracket
@@ -356,9 +344,7 @@ class Parser:
                     self.symbol = self.scanner.get_symbol()
                     return False
                 self.read_name("initialise")
-                print("Device name read inside initialise block as:", self.current_name)
 
-            print("Name type to determine which initialisation method runs:", self.current_name, self.name_type)
             if self.name_type == "device":
                 print("Entering device initialisation method")
                 eofcheck = self.device_initialisation(self.current_name)
@@ -371,15 +357,12 @@ class Parser:
 
             # Read first symbol of next line
             self.symbol = self.scanner.get_symbol()
-            print("First symbol of next line: ", self.scanner.symbol_list[self.symbol.type])
+
             if self.symbol == self.scanner.EOF:
                 return True
 
         if self.symbol.type == self.scanner.CLOSE_BRACKET:
-            # Get symbol after close bracket
             self.symbol = self.scanner.get_symbol()
-            
-            print("End of device block found using bracket. Setting of checking parameter previous_block:", self.previous_block)
             return eofcheck
         else:
             self.syntax.printerror(self.syntax.NO_CLOSE_BRACKET, self.scanner)
@@ -392,19 +375,18 @@ class Parser:
         
         """
 
-        print("Entered connections block")
-
-        if self.symbol.type == self.scanner.KEYWORD:
-            print("Keyword at start of connections block: ", self.names.get_name_string(self.symbol.id))
+        print("============================================Entered connections block")
 
         # Fetch next symbol after section heading and check it's a bracket
         self.symbol = self.scanner.get_symbol()
-        print("Symbol type:", self.scanner.symbol_list[self.symbol.type]) # Bracket
+
         if self.symbol.type != self.scanner.OPEN_BRACKET:
             self.syntax.printerror(self.syntax.NO_OPEN_BRACKET, self.scanner)
 
         print("Checked for open bracket. Fetching next symbol. Expect device name subheader.")
         self.previous_block = "connections"
+
+        # Fetch name subheader
         self.symbol = self.scanner.get_symbol()
         
         # Skip device block, end reached
@@ -413,7 +395,6 @@ class Parser:
             return False
 
         # Outer while loop for different device subsections
-        # Call line-level function as long as end of block not reached or if a bracket is missing, the next block hasn't started yet
         while self.symbol.type != self.scanner.CLOSE_BRACKET and self.symbol.id not in self.block_ids:
             
             self.connections_sub_block()
@@ -422,18 +403,26 @@ class Parser:
             # Get symbol after close bracket
             self.symbol = self.scanner.get_symbol()
             
-            print("End of device block found using bracket. Setting of checking parameter previous_block:", self.previous_block)
+            print("End of connections block found using bracket. Setting of checking parameter previous_block:", self.previous_block)
             return False
         else:
             self.syntax.printerror(self.syntax.NO_CLOSE_BRACKET, self.scanner)
             return False
     
     def connections_sub_block(self):
-        """For calling and reading connections sub blocks"""
+        """For calling and reading connections sub blocks
+        
+        Starts at point where subheader name has been fetched but not read
+        """
 
         # Read expected subheader - should be a device name only
         print("Entered sub block header method inside connections block")
+
+        # Read connection sub-block subheading
         self.read_name("connections subheading")
+
+        # Sets device to receive inputs
+        self.current_subsection = self.current_name
 
         while self.is_legal_name == False:
             # Automatically skips block and reads subheader of next block if name is not legit
@@ -444,55 +433,53 @@ class Parser:
             self.syntax.printerror(self.syntax.CONNECTION_SUBHEADER_NAME_ERROR, self.scanner)
             return False
 
-        self.current_subsection = self.current_name
-
         # Fetch next symbol after section subheading and check it's a bracket
         self.symbol = self.scanner.get_symbol()
-        print("Symbol type:", self.scanner.symbol_list[self.symbol.type]) # Bracket
+
         if self.symbol.type != self.scanner.OPEN_BRACKET:
             # If not a bracket, skip to next character (unique handling method to this error)
             self.syntax.printerror(self.syntax.NO_OPEN_BRACKET, self.scanner)
-            return False
+            return False # Double check error recovery here
 
+        # Open bracket found
         self.bracket_count = 1
         self.has_missed_bracket = False
 
-        print("Checked for open bracket for subsection inside connections. Fetching next symbol. Expect device name.")     
-        # Fetch device name
-        self.symbol = self.scanner.get_symbol()
-        # Skip device block, end reached
-        if self.symbol.type == self.scanner.CLOSE_BRACKET:
-            print("Connections block is empty.")
-            return False
-        
-        # Move to connection definition method
-        while (self.bracket_count%2) == 1 and self.symbol.type != self.scanner.CLOSE_BRACKET:
-            print("Reading device name inside {} subsection in connections".format(self.current_subsection))
+        print("Checked for open bracket for subsection inside connections.")
 
-            # Read next symbol and check it's a name
-            self.read_name("connections")
-            # Error recovery for it not name
-            while self.is_legal_name == False:
-                # Get next symbol on next line but also check it's not a close bracket
-                self.symbol = self.scanner.get_symbol()
-                if self.symbol.type == self.scanner.CLOSE_BRACKET:
-                    # Get next section header and return
-                    self.symbol = self.scanner.get_symbol()
-                    return False
-                    
-            # Call connection definition method
-            # Will also be called on the next subheader line if a close bracket is missing
-            # Check for missing close bracket relegated to inside this method by checking for an open bracket
-            # If errors etc, then skip the whole line and return from function
-            self.read_output(self.current_subsection, self.name_type)
+        # Get first symbol of each line
+        self.symbol = self.scanner.get_symbol()
+
+        # Move to connection definition method
+        # This recursively reads each connection line until a close bracket is found
+        while (self.bracket_count%2) == 1:
+
+            print("In method connections_sub_block, reading device name inside {} subsection in connections".format(self.current_subsection))
+
+            if self.symbol.type == self.scanner.CLOSE_BRACKET:
+                self.bracket_count += 1
+                break
+
+            # Note this method must get the symbol following every full output name
+            # For gates, this is an alphanumeric set
+            # For dtype, of form f.Q or f.QBAR
+            read_name_success = self.read_output()
+
+            if read_name_success == True:
+                # Device name fine, pass to connection definition block
+                print("Finished reading output name inside connections_sub_block. Calling connection_definition. Double checking current symbol: ", self.names.get_name_string(self.symbol.id))
+
+                self.connection_definition(self.current_subsection, self.object_dict[self.current_subsection])
+            
+            elif read_name_success == False:
+                pass
 
             if self.has_missed_bracket == True:
                 break
-            # Get first symbol of next line
+
+            # Get first symbol of each line
             self.symbol = self.scanner.get_symbol()
             print("First symbol of next line: ", self.scanner.symbol_list[self.symbol.type])
-            if self.symbol.type == self.scanner.CLOSE_BRACKET:
-                self.bracket_count += 1
 
         # If connection_definition tells us we have missed a bracket, recursively call the sub-block function again
         if self.has_missed_bracket == True:
@@ -503,7 +490,61 @@ class Parser:
         print("First symbol of next line: ", self.scanner.symbol_list[self.symbol.type])
         if self.symbol.type == self.scanner.EOF:
             return True
-    
+        
+    def read_output(self):
+        """Reads name of output (device from which signal is connected) by calling on read_name.
+        
+        Also deals with error recovery for case in connection block where subsection close bracket in previous subsection has been missed. It begins at the point where first symbol of each line has already been obtained from the scanner and returns True if it is a valid output name and False otherwise. It must necessarily return the next symbol after the output device name, as it needs to check for if a dot is present.
+        """
+        print("Entered read_output() method. Checking name type:", self.object_dict[self.current_name])
+
+        self.read_name("connections")
+        # Error recovery for it not name
+        if self.is_legal_name == False:
+            print("Name read is not legit")
+            return False
+
+        # Skip device block, end reached
+        if self.symbol.type == self.scanner.CLOSE_BRACKET:
+            print("Connections block is empty.")
+            return False
+
+        # Name type of subsection header
+        # This is the type of the object which is receiving inputs
+        self.output_device_id = self.symbol.id
+        
+        # GET NEXT SYMBOL AFTER FIRST NAME
+        self.symbol = self.scanner.get_symbol()
+
+        # Check for if a close bracket has been missed
+        if self.symbol.type == self.scanner.OPEN_BRACKET and (self.bracket_count%2) == 1:
+            self.syntax.printerror(self.syntax.NO_CLOSE_BRACKET)
+            # Change subsection
+            self.current_subsection = self.current_name
+            self.has_missed_bracket = True
+            return False # Double check error recovery
+
+        if self.symbol.type == self.scanner.DOT and self.object_dict[self.current_name] == "DTYPE":
+            self.symbol = self.scanner.get_symbol()
+            if self.symbol.id in self.dtype_outputs:
+                print("Found dtype output")
+                self.output_device_port_id = self.symbol.id
+
+                # Get next symbol
+                self.symbol = self.scanner.get_symbol()
+                return True
+            else:
+                self.syntax.printerror(self.syntax.DTYPE_OUTPUT_NAME_ERROR, self.scanner)
+                return False
+        
+        elif self.symbol.type == self.scanner.DOT and self.object_dict[self.current_name] != "DTYPE":
+            self.syntax.printerror(self.syntax.DOT_UNEXPECTED, self.scanner)
+            return False
+        
+        # If not dtype output name, then parser logic for next thing after output name passed onto connection_definition method
+        else:
+            return True
+
     def monitors_block(self):
         """Operate at level of parsing a monitor block.
 
@@ -512,6 +553,7 @@ class Parser:
         """
 
         print("Entered monitors block")
+        devices_to_add = []
 
         if self.symbol.type == self.scanner.KEYWORD:
             print("Keyword at start of monitors block: ", self.names.get_name_string(self.symbol.id))
@@ -524,15 +566,20 @@ class Parser:
 
         print("Checked for open bracket. Fetching next symbol. Expect name.")
         
+        # Get what should be a name in monitors
         self.symbol = self.scanner.get_symbol()
         self.read_name("monitors")
-        # if self.symbol.type == self.scanner.NAME:
-        #     if self.names.get_name_string in self.object_dict:
-        #         self.monitors.make_monitor(self.symbol.id)
-        #     else:
-        #         self.semantic.printerror(self.semantic.NAME_FOR_MONITORS_NOT_DEFINED, self.scanner)
-        # else:
-        #     self.syntax.printerror(self.syntax.NO_MONITOR_NAME, self.scanner)
+        if self.is_legal_name:
+            devices_to_add.append(self.current_name)
+        elif self.symbol.type == self.scanner.CLOSE_BRACKET:
+            return True
+        # Expect to be reading a block header if missing close bracket
+        else:
+            self.syntax.printerror(self.syntax.NO_CLOSE_BRACKET, self.scanner)
+            return True
+
+        # Fetch next thing after name
+        self.symbol = self.scanner.get_symbol()
 
         while self.symbol.type == self.scanner.COMMA:
             # If comma, expect a device name afterwards
@@ -540,7 +587,6 @@ class Parser:
             self.symbol = self.scanner.get_symbol()
             # Feed into name reader to obtain check on condition of name 
             self.read_name("monitors")
-
             if self.is_legal_name == False:
                 # read_name() will have already skipped a line and printed an error message
                 # Expect to be reading a close bracket
@@ -562,10 +608,13 @@ class Parser:
             self.symbol = self.scanner.get_symbol()
         
         # Next symbol now no longer a comma. It should be a semicolon.
-                
         if self.scanner.symbol_list[self.symbol.type] != ";":
             self.syntax.printerror(self.syntax.NO_SEMICOLON, self.scanner)
-    
+            return True
+
+        # Get what should be close bracket
+        self.symbol = self.scanner.get_symbol()
+
         if self.symbol.type == self.scanner.CLOSE_BRACKET:
             self.symbol = self.scanner.get_symbol()
             if self.symbol.type == self.scanner.EOF:
@@ -574,58 +623,10 @@ class Parser:
             else:
                 self.syntax.printerror("EXTRA_INFORMATION_AFTER_MONITORS")
                 return True
-        # Expect to be reading a block header if missing close bracket
         else:
             self.syntax.printerror(self.syntax.NO_CLOSE_BRACKET, self.scanner)
             print ("More stuff found after monitors. Perhaps the order is wrong or more than one line used. The rest will not be read by the parser.")
             return True
-        
-    def read_output(self, subsection):
-        """Reads name of output (device from which signal is connected).
-        
-        Also deals with error recovery for case in connection block where subsection close bracket in previous subsection has been missed.
-        """
-
-        print("Entered read_output() method")
-
-        # Name type of subsection header
-        # This is the type of the object which is receiving inputs
-        device_type = self.object_dict[subsection]
-        self.output_device_id = self.symbol.id
-        
-        # Get next symbol after first name
-        self.symbol = self.scanner.get_symbol()
-
-        # Check for if a close bracket has been missed
-        if self.symbol.type == self.scanner.OPEN_BRACKET and (self.bracket_count%2) == 1:
-            self.syntax.printerror(self.syntax.NO_CLOSE_BRACKET)
-            # Change subsection
-            self.current_subsection = self.current_name
-            self.has_missed_bracket = True
-            return
-
-        if self.symbol.type == self.scanner.DOT and device_type == "DTYPE":
-            self.symbol = self.scanner.get_symbol()
-            if self.symbol.id in self.dtype_outputs:
-                print("Found dtype output")
-                self.output_device_port_id = self.symbol.id
-                # Device name fine, pass to connection definition block
-                # Get next symbol 
-                self.symbol = self.scanner.get_symbol()
-                self.connection_definition(subsection, device_type)
-                return
-            else:
-                self.syntax.printerror(self.syntax.DTYPE_OUTPUT_NAME_ERROR, self.scanner)
-                return
-        
-        elif self.symbol.type == self.scanner.DOT and device_type != "DTYPE":
-            self.syntax.printerror(self.syntax.DOT_UNEXPECTED, self.scanner)
-            return
-        
-        # If not dtype output name, then parser logic for next thing after output name passed onto connection_definition method
-        else:
-            self.connection_definition(self, subsection, device_type)
-            return
 
 #===========================================================================================================
 #===========================================================================================================
@@ -633,7 +634,7 @@ class Parser:
         """Parse one line of connection definition for a gate subsection.
 
         Used inside connections block for defining inputs. Called by read_output() only.
-        It should be read at the point after we have obtained the keyword following the output name on each line, and finish without having read the first symbol of the next line.
+        It should be read at the point after we have obtained the keyword following the output name on each line, and finish with the scanner cursor on but without having read the first symbol of the next line.
 
         Parameters
         -------
@@ -643,27 +644,24 @@ class Parser:
         """
 
         print("Entered connection definition method. Current subsection: ", subsection)
+        print("Current device type:", device_type)
+
+        if self.scanner.symbol_list[self.symbol.type] == "keyword":
+            print("Current keyword:", self.names.get_name_string(self.symbol.id))
         
-        # If connecting to non dtype gate
         if self.symbol.id == self.scanner.to_id:
-            print("Connecting to non dtype gate")
+
+            print("Found word 'to' after output name.")
+
             # Found 'to', get next symbol and check that it's 1) a name and 2) the same name as the block (if not, semantic error)
             self.symbol = self.scanner.get_symbol()
+            print("Symbol after 'to':", self.names.get_name_string(self.symbol.id))
 
-            # If of type name and exists as a name string:
-            # Throws error if not of valid name type or not existing string
-            self.read_name("connections")
-            # Error if input gate name does not match subsection header
-            if self.current_name != subsection:
-                self.semantic.printerror(self.semantic.WRONG_INPUT_GATE_NAME)
-                return
-            # If read name does not read legit name, return and continue on next line for error recovery
-            if self.is_legal_name == False:
-                return
-            
-            if device_type in self.gate_type_ids and device_type != "DTYPE":
-                
+            if device_type != "DTYPE":
+                print("Connecting to non dtype gate")
                 self.output_device_port_id = None
+
+                print("Calling gate_input_name")
                 # Call method to parse gate input name
                 self.gate_input_name(self.current_subsection)
                 
@@ -676,7 +674,8 @@ class Parser:
 
             # If connecting to dtype:                   
             elif device_type == "DTYPE":
-
+                
+                print("Connecting to dtype gate")
                 self.output_device_port_id = None
                 # Call method to parse dtype input name
                 self.dtype_input_name(self.current_subsection)
@@ -688,40 +687,53 @@ class Parser:
                     self.syntax.printerror(self.syntax.NO_SEMICOLON, self.scanner)
                     return 
             
+            else:
+                print("Something funny has happened in connection_definition")
+                return
+
         elif self.symbol.id == self.scanner.is_id:
+
+            print("found word 'is' following output name.")
+
             # Get symbol after 'is' word. Expect 'connected'.
             self.symbol = self.scanner.get_symbol()
+
             if self.symbol.id == self.scanner.connected_id:
+
+                print("Found word 'connected'.")
                 # Found 'connected', get next symbol and check that it's 'to'
                 self.symbol = self.scanner.get_symbol()
-                if self.symbol.id == self.scanner.to_id:
-                    # Found 'to', get next symbol and check that it's 1) a name and 2) the same name as the block (if not, semantic error)
-                    self.symbol = self.scanner.get_symbol()
 
-                    # If it's of type name and exists as a name string:
-                    # Throws error if not of valid name type or not existing string
-                    self.read_name("connections")
-                    # Error if input gate name does not match subsection header
-                    if self.current_name != subsection:
-                        self.semantic.printerror(self.semantic.WRONG_INPUT_GATE_NAME)
-                        return
-                    # If read name does not read legit name, return and continue on next line for error recovery
-                    if self.is_legal_name == False:
-                        return
+                if self.symbol.id == self.scanner.to_id:
+
+                    print("Found word 'to'.")
+
+                    # Found 'to', get what should be the same name as the block
+                    self.symbol = self.scanner.get_symbol()
+                    print("Device name:", self.names.get_name_string(self.symbol.id))
 
                     if device_type != "DTYPE":
+
+                        # Set device output port id
                         self.output_device_port_id = None
+
                         # Call method to parse gate input name
+                        # This checks if the device name matches the subsection header and has a valid port name
                         self.gate_input_name(self.current_subsection)
                         print("Successfully made connection between devices")
+
+                        # Get semicolon
                         self.symbol = self.scanner.get_symbol()
                         if self.scanner.symbol_list[self.symbol.type] != ";":
                             self.syntax.printerror(self.syntax.NO_SEMICOLON, self.scanner)
                             return 
         
-                    else:
+                    elif device_type == "DTYPE":
+
+                        # Set device output port id
                         self.output_device_port_id = None
                         # Call method to parse dtype input name
+                        # This checks if the device name matches the subsection header and has a valid port name
                         self.dtype_input_name()
                         print("Successfully made connection between devices")
                         self.symbol = self.scanner.get_symbol()
@@ -738,6 +750,89 @@ class Parser:
             self.syntax.printerror(self.syntax.NO_CONNECTION_KEYWORD, self.scanner, "to or is")
             return
 
+    def gate_input_name(self, subsection):
+        """Check if gate input name is valid. If so, use Network method to make a connection.
+    
+        Starts when already obtained the name of the device to have an input port. This function checks if it matches the section subheader.
+        Ends without obtaining next symbol.
+        """
+
+        print("Checking gate input name for device and port")
+        # Error if input gate name does not match subsection header
+        if self.names.get_name_string(self.symbol.id) != subsection:
+            self.semantic.printerror(self.semantic.WRONG_INPUT_GATE_NAME, self.scanner, subsection, self.names.get_name_string(self.symbol.id))
+            return
+
+        # Set input device id
+        self.input_device_id = self.symbol.id
+
+        # Get what should be a dot
+        self.symbol = self.scanner.get_symbol()
+        # Check if it is a dot
+        if self.symbol.type == self.scanner.DOT:
+            print("Found input name dot. Retrieving port name")
+            self.symbol = self.scanner.get_symbol()
+            print("Check if next symbol after dot is name")
+            if self.symbol.type == self.scanner.NAME:
+                print("Setting input port id")
+                self.input_device_port_id = self.symbol.id
+                port_name = self.names.get_name_string(self.symbol.id)
+                if port_name[0] == "I":
+                    for char in port_name[1: len(port_name)]:
+                        if not char.isdigit():
+                            self.syntax.printerror(self.syntax.PORT_NAME_ERROR, self.scanner)
+                            return
+                    # Valid port name found. Use Network to make connection
+                    self.input_device_port = self.names.get_name_string(self.symbol.id)
+                    self.network.make_connection(self.output_device_id, self.output_device_port_id, self.input_device_id, self.input_device_port_id)
+                    print("====================================gate connection made! :D")
+                else:
+                    self.syntax.printerror(self.syntax.NO_INPUT_PORT_NAME, self.scanner)
+                    return
+            else:
+                self.syntax.printerror(self.syntax.NO_INPUT_PORT_NAME, self.scanner)
+                return
+        else:
+            self.syntax.printerror(self.syntax.MISSING_DOT_INPUT, self.scanner)
+            return
+
+
+    def dtype_input_name(self, subsection):
+        """Check if dtype input name is valid. If so, use Network method to make a connection.
+    
+        Should start when you have already read the name of the device to have an input port and checked if it has a valid name (it is a device saved as a dtype).
+        """
+
+        print("Inside dtype_input_name. Checking dtype input name for device and port")
+        # Error if input gate name does not match subsection header
+        if self.names.get_name_string(self.symbol.id) != subsection:
+            self.semantic.printerror(self.semantic.WRONG_INPUT_GATE_NAME, self.scanner, subsection, self.names.get_name_string(self.symbol.id))
+            return
+
+        # Set input device id
+        self.input_device_id = self.symbol.id
+
+        # Get what should be a dot
+        self.symbol = self.scanner.get_symbol()
+        if self.symbol.type == self.scanner.DOT:
+            # Found dot, check for name
+            self.symbol = self.scanner.get_symbol()
+            # Check if next symbol after dot is dtype input
+            if self.symbol.id in self.dtype_inputs:
+                self.input_device_port_id = self.symbol.id
+
+                # Valid port name found. Use Network to make connection
+                self.network.make_connection(self.output_device_id, self.output_device_port_id, self.input_device_id, self.input_device_port_id)
+                print("===============================================dtype connection made! :D")
+                
+            else:
+                self.syntax.printerror(self.syntax.NO_INPUT_PORT_NAME, self.scanner)
+                return
+        else:
+            self.syntax.printerror(self.syntax.MISSING_DOT_INPUT, self.scanner)
+            return
+
+
     def device_definition(self, currentname):
         """Parse one line of device definition.
 
@@ -753,13 +848,9 @@ class Parser:
 
         self.current_name = currentname
         devices_to_add = [currentname]
-        
-        print("Inside device definition method. Current symbol:", self.scanner.symbol_list[self.symbol.type])
-        print("Current name: ", self.current_name)
 
         self.symbol = self.scanner.get_symbol()
 
-        print("First symbol type after device name:", self.scanner.symbol_list[self.symbol.type])
         if self.symbol.type == self.scanner.EOF:
             return True
 
@@ -771,7 +862,6 @@ class Parser:
             self.read_name("devices")
             # Append to list at top of this method
             devices_to_add.append(self.current_name)
-            print("Symbol type after reading name after comma:", self.scanner.symbol_list[self.symbol.type], self.names.get_name_string(self.symbol.id))
             
             if self.name_type != "device":
                 # If you mix up device types, syntax error
@@ -803,7 +893,7 @@ class Parser:
             else:
                 for device in devices_to_add:
                     self.object_dict[device] = self.names.get_name_string(self.symbol.id)
-                print("Successfully appended device type {}".format(self.names.get_name_string(self.symbol.id)))
+
                 self.symbol = self.scanner.get_symbol()
 
                 if self.symbol == self.scanner.EOF:
@@ -834,12 +924,10 @@ class Parser:
         """
 
         self.current_name = currentname
-        print("Inside switch definition method. Current name: ", self.current_name)
         devices_to_add = [currentname]
 
         self.symbol = self.scanner.get_symbol()
 
-        print("First symbol type after switch name:", self.scanner.symbol_list[self.symbol.type])
         if self.symbol.type == self.scanner.EOF:
             return True
 
@@ -847,7 +935,7 @@ class Parser:
             # If comma, expect a device name afterwards
             # Fetch next thing after comma
             self.symbol = self.scanner.get_symbol()
-            print("Found a comma, checking for switch afterwards. Symbol type after comma:", self.scanner.symbol_list[self.symbol.type])
+
             # Feed into name reader
             self.read_name("devices")
             devices_to_add.append(self.current_name)
@@ -860,12 +948,9 @@ class Parser:
         # If next symbol is definition keyword:
         # Check if symbol type is keyword and symbol ID is that for definition
         if self.symbol.type == self.scanner.KEYWORD and self.symbol.id in self.definition_ids:
-            
-            print("Found definition keyword in right place.")
 
             # Get next symbol
             self.symbol = self.scanner.get_symbol()
-            print("Fetched gate name type. Now checking if it is a valid gate type. Symbol type:", self.scanner.symbol_list[self.symbol.type], self.names.get_name_string(self.symbol.id))
 
             # Check if next symbol is gate type id
             if self.symbol.id not in self.switch_id:
@@ -881,7 +966,7 @@ class Parser:
             else:
                 for device in devices_to_add:
                     self.object_dict[device] = "SWITCH"
-                print("Successfully appended switch type. Now fetching what should be semicolon.")
+
                 self.symbol = self.scanner.get_symbol()
 
                 if self.symbol == self.scanner.EOF:
@@ -912,11 +997,9 @@ class Parser:
         """
 
         self.current_name = currentname
-        print("Inside clock definition method. Current name: ", self.current_name)
         devices_to_add = [currentname]
 
         self.symbol = self.scanner.get_symbol()
-        print("First symbol type after switch name:", self.scanner.symbol_list[self.symbol.type])
 
         if self.symbol.type == self.scanner.EOF:
             return True
@@ -925,7 +1008,7 @@ class Parser:
             # If comma, expect a device name afterwards
             # Fetch next thing after comma
             self.symbol = self.scanner.get_symbol()
-            print("Found a comma, checking for clock afterwards. Symbol type after comma:", self.scanner.symbol_list[self.symbol.type])
+
             # Feed into name reader
             self.read_name("devices")
             if self.is_legal_name == False:
@@ -940,13 +1023,10 @@ class Parser:
         # If next symbol is definition keyword:
         # Check if symbol type is keyword and symbol ID is that for definition
         if self.symbol.type == self.scanner.KEYWORD and self.symbol.id in self.definition_ids:
-            
-            print("Found definition keyword in right place.")
 
             # Get next symbol
             self.symbol = self.scanner.get_symbol()
-            print("Fetched gate name type. Now checking if it is a valid gate type. Symbol type:", self.scanner.symbol_list[self.symbol.type], self.names.get_name_string(self.symbol.id))
-
+            
             # Check if next symbol is clock type id
             if self.symbol.id not in self.clock_id:
                 # If symbol is an id but not valid clock type
@@ -961,7 +1041,7 @@ class Parser:
             else:
                 for device in devices_to_add:
                     self.object_dict[device] = "CLOCK"
-                print("Successfully appended clock type. Now fetching what should be semicolon.")
+
                 self.symbol = self.scanner.get_symbol()
 
                 if self.symbol == self.scanner.EOF:
@@ -994,15 +1074,11 @@ class Parser:
 
         # Store names of devices to be initialised
         devices_to_be_initialised = [currentname]
-
         self.current_name = currentname
-        print("Inside device initialisation method. Current symbol:", self.scanner.symbol_list[self.symbol.type])
-        print("Current name: ", self.current_name)
 
         # Get expected comma
         self.symbol = self.scanner.get_symbol()
 
-        print("First symbol type after device name:", self.scanner.symbol_list[self.symbol.type])
         if self.symbol.type == self.scanner.EOF:
             return True
 
@@ -1023,31 +1099,18 @@ class Parser:
                 return False
             # Get next symbol after device name to check if it's a comma
             self.symbol = self.scanner.get_symbol()
-            print("Symbol after device name:", self.scanner.symbol_list[self.symbol.type])
+
         # If next symbol is definition keyword:
         # Check if symbol type is keyword and symbol ID is that for definition
         if self.symbol.type == self.scanner.KEYWORD and self.symbol.id in self.possession_ids:
             
             # Get next symbol
             self.symbol = self.scanner.get_symbol()
-            print("Symbol after possession keyword in initialisation block:", self.scanner.symbol_list[self.symbol.type])
+
             # Check if next symbol not a number
-            print("Checking if user defined input number is a number.")
             if self.symbol.type != self.scanner.NUMBER:
-                # Check for negative number
-                if self.symbol.type == self.scanner.DASH:
-                    # Get next thing after dash
-                    self.symbol = self.scanner.get_symbol()
-                    print("Symbol after dash:", self.scanner.symbol_list[self.symbol.type])
-                    if self.symbol.type == self.scanner.NUMBER:
-                        self.semantic.printerror(self.semantic.NEGATIVE_NUMBER_ILLEGAL, self.scanner)
-                        return False
-                    else:
-                        self.syntax.printerror(self.syntax.DASH_UNEXPECTED, self.scanner)
-                        return False
-                else:
-                    self.syntax.printerror(self.syntax.INPUT_NUMBER_ERROR, self.scanner)
-                    return False
+                self.syntax.printerror(self.syntax.INPUT_NUMBER_ERROR, self.scanner)
+                return False
 
             else:
                 # Get number
@@ -1095,11 +1158,8 @@ class Parser:
         switches_to_be_initialised = [currentname]
 
         self.current_name = currentname
-        print("Inside switch initialisation method. Current symbol:", self.scanner.symbol_list[self.symbol.type])
-
         self.symbol = self.scanner.get_symbol()
 
-        print("First symbol type after device name:", self.scanner.symbol_list[self.symbol.type])
         if self.symbol.type == self.scanner.EOF:
             return True
 
@@ -1138,7 +1198,6 @@ class Parser:
                     # Make device: args device_id, device_kind, switch level
                     self.devices.make_device(self.names.query(switch), self.devices.SWITCH, self.scanner.keywords_list[self.symbol.id])
 
-                print("Successfully added switch levels. Now fetching what should be semicolon.")
                 self.symbol = self.scanner.get_symbol()
                 if self.symbol == self.scanner.EOF:
                     return True
@@ -1163,11 +1222,8 @@ class Parser:
         """
 
         self.current_name = currentname
-        print("Inside clock initialisation method. Current symbol:", self.scanner.symbol_list[self.symbol.type])
-
         self.symbol = self.scanner.get_symbol()
 
-        print("First symbol type after device name:", self.scanner.symbol_list[self.symbol.type])
         if self.symbol.type == self.scanner.EOF:
             return True
 
@@ -1183,25 +1239,12 @@ class Parser:
                 
                 # Get next symbol - should be number
                 self.symbol = self.scanner.get_symbol()
-            
-                # Check for negative number
-                if self.symbol.type == self.scanner.DASH:
-                    # Get next thing after dash
-                    self.symbol = self.scanner.get_symbol()
-                    print("Symbol after dash:", self.scanner.symbol_list[self.symbol.type])
-                    if self.symbol.type == self.scanner.NUMBER:
-                        self.semantic.printerror(self.semantic.NEGATIVE_NUMBER_ILLEGAL, self.scanner)
-                        return False
-                    else:
-                        self.syntax.printerror(self.syntax.DASH_UNEXPECTED, self.scanner)
-                        return False
                 
                 # Not negative number - good to add
-                elif self.symbol.type == self.scanner.NUMBER:
+                if self.symbol.type == self.scanner.NUMBER:
                     # Make and initialise clock device
                     self.devices.make_device(self.names.query(self.current_name), self.devices.CLOCK, int(self.symbol.id/2))
 
-                    print("Successfully added clock cycle length. Now fetching what should be semicolon.")
                     self.symbol = self.scanner.get_symbol()
                     if self.symbol == self.scanner.EOF:
                         return True
@@ -1219,75 +1262,6 @@ class Parser:
         else:
             self.syntax.printerror(self.syntax.NO_CYCLE_KEYWORD, self.scanner)
             return False
-    
-    def gate_input_name(self, subsection):
-        """Check if gate input name is valid. If so, use Network method to make a connection.
-    
-        Should start when you have already read the name of the device to have an input port and checked if it has a valid name.
-        """
-
-	    # Now check if it's the name of the subsection. If not, semantic error
-        if self.current_name == subsection:
-            self.input_device_id = self.symbol.id
-            # Check for dot
-            self.symbol = self.scanner.get_symbol()
-            if self.symbol.type == self.scanner.DOT:
-                # Found dot, check for name
-                self.symbol = self.scanner.get_symbol()
-                # Check if next symbol after dot is name
-                if self.symbol.type == self.scanner.NAME:
-                    self.input_device_port_id = self.symbol.id
-                    port_name = self.names.get_name_string(self.symbol.id)
-                    if port_name[0] == "I":
-                        for char in port_name[1: len(port_name)]:
-                            if not char.isdigit():
-                                self.syntax.printerror(self.syntax.PORT_NAME_ERROR, self.scanner)
-                                return
-                        # Valid port name found. Use Network to make connection
-                        self.input_device_port = self.names.get_name_string(self.symbol.id)
-                        self.network.make_connection(self.output_device_id, self.output_device_port_id, self.input_device_id, self.input_device_port_id)
-                        
-                    else:
-                        self.syntax.printerror(self.syntax.NO_INPUT_PORT_NAME, self.scanner)
-                        return
-                else:
-                    self.syntax.printerror(self.syntax.NO_INPUT_PORT_NAME, self.scanner)
-                    return
-            else:
-                self.syntax.printerror(self.syntax.MISSING_DOT_INPUT, self.scanner)
-                return
-        else:
-            self.semantic.printerror(self.semantic.WRONG_INPUT_GATE_NAME, self.scanner, subsection, self.names.get_name_string(self.symbol.id))
-            return
-
-    def dtype_input_name(self, subsection):
-        """Check if dtype input name is valid. If so, use Network method to make a connection.
-    
-        Should start when you have already read the name of the device to have an input port and checked if it has a valid name (it is a device saved as a dtype).
-        """
-	    # Now check if it's the name of the subsection. If not, semantic error
-        if self.current_name == subsection:
-            self.input_device_id = self.symbol.id
-            # Check for dot
-            self.symbol = self.scanner.get_symbol()
-            if self.symbol.type == self.scanner.DOT:
-                # Found dot, check for name
-                self.symbol = self.scanner.get_symbol()
-                # Check if next symbol after dot is dtype input
-                if self.symbol.id in self.dtype_inputs:
-                    self.input_device_port_id = self.symbol.id
-                    # Valid port name found. Use Network to make connection
-                    self.network.make_connection(self.output_device_id, self.output_device_port_id, self.input_device_id, self.input_device_port_id)
-                    
-                else:
-                    self.syntax.printerror(self.syntax.NO_INPUT_PORT_NAME, self.scanner)
-                    return
-            else:
-                self.syntax.printerror(self.syntax.MISSING_DOT_INPUT, self.scanner)
-                return
-        else:
-            self.semantic.printerror(self.semantic.WRONG_INPUT_GATE_NAME, self.scanner, subsection, self.names.get_name_string(self.symbol.id))	
-            return
 
 #===========================================================================================================
 #===========================================================================================================
