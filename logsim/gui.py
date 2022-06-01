@@ -18,7 +18,7 @@ from monitors import Monitors
 from scanner import Scanner
 from parse import Parser
 
-from dum import DummyParser
+# from dum import DummyParser
 
 from gui_consoleout_tab import ConsoleOutTab
 from gui_circuitdef_tab import CircuitDefTab
@@ -72,7 +72,7 @@ class Gui(wx.Frame):
 
         self.scanner = Scanner(self.path, names)
         self.parser = Parser(names, devices, network, monitors, self.scanner)
-        self.dum_parser = DummyParser(names, devices, network, monitors, self.scanner)
+        # self.dum_parser = DummyParser(names, devices, network, monitors, self.scanner)
 
         # Create the menu, toolbar and statusbar
         self.create_menu()
@@ -117,7 +117,7 @@ class Gui(wx.Frame):
         self.monitorsPanel = MonitorsTab(notebook, names, devices, monitors, self.canvas, self.statusbar)
 
         self.consoleOutPanel = ConsoleOutTab(notebook, self.path, names, devices, network,
-                      monitors, self.inputsPanel, self.set_gui_state, self.global_vars, self.canvas)
+                      monitors, self.parser, self.inputsPanel, self.set_gui_state, self.global_vars, self.canvas, self.save_file)
 
         with open(self.path, "r") as f:
             self.circuitDefPanel.replace_text(f.read())
