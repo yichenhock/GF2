@@ -191,6 +191,9 @@ class Parser:
 
         return True
 
+#===========================================================================================================
+#===========================================================================================================
+
     def devices_block(self):
         """Operate at level of parsing a device block.
 
@@ -450,40 +453,6 @@ class Parser:
             print ("More stuff found after monitors. Perhaps the order is wrong or more than one line used. The rest will not be read by the parser.")
             return True
 
-    def skip_block(self, block):
-        """Skip entire block and ends up at header of next block, by repeatedly calling skip_line() from the Scanner class.
-
-        Method used for subheader name errors inside connections block, because it is not possible to know what is supposed to be inside a block if the header is poorly named. Start when cursor is on a bad header name. Finish after having read the first symbol of the next block (header).
-        """
-
-        while (self.symbol.id not in self.block_ids and self.symbol.type != self.scanner.EOF):
-            self.scanner.skip_line()
-            self.symbol = self.scanner.get_symbol()
-            if self.symbol.type == self.scanner.EOF:
-                return True
-        
-        if block == "":
-            self.previous_block = "devices"
-        if block == "devices":
-            self.previous_block = "initialise"
-        if block == "initialise":
-            self.previous_block = "connections"
-
-        return False
-    
-    def skip_subheading_block(self):
-        """Skip entire block and ends up at header of next block, by repeatedly calling skip_line() from the Scanner class.
-
-        Method used for subheader name errors inside connections block, because it is not possible to know what is supposed to be inside a block if the header is poorly named. Start when cursor is on a bad header name. Finish after having read the first symbol of the next block (header).
-        """
-
-        while (self.symbol.type != self.scanner.CLOSE_BRACKET):
-            self.scanner.skip_line()
-            self.symbol = self.scanner.get_symbol()
-        # Read first symbol on next line
-        self.symbol = self.scanner.get_symbol()
-        return     
-
     def connections_sub_block(self):
         """Call and read connections block's sub blocks.
         
@@ -556,90 +525,46 @@ class Parser:
         self.symbol = self.scanner.get_symbol()
         print("First symbol of next line: ", self.scanner.symbol_list[self.symbol.type])
 
-        
-    def read_signal(self, block):
-        """Read the name of signal (output) by calling on read_name. 
-        
-        Append the signal name to list in parser __init__ method and sets the output device id and port id (for dtype only). If device type is gate, then port id = None. Also deal with error recovery for case in connection block where subsection close bracket in previous subsection has been missed. Start at the point where first symbol of each line has already been obtained from the scanner and return True if it is a valid output name and False otherwise. If the device name is legit, return the next symbol after the output device name.
+#===========================================================================================================
+#===========================================================================================================
+
+    def skip_block(self, block):
+        """Skip entire block and ends up at header of next block, by repeatedly calling skip_line() from the Scanner class.
+
+        Method used for subheader name errors inside connections block, because it is not possible to know what is supposed to be inside a block if the header is poorly named. Start when cursor is on a bad header name. Finish after having read the first symbol of the next block (header).
         """
 
-        self.read_name("connections")
-        print("Entered read_signal() method. Checking name type:", self.object_dict[self.current_name])
-        print("Read name")
-        # Error recovery for it not name
-        if self.is_legal_name == False:
-            print("Name read is not legit")
-            return False
-
-        # Skip device block, end reached
-        if self.symbol.type == self.scanner.CLOSE_BRACKET:
-            print("Connections block is empty.")
-            return False
-
-        # Type of the object which is receiving inputs
-        self.output_device_id = self.symbol.id
-
-        # GET NEXT SYMBOL AFTER DEVICE NAME (if monitors section and not dtype, this is a comma)
-        self.symbol = self.scanner.get_symbol()
-
-        print("next symbol after name:", self.scanner.symbol_list[self.symbol.type])
-        # Check for if a close bracket has been missed
-        # If close bracket missed, parser stops parsing
-
-        if block == "connections" and self.symbol.type == self.scanner.OPEN_BRACKET and (self.bracket_count%2) == 1:
-            self.syntax.printerror(self.syntax.NO_CLOSE_BRACKET, self.scanner)
-            self.has_missed_bracket = True
-            return False
-        
-        if block == "monitors" and self.symbol.type != self.scanner.DOT:
-            self.monitors_to_add.append(self.current_name)
-            print("State of monitors array:", self.monitors_to_add)
-            return True
-
-        if self.symbol.type == self.scanner.DOT and self.object_dict[self.current_name] == "DTYPE":
-            print("Reading dtype inside read_signal")
+        while (self.symbol.id not in self.block_ids and self.symbol.type != self.scanner.EOF):
+            self.scanner.skip_line()
             self.symbol = self.scanner.get_symbol()
-            if self.symbol.id in self.dtype_outputs:
-
-                self.output_device_port_id = self.symbol.id
-                signal_name = ".".join((self.names.get_name_string(self.output_device_id), self.names.get_name_string(self.output_device_port_id)))
-                print("Signal name read:", signal_name)
-
-                if block == "connections" and signal_name not in self.signal_names:
-                    print("Appending new signal to signal names")
-                    self.signal_names.append(signal_name)
-                # Cannot have multiple of same signal name for d-type
-                elif block == "connections" and signal_name in self.signal_names:
-                    self.semantic.printerror(self.semantic.SIGNAL_ALREADY_EXISTS, self.scanner)
-                    return False
-                
-                # No risk of undefined name here - as long as it's in dtype outputs and the dtype exists, then the signal also exists
-                print(self.signal_names)
-                if block == "monitors":
-                    # Add to list of monitors to add
-                    self.monitors_to_add.append(signal_name)
-
-                # Get next symbol (in case of connnections block)
-                self.symbol = self.scanner.get_symbol()
+            if self.symbol.type == self.scanner.EOF:
                 return True
+        
+        if block == "":
+            self.previous_block = "devices"
+        if block == "devices":
+            self.previous_block = "initialise"
+        if block == "initialise":
+            self.previous_block = "connections"
 
-            else:
-                self.syntax.printerror(self.syntax.DTYPE_OUTPUT_NAME_ERROR, self.scanner)
-                return False
-        
-        elif self.symbol.type == self.scanner.DOT and self.object_dict[self.current_name] != "DTYPE":
-            self.syntax.printerror(self.syntax.DOT_UNEXPECTED, self.scanner)
-            return False
-        
-        # If not dtype output name, then parser logic for next thing after output name passed onto connection_definition method
-        elif block == "connections":
-            self.output_device_port_id = None
-            if self.names.get_name_string(self.output_device_id) not in self.signal_names:
-                self.signal_names.append(self.names.get_name_string(self.output_device_id))
-            return True
+        return False
+    
+    def skip_subheading_block(self):
+        """Skip entire block and ends up at header of next block, by repeatedly calling skip_line() from the Scanner class.
+
+        Method used for subheader name errors inside connections block, because it is not possible to know what is supposed to be inside a block if the header is poorly named. Start when cursor is on a bad header name. Finish after having read the first symbol of the next block (header).
+        """
+
+        while (self.symbol.type != self.scanner.CLOSE_BRACKET):
+            self.scanner.skip_line()
+            self.symbol = self.scanner.get_symbol()
+        # Read first symbol on next line
+        self.symbol = self.scanner.get_symbol()
+        return     
 
 #===========================================================================================================
 #===========================================================================================================
+
     def connection_definition(self, subsection, device_type):
         """Parse one line of connection definition for a gate subsection.
 
@@ -762,100 +687,6 @@ class Parser:
         else:
             self.syntax.printerror(self.syntax.NO_CONNECTION_KEYWORD, self.scanner, "to or is")
             return
-
-    def gate_input_name(self, subsection):
-        """Check if gate input name is valid. If so, use Network method to make a connection.
-    
-        Start when already obtained the name of the device to have an input port. This function checks if it matches the section subheader.
-        Ends without obtaining next symbol.
-
-        Returns
-        --------
-
-        'True' or 'False': used to track if error recovery is necessary in caller method.
-        """
-
-        print("Checking gate input name for device and port")
-        # Error if input gate name does not match subsection header
-        if self.names.get_name_string(self.symbol.id) != subsection:
-            self.semantic.printerror(self.semantic.WRONG_INPUT_GATE_NAME, self.scanner, subsection, self.names.get_name_string(self.symbol.id))
-            return False
-
-        # Set input device id
-        self.input_device_id = self.symbol.id
-
-        # Get what should be a dot
-        self.symbol = self.scanner.get_symbol()
-        # Check if it is a dot
-        if self.symbol.type == self.scanner.DOT:
-            print("Found input name dot. Retrieving port name")
-            self.symbol = self.scanner.get_symbol()
-            print("Check if next symbol after dot is name")
-            if self.symbol.type == self.scanner.NAME:
-                print("Setting input port id")
-                self.input_device_port_id = self.symbol.id
-                port_name = self.names.get_name_string(self.symbol.id)
-                if port_name[0] == "I":
-                    for char in port_name[1: len(port_name)]:
-                        if not char.isdigit():
-                            self.syntax.printerror(self.syntax.PORT_NAME_ERROR, self.scanner)
-                            return
-                    # Valid port name found. Use Network to make connection
-                    self.input_device_port = self.names.get_name_string(self.symbol.id)
-                    # Only make connection in case where port id and device id exist
-                    if self.devices.get_signal_name(self.input_device_id, self.input_device_port_id) != None:
-                        self.network.make_connection(self.output_device_id, self.output_device_port_id, self.input_device_id, self.input_device_port_id)
-                        print("====================================gate connection made! :D")
-                    elif self.devices.get_signal_name(self.input_device_id, self.input_device_port_id) == None:
-                        self.semantic.printerror(self.semantic.PORT_DOES_NOT_EXIST, self.scanner)
-                        return False
-                else:
-                    self.syntax.printerror(self.syntax.PORT_NAME_ERROR, self.scanner)
-                    return False
-            else:
-                self.syntax.printerror(self.syntax.NO_INPUT_PORT_NAME, self.scanner)
-                return False
-        else:
-            self.syntax.printerror(self.syntax.MISSING_DOT_INPUT, self.scanner)
-            return False
-
-
-    def dtype_input_name(self, subsection):
-        """Check if dtype input name is valid. If so, use Network method to make a connection.
-    
-        Should start when you have already read the name of the device to have an input port and checked if it has a valid name (it is a device saved as a dtype).
-        """
-
-        print("Inside dtype_input_name. Checking dtype input name for device and port")
-        # Error if input gate name does not match subsection header
-        if self.names.get_name_string(self.symbol.id) != subsection:
-            self.semantic.printerror(self.semantic.WRONG_INPUT_GATE_NAME, self.scanner, subsection, self.names.get_name_string(self.symbol.id))
-            return
-
-        # Set input device id
-        self.input_device_id = self.symbol.id
-
-        # Get what should be a dot
-        self.symbol = self.scanner.get_symbol()
-        if self.symbol.type == self.scanner.DOT:
-            # Found dot, check for name
-            self.symbol = self.scanner.get_symbol()
-            # Check if next symbol after dot is dtype input
-            if self.symbol.id in self.dtype_inputs:
-
-                self.input_device_port_id = self.symbol.id
-
-                # Valid port name found. Use Network to make connection
-                self.network.make_connection(self.output_device_id, self.output_device_port_id, self.input_device_id, self.input_device_port_id)
-                print("===============================================dtype connection made! :D")
-                
-            else:
-                self.syntax.printerror(self.syntax.PORT_NAME_ERROR, self.scanner)
-                return
-        else:
-            self.syntax.printerror(self.syntax.MISSING_DOT_INPUT, self.scanner)
-            return
-
 
     def device_definition(self, currentname):
         """Parse one line of device definition.
@@ -1397,6 +1228,183 @@ class Parser:
             self.syntax.printerror(self.syntax.NO_DEVICE_NAME, self.scanner)
             self.is_legal_name = False
             return
+
+    def gate_input_name(self, subsection):
+        """Check if gate input name is valid. If so, use Network method to make a connection.
+    
+        Start when already obtained the name of the device to have an input port. This function checks if it matches the section subheader.
+        Ends without obtaining next symbol.
+
+        Returns
+        --------
+
+        'True' or 'False': used to track if error recovery is necessary in caller method.
+        """
+
+        print("Checking gate input name for device and port")
+        # Error if input gate name does not match subsection header
+        if self.names.get_name_string(self.symbol.id) != subsection:
+            self.semantic.printerror(self.semantic.WRONG_INPUT_GATE_NAME, self.scanner, subsection, self.names.get_name_string(self.symbol.id))
+            return False
+
+        # Set input device id
+        self.input_device_id = self.symbol.id
+
+        # Get what should be a dot
+        self.symbol = self.scanner.get_symbol()
+        # Check if it is a dot
+        if self.symbol.type == self.scanner.DOT:
+            print("Found input name dot. Retrieving port name")
+            self.symbol = self.scanner.get_symbol()
+            print("Check if next symbol after dot is name")
+            if self.symbol.type == self.scanner.NAME:
+                print("Setting input port id")
+                self.input_device_port_id = self.symbol.id
+                port_name = self.names.get_name_string(self.symbol.id)
+                if port_name[0] == "I":
+                    for char in port_name[1: len(port_name)]:
+                        if not char.isdigit():
+                            self.syntax.printerror(self.syntax.PORT_NAME_ERROR, self.scanner)
+                            return
+                    # Valid port name found. Use Network to make connection
+                    self.input_device_port = self.names.get_name_string(self.symbol.id)
+                    # Only make connection in case where port id and device id exist
+                    if self.devices.get_signal_name(self.input_device_id, self.input_device_port_id) != None:
+                        self.network.make_connection(self.output_device_id, self.output_device_port_id, self.input_device_id, self.input_device_port_id)
+                        print("====================================gate connection made! :D")
+                    elif self.devices.get_signal_name(self.input_device_id, self.input_device_port_id) == None:
+                        self.semantic.printerror(self.semantic.PORT_DOES_NOT_EXIST, self.scanner)
+                        return False
+                else:
+                    self.syntax.printerror(self.syntax.PORT_NAME_ERROR, self.scanner)
+                    return False
+            else:
+                self.syntax.printerror(self.syntax.NO_INPUT_PORT_NAME, self.scanner)
+                return False
+        else:
+            self.syntax.printerror(self.syntax.MISSING_DOT_INPUT, self.scanner)
+            return False
+
+
+    def dtype_input_name(self, subsection):
+        """Check if dtype input name is valid. If so, use Network method to make a connection.
+    
+        Should start when you have already read the name of the device to have an input port and checked if it has a valid name (it is a device saved as a dtype).
+        """
+
+        print("Inside dtype_input_name. Checking dtype input name for device and port")
+        # Error if input gate name does not match subsection header
+        if self.names.get_name_string(self.symbol.id) != subsection:
+            self.semantic.printerror(self.semantic.WRONG_INPUT_GATE_NAME, self.scanner, subsection, self.names.get_name_string(self.symbol.id))
+            return
+
+        # Set input device id
+        self.input_device_id = self.symbol.id
+
+        # Get what should be a dot
+        self.symbol = self.scanner.get_symbol()
+        if self.symbol.type == self.scanner.DOT:
+            # Found dot, check for name
+            self.symbol = self.scanner.get_symbol()
+            # Check if next symbol after dot is dtype input
+            if self.symbol.id in self.dtype_inputs:
+
+                self.input_device_port_id = self.symbol.id
+
+                # Valid port name found. Use Network to make connection
+                self.network.make_connection(self.output_device_id, self.output_device_port_id, self.input_device_id, self.input_device_port_id)
+                print("===============================================dtype connection made! :D")
+                
+            else:
+                self.syntax.printerror(self.syntax.PORT_NAME_ERROR, self.scanner)
+                return
+        else:
+            self.syntax.printerror(self.syntax.MISSING_DOT_INPUT, self.scanner)
+            return
+
+    def read_signal(self, block):
+        """Read the name of signal (output) by calling on read_name. 
+        
+        Append the signal name to list in parser __init__ method and sets the output device id and port id (for dtype only). If device type is gate, then port id = None. Also deal with error recovery for case in connection block where subsection close bracket in previous subsection has been missed. Start at the point where first symbol of each line has already been obtained from the scanner and return True if it is a valid output name and False otherwise. If the device name is legit, return the next symbol after the output device name.
+        """
+
+        self.read_name("connections")
+        print("Entered read_signal() method. Checking name type:", self.object_dict[self.current_name])
+        print("Read name")
+        # Error recovery for it not name
+        if self.is_legal_name == False:
+            print("Name read is not legit")
+            return False
+
+        # Skip device block, end reached
+        if self.symbol.type == self.scanner.CLOSE_BRACKET:
+            print("Connections block is empty.")
+            return False
+
+        # Type of the object which is receiving inputs
+        self.output_device_id = self.symbol.id
+
+        # GET NEXT SYMBOL AFTER DEVICE NAME (if monitors section and not dtype, this is a comma)
+        self.symbol = self.scanner.get_symbol()
+
+        print("next symbol after name:", self.scanner.symbol_list[self.symbol.type])
+        # Check for if a close bracket has been missed
+        # If close bracket missed, parser stops parsing
+
+        if block == "connections" and self.symbol.type == self.scanner.OPEN_BRACKET and (self.bracket_count%2) == 1:
+            self.syntax.printerror(self.syntax.NO_CLOSE_BRACKET, self.scanner)
+            self.has_missed_bracket = True
+            return False
+        
+        if block == "monitors" and self.symbol.type != self.scanner.DOT:
+            self.monitors_to_add.append(self.current_name)
+            print("State of monitors array:", self.monitors_to_add)
+            return True
+
+        if self.symbol.type == self.scanner.DOT and self.object_dict[self.current_name] == "DTYPE":
+            print("Reading dtype inside read_signal")
+            self.symbol = self.scanner.get_symbol()
+            if self.symbol.id in self.dtype_outputs:
+
+                self.output_device_port_id = self.symbol.id
+                signal_name = ".".join((self.names.get_name_string(self.output_device_id), self.names.get_name_string(self.output_device_port_id)))
+                print("Signal name read:", signal_name)
+
+                if block == "connections" and signal_name not in self.signal_names:
+                    print("Appending new signal to signal names")
+                    self.signal_names.append(signal_name)
+                # Cannot have multiple of same signal name for d-type
+                elif block == "connections" and signal_name in self.signal_names:
+                    self.semantic.printerror(self.semantic.SIGNAL_ALREADY_EXISTS, self.scanner)
+                    return False
+                
+                # No risk of undefined name here - as long as it's in dtype outputs and the dtype exists, then the signal also exists
+                print(self.signal_names)
+                if block == "monitors":
+                    # Add to list of monitors to add
+                    self.monitors_to_add.append(signal_name)
+
+                # Get next symbol (in case of connnections block)
+                self.symbol = self.scanner.get_symbol()
+                return True
+
+            else:
+                self.syntax.printerror(self.syntax.DTYPE_OUTPUT_NAME_ERROR, self.scanner)
+                return False
+        
+        elif self.symbol.type == self.scanner.DOT and self.object_dict[self.current_name] != "DTYPE":
+            self.syntax.printerror(self.syntax.DOT_UNEXPECTED, self.scanner)
+            return False
+        
+        # If not dtype output name, then parser logic for next thing after output name passed onto connection_definition method
+        elif block == "connections":
+            self.output_device_port_id = None
+            if self.names.get_name_string(self.output_device_id) not in self.signal_names:
+                self.signal_names.append(self.names.get_name_string(self.output_device_id))
+            return True
+
+#===========================================================================================================
+#===========================================================================================================
 
     def parse_network(self):
         """Parse the circuit definition file."""
