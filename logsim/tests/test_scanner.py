@@ -131,10 +131,11 @@ def test_get_symbol(new_test_scanner):
     assert scanner.get_symbol().type == scanner.EOF
 
     # Check further get_symbol calls still return EOF
-    assert scanner.get_symbol().type == scanner.EOF 
+    assert scanner.get_symbol().type == scanner.EOF
 
 
 def test_print_error_line(new_test_scanner, capsys):
+    """Test to see that print_error_line prints error markers correctly."""
     scanner = new_test_scanner
     safety_counter = 0
     symbol = scanner.get_symbol()
@@ -159,9 +160,9 @@ def test_print_error_line(new_test_scanner, capsys):
                         invalid_character_location = current_character_location
 
                 elif current_line == 2:
-                    current_character_location += 1 
+                    current_character_location += 1
                     if letter == "^":
-                            error_pointer_location = current_character_location
+                        error_pointer_location = current_character_location
 
                 if letter == "\n":
                     current_line += 1
