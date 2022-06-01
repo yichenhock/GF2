@@ -9,6 +9,9 @@ import sys
 from numpy import save
 import wx
 
+from scanner import Scanner
+from parse import Parser
+
 class RedirectText(object):
     def __init__(self,aWxTextCtrl):
         self.out = aWxTextCtrl
@@ -142,6 +145,10 @@ class ConsoleOutTab(wx.Panel):
         # save file first 
         self.save_file(self.path)
 
+        # reinitialise the scanner and parser
+        self.scanner = Scanner(self.path, self.names)
+        self.parser = Parser(self.names, self.devices, self.network, self.monitors, self.scanner)
+
         if self.parser.parse_network(): 
 
             self.global_vars.cycles_completed = 0
@@ -178,7 +185,7 @@ class ConsoleOutTab(wx.Panel):
                 print(" ".join(["Continuing for", str(cycles), "cycles.",
                                 "Total:", str(self.global_vars.cycles_completed)]))
                 self.canvas.render_signals()
-                
+                self.set_gui_state(True)
 
     def read_command(self):
         """Return the first non-whitespace character."""

@@ -274,12 +274,25 @@ class Gui(wx.Frame):
             else: 
                     self.Close(True)
 
-    def on_run_button(self):
+    def parse(self): 
         # save the file first
         self.save_file(self.path)
 
-        # parse the network 
+        # reinitialise the scanner and parser
+        self.scanner = Scanner(self.path, self.names)
+        self.parser = Parser(self.names, self.devices, self.network, self.monitors, self.scanner)
+
         if self.parser.parse_network(): 
+            return True
+        else:
+            # error has occured while parsing 
+            wx.MessageBox("Error while parsing circuit definition. See error log in Output.",
+                          "Simulation Failed", wx.ICON_ERROR | wx.OK)
+            return False
+
+    def on_run_button(self):
+        # parse the network 
+        if self.parse(): 
             if not self.monitors.monitors_dictionary:
                 self.statusbar.SetStatusText("No monitors.")
                 return
@@ -288,6 +301,7 @@ class Gui(wx.Frame):
             self.update_statusbar("Run button pressed.")
             self.set_gui_state(sim_running=True)
             self.canvas.render_signals(flush_pan=True)
+            
         else: 
             # error has occured while parsing 
             wx.MessageBox("Error while parsing circuit definition. See error log in Output.",
@@ -298,6 +312,7 @@ class Gui(wx.Frame):
         self.consoleOutPanel.continue_command(True, self.spin.GetValue())
         self.update_statusbar("Continue button pressed.")
         self.canvas.render_signals(flush_pan=True)
+        self.set_gui_state(sim_running=True)
     
     def on_reset_button(self):
         # self.cycles_completed = 0
@@ -314,6 +329,10 @@ class Gui(wx.Frame):
         self.ToolBar.EnableTool(5, sim_running) # enable continue button
         self.circuitDefPanel.set_textbox_state(not sim_running) # text box only editable when the simulation is not running
         self.monitorsPanel.enable_monitor(not sim_running)
+        # update the inputs panel 
+        self.inputsPanel.refresh_list()
+        # update the monitors panel
+        self.monitorsPanel.initialise_monitor_list()
 
     def on_help_button(self): 
         wx.MessageBox("Press the buttons :D",
@@ -405,7 +424,6 @@ class Gui(wx.Frame):
                 else:
                     print('File created successfully in {}'.format(pathname))
                     self.load_file(pathname)
-
 
     def save_plot(self): 
         """
