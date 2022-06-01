@@ -1395,6 +1395,11 @@ class Parser:
         self.eofcheck = self.circuit_description()
 
         if self.eofcheck == True:
-            print("end of file reached")
             self.scanner.file.close()
-        return True
+
+        self.total_errors = self.semantic.error_code_count + self.syntax.error_code_count
+        if self.total_errors != 0:
+            print("Parser reached end of file with {} errors".format(self.total_errors))
+            return False
+        else:
+            return True
