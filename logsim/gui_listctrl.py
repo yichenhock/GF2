@@ -42,11 +42,11 @@ class ListCtrl(ULC.UltimateListCtrl, ListCtrlAutoWidthMixin):
         `None`
         """
         ListCtrlAutoWidthMixin._doResize(self)
-        if self.GetScrolledWin().HasScrollbar(wx.VERTICAL):
-            scrollbar_width = wx.SystemSettings.GetMetric(wx.SYS_VSCROLL_X)
-            # wx.SystemSettings.GetMetric(wx.SYS_VSCROLL_X) gives the
-            # vertical scrollbar width
-            self.SetColumnWidth(
-                self._resizeCol,
-                self.GetColumnWidth(self._resizeCol) - scrollbar_width
-            )
+        # if self.GetScrolledWin().HasScrollbar(wx.VERTICAL):
+        #     scrollbar_width = wx.SystemSettings.GetMetric(wx.SYS_VSCROLL_X)
+        #     # wx.SystemSettings.GetMetric(wx.SYS_VSCROLL_X) gives the
+        #     # vertical scrollbar width
+        #     self.SetColumnWidth(
+        #         self._resizeCol,
+        #         self.GetColumnWidth(self._resizeCol) - scrollbar_width
+        #     )
