@@ -54,6 +54,8 @@ class Gui(wx.Frame):
         """Initialise widgets and layout."""
         super().__init__(parent=None, title=title, size=(1024, 768))
 
+        self.SetIcon(wx.Icon('logsim/imgs/favicon.ico'))
+
         self.path = path
         self.names = names
         self.devices = devices
