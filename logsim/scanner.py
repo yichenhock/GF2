@@ -134,13 +134,13 @@ class Scanner:
         print(error_message)
         self.skip_line()
 
-    def skip_line(self): 
+    def skip_line(self):
         """Skips until next semicolon, bracket or EOF."""
         while self.current_character not in [";", "(", ")", ""]:
             self.advance()
         self.advance()
         return
-        
+
     def get_name(self):
         """Read and returns the next name (word made up of only letters)."""
         name = ""
