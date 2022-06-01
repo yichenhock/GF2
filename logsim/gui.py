@@ -7,9 +7,7 @@ Classes:
 --------
 Gui - configures the main window and all the widgets.
 """
-from importlib.resources import path
 import sys
-from tabnanny import check
 import wx
 import wx.lib.agw.aui as aui
 
@@ -19,6 +17,8 @@ from network import Network
 from monitors import Monitors
 from scanner import Scanner
 from parse import Parser
+
+from dum import DummyParser
 
 from gui_consoleout_tab import ConsoleOutTab
 from gui_circuitdef_tab import CircuitDefTab
@@ -64,6 +64,16 @@ class Gui(wx.Frame):
 
         self.global_vars = GlobalVars()
 
+        if self.path == None: # open up the file dialog
+            if not self.open_file():
+                print("Application must be run with a circuit definition file.")
+                self.Close(True) # exit the application
+                sys.exit()
+
+        self.scanner = Scanner(self.path, names)
+        self.parser = Parser(names, devices, network, monitors, self.scanner)
+        self.dum_parser = DummyParser(names, devices, network, monitors, self.scanner)
+
         # Create the menu, toolbar and statusbar
         self.create_menu()
         self.create_tb()
@@ -105,9 +115,12 @@ class Gui(wx.Frame):
         self.circuitDefPanel = CircuitDefTab(notebook, self.path, self.statusbar, self.global_vars)
         self.inputsPanel = InputsTab(notebook, names, devices, self.canvas, self.statusbar)
         self.monitorsPanel = MonitorsTab(notebook, names, devices, monitors, self.canvas, self.statusbar)
-        
+
         self.consoleOutPanel = ConsoleOutTab(notebook, self.path, names, devices, network,
                       monitors, self.inputsPanel, self.set_gui_state, self.global_vars, self.canvas)
+
+        with open(self.path, "r") as f:
+            self.circuitDefPanel.replace_text(f.read())
 
         notebook.AddPage(self.consoleOutPanel, "Output", True)
         notebook.AddPage(self.circuitDefPanel, "Circuit Definition", False)
@@ -329,11 +342,11 @@ class Gui(wx.Frame):
                             style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST) as \
                     file_dialog:
                 if file_dialog.ShowModal() == wx.ID_CANCEL:
-                    return  # the user changed their mind
+                    return False# the user changed their mind
 
                 # Proceed loading the file chosen by the user
                 pathname = file_dialog.GetPath()
-                self.load_file(pathname)
+                return self.load_file(pathname)
 
     def load_file(self, pathname): 
         try: 
@@ -341,13 +354,17 @@ class Gui(wx.Frame):
         except OSError: 
             wx.MessageBox("Error opening file.",
                         "Error", wx.ICON_ERROR | wx.OK)
-            return
+            return False
         self.path = pathname
-        self.statusbar.SetStatusText(pathname, 1)
+        try: 
+            self.statusbar.SetStatusText(pathname, 1)
+            self.circuitDefPanel.replace_text(f.read())
+        except AttributeError:
+            pass
         # write to circuit definition panel
-        self.circuitDefPanel.replace_text(f.read())
         self.global_vars.def_edited = False
         f.close()
+        return True
 
 
     def create_file(self): 
