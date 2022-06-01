@@ -36,7 +36,7 @@ class SemanticError(Scanner):
         "The device name {} provided in the monitors section has not been defined in the devices section.".format(symbol1), 
         "The signal name defined in connections section already exists."]
 
-        self.message = "SyntaxError: {}".format(self.message_list[id])
+        self.message = "ParserSemanticError: {}".format(self.message_list[id])
         
         # Print error to terminal using method in Scanner class.
         # Skip line to resume parsing after the next semicolon.
@@ -109,7 +109,7 @@ class SyntaxError(Scanner):
 
         self.scanner = scanner
 
-        self.message = "SyntaxError: {}".format(self.message_list[id])
+        self.message = "ParserSyntaxError: {}".format(self.message_list[id])
         
         # Print error
         # Do not skip line
