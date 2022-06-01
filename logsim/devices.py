@@ -36,7 +36,6 @@ class Device:
         # outputs dictionary stores {output_id: output_signal}
         self.outputs = {}
 
-        self.input_number = None
         self.device_kind = None
         self.clock_half_period = None
         self.clock_counter = None

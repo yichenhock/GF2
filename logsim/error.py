@@ -15,9 +15,9 @@ class SemanticError(Scanner):
     def __init__(self):
         """Set parameters to report error."""
 
-        self.id_list = [self.WRONG_GATE_FOR_NAME, self.NAME_ALREADY_EXISTS, self.NAME_FOR_INITIALISE_NOT_DEFINED, self.NAME_FOR_CONNECTIONS_NOT_DEFINED, self.WRONG_INPUT_GATE_NAME, self.NAME_FOR_MONITORS_NOT_DEFINED] = range(6)
+        self.id_list = [self.WRONG_GATE_FOR_NAME, self.NAME_ALREADY_EXISTS, self.NAME_FOR_INITIALISE_NOT_DEFINED, self.NAME_FOR_CONNECTIONS_NOT_DEFINED, self.WRONG_INPUT_GATE_NAME, self.NAME_FOR_MONITORS_NOT_DEFINED, self.SIGNAL_ALREADY_EXISTS] = range(7)
 
-        self.error_type_list = ["WRONG_GATE_FOR_NAME", "NAME_ALREADY_EXISTS", "NAME_FOR_INITIALISE_NOT_DEFINED", "NAME_FOR_CONNECTIONS_NOT_DEFINED", "WRONG_INPUT_GATE_NAME", "NAME_FOR_MONITORS_NOT_DEFINED"]
+        self.error_type_list = ["WRONG_GATE_FOR_NAME", "NAME_ALREADY_EXISTS", "NAME_FOR_INITIALISE_NOT_DEFINED", "NAME_FOR_CONNECTIONS_NOT_DEFINED", "WRONG_INPUT_GATE_NAME", "NAME_FOR_MONITORS_NOT_DEFINED", "SIGNAL_ALREADY_EXISTS"]
 
     def printerror(self, id, scanner, symbol1=None, symbol2=None):
         """Print error message to terminal and skip line.
@@ -33,7 +33,8 @@ class SemanticError(Scanner):
         "The device name {} provided in the initialisation section has not been defined in the devices section.".format(symbol1), 
         "The device name {} provided in the connections section has not been defined in the devices section.".format(symbol1), 
         "Wrong input gate name for connection section subheader. The subheader name should be the name of the device receiving inputs. Expected {}, got {}.".format(symbol1, symbol2), 
-        "The device name {} provided in the monitors section has not been defined in the devices section.".format(symbol1)]
+        "The device name {} provided in the monitors section has not been defined in the devices section.".format(symbol1), 
+        "The signal name defined in connections section already exists."]
 
         self.message = "SyntaxError: {}".format(self.message_list[id])
         
