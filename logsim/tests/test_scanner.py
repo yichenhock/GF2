@@ -5,7 +5,6 @@ from logsim.names import Names
 from logsim.scanner import Scanner, Symbol
 
 
-
 @pytest.fixture
 def new_names():
     """Return a new instance of the Names class."""
@@ -16,8 +15,8 @@ def new_names():
 def new_test_scanner():
     """Return a new instance of the Scanner class with predefined path."""
     new_names = Names()
-    path = "logsim/tests/test_scanner.txt" # Text file containing scanner tests for get_symbol
-
+    # Text file containing scanner tests for get_symbol
+    path = "logsim/tests/test_scanner.txt"
     return Scanner(path, new_names)
 
 
@@ -105,7 +104,8 @@ def test_get_symbol(new_test_scanner):
     """Test to see if get_symbol returns the correct symbol."""
     scanner = new_test_scanner
     # Skip comment 1
-    assert scanner.get_symbol().type == scanner.COMMA # Test each symbol type is recognised
+    # Test each symbol type is recognised
+    assert scanner.get_symbol().type == scanner.COMMA
     assert scanner.get_symbol().type == scanner.DOT
     assert scanner.get_symbol().type == scanner.SEMICOLON
     assert scanner.get_symbol().type == scanner.EQUALS
@@ -115,14 +115,14 @@ def test_get_symbol(new_test_scanner):
     assert scanner.get_symbol().type == scanner.NAME
     # Skip comment 2 and skip spaces + line breaks
 
-    for i in range(30): # Test for keywords
+    for i in range(30):  # Test for keywords
         symbol = scanner.get_symbol()
-        assert symbol.type == scanner.KEYWORD 
-        assert symbol.id == i # Correct keyword
+        assert symbol.type == scanner.KEYWORD
+        assert symbol.id == i  # Correct keyword
 
     # Check the erroneous line
     assert scanner.get_symbol().type == scanner.NAME
-    assert scanner.get_symbol().type == None # Invalid Character
+    assert scanner.get_symbol().type is None  # Invalid Character
     assert scanner.get_symbol().type == scanner.NAME
     assert scanner.get_symbol().type == scanner.SEMICOLON
     assert scanner.get_symbol().type == scanner.DOT
@@ -131,19 +131,20 @@ def test_get_symbol(new_test_scanner):
     assert scanner.get_symbol().type == scanner.EOF
 
     # Check further get_symbol calls still return EOF
-    assert scanner.get_symbol().type == scanner.EOF 
+    assert scanner.get_symbol().type == scanner.EOF
 
 
 def test_print_error_line(new_test_scanner, capsys):
+    """Test to see that print_error_line prints error markers correctly."""
     scanner = new_test_scanner
     safety_counter = 0
     symbol = scanner.get_symbol()
 
     while symbol.type != scanner.EOF:
-        if safety_counter > 10000: # Prevent infinite loop
+        if safety_counter > 10000:  # Prevent infinite loop
             break
         # Search for invalid character
-        if symbol.type == None:
+        if symbol.type is None:
             scanner.print_error_line("Invalid Character")
             captured = capsys.readouterr()
 
@@ -157,18 +158,18 @@ def test_print_error_line(new_test_scanner, capsys):
                     current_character_location += 1
                     if letter == "-":
                         invalid_character_location = current_character_location
-                        
+
                 elif current_line == 2:
-                    current_character_location += 1 
+                    current_character_location += 1
                     if letter == "^":
-                            error_pointer_location = current_character_location
-                                          
+                        error_pointer_location = current_character_location
+
                 if letter == "\n":
                     current_line += 1
                     current_character_location = -1
-            
-            assert invalid_character_location == 5 # Location of "-"
-            assert error_pointer_location == 5 # Location of "^"
+
+            assert invalid_character_location == 5  # Location of "-"
+            assert error_pointer_location == 5  # Location of "^"
 
             # Test that print_error_line skips rest of line after being called
             symbol = scanner.get_symbol()

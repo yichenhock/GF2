@@ -1,4 +1,3 @@
-
 """Read the circuit definition file and translate the characters into symbols.
 
 Used in the Logic Simulator project to read the characters in the definition
@@ -65,7 +64,6 @@ class Scanner:
         self.names = names
 
         # Define all symbol types
-        self.symbol_list = [",", ".", ";", "=", "(", ")", "keyword", "number", "name", "eof"]
         self.symbol_type_list = [self.COMMA, self.DOT, self.SEMICOLON,
                                  self.EQUALS, self.OPEN_BRACKET,
                                  self.CLOSE_BRACKET, self.KEYWORD,
@@ -112,7 +110,7 @@ class Scanner:
         return
 
     def skip_spaces(self):
-        """Skips until non-space character is reached."""
+        """Skips until non-space character is reached, also skips comments."""
         while self.current_character.isspace():
             self.advance()
         return
@@ -128,21 +126,21 @@ class Scanner:
         """Print current line with marker pointing where the error is."""
         print("Error type:", error_type)
         print(self.lines[self.current_line])
-        print(" " * (self.current_character_position - 1) + "^ Error here")
+        print(" " * (self.current_character_position - 1) + "^ Error Here")
         print(error_message)
         self.skip_line()
 
-    def skip_line(self): 
+    def skip_line(self):
         """Skips until next semicolon, bracket or EOF."""
         while self.current_character not in [";", "(", ")", ""]:
             self.advance()
         self.advance()
         return
-        
+
     def get_name(self):
         """Read and returns the next name (word made up of only letters)."""
         name = ""
-        while self.current_character.isalnum():
+        while self.current_character.isalpha():
             name += self.current_character
             self.advance()
         return name
@@ -200,7 +198,7 @@ class Scanner:
 
         elif self.current_character == "":  # End of File
             symbol.type = self.EOF
-        
+
         elif self.current_character == "#":
             self.skip_comment()
             symbol = self.get_symbol()
