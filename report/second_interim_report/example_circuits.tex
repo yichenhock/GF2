@@ -1,0 +1,326 @@
+%% LyX 2.2.4 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[english]{article}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage[latin9]{inputenc}
+\usepackage{geometry}
+\geometry{verbose,tmargin=3cm,bmargin=3cm,lmargin=2.5cm,rmargin=2.5cm}
+\usepackage{textcomp}
+\usepackage{amsmath, amstext}
+\usepackage{graphicx, float}
+\usepackage{pdfpages}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{pdfpages}
+\usepackage{fancyvrb}
+\usepackage{pdflscape}
+\usepackage{listings,multicol}
+
+
+
+\begin{document}
+
+\subsection*{Example Circuit A --- Simple Circuit}
+
+\vspace{-0.4cm}
+\begin{figure}[H]
+    \begin{center}
+    \includegraphics[width = 0.7\textwidth]{Simple Circuit.png}
+    \vspace{-1cm}
+    \caption{XOR Gate}
+    \end{center}
+    \end{figure}
+
+\begin{Verbatim}[numbers=left,xleftmargin=5mm]
+    #Example circuit - Simple circuit (As per first interim report);
+    #XOR gate;
+    
+    devices(
+        a is OR;
+        b is NAND;
+        c is AND;
+        sw1, sw2 are SWITCH;
+    )
+    
+    initialise(
+        sw1, sw2 are HIGH;
+        a, b, c have 2 inputs;
+    )
+    
+    connections(
+        a(
+            sw1 is connected to a.I1;
+            sw2 is connected to a.I2;
+        )
+    
+        b(  
+            sw1 is connected to b.I1;
+            sw2 is connected to b.I2;
+        )
+    
+        c(  
+            a is connected to c.I1;
+            b is connected to c.I2;
+        )
+    )
+    
+    monitors(
+        c;
+    )
+\end{Verbatim}
+
+
+\newpage
+\subsection*{Example Circuit B --- Complex Circuit}
+
+\vspace{-0.4cm}
+\begin{figure}[H]
+    \begin{center}
+    \includegraphics[width = \textwidth]{Complex Circuit.png}
+    \caption{2 Bit Counter with Outputs XOR}
+    \end{center}
+
+    \end{figure}
+
+\begin{Verbatim}[numbers=left,xleftmargin=5mm]
+    #Example circuit - Complex circuit (As per first interim report);
+    #2 bit counter with outputs XOR;
+    
+    devices(
+        a is NOR;
+        b, c, d, e are NAND;
+        f is DTYPE;
+        g is XOR;
+        sw1, sw2 are SWITCH;
+        clk1 is CLOCK;
+    )
+    
+    initialise(
+        a, b, c, d, e, g have 2 inputs;
+        sw1, sw2 are LOW;
+        clk1 cycle length 5;
+    )
+    
+    connections(
+        a(
+            e to a.I1;
+            e to a.I2;
+        )
+    
+        b(  
+            e to b.I1;
+            clk1 to b.I2;
+        )
+    
+        c(  
+            clk1 to c.I1;
+            a to c.I2;
+        )
+    
+        d(
+            b to d.I1;
+            e to d.I2;
+        )
+    
+        e(  
+            d to e.I1;
+            c to e.I2;
+        )
+    
+        f(
+            f.QBAR to f.DATA;
+            d to f.CLK;
+            sw1 to f.SET;
+            sw2 to f.CLEAR;
+        )
+    
+        g(  
+            d to g.I1;
+            f.Q to g.I2;
+        )
+    )
+    
+    monitors(
+        d, f.Q, g;
+    )
+\end{Verbatim}
+
+\newpage
+\subsection*{Example Circuit C --- 50 Switches}
+
+\vspace{-0.4cm}
+\begin{figure}[H]
+    \begin{center}
+    \includegraphics[width = \textwidth]{50 Switches.png}
+
+    \caption{50 Switches}
+    \end{center}
+    \end{figure}
+
+\begin{Verbatim}[numbers=left,xleftmargin=5mm]
+    #Example circuit - 50 switches;
+
+    devices(
+        sw1, sw2, sw3, sw4, sw5, sw6, sw7, sw8, sw9, sw10,
+        sw11, sw12, sw13, sw14, sw15, sw16, sw17, sw18, sw19, sw20,
+        sw21, sw22, sw23, sw24, sw25, sw26, sw27, sw28, sw29, sw30,
+        sw31, sw32, sw33, sw34, sw35, sw36, sw37, sw38, sw39, sw40,
+        sw41, sw42, sw43, sw44, sw45, sw46, sw47, sw48, sw49, sw50 are SWITCH;
+    )
+    
+    initialise(
+        sw1, sw2, sw3, sw4, sw5, sw6, sw7, sw8, sw9, sw10,
+        sw11, sw12, sw13, sw14, sw15, sw16, sw17, sw18, sw19, sw20,
+        sw21, sw22, sw23, sw24, sw25 are LOW;
+        sw26, sw27, sw28, sw29, sw30, sw31, sw32, sw33, sw34, sw35,
+        sw36, sw37, sw38, sw39, sw40, sw41, sw42, sw43, sw44, sw45,
+        sw46, sw47, sw48, sw49, sw50 are HIGH;
+    )
+    
+    connections(
+    )
+    
+    monitors(
+        sw1, sw2, sw3, sw4, sw5, sw6, sw7, sw8, sw9, sw10,
+        sw11, sw12, sw13, sw14, sw15, sw16, sw17, sw18, sw19, sw20,
+        sw21, sw22, sw23, sw24, sw25, sw26, sw27, sw28, sw29, sw30,
+        sw31, sw32, sw33, sw34, sw35, sw36, sw37, sw38, sw39, sw40,
+        sw41, sw42, sw43, sw44, sw45, sw46, sw47, sw48, sw49, sw50;
+    )
+    
+\end{Verbatim}
+
+\newpage
+\subsection*{Example Circuit D --- SR Bistable}
+
+\vspace{-0.4cm}
+\begin{figure}[H]
+    \begin{center}
+    \includegraphics[width = 0.65\textwidth]{SR Bistable.png}
+
+    \caption{SR Bistable}
+    \end{center}
+    \end{figure}
+
+\begin{Verbatim}[numbers=left,xleftmargin=5mm]
+    #Example circuit - SR bistable;
+
+    devices(
+        a, b, c, d are NAND;
+        sw1, sw2 are SWITCH;
+        clk1 is CLOCK;
+    )
+    
+    initialise(
+        sw1, sw2 are LOW;
+        a, b, c, d have 2 inputs;
+        clk1 cycle 5;
+    )
+    
+    connections(
+        a(
+            sw1 to a.I1;
+            clk1 to a.I2;
+        )
+    
+        b(  
+            clk1 to b.I1;
+            sw2 to b.I2;
+        )
+    
+        c(  
+            a to c.I1;
+            d to c.I2;
+        )
+    
+        d(  
+            c to d.I1;
+            b to d.I2;
+        )
+    )
+    
+    monitors(
+        c, d;
+    )
+\end{Verbatim}
+
+\newpage
+\subsection*{Example Circuit E --- Divide by 3 Circuit}
+
+\vspace{-0.4cm}
+\begin{figure}[H]
+    \begin{center}
+    \includegraphics[width = 0.65\textwidth]{Divide by 3.png}
+
+    \caption{Divide by 3 Circuit}
+    \end{center}
+    \end{figure}
+
+\begin{Verbatim}[numbers=left,xleftmargin=5mm]
+    #Example circuit - divide (clock frequency) by 3;
+
+    devices(
+        a is AND;
+        b, c are DTYPE;
+        sw1, sw2, sw3, sw4 are SWITCH;
+        clk1 is CLOCK;
+    )
+    
+    initialise(
+        a has 2 inputs;
+        sw1, sw2, sw3, sw4 are LOW;
+        clk1 cycle 9;
+    )
+    
+    connections(
+        a(
+            b.QBAR to a.I1;
+            c.QBAR to a.I2;
+        )
+    
+        b(  
+            a to b.DATA;
+            clk1 to b.CLK;
+            sw1 to b.SET;
+            sw2 to b.CLEAR;
+        )
+    
+        c(  
+            b.Q to c.DATA;
+            clk1 to c.CLK;
+            sw3 to c.SET;
+            sw4 to c.CLEAR;
+        )
+    )
+    
+    monitors(
+        c.Q;
+    )
+\end{Verbatim}
+
+    
+\newpage
+\subsection*{Example Circuit F --- Blank Circuit}
+\hfill\\
+
+
+\begin{Verbatim}[numbers=left,xleftmargin=5mm]
+    #Example circuit - Blank circuit;
+
+    devices(
+    )
+    
+    initialise(
+    )
+    
+    connections(
+    )
+    
+    monitors(
+    )
+\end{Verbatim}
+\hfill\\
+Alternatively, a blank .txt file will also suffice
+
+\end{document}

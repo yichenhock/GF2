@@ -1,4 +1,4 @@
-#Example circuit - JK bistable;
+#Example circuit - SR bistable;
 
 devices(
     a, b, c, d are NAND;
@@ -8,22 +8,19 @@ devices(
 
 initialise(
     sw1, sw2 are LOW;
-    a, b have 3 inputs;
-    c, d have 2 inputs;
+    a, b, c, d have 2 inputs;
     clk1 cycle 5;
 )
 
 connections(
     a(
-        d to a.I1;
-        sw1 to a.I2;
-        clk1 to a.I3;
+        sw1 to a.I1;
+        clk1 to a.I2;
     )
 
     b(  
         clk1 to b.I1;
         sw2 to b.I2;
-        c to b.I3;
     )
 
     c(  
