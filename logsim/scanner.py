@@ -113,10 +113,6 @@ class Scanner:
         """Skips until non-space character is reached, also skips comments."""
         while self.current_character.isspace():
             self.advance()
-        if self.current_character == "#":
-            self.skip_comment()
-        while self.current_character.isspace():
-            self.advance()
         return
 
     def skip_comment(self):
@@ -202,6 +198,10 @@ class Scanner:
 
         elif self.current_character == "":  # End of File
             symbol.type = self.EOF
+
+        elif self.current_character == "#":
+            self.skip_comment()
+            symbol = self.get_symbol()
 
         else:  # Not a valid character (symbol.type == None)
             self.advance()
