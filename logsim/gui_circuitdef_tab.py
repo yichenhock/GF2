@@ -49,19 +49,3 @@ class CircuitDefTab(wx.Panel):
 
     def replace_text(self, new_text):
         self.textBox.SetValue(new_text)
-
-    # def read_file(self, path): 
-    #     try: 
-    #         f = open(path)
-    #     except OSError: 
-    #         print("This file could not be opened, perhaps it doesn't exist")
-    #         sys.exit()
-
-    #     text = ''
-    #     while True: 
-    #         c = f.read(1)
-    #         text += c
-    #         if c == '':
-    #             break 
-
-    #     return text
