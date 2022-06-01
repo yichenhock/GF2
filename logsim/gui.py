@@ -7,7 +7,9 @@ Classes:
 --------
 Gui - configures the main window and all the widgets.
 """
-from ast import Global
+from importlib.resources import path
+import sys
+from tabnanny import check
 import wx
 import wx.lib.agw.aui as aui
 
@@ -59,7 +61,6 @@ class Gui(wx.Frame):
         self.monitors = monitors
 
         self.global_vars = GlobalVars()
-        # self.cycles_completed = self.global_vars.cycles_completed  # number of simulation cycles completed
 
         # Create the menu, toolbar and statusbar
         self.create_menu()
@@ -79,15 +80,12 @@ class Gui(wx.Frame):
         self.main_sizer = wx.BoxSizer(wx.HORIZONTAL)
         self.canvas_sizer = wx.BoxSizer(wx.VERTICAL)
 
-        # self.button = wx.Button(self, wx.ID_ANY, 'testing')
-
         self.canvas = MyGLCanvas(self.main_panel, devices, monitors, self.global_vars)
         self.y_scroll = wx.ScrollBar(self.main_panel, style=wx.SB_VERTICAL)
         self.x_scroll = wx.ScrollBar(self.main_panel, style=wx.SB_HORIZONTAL)
         self.y_scroll.Disable()
         self.x_scroll.Disable()
 
-        # self.main_sizer.Add(self.canvas, 1, wx.EXPAND | wx.ALL , 0)
         self.main_sizer.Add(self.canvas_sizer, 1,
                             wx.EXPAND | wx.ALL | wx.TOP | wx.LEFT | wx.BOTTOM, 0)
         self.main_sizer.Add(self.y_scroll, 0,
@@ -102,7 +100,7 @@ class Gui(wx.Frame):
 
         # bottom panel 
         notebook = aui.AuiNotebook(self, wx.ID_ANY, agwStyle=aui.AUI_NB_CLOSE_ON_ALL_TABS )
-        self.circuitDefPanel = CircuitDefTab(notebook, self.path, self.statusbar)
+        self.circuitDefPanel = CircuitDefTab(notebook, self.path, self.statusbar, self.global_vars)
         self.inputsPanel = InputsTab(notebook, names, devices, self.canvas, self.statusbar)
         self.monitorsPanel = MonitorsTab(notebook, names, devices, monitors, self.canvas, self.statusbar)
         
@@ -128,7 +126,6 @@ class Gui(wx.Frame):
         agwFlags = self.mgr.GetAGWFlags()
         self.mgr.SetAGWFlags(agwFlags
                                | aui.AUI_MGR_AERO_DOCKING_GUIDES
-                            #    | aui.AUI_MGR_WHIDBEY_DOCKING_GUIDES
         )
 
         self.mgr.Update() 
@@ -227,13 +224,12 @@ class Gui(wx.Frame):
         self.update_statusbar("Number of simulation cycles set to: {}".format(spin_value))
 
     def on_tool_click(self, event):
-        # print("tool %s clicked" % event.GetId())
 
         if event.GetId() == 1: # browse
             self.open_file()
 
         elif event.GetId() == 2: # save
-            self.save_file()
+            self.save_file(self.path)
 
         elif event.GetId() == 3: # new file
             self.create_file()
@@ -255,7 +251,13 @@ class Gui(wx.Frame):
 
         elif event.GetId() == 9: # quit
             # check first if user has any unsaved changes!!
-            self.Close(True)
+            if self.global_vars.def_edited:
+                resp = wx.MessageBox("Changes you made may not be saved.",
+                          "Quit application?", wx.ICON_WARNING | wx.OK | wx.CANCEL)
+                if resp == wx.OK: 
+                    self.Close(True)
+            else: 
+                    self.Close(True)
 
     def on_run_button(self):
 
@@ -299,6 +301,17 @@ class Gui(wx.Frame):
         self.mgr.UnInit()
         self.Destroy()
     
+    def check_for_changes(self):
+        # check if user has any unsaved changes!!
+        if self.global_vars.def_edited:
+            resp = wx.MessageBox("Changes you made may not be saved.",
+                        "Open a new file?", wx.ICON_WARNING | wx.OK | wx.CANCEL)
+            if resp == wx.OK: 
+                return True
+        else: 
+                return True
+        return False
+
     def open_file(self): 
         
         """
@@ -308,20 +321,32 @@ class Gui(wx.Frame):
         -------
         `None`
         """
-        with wx.FileDialog(self, "Open File",
-                           wildcard="Text documents (*.txt)|*.txt",
-                           style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST) as \
-                file_dialog:
-            if file_dialog.ShowModal() == wx.ID_CANCEL:
-                return  # the user changed their mind
+        if self.check_for_changes():
+            with wx.FileDialog(self, "Open File",
+                            wildcard="Text documents (*.txt)|*.txt",
+                            style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST) as \
+                    file_dialog:
+                if file_dialog.ShowModal() == wx.ID_CANCEL:
+                    return  # the user changed their mind
 
-            # Proceed loading the file chosen by the user
-            pathname = file_dialog.GetPath()
-            self.load_file(pathname)
+                # Proceed loading the file chosen by the user
+                pathname = file_dialog.GetPath()
+                self.load_file(pathname)
 
     def load_file(self, pathname): 
+        try: 
+            f = open(pathname)
+        except OSError: 
+            wx.MessageBox("Error opening file.",
+                        "Error", wx.ICON_ERROR | wx.OK)
+            return
         self.path = pathname
         self.statusbar.SetStatusText(pathname, 1)
+        # write to circuit definition panel
+        self.circuitDefPanel.replace_text(f.read())
+        self.global_vars.def_edited = False
+        f.close()
+
 
     def create_file(self): 
         """
@@ -331,17 +356,28 @@ class Gui(wx.Frame):
         -------
         `None`
         """
-        with wx.FileDialog(self, "Save File",
-                           defaultFile="new_circuit_definition_file.txt",
-                           wildcard="Text documents (*.txt)|*.txt",
-                           style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT) as \
-                file_dialog:
-            if file_dialog.ShowModal() == wx.ID_CANCEL:
-                return  # the user changed their mind
+        if self.check_for_changes():
+            with wx.FileDialog(self, "Save File",
+                            defaultFile="new_definition_file.txt",
+                            wildcard="Text documents (*.txt)|*.txt",
+                            style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT) as \
+                    file_dialog:
+                if file_dialog.ShowModal() == wx.ID_CANCEL:
+                    return  # the user changed their mind
+                    
+                # Proceed saving the file chosen by the user
+                pathname = file_dialog.GetPath()
+                # CREATE A NEW FILE HERE AND SET THAT AS THE NEW PATH!
+                try:
+                    open(pathname, 'w').close()
+                except OSError:
+                    print('Failed creating the file')
+                    wx.MessageBox("Error creating file.",
+                            "Error", wx.ICON_ERROR | wx.OK)
+                else:
+                    print('File created successfully in {}'.format(pathname))
+                    self.load_file(pathname)
 
-            # Proceed saving the file chosen by the user
-            pathname = file_dialog.GetPath()
-            # CREATE A NEW FILE HERE AND SET THAT AS THE NEW PATH!
 
     def save_plot(self): 
         """
@@ -361,14 +397,40 @@ class Gui(wx.Frame):
 
             # Proceed saving the file chosen by the user
             pathname = file_dialog.GetPath()
-            # self.canvas.save(pathname)
+            self.canvas.save(pathname)
     
-    def save_file(self): 
-        pass # save whatever is in the circuit def file into the current loaded path (overwrite!)
+    def save_file(self, pathname): 
+        # try to save to the same path
+        try:
+            with open(pathname, "w") as f:
+                f.write(self.circuitDefPanel.get_text())
+
+        except OSError:
+            wx.MessageBox("Error saving file.",
+                    "Error", wx.ICON_ERROR | wx.OK)
+            return
+
+        self.statusbar.SetStatusText('File saved.')
+        self.global_vars.def_edited = False
+
+        # save whatever is in the circuit def file into the current loaded path (overwrite!)
         # get the value of whatever is in the textbox and then save :)
     
     def save_file_as(self):
-        print('save file as')
+        with wx.FileDialog(self, "Save File",
+                        defaultFile="new_definition_file.txt",
+                        wildcard="Text documents (*.txt)|*.txt",
+                        style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT) as \
+                file_dialog:
+            if file_dialog.ShowModal() == wx.ID_CANCEL:
+                return  # the user changed their mind
+                
+            # Proceed saving the file chosen by the user
+            pathname = file_dialog.GetPath()
+
+            # save the file to the new path
+            self.save_file(pathname)
+            self.load_file(pathname)
 
     def set_scroll(self, event = None):
         self.canvas.update_dimensions()

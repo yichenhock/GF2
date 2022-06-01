@@ -153,18 +153,27 @@ class MonitorsTab(wx.Panel):
             if name_to_add in monitored_signals: 
                 self.statusbar.SetStatusText('Component already added!')
             else: 
-                # add the component to the monitor
-                name_id = self.names.query(name_to_add) 
-                # IF THIS IS DTYPE, THERE NEEDS TO BE A SECOND ARGUMENT!
-
-                self.monitors.make_monitor(name_id, None) 
-                # append the component to the list
-                self.append_to_monitors_list(name_to_add)
-                self.statusbar.SetStatusText('Added component to monitor.')
-                print('{} added to monitor.'.format(name_to_add))
+                self.add_monitor(name_to_add)
 
     def on_add_all_button(self,event):
-        pass
+        names_list = self.combo_names.GetItems()
+
+        for name in names_list: 
+            if name not in self.monitors.get_signal_names()[0]:
+                self.add_monitor(name)
+
+    def add_monitor(self, name_to_add):
+        # add the component to the monitor
+        name_id = self.names.query(name_to_add) 
+        # IF THIS IS DTYPE, THERE NEEDS TO BE A SECOND ARGUMENT!
+
+        self.monitors.make_monitor(name_id, None) 
+        # append the component to the list
+        self.append_to_monitors_list(name_to_add)
+        self.statusbar.SetStatusText('Added component to monitor.')
+        print('{} added to monitor.'.format(name_to_add))
+
+        
 
     def on_remove(self, event): 
         signal_id = event.GetEventObject().signal_id
@@ -186,5 +195,5 @@ class MonitorsTab(wx.Panel):
         if state: 
             self.warning_text.SetLabel('')
         else:
-            self.warning_text.SetLabel("*Reset simulation to add components to monitor!")
+            self.warning_text.SetLabel("Reset simulation to add components to monitor!")
         

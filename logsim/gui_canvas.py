@@ -85,14 +85,14 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         # height of signal amplitude
         self.amplitude = 30
 
-        self.margin_scale = 9
-        self.margin_offset = 9
+        self.margin_scale = 10
+        self.margin_offset = 10
 
         # vertical spacing between different components
         self.component_vspace = 50
 
         # offset of component label from the bottom line
-        self.component_label_offset = 10
+        self.component_label_offset = 15
         assert self.component_vspace >= self.amplitude
         
         # vertical offset of clock name label and axis numbers
@@ -221,7 +221,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         y = self.initial_y  # reset y coordinate
         number_devices = len(self.monitors.monitors_dictionary)
         for i in range(0, cycles + 1, axis_interval):
-            # Only draw every grid_interval
+            # draw every grid_interval
             if x < self.origin_x - self.pan_x:
                 # Don't bother drawing if grid lines to the left of
                 # visible area
@@ -249,8 +249,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
 
         for device_id, output_id in reversed(self.monitors.monitors_dictionary): 
             if y < self.initial_y + self.clock_vspace - self.pan_y:
-                # Don't bother drawing if waveforms are below the
-                # visible area or obscuring the cycle axis
+                # Don't render signals below visible area/obscuring cycle axis
                 y += self.component_vspace
                 continue
             
@@ -271,8 +270,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
 
             for signal in signal_list:
                 if x < self.origin_x - self.pan_x - self.curr_wavelength:
-                    # Don't bother drawing if waveforms are to the left
-                    # of visible area
+                    # Don't render signals to the left of visible area
                     x += self.curr_wavelength
                     continue
                 elif x < self.origin_x - self.pan_x:
@@ -280,7 +278,6 @@ class MyGLCanvas(wxcanvas.GLCanvas):
                     # obscuring labels
                     offset = self.origin_x - self.pan_x - x
                 else:
-                    # No need to change anything
                     offset = 0
 
                 # Signals for a particular device
@@ -302,9 +299,8 @@ class MyGLCanvas(wxcanvas.GLCanvas):
                     pass
                 x += self.curr_wavelength
 
-            # end for signal in signal_list
             GL.glEnd()
-            y += self.component_vspace  # move up for the next device
+            y += self.component_vspace 
 
     def on_paint(self, event):
         """Handle the paint event."""
@@ -327,7 +323,6 @@ class MyGLCanvas(wxcanvas.GLCanvas):
 
     def on_mouse(self, event):
         """Handle mouse events."""
-        text = ""
         # # Calculate object coordinates of the mouse position
         # size = self.GetClientSize()
         # ox = (event.GetX() - self.pan_x) / self.zoom

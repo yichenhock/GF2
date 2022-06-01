@@ -6,16 +6,14 @@ class CircuitDefTab(wx.Panel):
     A simple wx.Panel class
     """
     #----------------------------------------------------------------------
-    def __init__(self, parent, path, statusbar):
+    def __init__(self, parent, path, statusbar, global_vars):
         """"""
         wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
         
         self.statusbar = statusbar
-
-        # read circuit_definition file and populate the text control
-        text = self.read_file(path)
+        self.global_vars = global_vars
         
-        self.textBox = wx.TextCtrl(self, -1, text, style = wx.NO_BORDER | wx.TE_MULTILINE | wx.TE_PROCESS_ENTER) 
+        self.textBox = wx.TextCtrl(self, -1, "", style = wx.NO_BORDER | wx.TE_MULTILINE | wx.TE_PROCESS_ENTER) 
       
         font_code = wx.Font(10, wx.MODERN, wx.NORMAL, wx.NORMAL, False, u'Consolas')
         self.textBox.SetFont(font_code)
@@ -25,6 +23,14 @@ class CircuitDefTab(wx.Panel):
 
         self.SetSizer(sizer)
         self.textBox.Bind(wx.EVT_KEY_DOWN, self.on_edit_attempt)
+        self.textBox.Bind(wx.EVT_TEXT, self.on_text_edit)
+
+    def on_text_edit(self, event): 
+        self.global_vars.def_edited = True
+        event.Skip()
+    
+    def get_text(self):
+        return self.textBox.GetValue()
 
     def set_textbox_state(self, state): 
         self.textBox.SetEditable(state)
@@ -41,18 +47,21 @@ class CircuitDefTab(wx.Panel):
         else: 
             event.Skip()
 
-    def read_file(self, path): 
-        try: 
-            f = open(path)
-        except OSError: 
-            print("This file could not be opened, perhaps it doesn't exist")
-            sys.exit()
+    def replace_text(self, new_text):
+        self.textBox.SetValue(new_text)
 
-        text = ''
-        while True: 
-            c = f.read(1)
-            text += c
-            if c == '':
-                break 
+    # def read_file(self, path): 
+    #     try: 
+    #         f = open(path)
+    #     except OSError: 
+    #         print("This file could not be opened, perhaps it doesn't exist")
+    #         sys.exit()
 
-        return text
+    #     text = ''
+    #     while True: 
+    #         c = f.read(1)
+    #         text += c
+    #         if c == '':
+    #             break 
+
+    #     return text
