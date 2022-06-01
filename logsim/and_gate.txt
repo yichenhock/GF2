@@ -1,0 +1,21 @@
+# Dummy Parser - simple AND gate;
+
+devices(
+	a is AND;
+	sw1 and sw2 are SWITCH;
+)
+
+initialise(
+
+	sw1, sw2 are HIGH;
+)
+
+connections(
+	a(
+		sw1 is connected to a.I1;
+		sw2 is connected to a.I2;
+)
+
+monitors(
+	a;
+)
