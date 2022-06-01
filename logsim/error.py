@@ -28,7 +28,7 @@ class SemanticError(Scanner):
         'message': Output to be printed to terminal."""
         self.scanner = scanner
 
-        self.message_list = ["Wrong gate type provided for device name chosen. Given {}, expected {}".format(symbol1, symbol2), "Device name {} defined has already been used above.".format(symbol1), "The device name {} provided in the initialisation section has not been defined in the devices section.".format(symbol1), "The device name {} provided in the connections section has not been defined in the devices section.".format(symbol1), "Please enter a positive, nonzero value.", "Wrong input gate name for connection section subheader. The subheader name should be the name of the device receiving inputs. Expected {}, got {}.".format(symbol1, symbol2)]
+        self.message_list = ["Wrong gate type provided for device name chosen. Given {}, expected {}".format(symbol1, symbol2), "Device name {} defined has already been used above.".format(symbol1), "The device name {} provided in the initialisation section has not been defined in the devices section.".format(symbol1), "The device name {} provided in the connections section has not been defined in the devices section.".format(symbol1), "Please enter a positive, nonzero value.", "Wrong input gate name for connection section subheader. The subheader name should be the name of the device receiving inputs. Expected {}, got {}.".format(symbol1, symbol2), "The device name {} provided in the monitors section has not been defined in the devices section.".format(symbol1)]
 
         self.message = "SyntaxError: {}".format(self.message_list[id])
         
@@ -43,20 +43,20 @@ class SyntaxError(Scanner):
 
         self.id_list = [self.NO_OPEN_BRACKET, self.NO_CLOSE_BRACKET, self.DEVICE_LETTER_CAPITAL, self.NO_DEVICE_NAME, self.NO_HEADER, self.HEADER_NAME_ERROR, self.NO_DEFINITION_KEYWORD, self.NO_POSSESSION_KEYWORD, self.DEVICE_TYPE_ERROR, self.INCORRECT_SWITCH_NAME, self.INCORRECT_CLOCK_NAME, self.NO_SEMICOLON, self.INCONSISTENT_DEVICE_NAMES, self.MISSING_SECTION,
 
-        self.INPUT_NUMBER_ERROR, self.INPUTS_KEYWORD_ERROR, self.SWITCH_LEVEL_ERROR, self.NO_CYCLE_KEYWORD, self.NO_LENGTH_KEYWORD, self.NO_CYCLE_LENGTH, self.DASH_UNEXPECTED,
+        self.INPUT_NUMBER_ERROR, self.INPUTS_KEYWORD_ERROR, self.SWITCH_LEVEL_ERROR, self.NO_CYCLE_KEYWORD, self.NO_LENGTH_KEYWORD, self.NO_CYCLE_LENGTH, self.DASH_UNEXPECTED, self.DOT_UNEXPECTED,
 
-        self.NO_CONNECTION_KEYWORD, self.NO_INPUT_GATE_NAME, self.NO_INPUT_PORT_NAME, self.MISSING_DOT_INPUT, self.PORT_NAME_ERROR, self.CONNECTION_SUBHEADER_NAME_ERROR,
+        self.NO_CONNECTION_KEYWORD, self.NO_INPUT_GATE_NAME, self.NO_INPUT_PORT_NAME, self.MISSING_DOT_INPUT, self.PORT_NAME_ERROR, self.CONNECTION_SUBHEADER_NAME_ERROR, self.DTYPE_OUTPUT_NAME_ERROR,
 
-        self.NO_MONITOR_NAME] = range(28)
+        self.NO_MONITOR_NAME, self.EXTRA_INFORMATION_AFTER_MONITORS] = range(31)
 
         self.error_type_list = ["NO_OPEN_BRACKET", "NO_CLOSE_BRACKET", "DEVICE_LETTER_CAPITAL", "NO_DEVICE_NAME", "NO_HEADER", "HEADER_NAME_ERROR", "NO_DEFINITION_KEYWORD", "NO_POSSESSION_KEYWORD", "DEVICE_TYPE_ERROR", "INCORRECT_SWITCH_NAME", "INCORRECT_CLOCK_NAME", "NO_SEMICOLON", "INCONSISTENT_DEVICE_NAMES", "MISSING_SECTION"
 
         "INPUT_NUMBER_ERROR", "INPUTS_KEYWORD_ERROR", "SWITCH_LEVEL_ERROR", "NO_CYCLE_KEYWORD", "NO_LENGTH_KEYWORD", "NO_CYCLE_LENGTH", "DASH_UNEXPECTED",
 
         "NO_CONNECTION_KEYWORD", "NO_INPUT_GATE_NAME", "NO_INPUT_PORT_NAME", "MISSING_DOT_INPUT", 
-        "PORT_NAME_ERROR", "CONNECTION_SUBHEADER_NAME_ERROR",
+        "PORT_NAME_ERROR", "CONNECTION_SUBHEADER_NAME_ERROR", "DTYPE_OUTPUT_NAME_ERROR", "DOT_UNEXPECTED",
 
-        "NO_MONITOR_NAME"]
+        "NO_MONITOR_NAME", "EXTRA_INFORMATION_AFTER_MONITORS"]
 
     def printerror(self, id, scanner, symbol1=None):
         """Print error message to terminal and skip line.
@@ -67,11 +67,13 @@ class SyntaxError(Scanner):
         'message': Output to be printed to terminal.
         """
         
-        self.message_list = ["Missing open parentheses following section header. Parser will skip next line of code. Please fix and rerun.", "Missing close parentheses following section or subsection initialisation.", "Device names must not contain capitalised letters.", "Device, switch or clock name missing. Please provide a valid alphanumeric name.", "Section header missing", "Section header name {} is not legal.".format(symbol1), "Missing definition keyword.", "Missing possession keyword.", "Device type is not legal.", "'sw' must be followed by a number only. 'sw' at the start of a name is a reserved device naming keyword indicating a switch.", "'clk' must be followed by a number only. 'clk' at the start of a name is a reserved device naming keyword indicating a clock.", "Semicolon expected at line end, but none found.", "Inconsistent device name types on each line. Switches, clocks and devices must be grouped separately.", "Section {} missing where expected.".format(symbol1), "Input number missing where expected.", "Initialisation line for devices should end in keyword 'input' or 'inputs'.", "Switch level may only be HIGH or LOW.", "Keyword 'cycle' missing from clock cycle length definition.", "Keyword 'length' missing from clock cycle length definition.", "Cycle length (number) missing from clock cycle length definition.", "Unexpected dash '-' symbol found.",
+        self.message_list = ["Missing open parentheses following section header. Parser will skip next line of code. Please fix and rerun.", "Missing close parentheses following section or subsection initialisation.", "Device names must not contain capitalised letters.", "Device, switch or clock name missing. Please provide a valid alphanumeric name.", "Section header missing", "Section header name {} is not legal.".format(symbol1), "Missing definition keyword.", "Missing possession keyword.", "Device type is not legal.", "'sw' must be followed by a number only. 'sw' at the start of a name is a reserved device naming keyword indicating a switch.", "'clk' must be followed by a number only. 'clk' at the start of a name is a reserved device naming keyword indicating a clock.", "Semicolon expected at line end, but none found.", "Inconsistent device name types on each line. Switches, clocks and devices must be grouped separately.", "Section {} missing where expected.".format(symbol1), 
+        
+        "Input number missing where expected.", "Initialisation line for devices should end in keyword 'input' or 'inputs'.", "Switch level may only be HIGH or LOW.", "Keyword 'cycle' missing from clock cycle length definition.", "Keyword 'length' missing from clock cycle length definition.", "Cycle length (number) missing from clock cycle length definition.", "Unexpected dash '-' symbol found.",
 
-        "Connection keyword missing. Check that connections are made using the phrases 'is connected to' or 'to' only. Expected {}.".format(symbol1), "No input gate name given in connection section. Check that a valid gate has been specified.", "Missing input port name. Check that a valid name is used - of form 'IN' followed by a number.", "Missing dot in input name. Names should be of form e.g. 'a.I1'.", "Port names need to be of form 'IN' followed by a number.", "Subheaders are devices to receive inputs. These cannot be switches or clocks.",
+        "Connection keyword missing. Check that connections are made using the phrases 'is connected to' or 'to' only. Expected {}.".format(symbol1), "No input gate name given in connection section. Check that a valid gate has been specified.", "Missing input port name. Check that a valid name is used - of form 'IN' followed by a number.", "Missing dot in input name. Names should be of form e.g. 'a.I1'.", "Port names need to be of form 'IN' followed by a number.", "Subheaders are devices to receive inputs. These cannot be switches or clocks.", "No correct dtype output port name given where expected. This should be Q or QBAR.", "Unexpected dot following name of none dtype used to define name of output. Only dtype outputs should take this form, e.g.: a.Q, a.QBAR.",
 
-        "Missing name in monitor section."]
+        "Missing name in monitor section.", "Extra information provided in circuit definition file after end of the monitors block. Please ensure that this is moved elsewhere if it is important as it will not be read."]
 
         self.scanner = scanner
 

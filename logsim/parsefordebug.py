@@ -232,76 +232,7 @@ class Parser:
         """
         print("Entered initialise block")
 
-        if self.symbol.type == self.scanner.KEYWORD:
-            print("Keyword at start of initialise block: ", self.names.get_name_string(self.symbol.id))
-
-        # Fetch next symbol after section heading and check it's a bracket
-        self.symbol = self.scanner.get_symbol()
-        print("Symbol type:", self.scanner.symbol_list[self.symbol.type]) # Bracket
-        if self.symbol.type != self.scanner.OPEN_BRACKET:
-            self.syntax.printerror(self.syntax.NO_OPEN_BRACKET, self.scanner)
-
-        print("Checked for open bracket. Fetching next symbol. Expect name.")
-        self.previous_block = "initialise"
-
-        self.symbol = self.scanner.get_symbol()
-        if self.symbol.type == self.scanner.EOF:
-            eofcheck = True
-            return eofcheck
-        # Skip device block, end reached
-        if self.symbol.type == self.scanner.CLOSE_BRACKET:
-            eofcheck = False
-            print("Devices block is empty.")
-            return eofcheck
-
-        # Call line-level function as long as end of block not reached
-        while self.symbol.type != self.scanner.CLOSE_BRACKET and self.symbol.id not in self.block_ids:
-            # Read first name on next line to check if it is a device, switch or clock name
-            # Sets name_type and current_name attributes
-            self.read_name("initialise")
-            print("Device name read inside initialise block as:", self.current_name)
-            # Error recovery: for if first name on each line is not valid
-            while self.is_legal_name == False:
-                # Get next symbol on next line but also check it's not a close bracket
-                self.symbol = self.scanner.get_symbol()
-                if self.symbol.type == self.scanner.CLOSE_BRACKET:
-                    # Get next section header and return
-                    self.symbol = self.scanner.get_symbol()
-                    return False
-                self.read_name("initialise")
-                print("Device name read inside initialise block as:", self.current_name)
-
-            print("Name type to determine which initialisation method runs:", self.current_name, self.name_type)
-            if self.name_type == "device":
-                print("Entering device initialisation method")
-                eofcheck = self.device_initialisation(self.current_name)
-            elif self.name_type == "switch":
-                print("Entering switch initialisation method")
-                self.switch_initialisation(self.current_name)
-            elif self.name_type == "clock":
-                print("Entering clock initialisation method")
-                self.clock_initialisation(self.current_name)
-
-            # Read first symbol of next line
-            self.symbol = self.scanner.get_symbol()
-            print("First symbol of next line: ", self.scanner.symbol_list[self.symbol.type])
-            if self.symbol == self.scanner.EOF:
-                return True
-
-        if self.symbol.type == self.scanner.CLOSE_BRACKET:
-
-            # Get symbol after close bracket
-            self.symbol = self.scanner.get_symbol()
-            
-            print("End of device block found using bracket. Setting of checking parameter previous_block:", self.previous_block)
-            # Exit the above while loop when symbol stored is a closed bracket
-            # End of functionality of devices_block function
-            return eofcheck
-
-        # Expect to be reading a block header if missing close bracket
-        else:
-            self.syntax.printerror(self.syntax.NO_CLOSE_BRACKET, self.scanner)
-            return eofcheck
+        return False
 
     def connections_block(self):
         """Operate at level of parsing a device block.
@@ -312,7 +243,7 @@ class Parser:
 
         print("Entered connections block")
         print("State of object dictionary: ", self.object_dict)
-        return True  
+        return False 
 
 #===========================================================================================================
 #===========================================================================================================
@@ -665,7 +596,6 @@ class Parser:
         if self.eofcheck == True:
             print("end of file reached")
             self.scanner.file.close()
-
         return
 
 #===========================================================================================================
