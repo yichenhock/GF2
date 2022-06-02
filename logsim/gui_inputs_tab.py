@@ -82,6 +82,7 @@ class InputsTab(wx.Panel):
         self.canvas.render_signals(flush_pan=True)
 
     def on_toggle(self, event):
+        """Handle event when user toggles the switch button."""
         state = event.GetEventObject().GetValue()
         switch_id = event.GetEventObject().switch_id
         if state:

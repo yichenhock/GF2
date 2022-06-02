@@ -66,8 +66,8 @@ class Gui(wx.Frame):
 
         if self.path is None:  # open up the file dialog
             if not self.open_file():
-                print("Application must be run with a circuit \
-                    definition file.")
+                print("Application must be run with a circuit "
+                    "definition file.")
                 self.Close(True)  # exit the application
                 sys.exit()
 
@@ -179,6 +179,7 @@ class Gui(wx.Frame):
         self.parse()
 
     def create_menu(self):
+        """Create a menu."""
         fileMenu = wx.Menu()
         fileMenu.Append(wx.ID_ABOUT, "&About")
         fileMenu.Append(wx.ID_SAVEAS, "&Save As")
@@ -192,6 +193,7 @@ class Gui(wx.Frame):
         self.Bind(wx.EVT_MENU, self.on_menu)
 
     def create_tb(self):
+        """Create a toolbar."""
         tb = wx.ToolBar(self, - 1, style=wx.TB_TEXT)
         self.ToolBar = tb
 
@@ -259,6 +261,7 @@ class Gui(wx.Frame):
         self.Bind(wx.EVT_TOOL, self.on_tool_click, id=9)
 
     def update_statusbar(self, text):
+        """Update the text on the statusbar."""
         self.statusbar.SetStatusText(text)
 
     def on_menu(self, event):
@@ -280,7 +283,7 @@ class Gui(wx.Frame):
             "Number of simulation cycles set to: {}".format(spin_value))
 
     def on_tool_click(self, event):
-
+        """Map toolbar buttons to functions."""
         if event.GetId() == 1:  # browse
             self.open_file()
 
@@ -320,7 +323,7 @@ class Gui(wx.Frame):
                 self.Close(True)
 
     def parse(self):
-        # if self.global_vars.def_edited:
+        """Compiles/parses the circuit definition file."""
         # save the file first
         self.save_file(self.path)
 
@@ -348,6 +351,7 @@ class Gui(wx.Frame):
             self.statusbar.SetStatusText("Parser failed to work :(")
 
     def on_run_button(self):
+        """Run the simulation for N cycles from scratch."""
         if not self.monitors.monitors_dictionary:
             self.statusbar.SetStatusText("No monitors.")
             return
@@ -358,13 +362,14 @@ class Gui(wx.Frame):
         self.canvas.render_signals(flush_pan=True)
 
     def on_cont_button(self):
+        """Continue the simulation for N cycles."""
         self.consoleOutPanel.continue_command(True, self.spin.GetValue())
         self.update_statusbar("Continue button pressed.")
         self.canvas.render_signals(flush_pan=True)
         self.set_gui_state(sim_running=True)
 
     def on_reset_button(self):
-        # self.cycles_completed = 0
+        """Reset the simulation."""
         self.global_vars.cycles_completed = 0
 
         self.monitors.reset_monitors()
@@ -374,6 +379,7 @@ class Gui(wx.Frame):
         self.canvas.render_signals(flush_pan=True)
 
     def set_gui_state(self, sim_running):
+        """Set the state of GUI widgets depending on simulation state."""
         self.ToolBar.EnableTool(4, not sim_running)  # disable compile button
         self.ToolBar.EnableTool(5, not sim_running)  # disable run button
         self.ToolBar.EnableTool(6, sim_running)  # enable continue button
@@ -383,16 +389,17 @@ class Gui(wx.Frame):
         self.monitorsPanel.enable_monitor(not sim_running)
 
     def on_help_button(self):
+        """Display a helpful message box."""
         wx.MessageBox("Press the buttons :D",
                       "Help", wx.ICON_INFORMATION | wx.OK)
 
     def on_close(self, event):
-        # deinitialize the frame manager
+        """Deinitialise the frame manager on close."""
         self.mgr.UnInit()
         self.Destroy()
 
     def check_for_changes(self):
-        # check if user has any unsaved changes!!
+        """Check if the user has any unsaved changes."""
         if self.global_vars.def_edited:
             resp = wx.MessageBox("Changes you made may not be saved.",
                                  "Open a new file?", wx.ICON_WARNING |
@@ -404,13 +411,7 @@ class Gui(wx.Frame):
         return False
 
     def open_file(self):
-        """
-        Launch a dialog for the user to select and open a file.
-
-        Returns
-        -------
-        `None`
-        """
+        """Launch a dialog to select and open a file."""
         if self.check_for_changes():
             with wx.FileDialog(self, "Open File",
                                wildcard="Text documents (*.txt)|*.txt",
@@ -424,6 +425,7 @@ class Gui(wx.Frame):
                 return self.load_file(pathname)
 
     def load_file(self, pathname):
+        """Load a file into the GUI."""
         try:
             f = open(pathname)
         except OSError:
@@ -442,14 +444,7 @@ class Gui(wx.Frame):
         return True
 
     def create_file(self):
-        """
-        Launch a dialog for the user to select and create a new file in that
-        directory.
-
-        Returns
-        -------
-        `None`
-        """
+        """Launch a dialog to select and create a new file."""
         if self.check_for_changes():
             with wx.FileDialog(self, "Save File",
                                defaultFile="new_definition_file.txt",
@@ -473,14 +468,7 @@ class Gui(wx.Frame):
                     self.load_file(pathname)
 
     def save_plot(self):
-        """
-        Launch a dialog for the user to select and save the signal trace as an
-        image.
-
-        Returns
-        -------
-        `None`
-        """
+        """Launch a dialog to save the signal trace as an image."""
         with wx.FileDialog(self, "Save File",
                            defaultFile="image.png",
                            wildcard="PNG files (*.png)|*.png",
@@ -494,7 +482,7 @@ class Gui(wx.Frame):
             self.canvas.save(pathname)
 
     def save_file(self, pathname):
-        # try to save to the same path
+        """Launch a dialog to save the current file."""
         try:
             with open(pathname, "w") as f:
                 f.write(self.circuitDefPanel.get_text())
@@ -508,6 +496,7 @@ class Gui(wx.Frame):
         self.global_vars.def_edited = False
 
     def save_file_as(self):
+        """Launch a dialog for to save the current file as a new file."""
         with wx.FileDialog(self, "Save File",
                            defaultFile="new_definition_file.txt",
                            wildcard="Text documents (*.txt)|*.txt",
@@ -524,6 +513,7 @@ class Gui(wx.Frame):
             self.load_file(pathname)
 
     def set_scroll(self, event=None):
+        """Set the scrollbar position based on the canvas position."""
         self.canvas.update_dimensions()
         y_scroll_width, y_scroll_height = self.y_scroll.GetSize()
         x_scroll_width, x_scroll_height = self.x_scroll.GetSize()
@@ -551,14 +541,16 @@ class Gui(wx.Frame):
 
         self.Refresh()
 
-    def on_y_scroll(self, event: wx.Event) -> None:
+    def on_y_scroll(self, event):
+        """Pan the canvas when the user scrolls vertically."""
         position = self.y_scroll.GetThumbPosition()
         self.canvas.pan_y = -(
             self.canvas.plot_height - self.canvas.height - position)
         self.canvas.init = False
         self.canvas.render_signals(set_scroll=False)
 
-    def on_x_scroll(self, event: wx.Event) -> None:
+    def on_x_scroll(self, event):
+        """Pan the canvas when the user scrolls horizontally."""
         x_position = self.x_scroll.GetThumbPosition()
         self.canvas.pan_x = -1 * x_position
         self.canvas.init = False
