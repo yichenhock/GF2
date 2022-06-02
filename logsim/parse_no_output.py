@@ -412,7 +412,6 @@ class Parser:
         for signal in self.monitors_to_add:
             [id, port_id] = self.devices.get_signal_ids(signal)
             self.monitors.make_monitor(id, port_id)
-            print("Successfully created monitor for {}".format(signal))
 
         # Get what should be close bracket
         self.symbol = self.scanner.get_symbol()
@@ -546,9 +545,6 @@ class Parser:
         'currentname': the current name read from calling read_name() inside the devices block.
         'device_type': the type of the device which is receiving an input.
         """
-
-        if self.scanner.symbol_list[self.symbol.type] == "keyword":
-            print("Current keyword:", self.names.get_name_string(self.symbol.id))
         
         if self.symbol.id == self.scanner.to_id:
 
@@ -1254,7 +1250,6 @@ class Parser:
         # GET NEXT SYMBOL AFTER DEVICE NAME (if monitors section and not dtype, this is a comma)
         self.symbol = self.scanner.get_symbol()
 
-        print("next symbol after name:", self.scanner.symbol_list[self.symbol.type])
         # Check for if a close bracket has been missed
         # If close bracket missed, parser stops parsing
 
@@ -1265,7 +1260,6 @@ class Parser:
         
         if block == "monitors" and self.symbol.type != self.scanner.DOT:
             self.monitors_to_add.append(self.current_name)
-            print("State of monitors array:", self.monitors_to_add)
             return True
 
         if self.symbol.type == self.scanner.DOT and self.object_dict[self.current_name] == "DTYPE":
@@ -1280,7 +1274,6 @@ class Parser:
                     self.semantic.printerror(self.semantic.SIGNAL_ALREADY_EXISTS, self.scanner)
                     return False
                 # No risk of undefined name here - as long as it's in dtype outputs and the dtype exists, then the signal also exists
-                print(self.signal_names)
                 if block == "monitors":
                     # Add to list of monitors to add
                     self.monitors_to_add.append(signal_name)
