@@ -360,6 +360,7 @@ class Gui(wx.Frame):
         except Exception as e:
             print(e)
             self.statusbar.SetStatusText("Parser failed to work :(")
+            return False
 
     def on_run_button(self):
         """Run the simulation for N cycles from scratch."""
