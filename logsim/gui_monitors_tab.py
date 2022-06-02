@@ -144,7 +144,10 @@ class MonitorsTab(wx.Panel):
             signal_id, signal_name, output_id, output_name = self.get_signal_and_output_id(signal)
         self.combo_types.SetValue('All')
         self.initialise_combo_names()
-        self.canvas.render_signals(flush_pan=True)
+        try:
+            self.canvas.render_signals(flush_pan=True)
+        except Exception as e:
+            pass
 
     def get_signal_and_output_id(self, signal): 
         name_arr = signal.split('.')
@@ -180,7 +183,10 @@ class MonitorsTab(wx.Panel):
         button.Bind(wx.EVT_TOGGLEBUTTON, self.on_remove)
 
         self.displayed_signals.append((signal_id, output_id))
-        self.canvas.render_signals(flush_pan=True)
+        try:
+            self.canvas.render_signals(flush_pan=True)
+        except Exception as e:
+            pass
 
     def initialise_combo_names(self):
         """Initialise `combo_names` with a list of all device names."""
@@ -255,7 +261,10 @@ class MonitorsTab(wx.Panel):
         self.statusbar.SetStatusText("Component removed from monitor.")
         print('{} removed from monitor.'.format(
             self.names.get_name_string(signal_id)))
-        self.canvas.render_signals(flush_pan=True)
+        try:
+            self.canvas.render_signals(flush_pan=True)
+        except Exception as e:
+            pass
 
     def enable_monitor(self, state):
         """Allow components to be added to the monitor."""
@@ -267,4 +276,4 @@ class MonitorsTab(wx.Panel):
             self.warning_text.SetLabel('')
         else:
             self.warning_text.SetLabel(
-                "Reset simulation to add components to monitor!")
+                " Reset simulation to add components!")

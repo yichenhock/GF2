@@ -79,7 +79,10 @@ class InputsTab(wx.Panel):
         button.switch_id = switch_id
         button.Bind(wx.EVT_TOGGLEBUTTON, self.on_toggle)
 
-        self.canvas.render_signals(flush_pan=True)
+        try:
+            self.canvas.render_signals(flush_pan=True)
+        except Exception as e:
+            pass
 
     def on_toggle(self, event):
         """Handle event when user toggles the switch button."""
