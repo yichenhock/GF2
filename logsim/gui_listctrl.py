@@ -1,6 +1,7 @@
-import wx 
+import wx
 from wx.lib.mixins.listctrl import ListCtrlAutoWidthMixin
 import wx.lib.agw.ultimatelistctrl as ULC
+
 
 class ListCtrl(ULC.UltimateListCtrl, ListCtrlAutoWidthMixin):
     """

@@ -4,11 +4,13 @@ import wx.lib.agw.ultimatelistctrl as ULC
 
 from gui_listctrl import ListCtrl
 
+
 class InputsTab(wx.Panel):
     """
     A simple wx.Panel class
     """
-    #----------------------------------------------------------------------
+    # ----------------------------------------------------------------------
+
     def __init__(self, parent, names, devices, canvas, statusbar):
         """"""
         wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
@@ -24,7 +26,7 @@ class InputsTab(wx.Panel):
             ULC.ULC_HAS_VARIABLE_ROW_HEIGHT | ULC.ULC_NO_HIGHLIGHT | \
             ULC.ULC_SHOW_TOOLTIPS | ULC.ULC_NO_HEADER
         self.switch_list = ListCtrl(self, wx.ID_ANY,
-                                      agwStyle=switch_list_style)
+                                    agwStyle=switch_list_style)
         self.switch_list.InsertColumn(0, "Switch")
         self.switch_list.InsertColumn(1, "State")
 
@@ -34,11 +36,11 @@ class InputsTab(wx.Panel):
         self.SetSizer(sizer)
 
         self.refresh_list()
-    
+
     def refresh_list(self):
         self.switch_list.DeleteAllItems()
         switch_ids = self.devices.find_devices(self.devices.SWITCH)
-        
+
         for i in range(len(switch_ids)):
             switch_id = switch_ids[i]
 
@@ -46,7 +48,7 @@ class InputsTab(wx.Panel):
             self.append_to_switch_list(i, switch_id, state)
 
     def append_to_switch_list(self, i: int, switch_id: int, initial_state: int):
-        
+
         switch_name = self.names.get_name_string(switch_id)
 
         state = initial_state == 1
@@ -64,9 +66,9 @@ class InputsTab(wx.Panel):
         button = getattr(self, attr)
 
         button.SetValue(state)
-        if state: 
+        if state:
             button.SetForegroundColour('green')
-        else: 
+        else:
             button.SetForegroundColour('red')
 
         # Right cell is the toggle button
@@ -77,7 +79,7 @@ class InputsTab(wx.Panel):
         button.Bind(wx.EVT_TOGGLEBUTTON, self.on_toggle)
 
         self.canvas.render_signals(flush_pan=True)
-    
+
     def on_toggle(self, event):
         state = event.GetEventObject().GetValue()
         switch_id = event.GetEventObject().switch_id
@@ -86,12 +88,14 @@ class InputsTab(wx.Panel):
             self.statusbar.SetStatusText("Set switch {} to 1.".format(
                 self.names.get_name_string(switch_id)))
             self.devices.set_switch(switch_id, 1)
-            print("Switch {} set to 1.".format(self.names.get_name_string(switch_id)))
+            print("Switch {} set to 1.".format(
+                self.names.get_name_string(switch_id)))
             event.GetEventObject().SetForegroundColour('green')
         else:
             event.GetEventObject().SetLabel("OFF")
             self.statusbar.SetStatusText("Set switch {} to 0.".format(
                 self.names.get_name_string(switch_id)))
-            print("Switch {} set to 0.".format(self.names.get_name_string(switch_id)))
+            print("Switch {} set to 0.".format(
+                self.names.get_name_string(switch_id)))
             self.devices.set_switch(switch_id, 0)
             event.GetEventObject().SetForegroundColour('red')

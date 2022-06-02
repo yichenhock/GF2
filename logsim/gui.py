@@ -23,8 +23,9 @@ from gui_consoleout_tab import ConsoleOutTab
 from gui_circuitdef_tab import CircuitDefTab
 from gui_inputs_tab import InputsTab
 from gui_monitors_tab import MonitorsTab
-from gui_canvas import MyGLCanvas 
+from gui_canvas import MyGLCanvas
 from global_vars import GlobalVars
+
 
 class Gui(wx.Frame):
     """Configure the main window and all the widgets.
@@ -63,10 +64,10 @@ class Gui(wx.Frame):
 
         self.global_vars = GlobalVars()
 
-        if self.path == None: # open up the file dialog
+        if self.path == None:  # open up the file dialog
             if not self.open_file():
                 print("Application must be run with a circuit definition file.")
-                self.Close(True) # exit the application
+                self.Close(True)  # exit the application
                 sys.exit()
 
         self.scanner = Scanner(self.path, names)
@@ -76,21 +77,23 @@ class Gui(wx.Frame):
         self.create_menu()
         self.create_tb()
         self.statusbar = self.CreateStatusBar(2)
-        self.statusbar.SetStatusWidths([-2,-1])
-        self.statusbar.SetStatusText(self.path,1)
+        self.statusbar.SetStatusWidths([-2, -1])
+        self.statusbar.SetStatusText(self.path, 1)
 
         # create an AuiManager object
         self.mgr = aui.AuiManager()
-        
+
         # notify AUI which frame to use
         self.mgr.SetManagedWindow(self)
 
         # # main monitor part
-        self.main_panel = wx.Panel(self, wx.ID_ANY, size=(wx.EXPAND, wx.EXPAND))
+        self.main_panel = wx.Panel(
+            self, wx.ID_ANY, size=(wx.EXPAND, wx.EXPAND))
         self.main_sizer = wx.BoxSizer(wx.HORIZONTAL)
         self.canvas_sizer = wx.BoxSizer(wx.VERTICAL)
 
-        self.canvas = MyGLCanvas(self.main_panel, devices, monitors, self.global_vars)
+        self.canvas = MyGLCanvas(
+            self.main_panel, devices, monitors, self.global_vars)
         self.y_scroll = wx.ScrollBar(self.main_panel, style=wx.SB_VERTICAL)
         self.x_scroll = wx.ScrollBar(self.main_panel, style=wx.SB_HORIZONTAL)
         self.y_scroll.Disable()
@@ -103,19 +106,23 @@ class Gui(wx.Frame):
 
         self.canvas_sizer.Add(self.canvas, wx.EXPAND, wx.EXPAND | wx.LEFT, 0)
         self.canvas_sizer.Add(self.x_scroll, 0, wx.EXPAND | wx.ALL, 0)
-        
+
         self.main_panel.SetSizerAndFit(self.main_sizer)
 
         self.mgr.AddPane(self.main_panel, aui.AuiPaneInfo().CenterPane())
 
-        # bottom panel 
-        notebook = aui.AuiNotebook(self, wx.ID_ANY, agwStyle=aui.AUI_NB_CLOSE_ON_ALL_TABS )
-        self.circuitDefPanel = CircuitDefTab(notebook, self.path, self.statusbar, self.global_vars)
-        self.inputsPanel = InputsTab(notebook, names, devices, self.canvas, self.statusbar)
-        self.monitorsPanel = MonitorsTab(notebook, names, devices, monitors, self.canvas, self.statusbar)
+        # bottom panel
+        notebook = aui.AuiNotebook(
+            self, wx.ID_ANY, agwStyle=aui.AUI_NB_CLOSE_ON_ALL_TABS)
+        self.circuitDefPanel = CircuitDefTab(
+            notebook, self.path, self.statusbar, self.global_vars)
+        self.inputsPanel = InputsTab(
+            notebook, names, devices, self.canvas, self.statusbar)
+        self.monitorsPanel = MonitorsTab(
+            notebook, names, devices, monitors, self.canvas, self.statusbar)
 
         self.consoleOutPanel = ConsoleOutTab(notebook, self.path, names, devices, network,
-                      monitors, self.parser, self.inputsPanel, self.set_gui_state, self.global_vars, self.canvas, self.save_file)
+                                             monitors, self.parser, self.inputsPanel, self.set_gui_state, self.global_vars, self.canvas, self.save_file)
 
         with open(self.path, "r") as f:
             self.circuitDefPanel.replace_text(f.read())
@@ -132,37 +139,37 @@ class Gui(wx.Frame):
         notebook.SetCloseButton(3, False)
 
         self.mgr.AddPane(notebook,
-                          aui.AuiPaneInfo().CaptionVisible(False).
-                          Right().PaneBorder(False).Floatable(False).GripperTop(False).MinSize(330,150).CloseButton(False))
+                         aui.AuiPaneInfo().CaptionVisible(False).
+                         Right().PaneBorder(False).Floatable(False).GripperTop(False).MinSize(330, 150).CloseButton(False))
 
         # setting docking guides fixes docking issue (problem with wxTimer)
         agwFlags = self.mgr.GetAGWFlags()
         self.mgr.SetAGWFlags(agwFlags
-                               | aui.AUI_MGR_AERO_DOCKING_GUIDES
-        )
+                             | aui.AUI_MGR_AERO_DOCKING_GUIDES
+                             )
 
-        self.mgr.Update() 
+        self.mgr.Update()
 
         self.y_scroll.Bind(wx.EVT_SCROLL, self.on_y_scroll)
         self.y_scroll.Bind(wx.EVT_SIZE, self.set_scroll)  # when window resizes
         self.x_scroll.Bind(wx.EVT_SCROLL, self.on_x_scroll)
         self.x_scroll.Bind(wx.EVT_SIZE, self.set_scroll)  # when window resizes
 
-        self.Bind(wx.EVT_CLOSE, self.on_close) 
-        self.Centre() 
+        self.Bind(wx.EVT_CLOSE, self.on_close)
+        self.Centre()
         self.Show(True)
-        
+
         self.SetSizeHints(minW=600, minH=400)
 
         self.set_gui_state(sim_running=False)
 
         print("Logic Simulator: interactive graphical user interface.\n"
               "Enter 'h' for help.")
-        
+
         # try parsing the network
         self.parse()
 
-    def create_menu(self): 
+    def create_menu(self):
         fileMenu = wx.Menu()
         fileMenu.Append(wx.ID_ABOUT, "&About")
         fileMenu.Append(wx.ID_SAVEAS, "&Save As")
@@ -172,29 +179,29 @@ class Gui(wx.Frame):
         menuBar.Append(fileMenu, "&File")
 
         self.SetMenuBar(menuBar)
-        
+
         self.Bind(wx.EVT_MENU, self.on_menu)
-    
-    def create_tb(self): 
-        tb = wx.ToolBar(self,- 1, style=wx.TB_TEXT)
+
+    def create_tb(self):
+        tb = wx.ToolBar(self, - 1, style=wx.TB_TEXT)
         self.ToolBar = tb
 
-        tb.AddTool( 1, 'Browse', wx.Image("./logsim/imgs/browse.png",
-                           wx.BITMAP_TYPE_PNG).ConvertToBitmap(), shortHelp="Browse for a file") 
-        tb.AddTool( 2, 'Save', wx.Image("./logsim/imgs/save.png",
-                           wx.BITMAP_TYPE_PNG).ConvertToBitmap(), shortHelp="Save the file") 
-        tb.AddTool( 3, 'New', wx.Image("./logsim/imgs/new file.png",
-                           wx.BITMAP_TYPE_PNG).ConvertToBitmap(), shortHelp="Create a new file") 
+        tb.AddTool(1, 'Browse', wx.Image("./logsim/imgs/browse.png",
+                                         wx.BITMAP_TYPE_PNG).ConvertToBitmap(), shortHelp="Browse for a file")
+        tb.AddTool(2, 'Save', wx.Image("./logsim/imgs/save.png",
+                                       wx.BITMAP_TYPE_PNG).ConvertToBitmap(), shortHelp="Save the file")
+        tb.AddTool(3, 'New', wx.Image("./logsim/imgs/new file.png",
+                                      wx.BITMAP_TYPE_PNG).ConvertToBitmap(), shortHelp="Create a new file")
         tb.AddStretchableSpace()
-        tb.AddTool( 4, 'Compile', wx.Image("./logsim/imgs/compile.png",
-                           wx.BITMAP_TYPE_PNG).ConvertToBitmap(), shortHelp="Compile the circuit definition") 
-        tb.AddTool( 5, 'Run', wx.Image("./logsim/imgs/run.png",
-                           wx.BITMAP_TYPE_PNG).ConvertToBitmap(), shortHelp="Run the simulation") 
-        tb.AddTool( 6, 'Continue', wx.Image("./logsim/imgs/continue.png",
-                           wx.BITMAP_TYPE_PNG).ConvertToBitmap(), shortHelp="Continue the simulation") 
-        tb.AddTool( 7, 'Reset', wx.Image("./logsim/imgs/reset.png",
-                           wx.BITMAP_TYPE_PNG).ConvertToBitmap(), shortHelp="Reset the simulation") 
-        
+        tb.AddTool(4, 'Compile', wx.Image("./logsim/imgs/compile.png",
+                                          wx.BITMAP_TYPE_PNG).ConvertToBitmap(), shortHelp="Compile the circuit definition")
+        tb.AddTool(5, 'Run', wx.Image("./logsim/imgs/run.png",
+                                      wx.BITMAP_TYPE_PNG).ConvertToBitmap(), shortHelp="Run the simulation")
+        tb.AddTool(6, 'Continue', wx.Image("./logsim/imgs/continue.png",
+                                           wx.BITMAP_TYPE_PNG).ConvertToBitmap(), shortHelp="Continue the simulation")
+        tb.AddTool(7, 'Reset', wx.Image("./logsim/imgs/reset.png",
+                                        wx.BITMAP_TYPE_PNG).ConvertToBitmap(), shortHelp="Reset the simulation")
+
         self.spin = wx.SpinCtrl(tb, wx.ID_ANY, "10")
         # Configure spin
         self.spin.SetMin(1)
@@ -202,12 +209,12 @@ class Gui(wx.Frame):
         tb.AddControl(self.spin, 'Cycles')
 
         tb.AddStretchableSpace()
-        tb.AddTool( 8, 'Save Plot', wx.Image("./logsim/imgs/save image.png",
-                           wx.BITMAP_TYPE_PNG).ConvertToBitmap(), shortHelp="Save signal trace as an image") 
-        tb.AddTool( 9, 'Help', wx.Image("./logsim/imgs/help.png",
-                           wx.BITMAP_TYPE_PNG).ConvertToBitmap(), shortHelp="Help") 
-        tb.AddTool( 10, 'Quit', wx.Image("./logsim/imgs/quit.png",
-                           wx.BITMAP_TYPE_PNG).ConvertToBitmap(), shortHelp="Quit Logic Simulator") 
+        tb.AddTool(8, 'Save Plot', wx.Image("./logsim/imgs/save image.png",
+                                            wx.BITMAP_TYPE_PNG).ConvertToBitmap(), shortHelp="Save signal trace as an image")
+        tb.AddTool(9, 'Help', wx.Image("./logsim/imgs/help.png",
+                                       wx.BITMAP_TYPE_PNG).ConvertToBitmap(), shortHelp="Help")
+        tb.AddTool(10, 'Quit', wx.Image("./logsim/imgs/quit.png",
+                                        wx.BITMAP_TYPE_PNG).ConvertToBitmap(), shortHelp="Quit Logic Simulator")
 
         tb.Realize()
 
@@ -222,7 +229,7 @@ class Gui(wx.Frame):
         self.Bind(wx.EVT_TOOL, self.on_tool_click, id=8)
         self.Bind(wx.EVT_TOOL, self.on_tool_click, id=9)
 
-    def update_statusbar(self, text): 
+    def update_statusbar(self, text):
         self.statusbar.SetStatusText(text)
 
     def on_menu(self, event):
@@ -239,75 +246,77 @@ class Gui(wx.Frame):
     def on_spin(self, event):
         """Handle the event when the user changes the spin control value."""
         spin_value = self.spin.GetValue()
-        self.update_statusbar("Number of simulation cycles set to: {}".format(spin_value))
+        self.update_statusbar(
+            "Number of simulation cycles set to: {}".format(spin_value))
 
     def on_tool_click(self, event):
 
-        if event.GetId() == 1: # browse
+        if event.GetId() == 1:  # browse
             self.open_file()
 
-        elif event.GetId() == 2: # save
+        elif event.GetId() == 2:  # save
             self.save_file(self.path)
 
-        elif event.GetId() == 3: # new file
+        elif event.GetId() == 3:  # new file
             self.create_file()
 
-        elif event.GetId() == 4: # compile aka parse file
+        elif event.GetId() == 4:  # compile aka parse file
             self.parse()
 
-        elif event.GetId() == 5: # run
+        elif event.GetId() == 5:  # run
             self.on_run_button()
 
-        elif event.GetId() == 6: # continue
+        elif event.GetId() == 6:  # continue
             self.on_cont_button()
 
-        elif event.GetId() == 7: # reset 
+        elif event.GetId() == 7:  # reset
             self.on_reset_button()
 
-        elif event.GetId() == 8: # save plot
+        elif event.GetId() == 8:  # save plot
             self.save_plot()
 
-        elif event.GetId() == 9: # help
+        elif event.GetId() == 9:  # help
             self.on_help_button()
 
-        elif event.GetId() == 10: # quit
+        elif event.GetId() == 10:  # quit
             # check first if user has any unsaved changes!!
             if self.global_vars.def_edited:
                 resp = wx.MessageBox("Changes you made may not be saved.",
-                          "Quit application?", wx.ICON_WARNING | wx.OK | wx.CANCEL)
-                if resp == wx.OK: 
+                                     "Quit application?", wx.ICON_WARNING | wx.OK | wx.CANCEL)
+                if resp == wx.OK:
                     self.Close(True)
-            else: 
-                    self.Close(True)
+            else:
+                self.Close(True)
 
-    def parse(self): 
+    def parse(self):
         # if self.global_vars.def_edited:
         # save the file first
         self.save_file(self.path)
 
         # reinitialise the scanner and parser
         self.scanner = Scanner(self.path, self.names)
-        self.parser = Parser(self.names, self.devices, self.network, self.monitors, self.scanner)
-        
-        try: 
-            if self.parser.parse_network(): 
-                # update the inputs panel 
+        self.parser = Parser(self.names, self.devices,
+                             self.network, self.monitors, self.scanner)
+
+        try:
+            if self.parser.parse_network():
+                # update the inputs panel
                 self.inputsPanel.refresh_list()
                 # update the monitors panel
                 self.monitorsPanel.initialise_monitor_list()
                 self.set_gui_state(sim_running=False)
 
-                self.statusbar.SetStatusText('File saved and compiled successfully.')
+                self.statusbar.SetStatusText(
+                    'File saved and compiled successfully.')
                 return True
             else:
-                # error has occured while parsing 
+                # error has occured while parsing
                 # wx.MessageBox("Error while parsing circuit definition. See error log in Output.",
                 #               "Simulation Failed", wx.ICON_ERROR | wx.OK)
                 self.statusbar.SetStatusText('File compiled with errors.')
                 return False
-        except: 
+        except:
             self.statusbar.SetStatusText("Parser failed to work :(")
-        
 
     def on_run_button(self):
         if not self.monitors.monitors_dictionary:
@@ -324,7 +333,7 @@ class Gui(wx.Frame):
         self.update_statusbar("Continue button pressed.")
         self.canvas.render_signals(flush_pan=True)
         self.set_gui_state(sim_running=True)
-    
+
     def on_reset_button(self):
         # self.cycles_completed = 0
         self.global_vars.cycles_completed = 0
@@ -334,37 +343,37 @@ class Gui(wx.Frame):
         self.update_statusbar("Reset button pressed.")
         self.set_gui_state(sim_running=False)
         self.canvas.render_signals(flush_pan=True)
-    
-    def set_gui_state(self, sim_running): 
-        self.ToolBar.EnableTool(4, not sim_running) # disable compile button
-        self.ToolBar.EnableTool(5, not sim_running) # disable run button
-        self.ToolBar.EnableTool(6, sim_running) # enable continue button
-        self.ToolBar.EnableTool(7, sim_running) # enable reset button
-        self.circuitDefPanel.set_textbox_state(not sim_running) # text box only editable when the simulation is not running
+
+    def set_gui_state(self, sim_running):
+        self.ToolBar.EnableTool(4, not sim_running)  # disable compile button
+        self.ToolBar.EnableTool(5, not sim_running)  # disable run button
+        self.ToolBar.EnableTool(6, sim_running)  # enable continue button
+        self.ToolBar.EnableTool(7, sim_running)  # enable reset button
+        # text box only editable when the simulation is not running
+        self.circuitDefPanel.set_textbox_state(not sim_running)
         self.monitorsPanel.enable_monitor(not sim_running)
 
-    def on_help_button(self): 
+    def on_help_button(self):
         wx.MessageBox("Press the buttons :D",
-                          "Help", wx.ICON_INFORMATION | wx.OK)
+                      "Help", wx.ICON_INFORMATION | wx.OK)
 
     def on_close(self, event):
         # deinitialize the frame manager
         self.mgr.UnInit()
         self.Destroy()
-    
+
     def check_for_changes(self):
         # check if user has any unsaved changes!!
         if self.global_vars.def_edited:
             resp = wx.MessageBox("Changes you made may not be saved.",
-                        "Open a new file?", wx.ICON_WARNING | wx.OK | wx.CANCEL)
-            if resp == wx.OK: 
+                                 "Open a new file?", wx.ICON_WARNING | wx.OK | wx.CANCEL)
+            if resp == wx.OK:
                 return True
-        else: 
-                return True
+        else:
+            return True
         return False
 
-    def open_file(self): 
-        
+    def open_file(self):
         """
         Launch a dialog for the user to select and open a file.
 
@@ -374,25 +383,25 @@ class Gui(wx.Frame):
         """
         if self.check_for_changes():
             with wx.FileDialog(self, "Open File",
-                            wildcard="Text documents (*.txt)|*.txt",
-                            style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST) as \
+                               wildcard="Text documents (*.txt)|*.txt",
+                               style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST) as \
                     file_dialog:
                 if file_dialog.ShowModal() == wx.ID_CANCEL:
-                    return False# the user changed their mind
+                    return False  # the user changed their mind
 
                 # Proceed loading the file chosen by the user
                 pathname = file_dialog.GetPath()
                 return self.load_file(pathname)
 
-    def load_file(self, pathname): 
-        try: 
+    def load_file(self, pathname):
+        try:
             f = open(pathname)
-        except OSError: 
+        except OSError:
             wx.MessageBox("Error opening file.",
-                        "Error", wx.ICON_ERROR | wx.OK)
+                          "Error", wx.ICON_ERROR | wx.OK)
             return False
         self.path = pathname
-        try: 
+        try:
             self.statusbar.SetStatusText(pathname, 1)
             self.circuitDefPanel.replace_text(f.read())
         except AttributeError:
@@ -402,8 +411,7 @@ class Gui(wx.Frame):
         f.close()
         return True
 
-
-    def create_file(self): 
+    def create_file(self):
         """
         Launch a dialog for the user to select and create a new file in that directory.
 
@@ -413,13 +421,13 @@ class Gui(wx.Frame):
         """
         if self.check_for_changes():
             with wx.FileDialog(self, "Save File",
-                            defaultFile="new_definition_file.txt",
-                            wildcard="Text documents (*.txt)|*.txt",
-                            style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT) as \
+                               defaultFile="new_definition_file.txt",
+                               wildcard="Text documents (*.txt)|*.txt",
+                               style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT) as \
                     file_dialog:
                 if file_dialog.ShowModal() == wx.ID_CANCEL:
                     return  # the user changed their mind
-                    
+
                 # Proceed saving the file chosen by the user
                 pathname = file_dialog.GetPath()
                 # CREATE A NEW FILE HERE AND SET THAT AS THE NEW PATH!
@@ -428,12 +436,12 @@ class Gui(wx.Frame):
                 except OSError:
                     print('Failed creating the file')
                     wx.MessageBox("Error creating file.",
-                            "Error", wx.ICON_ERROR | wx.OK)
+                                  "Error", wx.ICON_ERROR | wx.OK)
                 else:
                     print('File created successfully in {}'.format(pathname))
                     self.load_file(pathname)
 
-    def save_plot(self): 
+    def save_plot(self):
         """
         Launch a dialog for the user to select and save the signal trace as an image.
 
@@ -452,8 +460,8 @@ class Gui(wx.Frame):
             # Proceed saving the file chosen by the user
             pathname = file_dialog.GetPath()
             self.canvas.save(pathname)
-    
-    def save_file(self, pathname): 
+
+    def save_file(self, pathname):
         # try to save to the same path
         try:
             with open(pathname, "w") as f:
@@ -461,21 +469,21 @@ class Gui(wx.Frame):
 
         except OSError:
             wx.MessageBox("Error saving file.",
-                    "Error", wx.ICON_ERROR | wx.OK)
+                          "Error", wx.ICON_ERROR | wx.OK)
             return
 
         self.statusbar.SetStatusText('File saved.')
         self.global_vars.def_edited = False
-    
+
     def save_file_as(self):
         with wx.FileDialog(self, "Save File",
-                        defaultFile="new_definition_file.txt",
-                        wildcard="Text documents (*.txt)|*.txt",
-                        style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT) as \
+                           defaultFile="new_definition_file.txt",
+                           wildcard="Text documents (*.txt)|*.txt",
+                           style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT) as \
                 file_dialog:
             if file_dialog.ShowModal() == wx.ID_CANCEL:
                 return  # the user changed their mind
-                
+
             # Proceed saving the file chosen by the user
             pathname = file_dialog.GetPath()
 
@@ -483,7 +491,7 @@ class Gui(wx.Frame):
             self.save_file(pathname)
             self.load_file(pathname)
 
-    def set_scroll(self, event = None):
+    def set_scroll(self, event=None):
         self.canvas.update_dimensions()
         y_scroll_width, y_scroll_height = self.y_scroll.GetSize()
         x_scroll_width, x_scroll_height = self.x_scroll.GetSize()
