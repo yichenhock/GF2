@@ -58,7 +58,7 @@ class SyntaxError():
 
         self.NO_CONNECTION_KEYWORD, self.NO_INPUT_GATE_NAME, self.NO_INPUT_PORT_NAME, self.MISSING_DOT_INPUT, self.PORT_NAME_ERROR, self.CONNECTION_SUBHEADER_NAME_ERROR, self.DTYPE_OUTPUT_NAME_ERROR, self.DOT_UNEXPECTED,
 
-        self.NO_MONITOR_NAME, self.EXTRA_INFORMATION_AFTER_MONITORS] = range(30)
+        self.NO_MONITOR_NAME, self.EXTRA_INFORMATION_AFTER_MONITORS, self.EMPTY_FILE] = range(31)
 
         self.error_type_list = ["NO_OPEN_BRACKET", "NO_CLOSE_BRACKET", "DEVICE_LETTER_CAPITAL", "NO_DEVICE_NAME", "NO_HEADER", "HEADER_NAME_ERROR", "NO_DEFINITION_KEYWORD", "NO_POSSESSION_KEYWORD", "DEVICE_TYPE_ERROR", "INCORRECT_SWITCH_NAME", "INCORRECT_CLOCK_NAME", "NO_SEMICOLON", "INCONSISTENT_DEVICE_NAMES", "MISSING_SECTION",
 
@@ -67,7 +67,7 @@ class SyntaxError():
         "NO_CONNECTION_KEYWORD", "NO_INPUT_GATE_NAME", "NO_INPUT_PORT_NAME", "MISSING_DOT_INPUT", 
         "PORT_NAME_ERROR", "CONNECTION_SUBHEADER_NAME_ERROR", "DTYPE_OUTPUT_NAME_ERROR", "DOT_UNEXPECTED",
 
-        "NO_MONITOR_NAME", "EXTRA_INFORMATION_AFTER_MONITORS"]
+        "NO_MONITOR_NAME", "EXTRA_INFORMATION_AFTER_MONITORS", "EMPTY_FILE"]
 
         self.error_code_count = 0
 
@@ -114,7 +114,7 @@ class SyntaxError():
         "Unexpected dot following name of none dtype used to define name of output. Only dtype outputs should take this form, e.g.: a.Q, a.QBAR.",
 
         "Missing name in monitor section.", 
-        "Extra information provided in circuit definition file after end of the monitors block. Please ensure that this is moved elsewhere if it is important as it will not be read."]
+        "Extra information provided in circuit definition file after end of the monitors block. Please ensure that this is moved elsewhere if it is important as it will not be read.", "Circuit definition text file is either empty or does not contain characters recognised by the scanner."]
 
         self.message = "ParserSyntaxError: {}".format(self.message_list[id])
         
