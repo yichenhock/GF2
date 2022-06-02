@@ -1,4 +1,4 @@
-# Dummy Parser - simple AND gate;
+# Simple AND gate;
 
 devices(
 	a is AND;

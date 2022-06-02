@@ -101,9 +101,7 @@ class Parser:
                     if next_sym.type == self.scanner.EOF:
                         raise ParserError # raise expected a 'IS' or 'ARE'
                     
-                    
                     # if next_sym.type
-                    
                     next_sym = self.scanner.get_symbol()
 
             else: 
