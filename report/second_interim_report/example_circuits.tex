@@ -299,9 +299,56 @@
     )
 \end{Verbatim}
 
-    
+
 \newpage
-\subsection*{Example Circuit F --- Blank Circuit}
+\subsection*{Example Circuit F --- Ring Oscillator}
+
+\vspace{-0.4cm}
+\begin{figure}[H]
+    \begin{center}
+    \includegraphics[width = 0.65\textwidth]{Ring Oscillator.png}
+
+    \caption{Ring Oscillator}
+    \end{center}
+    \end{figure}
+
+\begin{Verbatim}[numbers=left,xleftmargin=5mm]
+    #Example circuit - Ring Oscillator;
+
+    devices(
+        a, b, c are NAND;
+    )
+    
+    initialise(
+        a, b, c have 2 inputs;
+    )
+    
+    connections(
+        a(
+            c to a.I1;
+            c to a.I2;
+        )
+    
+        b(  
+            a to b.I1;
+            a to b.I2;
+        )
+    
+        c(  
+            b to c.I1;
+            b to c.I2;
+        )
+    )
+    
+    monitors(
+        c;
+    )
+\end{Verbatim}
+\hfill\\
+Note that this circuit will not be able to be simulated as it involves oscillating signals.
+
+\newpage
+\subsection*{Example Circuit G --- Blank Circuit}
 \hfill\\
 
 
