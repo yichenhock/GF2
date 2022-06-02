@@ -167,7 +167,7 @@ class Gui(wx.Frame):
         self.Centre()
         self.Show(True)
 
-        self.SetSizeHints(minW=600, minH=400)
+        self.SetSizeHints(minW=700, minH=500)
 
         self.set_gui_state(sim_running=False)
 
