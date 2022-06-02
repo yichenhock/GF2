@@ -20,12 +20,14 @@ class MonitorsTab(wx.Panel):
         self.canvas = canvas
         self.statusbar = statusbar
 
-        self.displayed_signals = []  # list of signal ids of signals currently being displayed
+        # list of signal ids of signals currently being displayed
+        self.displayed_signals = []
 
         monitors_list_style = \
             ULC.ULC_REPORT | \
             ULC.ULC_HRULES | ULC.ULC_SINGLE_SEL | \
-            ULC.ULC_HAS_VARIABLE_ROW_HEIGHT | ULC.ULC_NO_HEADER | ULC.ULC_SHOW_TOOLTIPS
+            ULC.ULC_HAS_VARIABLE_ROW_HEIGHT | ULC.ULC_NO_HEADER | \
+            ULC.ULC_SHOW_TOOLTIPS
         self.monitors_list = ListCtrl(self, wx.ID_ANY,
                                       agwStyle=monitors_list_style)
         self.monitors_list.InsertColumn(0, "Component")
@@ -33,8 +35,10 @@ class MonitorsTab(wx.Panel):
 
         # configure the drop down boxes
         self.label_types = wx.StaticText(self, wx.ID_ANY, "Type")
-        self.combo_types = wx.ComboBox(self, wx.ID_ANY, choices=[
-                                       'All', 'Gate', 'Switch', 'Clock', 'D-Type'], style=wx.CB_READONLY)
+        self.combo_types = wx.ComboBox(self, wx.ID_ANY,
+                                       choices=['All', 'Gate', 'Switch',
+                                                'Clock', 'D-Type'],
+                                       style=wx.CB_READONLY)
         self.label_names = wx.StaticText(self, wx.ID_ANY, "Name")
         self.combo_names = wx.ComboBox(
             self, wx.ID_ANY, choices=[], style=wx.CB_READONLY)
@@ -117,7 +121,8 @@ class MonitorsTab(wx.Panel):
             # input_types = ['CLK', 'SET', 'CLEAR', 'DATA']
             # new_list = []
             # for id in dtype_ids:
-            #     new_list.extend(['.'.join([self.names.get_name_string(id),i]) for i in input_types])
+            #     new_list.extend(['.'.join([self.names.get_name_string(id),i])
+            # for i in input_types])
             # self.refresh_combo_names(new_list)
 
     # initialise the stuff that is monitored from the start

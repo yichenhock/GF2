@@ -32,7 +32,8 @@ class ConsoleOutTab(wx.Panel):
     # ----------------------------------------------------------------------
 
     def __init__(self, parent, path, names, devices, network,
-                 monitors, parser, inputsPanel, set_gui_state,  global_vars, canvas, save_file):
+                 monitors, parser, inputsPanel, set_gui_state,
+                 global_vars, canvas, save_file):
         """"""
         wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
 
@@ -58,9 +59,11 @@ class ConsoleOutTab(wx.Panel):
         self.cursor = 0  # cursor position
 
         self.log = wx.TextCtrl(
-            self, wx.ID_ANY, "", style=wx.NO_BORDER | wx.TE_MULTILINE | wx.TOP | wx.TE_READONLY)
+            self, wx.ID_ANY, "", style=wx.NO_BORDER | wx.TE_MULTILINE |
+            wx.TOP | wx.TE_READONLY)
         self.commands = wx.TextCtrl(self, wx.ID_ANY, "", size=(
-            wx.MAXIMIZE, 22), style=wx.BORDER_DEFAULT | wx.BOTTOM | wx.TE_PROCESS_ENTER)
+            wx.MAXIMIZE, 22), style=wx.BORDER_DEFAULT | wx.BOTTOM |
+            wx.TE_PROCESS_ENTER)
 
         redir = RedirectText(self.log)
         sys.stdout = redir
@@ -141,7 +144,8 @@ class ConsoleOutTab(wx.Panel):
             if self.network.execute_network():
                 self.monitors.record_signals()
             else:
-                self.parent.GetParent().statusbar.SetStatusText("Error! Network oscillating.")
+                self.parent.GetParent().statusbar\
+                    .SetStatusText("Error! Network oscillating.")
                 print("Error! Network oscillating.")
                 return False
         # self.monitors.display_signals()
@@ -149,15 +153,6 @@ class ConsoleOutTab(wx.Panel):
 
     def run_command(self, gui=False, gui_cycles=None):
         """Run the simulation from scratch."""
-        # # save file first
-        # self.save_file(self.path)
-
-        # # reinitialise the scanner and parser
-        # self.scanner = Scanner(self.path, self.names)
-        # self.parser = Parser(self.names, self.devices, self.network, self.monitors, self.scanner)
-
-        # if self.parser.parse_network():
-
         self.global_vars.cycles_completed = 0
         if gui:
             cycles = gui_cycles
@@ -186,7 +181,8 @@ class ConsoleOutTab(wx.Panel):
             elif self.run_network(cycles):
                 self.global_vars.cycles_completed += cycles
                 print(" ".join(["Continuing for", str(cycles), "cycles.",
-                                "Total:", str(self.global_vars.cycles_completed)]))
+                                "Total:",
+                                str(self.global_vars.cycles_completed)]))
                 self.canvas.render_signals()
                 self.set_gui_state(True)
 

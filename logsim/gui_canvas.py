@@ -250,7 +250,8 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         # Reset y coordinate and offset
         y = self.initial_y + self.clock_vspace
 
-        for device_id, output_id in reversed(self.monitors.monitors_dictionary):
+        for device_id, output_id in \
+                reversed(self.monitors.monitors_dictionary):
             if y < self.initial_y + self.clock_vspace - self.pan_y:
                 # Don't render signals below visible area/obscuring cycle axis
                 y += self.component_vspace

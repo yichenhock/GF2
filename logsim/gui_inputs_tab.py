@@ -47,7 +47,8 @@ class InputsTab(wx.Panel):
             state = self.devices.get_device(switch_id).switch_state
             self.append_to_switch_list(i, switch_id, state)
 
-    def append_to_switch_list(self, i: int, switch_id: int, initial_state: int):
+    def append_to_switch_list(self, i: int, switch_id: int,
+                              initial_state: int):
 
         switch_name = self.names.get_name_string(switch_id)
 

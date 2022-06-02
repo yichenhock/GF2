@@ -16,7 +16,8 @@ class CircuitDefTab(wx.Panel):
         self.global_vars = global_vars
 
         self.textBox = wx.TextCtrl(
-            self, -1, "", style=wx.NO_BORDER | wx.TE_MULTILINE | wx.TE_PROCESS_ENTER)
+            self, -1, "", style=wx.NO_BORDER | wx.TE_MULTILINE |
+            wx.TE_PROCESS_ENTER)
 
         font_code = wx.Font(10, wx.MODERN, wx.NORMAL,
                             wx.NORMAL, False, u'Consolas')
