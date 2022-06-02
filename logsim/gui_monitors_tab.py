@@ -26,15 +26,15 @@ class MonitorsTab(wx.Panel):
         self.statusbar = statusbar
 
         # list of signal ids of signals currently being displayed
-        self.displayed_signals = []
+        self.displayed_signals = [] # [(signal_name, output_port)]
 
-        monitors_list_style = \
+        self.monitors_list_style = \
             ULC.ULC_REPORT | \
             ULC.ULC_HRULES | ULC.ULC_SINGLE_SEL | \
             ULC.ULC_HAS_VARIABLE_ROW_HEIGHT | ULC.ULC_NO_HEADER | \
             ULC.ULC_SHOW_TOOLTIPS
         self.monitors_list = ListCtrl(self, wx.ID_ANY,
-                                      agwStyle=monitors_list_style)
+                                      agwStyle=self.monitors_list_style)
         self.monitors_list.InsertColumn(0, "Component")
         self.monitors_list.InsertColumn(1, "")  # remove from monitor buttons
 
@@ -122,34 +122,51 @@ class MonitorsTab(wx.Panel):
                 [self.names.get_name_string(id) for id in clock_ids])
 
         elif self.combo_types.GetValue() == 'D-Type':  # DTYPE IS SPECIAL!
-            pass
-            # dtype_ids = self.devices.find_devices(self.devices.D_TYPE)
-            # input_types = ['CLK', 'SET', 'CLEAR', 'DATA']
-            # new_list = []
-            # for id in dtype_ids:
-            #     new_list.extend(['.'.join([self.names.get_name_string(id),i])
-            # for i in input_types])
-            # self.refresh_combo_names(new_list)
+            dtype_ids = self.devices.find_devices(self.devices.D_TYPE)
+            self.refresh_combo_names(
+                [self.names.get_name_string(id) for id in dtype_ids])
+
+    def clear_monitor_list(self): 
+        """Clear monitor list before initialisation."""
+        # clear the existing stuff on the list
+        for (signal_id, output_id) in self.displayed_signals[::-1]:
+            signal = self.get_signal_full_name(signal_id, output_id)
+            index = self.monitors_list.FindItem(-1,signal)
+            self.monitors_list.DeleteItem(index)
+            self.displayed_signals.remove((signal_id, output_id))
 
     # initialise the stuff that is monitored from the start
     def initialise_monitor_list(self):
         """Initialise `self.monitors_list` with circuit definition file."""
-        # clear the existing stuff on the list
-        self.monitors_list.DeleteAllItems()
-
         monitored_signals = self.monitors.get_signal_names()[0]
-
         for signal in monitored_signals:
             self.append_to_monitors_list(signal)
-
+            signal_id, signal_name, output_id, output_name = self.get_signal_and_output_id(signal)
+        self.combo_types.SetValue('All')
         self.initialise_combo_names()
+        self.canvas.render_signals(flush_pan=True)
 
-    def append_to_monitors_list(self, signal_name):
-        """Add an entry to `self.monitors_list`."""
+    def get_signal_and_output_id(self, signal): 
+        name_arr = signal.split('.')
+        signal_name = name_arr[0]
         signal_id = self.names.query(signal_name)
+
+        output_id = None
+        output_name = None
+        if len(name_arr) > 1:
+            output_name = name_arr[1]
+            output_id = self.names.query(output_name)
+
+        return signal_id, signal_name, output_id, output_name
+
+    def append_to_monitors_list(self, signal):
+        """Add an entry to `self.monitors_list`."""
+        # signal name may be a dtype
+        signal_id, signal_name, output_id, output_name = self.get_signal_and_output_id(signal)
+
         index = self.monitors_list.InsertStringItem(
-            len(self.displayed_signals), signal_name)
-        attr = "signal_" + str(signal_id)
+            len(self.displayed_signals), signal)
+        attr = "signal_" + str(signal_id) + "_" + str(output_id)
         setattr(self, attr,
                 wx.ToggleButton(self.monitors_list, wx.ID_ANY,
                                 str("Remove")))
@@ -159,9 +176,10 @@ class MonitorsTab(wx.Panel):
         # Set switch_id attribute so that event handler can access
         # the id
         button.signal_id = signal_id
+        button.output_id = output_id
         button.Bind(wx.EVT_TOGGLEBUTTON, self.on_remove)
 
-        self.displayed_signals.append(signal_id)
+        self.displayed_signals.append((signal_id, output_id))
         self.canvas.render_signals(flush_pan=True)
 
     def initialise_combo_names(self):
@@ -173,8 +191,15 @@ class MonitorsTab(wx.Panel):
     def refresh_combo_names(self, names_list):
         """Refresh the list in `combo_names`."""
         self.combo_names.Clear()
+        dtype_outputs = ["DATA", "CLK", "SET", "CLEAR", "Q", "QBAR"]
         for name in names_list:
-            self.combo_names.Append(name)
+            device = self.devices.get_device(self.names.query(name))
+            if device.device_kind == self.devices.D_TYPE:
+                # DTYPES have multiple output ports
+                for port_name in dtype_outputs:
+                    self.combo_names.Append(".".join([name, port_name]))
+            else:
+                self.combo_names.Append(name)
 
     def on_add_button(self, event):
         """Handles the event when the user adds a component to monitor."""
@@ -189,7 +214,7 @@ class MonitorsTab(wx.Panel):
                 self.add_monitor(name_to_add)
 
     def on_add_all_button(self, event):
-        """Handles the event when the user adds all component to monitor."""
+        """Handles the event when the user adds all components to monitor."""
         names_list = self.combo_names.GetItems()
 
         for name in names_list:
@@ -198,24 +223,35 @@ class MonitorsTab(wx.Panel):
 
     def add_monitor(self, name_to_add):
         """Add components to `self.monitors_list`."""
-        name_id = self.names.query(name_to_add)
-        # IF THIS IS DTYPE, THERE NEEDS TO BE A SECOND ARGUMENT!
+        signal_id, signal_name, output_id, output_name = self.get_signal_and_output_id(name_to_add)
 
-        self.monitors.make_monitor(name_id, None)
+        self.monitors.make_monitor(signal_id, output_id)
         # append the component to the list
         self.append_to_monitors_list(name_to_add)
         self.statusbar.SetStatusText('Added component to monitor.')
         print('{} added to monitor.'.format(name_to_add))
 
+    def get_signal_full_name(self, signal_id, output_id):
+        if output_id: 
+            signal_name = "".join([self.names.get_name_string(signal_id),'.',self.names.get_name_string(output_id)])
+        else: 
+            signal_name = self.names.get_name_string(signal_id)
+        return signal_name
+
     def on_remove(self, event):
         """Handles the event when the user removes a component."""
-        signal_id = event.GetEventObject().signal_id
+        button = event.GetEventObject()
+        signal_id = button.signal_id
+        output_id = button.output_id
+
+        signal = self.get_signal_full_name(signal_id, output_id)
+
         # remove the signal from monitors
-        # NEED TO ACCOUNT FOR DTYPES!!
-        self.monitors.remove_monitor(signal_id, None)
+        self.monitors.remove_monitor(signal_id, output_id)
         # remove the signal from the monitors list
-        self.monitors_list.DeleteItem(self.displayed_signals.index(signal_id))
-        self.displayed_signals.remove(signal_id)
+        self.monitors_list.DeleteItem(self.monitors_list
+                .FindItem(-1, signal))
+        self.displayed_signals.remove((signal_id, output_id))
         self.statusbar.SetStatusText("Component removed from monitor.")
         print('{} removed from monitor.'.format(
             self.names.get_name_string(signal_id)))

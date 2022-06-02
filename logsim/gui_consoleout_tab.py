@@ -6,12 +6,10 @@ Description of classes
 
 """
 import sys
-from numpy import save
 import wx
 
 from scanner import Scanner
-from parse import Parser
-# from dum import DummyParser as Parser
+from parse_no_output import Parser
 
 
 class RedirectText(object):

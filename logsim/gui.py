@@ -16,8 +16,7 @@ from devices import Devices
 from network import Network
 from monitors import Monitors
 from scanner import Scanner
-from parse import Parser
-# from dum import DummyParser as Parser
+from parse_no_output import Parser
 
 from gui_consoleout_tab import ConsoleOutTab
 from gui_circuitdef_tab import CircuitDefTab
@@ -259,6 +258,7 @@ class Gui(wx.Frame):
         self.Bind(wx.EVT_TOOL, self.on_tool_click, id=7)
         self.Bind(wx.EVT_TOOL, self.on_tool_click, id=8)
         self.Bind(wx.EVT_TOOL, self.on_tool_click, id=9)
+        self.Bind(wx.EVT_TOOL, self.on_tool_click, id=10)
 
     def update_statusbar(self, text):
         """Update the text on the statusbar."""
@@ -285,7 +285,11 @@ class Gui(wx.Frame):
     def on_tool_click(self, event):
         """Map toolbar buttons to functions."""
         if event.GetId() == 1:  # browse
-            self.open_file()
+            if self.open_file():
+                # reset the simulation
+                self.on_reset_button()
+                # parse the file
+                self.parse()
 
         elif event.GetId() == 2:  # save
             self.save_file(self.path)
@@ -326,11 +330,17 @@ class Gui(wx.Frame):
         """Compiles/parses the circuit definition file."""
         # save the file first
         self.save_file(self.path)
+        self.statusbar.SetStatusText('Compiling...')
 
-        # reinitialise the scanner and parser
-        self.scanner = Scanner(self.path, self.names)
-        self.parser = Parser(self.names, self.devices,
-                             self.network, self.monitors, self.scanner)
+        self.monitorsPanel.clear_monitor_list()
+
+        # reinitialise instances
+        self.names.__init__()
+        self.devices.__init__(self.names)
+        self.network.__init__(self.names, self.devices)
+        self.monitors.__init__(self.names, self.devices, self.network)
+        self.scanner.__init__(self.path, self.names)
+        self.parser.__init__(self.names, self.devices, self.network, self.monitors, self.scanner)
 
         try:
             if self.parser.parse_network():
@@ -347,7 +357,8 @@ class Gui(wx.Frame):
                 # error has occured while parsing
                 self.statusbar.SetStatusText('File compiled with errors.')
                 return False
-        except Exception:
+        except Exception as e:
+            print(e)
             self.statusbar.SetStatusText("Parser failed to work :(")
 
     def on_run_button(self):
