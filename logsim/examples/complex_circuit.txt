@@ -18,7 +18,7 @@ initialise(
 connections(
     f(
         f.QBAR to f.DATA;
-        d to f.CLK;
+        d is connected to f.CLK;
         sw1 to f.SET;
         sw2 to f.CLEAR;
     )

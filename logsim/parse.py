@@ -1432,10 +1432,10 @@ class Parser:
         self.eofcheck = self.circuit_description()
 
         if self.eofcheck == True:
-            for device in self.devices.devices_list:
-                print("Device", self.names.get_name_string(device.device_id), "Inputs:", device.inputs, "Outputs:", device.outputs)
-            print(self.devices.find_devices(self.devices.SWITCH))
-            print(self.monitors.monitors_dictionary)
+            # for device in self.devices.devices_list:
+            #     print("Device", self.names.get_name_string(device.device_id), "Inputs:", device.inputs, "Outputs:", device.outputs)
+            # print(self.devices.find_devices(self.devices.SWITCH))
+            # print(self.monitors.monitors_dictionary)
             self.scanner.file.close()
 
         self.total_errors = self.semantic.error_code_count + self.syntax.error_code_count
