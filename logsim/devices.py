@@ -100,8 +100,11 @@ class Devices:
     def __init__(self, names):
         """Initialise devices list and constants."""
 
+        # List of names imported from names module
+        # Read in from scanner
         self.names = names
 
+        # List of Device type objects - can assign attributes
         self.devices_list = []
 
         gate_strings = ["AND", "OR", "NAND", "NOR", "XOR"]

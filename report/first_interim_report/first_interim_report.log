@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.3) (preloaded format=pdflatex 2022.5.14)  28 MAY 2022 18:12
+=======
 This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.3) (preloaded format=pdflatex 2022.5.14)  28 MAY 2022 17:22
+>>>>>>> michael/scanner_pytests
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -447,36 +451,18 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 48
 File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
 ))
 \c@lstlisting=\count316
- (first_interim_report.toc
-LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 4.
- (C:\Users\micha\AppData\Local\Programs\MiKTeX\tex/latex/lm\ot1lmr.fd
-File: ot1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
-)
-LaTeX Font Info:    Trying to load font information for OML+lmm on input line 4.
- (C:\Users\micha\AppData\Local\Programs\MiKTeX\tex/latex/lm\omllmm.fd
-File: omllmm.fd 2009/10/30 v1.6 Font defs for Latin Modern
-)
-LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 4.
- (C:\Users\micha\AppData\Local\Programs\MiKTeX\tex/latex/lm\omslmsy.fd
-File: omslmsy.fd 2009/10/30 v1.6 Font defs for Latin Modern
-)
-LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 4.
- (C:\Users\micha\AppData\Local\Programs\MiKTeX\tex/latex/lm\omxlmex.fd
-File: omxlmex.fd 2009/10/30 v1.6 Font defs for Latin Modern
-)
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 4.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 4.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 4.
-)
+
+No file first_interim_report.toc.
 \tf@toc=\write4
 \openout4 = `first_interim_report.toc'.
 
- [1
+[1
 
-{C:/Users/micha/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}] [2]
+{C:/Users/micha/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}]
+
+LaTeX Warning: Reference `fig:Gantt Chart' on page 2 undefined on input line 75.
+
+[2]
 LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 81.
  (C:\Users\micha\AppData\Local\Programs\MiKTeX\tex/latex/lm\t1lmtt.fd
 File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
@@ -500,6 +486,138 @@ File: Simple Circuit.png Graphic file (type png)
 <use Simple Circuit.png>
 Package pdftex.def Info: Simple Circuit.png  used on input line 167.
 (pdftex.def)             Requested size: 330.42041pt x 158.02681pt.
+<<<<<<< HEAD
+d:/Files/University/Year 3/Projects/GF2 Software/logsim/GF2/report/first_interim_report/first_interim_report.tex:169: Misplaced \noalign.
+\hline ->\noalign 
+                  {\ifnum 0=`}\fi \hrule \@height \arrayrulewidth \futurelet...
+l.169     \hline
+                
+I expect to see \noalign only after the \cr of
+an alignment. Proceed, and I'll ignore this case.
+
+
+d:/Files/University/Year 3/Projects/GF2 Software/logsim/GF2/report/first_interim_report/first_interim_report.tex:194: LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.194 \end{Verbatim}
+                    
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+d:/Files/University/Year 3/Projects/GF2 Software/logsim/GF2/report/first_interim_report/first_interim_report.tex:194: LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.194 \end{Verbatim}
+                    
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+d:/Files/University/Year 3/Projects/GF2 Software/logsim/GF2/report/first_interim_report/first_interim_report.tex:194: LaTeX Error: \begin{figure} on input line 165 ended by \end{Verbatim}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.194 \end{Verbatim}
+                    
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+d:/Files/University/Year 3/Projects/GF2 Software/logsim/GF2/report/first_interim_report/first_interim_report.tex:194: Missing } inserted.
+<inserted text> 
+                }
+l.194 \end{Verbatim}
+                    
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+
+d:/Files/University/Year 3/Projects/GF2 Software/logsim/GF2/report/first_interim_report/first_interim_report.tex:195: LaTeX Error: \begin{figure} on input line 165 ended by \end{multicols}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.195 \end{multicols}
+                     
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+d:/Files/University/Year 3/Projects/GF2 Software/logsim/GF2/report/first_interim_report/first_interim_report.tex:195: Missing } inserted.
+<inserted text> 
+                }
+l.195 \end{multicols}
+                     
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+
+d:/Files/University/Year 3/Projects/GF2 Software/logsim/GF2/report/first_interim_report/first_interim_report.tex:195: LaTeX Error: \begin{document} ended by \end{multicols}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.195 \end{multicols}
+                     
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+d:/Files/University/Year 3/Projects/GF2 Software/logsim/GF2/report/first_interim_report/first_interim_report.tex:195: Extra \endgroup.
+<recently read> \endgroup 
+                          
+l.195 \end{multicols}
+                     
+Things are pretty mixed up, but I think the worst is over.
+
+<Complex Circuit.png, id=18, 823.075pt x 301.125pt>
+File: Complex Circuit.png Graphic file (type png)
+<use Complex Circuit.png>
+Package pdftex.def Info: Complex Circuit.png  used on input line 202.
+(pdftex.def)             Requested size: 472.03123pt x 172.69524pt.
+[4] [5 <./Complex Circuit.png>] [6]
+LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 299.
+ (C:\Users\micha\AppData\Local\Programs\MiKTeX\tex/latex/lm\ot1lmr.fd
+File: ot1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 299.
+ (C:\Users\micha\AppData\Local\Programs\MiKTeX\tex/latex/lm\omllmm.fd
+File: omllmm.fd 2009/10/30 v1.6 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 299.
+ (C:\Users\micha\AppData\Local\Programs\MiKTeX\tex/latex/lm\omslmsy.fd
+File: omslmsy.fd 2009/10/30 v1.6 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 299.
+ (C:\Users\micha\AppData\Local\Programs\MiKTeX\tex/latex/lm\omxlmex.fd
+File: omxlmex.fd 2009/10/30 v1.6 Font defs for Latin Modern
+)
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <10> on input line 299.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <7> on input line 299.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <5> on input line 299.
+
+Underfull \hbox (badness 4254) in paragraph at lines 312--312
+=======
 [4] [5 <./Simple Circuit.png>]
 <Complex Circuit.png, id=25, 823.075pt x 301.125pt>
 File: Complex Circuit.png Graphic file (type png)
@@ -508,50 +626,89 @@ Package pdftex.def Info: Complex Circuit.png  used on input line 217.
 (pdftex.def)             Requested size: 472.03123pt x 172.69524pt.
  [6 <./Complex Circuit.png>] [7]
 Underfull \hbox (badness 4254) in paragraph at lines 326--326
+>>>>>>> michael/scanner_pytests
 []\T1/lmr/m/n/10 initialise( sw1, sw2 are
  []
 
 
+<<<<<<< HEAD
+Underfull \hbox (badness 10000) in paragraph at lines 312--312
+=======
 Underfull \hbox (badness 10000) in paragraph at lines 326--326
+>>>>>>> michael/scanner_pytests
 \T1/lmr/m/n/10 HIGH; ); con-nec-tions(
  []
 
 
+<<<<<<< HEAD
+Underfull \hbox (badness 4582) in paragraph at lines 312--312
+=======
 Underfull \hbox (badness 4582) in paragraph at lines 326--326
+>>>>>>> michael/scanner_pytests
 \T1/lmr/m/n/10 sw1 to d.SET; sw2 to
  []
 
 
+<<<<<<< HEAD
+Underfull \hbox (badness 1478) in paragraph at lines 316--316
+=======
 Underfull \hbox (badness 1478) in paragraph at lines 330--330
+>>>>>>> michael/scanner_pytests
 \T1/lmr/m/n/10 con-nec-tions( sw1 is con-
  []
 
 
+<<<<<<< HEAD
+Underfull \hbox (badness 10000) in paragraph at lines 324--324
+=======
 Underfull \hbox (badness 10000) in paragraph at lines 338--338
+>>>>>>> michael/scanner_pytests
 []\T1/lmr/m/n/10 devices( sw1, sw2 are
  []
 
-[8]
-<Gantt Chart.pdf, id=36, 794.97pt x 614.295pt>
+[7]
+<Gantt Chart.pdf, id=33, 794.97pt x 614.295pt>
 File: Gantt Chart.pdf Graphic file (type pdf)
 <use Gantt Chart.pdf>
+<<<<<<< HEAD
+Package pdftex.def Info: Gantt Chart.pdf  used on input line 347.
+=======
 Package pdftex.def Info: Gantt Chart.pdf  used on input line 361.
+>>>>>>> michael/scanner_pytests
 (pdftex.def)             Requested size: 614.295pt x 474.69582pt.
- [9
+ [8
 
- <./Gantt Chart.pdf>] (first_interim_report.aux) ) 
+ <./Gantt Chart.pdf>] (first_interim_report.aux)
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) 
 Here is how much of TeX's memory you used:
+<<<<<<< HEAD
+ 7715 strings out of 478619
+ 121853 string characters out of 2843245
+ 604048 words of memory out of 3000000
+ 25745 multiletter control sequences out of 15000+600000
+=======
  7718 strings out of 478619
  122009 string characters out of 2843245
  600011 words of memory out of 3000000
  25746 multiletter control sequences out of 15000+600000
+>>>>>>> michael/scanner_pytests
  509135 words of font info for 49 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 61i,10n,75p,1125b,1601s stack positions out of 10000i,1000n,20000p,200000b,80000s
+ 61i,10n,75p,1134b,1601s stack positions out of 10000i,1000n,20000p,200000b,80000s
 {C:/Users/micha/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-ec.enc}<C:/Users/micha/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmbx10.pfb><C:/Users/micha/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmbx12.pfb><C:/Users/micha/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmbxi10.pfb><C:/Users/micha/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmr10.pfb><C:/Users/micha/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmr5.pfb><C:/Users/micha/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmtt10.pfb><C:/Users/micha/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmtt9.pfb>
+<<<<<<< HEAD
+Output written on first_interim_report.pdf (8 pages, 288948 bytes).
+=======
 Output written on first_interim_report.pdf (9 pages, 297165 bytes).
+>>>>>>> michael/scanner_pytests
 PDF statistics:
- 88 PDF objects out of 1000 (max. 8388607)
+ 85 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  16 words of extra memory for PDF output out of 10000 (max. 10000000)
 

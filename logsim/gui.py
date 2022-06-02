@@ -17,8 +17,7 @@ from network import Network
 from monitors import Monitors
 from scanner import Scanner
 from parse import Parser
-
-from dum import DummyParser
+# from dum import DummyParser as Parser
 
 from gui_consoleout_tab import ConsoleOutTab
 from gui_circuitdef_tab import CircuitDefTab
@@ -72,7 +71,6 @@ class Gui(wx.Frame):
 
         self.scanner = Scanner(self.path, names)
         self.parser = Parser(names, devices, network, monitors, self.scanner)
-        self.dum_parser = DummyParser(names, devices, network, monitors, self.scanner)
 
         # Create the menu, toolbar and statusbar
         self.create_menu()
@@ -117,7 +115,7 @@ class Gui(wx.Frame):
         self.monitorsPanel = MonitorsTab(notebook, names, devices, monitors, self.canvas, self.statusbar)
 
         self.consoleOutPanel = ConsoleOutTab(notebook, self.path, names, devices, network,
-                      monitors, self.inputsPanel, self.set_gui_state, self.global_vars, self.canvas)
+                      monitors, self.parser, self.inputsPanel, self.set_gui_state, self.global_vars, self.canvas, self.save_file)
 
         with open(self.path, "r") as f:
             self.circuitDefPanel.replace_text(f.read())
@@ -160,6 +158,9 @@ class Gui(wx.Frame):
 
         print("Logic Simulator: interactive graphical user interface.\n"
               "Enter 'h' for help.")
+        
+        # try parsing the network
+        self.parse()
 
     def create_menu(self): 
         fileMenu = wx.Menu()
@@ -185,11 +186,13 @@ class Gui(wx.Frame):
         tb.AddTool( 3, 'New', wx.Image("./logsim/imgs/new file.png",
                            wx.BITMAP_TYPE_PNG).ConvertToBitmap(), shortHelp="Create a new file") 
         tb.AddStretchableSpace()
-        tb.AddTool( 4, 'Run', wx.Image("./logsim/imgs/run.png",
+        tb.AddTool( 4, 'Compile', wx.Image("./logsim/imgs/compile.png",
+                           wx.BITMAP_TYPE_PNG).ConvertToBitmap(), shortHelp="Compile the circuit definition") 
+        tb.AddTool( 5, 'Run', wx.Image("./logsim/imgs/run.png",
                            wx.BITMAP_TYPE_PNG).ConvertToBitmap(), shortHelp="Run the simulation") 
-        tb.AddTool( 5, 'Continue', wx.Image("./logsim/imgs/continue.png",
+        tb.AddTool( 6, 'Continue', wx.Image("./logsim/imgs/continue.png",
                            wx.BITMAP_TYPE_PNG).ConvertToBitmap(), shortHelp="Continue the simulation") 
-        tb.AddTool( 6, 'Reset', wx.Image("./logsim/imgs/reset.png",
+        tb.AddTool( 7, 'Reset', wx.Image("./logsim/imgs/reset.png",
                            wx.BITMAP_TYPE_PNG).ConvertToBitmap(), shortHelp="Reset the simulation") 
         
         self.spin = wx.SpinCtrl(tb, wx.ID_ANY, "10")
@@ -199,11 +202,11 @@ class Gui(wx.Frame):
         tb.AddControl(self.spin, 'Cycles')
 
         tb.AddStretchableSpace()
-        tb.AddTool( 7, 'Save Plot', wx.Image("./logsim/imgs/save image.png",
+        tb.AddTool( 8, 'Save Plot', wx.Image("./logsim/imgs/save image.png",
                            wx.BITMAP_TYPE_PNG).ConvertToBitmap(), shortHelp="Save signal trace as an image") 
-        tb.AddTool( 8, 'Help', wx.Image("./logsim/imgs/help.png",
+        tb.AddTool( 9, 'Help', wx.Image("./logsim/imgs/help.png",
                            wx.BITMAP_TYPE_PNG).ConvertToBitmap(), shortHelp="Help") 
-        tb.AddTool( 9, 'Quit', wx.Image("./logsim/imgs/quit.png",
+        tb.AddTool( 10, 'Quit', wx.Image("./logsim/imgs/quit.png",
                            wx.BITMAP_TYPE_PNG).ConvertToBitmap(), shortHelp="Quit Logic Simulator") 
 
         tb.Realize()
@@ -249,22 +252,25 @@ class Gui(wx.Frame):
         elif event.GetId() == 3: # new file
             self.create_file()
 
-        elif event.GetId() == 4: # run
+        elif event.GetId() == 4: # compile aka parse file
+            self.parse()
+
+        elif event.GetId() == 5: # run
             self.on_run_button()
 
-        elif event.GetId() == 5: # continue
+        elif event.GetId() == 6: # continue
             self.on_cont_button()
 
-        elif event.GetId() == 6: # reset 
+        elif event.GetId() == 7: # reset 
             self.on_reset_button()
 
-        elif event.GetId() == 7: # save plot
+        elif event.GetId() == 8: # save plot
             self.save_plot()
 
-        elif event.GetId() == 8: # help
+        elif event.GetId() == 9: # help
             self.on_help_button()
 
-        elif event.GetId() == 9: # quit
+        elif event.GetId() == 10: # quit
             # check first if user has any unsaved changes!!
             if self.global_vars.def_edited:
                 resp = wx.MessageBox("Changes you made may not be saved.",
@@ -274,8 +280,36 @@ class Gui(wx.Frame):
             else: 
                     self.Close(True)
 
-    def on_run_button(self):
+    def parse(self): 
+        # if self.global_vars.def_edited:
+        # save the file first
+        self.save_file(self.path)
 
+        # reinitialise the scanner and parser
+        self.scanner = Scanner(self.path, self.names)
+        self.parser = Parser(self.names, self.devices, self.network, self.monitors, self.scanner)
+        
+        try: 
+            if self.parser.parse_network(): 
+                # update the inputs panel 
+                self.inputsPanel.refresh_list()
+                # update the monitors panel
+                self.monitorsPanel.initialise_monitor_list()
+                self.set_gui_state(sim_running=False)
+
+                self.statusbar.SetStatusText('File saved and compiled successfully.')
+                return True
+            else:
+                # error has occured while parsing 
+                # wx.MessageBox("Error while parsing circuit definition. See error log in Output.",
+                #               "Simulation Failed", wx.ICON_ERROR | wx.OK)
+                self.statusbar.SetStatusText('File compiled with errors.')
+                return False
+        except: 
+            self.statusbar.SetStatusText("Parser failed to work :(")
+        
+
+    def on_run_button(self):
         if not self.monitors.monitors_dictionary:
             self.statusbar.SetStatusText("No monitors.")
             return
@@ -284,11 +318,12 @@ class Gui(wx.Frame):
         self.update_statusbar("Run button pressed.")
         self.set_gui_state(sim_running=True)
         self.canvas.render_signals(flush_pan=True)
-    
+
     def on_cont_button(self):
         self.consoleOutPanel.continue_command(True, self.spin.GetValue())
         self.update_statusbar("Continue button pressed.")
         self.canvas.render_signals(flush_pan=True)
+        self.set_gui_state(sim_running=True)
     
     def on_reset_button(self):
         # self.cycles_completed = 0
@@ -301,15 +336,16 @@ class Gui(wx.Frame):
         self.canvas.render_signals(flush_pan=True)
     
     def set_gui_state(self, sim_running): 
-        self.ToolBar.EnableTool(4, not sim_running) # disable run button
-        self.ToolBar.EnableTool(5, sim_running) # enable continue button
+        self.ToolBar.EnableTool(4, not sim_running) # disable compile button
+        self.ToolBar.EnableTool(5, not sim_running) # disable run button
+        self.ToolBar.EnableTool(6, sim_running) # enable continue button
+        self.ToolBar.EnableTool(7, sim_running) # enable reset button
         self.circuitDefPanel.set_textbox_state(not sim_running) # text box only editable when the simulation is not running
         self.monitorsPanel.enable_monitor(not sim_running)
 
     def on_help_button(self): 
         wx.MessageBox("Press the buttons :D",
                           "Help", wx.ICON_INFORMATION | wx.OK)
-
 
     def on_close(self, event):
         # deinitialize the frame manager
@@ -397,7 +433,6 @@ class Gui(wx.Frame):
                     print('File created successfully in {}'.format(pathname))
                     self.load_file(pathname)
 
-
     def save_plot(self): 
         """
         Launch a dialog for the user to select and save the signal trace as an image.
@@ -431,9 +466,6 @@ class Gui(wx.Frame):
 
         self.statusbar.SetStatusText('File saved.')
         self.global_vars.def_edited = False
-
-        # save whatever is in the circuit def file into the current loaded path (overwrite!)
-        # get the value of whatever is in the textbox and then save :)
     
     def save_file_as(self):
         with wx.FileDialog(self, "Save File",

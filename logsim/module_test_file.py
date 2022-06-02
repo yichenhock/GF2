@@ -1,7 +1,11 @@
 #This file is for testing various functions developed in each module
 import sys
 from names import Names
-from scanner import Symbol, Scanner
+from scanner import Scanner
+from parse_no_output import Parser
+from devices import Devices
+from network import Network
+from monitors import Monitors
 
 """names.py tests"""
 
@@ -20,9 +24,8 @@ from scanner import Symbol, Scanner
 
 """scanner.py tests"""
 
-name = Names()
-name.lookup(["Hello", "hi"])
-
+names = Names()
+names.lookup(["Hello", "hi"])
 
 # Check command line arguments
 arguments = sys.argv[1:]
@@ -33,16 +36,24 @@ if len(arguments) != 1:
 else:
     path = arguments[0]
     print("\nNow opening file...")
-    scanner = Scanner(path, name)
+    scanner = Scanner(path, names)
 
-print(scanner.file.read())
-scanner.file.seek(0)
-x = scanner.get_symbol()
-type_id_list = []
-while x.type != 9:
-    x = scanner.get_symbol()
-    type_id_list.append([x.type, x.id])
-    print(x.type, x.id)
-    #print(name.names)
+# print(scanner.file.read())
+# scanner.file.seek(0)
+# x = scanner.get_symbol()
+# type_id_list = []
+# while x.type != 9:
+#     x = scanner.get_symbol()
+#     type_id_list.append([x.type, x.id])
+#     print(x.type, x.id)
+#     # print(name.names)
 
-#print(type_id_list)
+# #print(type_id_list)
+
+"""parser.py tests"""
+devices = Devices(names)
+network = Network(names, devices)
+monitors = Monitors(names, devices, network)
+
+parse = Parser(names, devices, network, monitors, scanner)
+parse.parse_network()

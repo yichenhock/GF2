@@ -40,7 +40,7 @@ class Names:
     def __init__(self):
         """Initialise names list."""
         self.names = []
-        self.error_code_count = 0  # how many error codes have been declared
+        self.error_code_count = 0  # How many error codes have been declared
 
     def unique_error_codes(self, num_error_codes):
         """Return a list of unique integer error codes."""
@@ -49,6 +49,7 @@ class Names:
         if num_error_codes < 1:
             raise ValueError("Expected name_id to be positive and non-zero.")
 
+        # Range returns a list of integers that counts up
         self.error_code_count += num_error_codes
         return range(self.error_code_count - num_error_codes,
                      self.error_code_count)

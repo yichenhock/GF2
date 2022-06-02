@@ -9,6 +9,7 @@ devices(
 )
 
 initialise(
+    a has 2 inputs;
     sw1, sw2 are HIGH;
     a, b, c have 2 inputs;
 )

@@ -6,7 +6,12 @@ Description of classes
 
 """
 import sys
+from numpy import save
 import wx
+
+from scanner import Scanner
+from parse import Parser
+# from dum import DummyParser as Parser
 
 class RedirectText(object):
     def __init__(self,aWxTextCtrl):
@@ -24,7 +29,7 @@ class ConsoleOutTab(wx.Panel):
     """
     #----------------------------------------------------------------------
     def __init__(self, parent, path, names, devices, network,
-                      monitors, inputsPanel, set_gui_state,  global_vars, canvas):
+                      monitors, parser, inputsPanel, set_gui_state,  global_vars, canvas, save_file):
         """"""
         wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
 
@@ -35,6 +40,10 @@ class ConsoleOutTab(wx.Panel):
         self.network = network
         self.inputsPanel = inputsPanel
         self.set_gui_state = set_gui_state # function
+
+        self.path = path
+        self.parser = parser 
+        self.save_file = save_file
 
         self.canvas = canvas
 
@@ -134,6 +143,15 @@ class ConsoleOutTab(wx.Panel):
 
     def run_command(self, gui=False, gui_cycles=None):
         """Run the simulation from scratch."""
+        # # save file first 
+        # self.save_file(self.path)
+
+        # # reinitialise the scanner and parser
+        # self.scanner = Scanner(self.path, self.names)
+        # self.parser = Parser(self.names, self.devices, self.network, self.monitors, self.scanner)
+
+        # if self.parser.parse_network(): 
+
         self.global_vars.cycles_completed = 0
         if gui:
             cycles = gui_cycles
@@ -164,7 +182,7 @@ class ConsoleOutTab(wx.Panel):
                 print(" ".join(["Continuing for", str(cycles), "cycles.",
                                 "Total:", str(self.global_vars.cycles_completed)]))
                 self.canvas.render_signals()
-                
+                self.set_gui_state(True)
 
     def read_command(self):
         """Return the first non-whitespace character."""

@@ -1,5 +1,4 @@
 #Example circuit - Complex circuit (As per first interim report);
-#2 bit counter with outputs XOR;
 
 devices(
     a is NOR;
@@ -17,6 +16,13 @@ initialise(
 )
 
 connections(
+    f(
+        f.QBAR to f.DATA;
+        d is connected to f.CLK;
+        sw1 to f.SET;
+        sw2 to f.CLEAR;
+    )
+    
     a(
         e to a.I1;
         e to a.I2;
@@ -42,13 +48,6 @@ connections(
         c to e.I2;
     )
 
-    f(
-        f.QBAR to f.DATA;
-        d to f.CLK;
-        sw1 to f.SET;
-        sw2 to f.CLEAR;
-    )
-
     g(  
         d to g.I1;
         f.Q to g.I2;
@@ -58,3 +57,6 @@ connections(
 monitors(
     d, f.Q, g;
 )
+
+
+#2 bit counter with outputs XOR;

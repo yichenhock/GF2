@@ -39,8 +39,8 @@ class MonitorsTab(wx.Panel):
 
         # initialise the combo boxes with default values
         self.combo_types.SetValue("All")
-        self.initialise_combo_names()
-        self.initialise_monitor_list()
+        # self.initialise_combo_names()
+        # self.initialise_monitor_list()
 
         # Create a sizer.
         self.grid_sizer = wx.FlexGridSizer(2, 2, (5, 5))
@@ -112,10 +112,15 @@ class MonitorsTab(wx.Panel):
             # self.refresh_combo_names(new_list)
 
     def initialise_monitor_list(self): # initialise the stuff that is monitored from the start
+        # clear the existing stuff on the list
+        self.monitors_list.DeleteAllItems()
+
         monitored_signals = self.monitors.get_signal_names()[0]
         
         for signal in monitored_signals:
             self.append_to_monitors_list(signal)
+        
+        self.initialise_combo_names()
 
     def append_to_monitors_list(self, signal_name):
         signal_id = self.names.query(signal_name)
@@ -172,8 +177,6 @@ class MonitorsTab(wx.Panel):
         self.append_to_monitors_list(name_to_add)
         self.statusbar.SetStatusText('Added component to monitor.')
         print('{} added to monitor.'.format(name_to_add))
-
-        
 
     def on_remove(self, event): 
         signal_id = event.GetEventObject().signal_id
