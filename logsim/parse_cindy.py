@@ -1422,14 +1422,12 @@ class Parser:
     def parse_network(self):
         """Parse the circuit definition file."""
 
-
         self.eofcheck = False
         self.symbol = self.scanner.get_symbol()
-        # Check for empty file
         if self.symbol.type == self.scanner.EOF:
             print("Syntax Error: Empty file found.")
             return False
-        else:# Tree structure: split into blocks
+        else:
             self.eofcheck = self.circuit_description()
 
         if self.eofcheck == True:
