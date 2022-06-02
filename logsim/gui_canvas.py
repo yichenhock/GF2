@@ -11,6 +11,7 @@ import wx.glcanvas as wxcanvas
 from OpenGL import GL, GLUT
 from PIL import Image
 
+
 class MyGLCanvas(wxcanvas.GLCanvas):
     """Handle all drawing operations.
 
@@ -49,7 +50,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         self.init = False
         self.context = wxcanvas.GLContext(self)
         self.parent = parent
-        self.devices = devices 
+        self.devices = devices
         self.monitors = monitors
 
         # self.cycles_completed = 0
@@ -94,7 +95,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         # offset of component label from the bottom line
         self.component_label_offset = 15
         assert self.component_vspace >= self.amplitude
-        
+
         # vertical offset of clock name label and axis numbers
         self.clock_name_offset = 10
         self.clock_axis_labels_offset = 12
@@ -132,58 +133,61 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         GL.glTranslated(self.pan_x, self.pan_y, 0.0)
         GL.glScaled(self.zoom, self.zoom, self.zoom)
 
-    def render_signals(self, set_scroll = True, flush_pan = False):
+    def render_signals(self, set_scroll=True, flush_pan=False):
         # set left margin width
-        cycle_chars = 4 # cycle name is about 4 characters wide
+        cycle_chars = 4  # cycle name is about 4 characters wide
         if self.monitors.get_margin() is not None:
             margin = max(self.monitors.get_margin(), cycle_chars)
         else:
-            margin = cycle_chars 
-        
+            margin = cycle_chars
+
         # set plot origin_x
-        self.origin_x = self.initial_x + margin * self.margin_scale + self.margin_offset
+        self.origin_x = self.initial_x + margin * \
+            self.margin_scale + self.margin_offset
 
         # scale plot horizontally
         self.curr_wavelength = self.wavelength * self.zoom
 
         # update plot height (initial_y is used as bottom/top margin)
-        self.plot_height = self.initial_y*2 + self.clock_vspace + self.component_vspace*len(self.monitors.monitors_dictionary)
+        self.plot_height = self.initial_y*2 + self.clock_vspace + \
+            self.component_vspace*len(self.monitors.monitors_dictionary)
 
         # update plot width (initial_x is used as left/right margin)
         # print(self.parent.GetParent().cycles_completed)
-        self.plot_width = self.origin_x + self.curr_wavelength * self.global_vars.cycles_completed + self.initial_x 
+        self.plot_width = self.origin_x + self.curr_wavelength * \
+            self.global_vars.cycles_completed + self.initial_x
 
         # enforce pan limits
         self.enforce_pan_x_limits(self.pan_x)
         self.enforce_pan_y_limits(self.pan_y)
 
-        if flush_pan: 
+        if flush_pan:
             # flush pan to the right
             width_limit = max(0, self.plot_width - self.width)
             self.pan_x = -width_limit
-            self.init = False 
-        
+            self.init = False
+
         self.SetCurrent(self.context)
 
         if not self.init:
             # Configure the viewport, modelview and projection matrices
             self.init_gl()
             self.init = True
-        
+
         # Clear everything
         GL.glClear(GL.GL_COLOR_BUFFER_BIT)
 
-        if not self.monitors.monitors_dictionary: 
+        if not self.monitors.monitors_dictionary:
             # no monitors present
             self.plot_width = 0
             self.plot_height = 0
-            if set_scroll: 
-                self.parent.GetParent().set_scroll() # disable scrollbar
-            
+            if set_scroll:
+                self.parent.GetParent().set_scroll()  # disable scrollbar
+
             GL.glFlush()
             self.SwapBuffers()
-            return 
-        
+            return
+
         self.draw_cycle_axis()
         self.draw_signal_trace()
 
@@ -211,7 +215,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         GL.glVertex2f(x + cycles * self.curr_wavelength, y - self.pan_y)
         # account for pan
         GL.glEnd()
-        
+
         # Interval for the vertical grid lines
         axis_interval = max(math.floor(1.1 / self.zoom),
                             1)  # 1.1 is a fudge factor
@@ -242,25 +246,25 @@ class MyGLCanvas(wxcanvas.GLCanvas):
                              clear=False)  # account for pan
             x += axis_interval * self.curr_wavelength
 
-    
     def draw_signal_trace(self):
         # Reset y coordinate and offset
         y = self.initial_y + self.clock_vspace
 
-        for device_id, output_id in reversed(self.monitors.monitors_dictionary): 
+        for device_id, output_id in \
+                reversed(self.monitors.monitors_dictionary):
             if y < self.initial_y + self.clock_vspace - self.pan_y:
                 # Don't render signals below visible area/obscuring cycle axis
                 y += self.component_vspace
                 continue
-            
+
             monitor_name = self.devices.get_signal_name(device_id, output_id)
 
             x = self.initial_x
-            y += self.component_label_offset 
+            y += self.component_label_offset
             self.render_text(monitor_name, x - self.pan_x, y,
                              font=GLUT.GLUT_BITMAP_9_BY_15, flush=False,
                              clear=False)  # account for pan
-            
+
             x = self.origin_x  # reset x coordinate
             y -= self.component_label_offset  # return to low signal line
             signal_list = self.monitors.monitors_dictionary[
@@ -300,7 +304,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
                 x += self.curr_wavelength
 
             GL.glEnd()
-            y += self.component_vspace 
+            y += self.component_vspace
 
     def on_paint(self, event):
         """Handle the paint event."""
@@ -404,7 +408,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
     def enforce_pan_x_limits(self, new_pan_x: float) -> None:
         width_limit = max(0, self.plot_width - self.width)
         self.pan_x = max(min(new_pan_x, 0), - width_limit)
-    
+
     def adjust_pan_x(self, event: wx.Event, old_zoom: float) -> None:
         offset = event.GetX() - self.pan_x - self.origin_x
         if offset > 0:
