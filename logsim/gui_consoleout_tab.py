@@ -9,7 +9,7 @@ import sys
 import wx
 
 from scanner import Scanner
-from parse_no_output import Parser
+from parse import Parser
 
 
 class RedirectText(object):

@@ -16,7 +16,7 @@ from devices import Devices
 from network import Network
 from monitors import Monitors
 from scanner import Scanner
-from parse_no_output import Parser
+from parse import Parser
 
 from gui_consoleout_tab import ConsoleOutTab
 from gui_circuitdef_tab import CircuitDefTab
@@ -469,7 +469,13 @@ class Gui(wx.Frame):
                 pathname = file_dialog.GetPath()
                 # CREATE A NEW FILE HERE AND SET THAT AS THE NEW PATH!
                 try:
-                    open(pathname, 'w').close()
+                    # open(pathname, 'w').close()
+                    with open('logsim/examples/blank.txt','r') as examplefile, open(pathname,'w') as newfile:
+                        # read content from first file
+                        for line in examplefile:
+                                # append content to second file
+                                newfile.write(line)
+
                 except OSError:
                     print('Failed creating the file')
                     wx.MessageBox("Error creating file.",

@@ -191,7 +191,7 @@ class MonitorsTab(wx.Panel):
     def refresh_combo_names(self, names_list):
         """Refresh the list in `combo_names`."""
         self.combo_names.Clear()
-        dtype_outputs = ["DATA", "CLK", "SET", "CLEAR", "Q", "QBAR"]
+        dtype_outputs = ["Q", "QBAR"]
         for name in names_list:
             device = self.devices.get_device(self.names.query(name))
             if device.device_kind == self.devices.D_TYPE:
