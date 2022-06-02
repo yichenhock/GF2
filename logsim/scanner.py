@@ -64,7 +64,8 @@ class Scanner:
 
         self.names = names
 
-        self.symbol_list = [",", ".", ";", "=", "(", ")", "keyword", "number", "name", "eof"]
+        self.symbol_list = [",", ".", ";", "=", "(", ")", "keyword",
+                            "number", "name", "eof"]
         # Define all symbol types
         self.symbol_type_list = [self.COMMA, self.DOT, self.SEMICOLON,
                                  self.EQUALS, self.OPEN_BRACKET,
@@ -132,13 +133,13 @@ class Scanner:
         print(error_message)
         self.skip_line()
 
-    def skip_line(self): 
+    def skip_line(self):
         """Skips until next semicolon, bracket or EOF."""
         while self.current_character not in [";", "(", ")", ""]:
             self.advance()
         self.advance()
         return
-        
+
     def get_name(self):
         """Read and returns the next name (word made up of only letters)."""
         name = ""
@@ -200,7 +201,7 @@ class Scanner:
 
         elif self.current_character == "":  # End of File
             symbol.type = self.EOF
-        
+
         elif self.current_character == "#":
             self.skip_comment()
             symbol = self.get_symbol()
