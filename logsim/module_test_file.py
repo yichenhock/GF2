@@ -2,7 +2,7 @@
 import sys
 from names import Names
 from scanner import Scanner
-from parse_no_output import Parser
+from parse_cindy import Parser
 from devices import Devices
 from network import Network
 from monitors import Monitors

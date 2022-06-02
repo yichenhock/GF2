@@ -414,7 +414,6 @@ class Parser:
 
         # Read the signal name and adds it to monitors_to_add if valid
         read_signal_success = self.read_signal("monitors")
-        print("thing after reading first signal in monitors", self.scanner.symbol_list[self.symbol.type])
         if not read_signal_success:
             # End of file
             return True
@@ -515,7 +514,6 @@ class Parser:
 
             # Get first symbol of each line
             self.symbol = self.scanner.get_symbol()
-            print("First symbol of next line inside each subsection: ", self.scanner.symbol_list[self.symbol.type])
 
         # If connection_definition tells us we have missed a bracket, recursively call the sub-block function again
         if self.has_missed_bracket == True:
@@ -523,7 +521,6 @@ class Parser:
 
         # Read first symbol of next line
         self.symbol = self.scanner.get_symbol()
-        print("First symbol of next line: ", self.scanner.symbol_list[self.symbol.type])
 
 #===========================================================================================================
 #===========================================================================================================
@@ -580,9 +577,6 @@ class Parser:
 
         print("Entered connection definition method. Current subsection: ", subsection)
         print("Current device type:", device_type)
-
-        if self.scanner.symbol_list[self.symbol.type] == "keyword":
-            print("Current keyword:", self.names.get_name_string(self.symbol.id))
         
         if self.symbol.id == self.scanner.to_id:
 
@@ -1328,8 +1322,12 @@ class Parser:
                 self.input_device_port_id = self.symbol.id
 
                 # Valid port name found. Use Network to make connection
-                self.network.make_connection(self.output_device_id, self.output_device_port_id, self.input_device_id, self.input_device_port_id)
-                print("===============================================dtype connection made! :D")
+                network_connected = self.network.make_connection(self.output_device_id, self.output_device_port_id, self.input_device_id, self.input_device_port_id)
+                if network_connected != self.network.NO_ERROR:
+                    print(network_connected)
+                    print("Issue in dtype connection")
+                else:
+                    print("===============================================dtype connection made! :D")
                 
             else:
                 self.syntax.printerror(self.syntax.PORT_NAME_ERROR, self.scanner)
@@ -1363,7 +1361,6 @@ class Parser:
         # GET NEXT SYMBOL AFTER DEVICE NAME (if monitors section and not dtype, this is a comma)
         self.symbol = self.scanner.get_symbol()
 
-        print("next symbol after name:", self.scanner.symbol_list[self.symbol.type])
         # Check for if a close bracket has been missed
         # If close bracket missed, parser stops parsing
 
@@ -1430,16 +1427,16 @@ class Parser:
         self.symbol = self.scanner.get_symbol()
         # Check for empty file
         if self.symbol.type == self.scanner.EOF:
-            self.syntax.printerror(self.syntax.EMPTY_FILE, self.scanner)
+            print("Syntax Error: Empty file found.")
             return False
-        # Tree structure: split into blocks
-        self.eofcheck = self.circuit_description()
+        else:# Tree structure: split into blocks
+            self.eofcheck = self.circuit_description()
 
         if self.eofcheck == True:
-            # for device in self.devices.devices_list:
-            #     print("Device", self.names.get_name_string(device.device_id), "Inputs:", device.inputs, "Outputs:", device.outputs)
-            # print(self.devices.find_devices(self.devices.SWITCH))
-            # print(self.monitors.monitors_dictionary)
+            for device in self.devices.devices_list:
+                print("Device", self.names.get_name_string(device.device_id), "Inputs:", device.inputs, "Outputs:", device.outputs)
+            print(self.devices.find_devices(self.devices.SWITCH))
+            print(self.monitors.monitors_dictionary)
             self.scanner.file.close()
 
         self.total_errors = self.semantic.error_code_count + self.syntax.error_code_count
