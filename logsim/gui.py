@@ -19,8 +19,6 @@ from scanner import Scanner
 from parse import Parser
 # from dum import DummyParser as Parser
 
-# from dum import DummyParser
-
 from gui_consoleout_tab import ConsoleOutTab
 from gui_circuitdef_tab import CircuitDefTab
 from gui_inputs_tab import InputsTab
@@ -290,22 +288,25 @@ class Gui(wx.Frame):
         # reinitialise the scanner and parser
         self.scanner = Scanner(self.path, self.names)
         self.parser = Parser(self.names, self.devices, self.network, self.monitors, self.scanner)
+        
+        try: 
+            if self.parser.parse_network(): 
+                # update the inputs panel 
+                self.inputsPanel.refresh_list()
+                # update the monitors panel
+                self.monitorsPanel.initialise_monitor_list()
+                self.set_gui_state(sim_running=False)
 
-        if self.parser.parse_network(): 
-            # update the inputs panel 
-            self.inputsPanel.refresh_list()
-            # update the monitors panel
-            self.monitorsPanel.initialise_monitor_list()
-            self.set_gui_state(sim_running=False)
-
-            self.statusbar.SetStatusText('File saved and compiled successfully.')
-            return True
-        else:
-            # error has occured while parsing 
-            # wx.MessageBox("Error while parsing circuit definition. See error log in Output.",
-            #               "Simulation Failed", wx.ICON_ERROR | wx.OK)
-            self.statusbar.SetStatusText('File compiled with errors.')
-            return False
+                self.statusbar.SetStatusText('File saved and compiled successfully.')
+                return True
+            else:
+                # error has occured while parsing 
+                # wx.MessageBox("Error while parsing circuit definition. See error log in Output.",
+                #               "Simulation Failed", wx.ICON_ERROR | wx.OK)
+                self.statusbar.SetStatusText('File compiled with errors.')
+                return False
+        except: 
+            self.statusbar.SetStatusText("Parser failed to work :(")
         
 
     def on_run_button(self):
