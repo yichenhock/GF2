@@ -1308,8 +1308,8 @@ class Parser:
         if self.symbol.type == self.scanner.EOF:
             self.syntax.printerror(self.syntax.EMPTY_FILE, self.scanner)
             return False
-        # Tree structure: split into blocks
-        self.eofcheck = self.circuit_description()
+        else:
+            self.eofcheck = self.circuit_description()
 
         if self.eofcheck == True:
             # for device in self.devices.devices_list:

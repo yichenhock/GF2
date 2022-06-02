@@ -118,14 +118,17 @@ class Network:
         second_device = self.devices.get_device(second_device_id)
 
         if first_device is None or second_device is None:
+            print("Device absent")
             error_type = self.DEVICE_ABSENT
 
         elif first_port_id in first_device.inputs:
             if first_device.inputs[first_port_id] is not None:
                 # Input is already in a connection
+                print("Input connected")
                 error_type = self.INPUT_CONNECTED
             elif second_port_id in second_device.inputs:
                 # Both ports are inputs
+                print("Input to input")
                 error_type = self.INPUT_TO_INPUT
             elif second_port_id in second_device.outputs:
                 # Make connection
@@ -133,24 +136,29 @@ class Network:
                                                       second_port_id)
                 error_type = self.NO_ERROR
             else:  # second_port_id is not a valid input or output port
+                print("Second port absent")
                 error_type = self.PORT_ABSENT
 
         elif first_port_id in first_device.outputs:
             if second_port_id in second_device.outputs:
                 # Both ports are outputs
+                print("output connected to output")
                 error_type = self.OUTPUT_TO_OUTPUT
             elif second_port_id in second_device.inputs:
                 if second_device.inputs[second_port_id] is not None:
                     # Input is already in a connection
+                    print("Input connected")
                     error_type = self.INPUT_CONNECTED
                 else:
                     second_device.inputs[second_port_id] = (first_device_id,
                                                             first_port_id)
                     error_type = self.NO_ERROR
             else:
+                print("Port absent")
                 error_type = self.PORT_ABSENT
 
         else:  # first_port_id not a valid input or output port
+            print("First port absent")
             error_type = self.PORT_ABSENT
 
         return error_type
