@@ -97,8 +97,8 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         assert self.component_vspace >= self.amplitude
 
         # vertical offset of clock name label and axis numbers
-        self.clock_name_offset = 10
-        self.clock_axis_labels_offset = 12
+        self.clock_name_offset = 12
+        self.clock_axis_labels_offset = 10
         # vertical space between clock axis and first signal
         self.clock_vspace = 30
 
