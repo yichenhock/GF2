@@ -20,11 +20,11 @@ from devices import Devices
 from network import Network
 from monitors import Monitors
 from scanner import Scanner
-from parse import Parser
+# from parse import Parser
 from userint import UserInterface
 from gui import Gui
 
-# from dum import DummyParser
+from dum import DummyParser as Parser
 
 def main(arg_list):
     """Parse the command line options and arguments specified in arg_list.

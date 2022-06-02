@@ -11,6 +11,7 @@ import wx
 
 from scanner import Scanner
 from parse import Parser
+# from dum import DummyParser as Parser
 
 class RedirectText(object):
     def __init__(self,aWxTextCtrl):
@@ -142,33 +143,29 @@ class ConsoleOutTab(wx.Panel):
 
     def run_command(self, gui=False, gui_cycles=None):
         """Run the simulation from scratch."""
-        # save file first 
-        self.save_file(self.path)
+        # # save file first 
+        # self.save_file(self.path)
 
-        # reinitialise the scanner and parser
-        self.scanner = Scanner(self.path, self.names)
-        self.parser = Parser(self.names, self.devices, self.network, self.monitors, self.scanner)
+        # # reinitialise the scanner and parser
+        # self.scanner = Scanner(self.path, self.names)
+        # self.parser = Parser(self.names, self.devices, self.network, self.monitors, self.scanner)
 
-        if self.parser.parse_network(): 
+        # if self.parser.parse_network(): 
 
-            self.global_vars.cycles_completed = 0
-            if gui:
-                cycles = gui_cycles
-            else:
-                cycles = self.read_number(0, None)
+        self.global_vars.cycles_completed = 0
+        if gui:
+            cycles = gui_cycles
+        else:
+            cycles = self.read_number(0, None)
 
-            if cycles is not None:  # if the number of cycles provided is valid
-                self.monitors.reset_monitors()
-                print("".join(["Running for ", str(cycles), " cycle(s)"]))
-                self.devices.cold_startup()
-                if self.run_network(cycles):
-                    self.global_vars.cycles_completed += cycles
-                self.set_gui_state(True)
-                self.canvas.render_signals()
-        else: 
-            # error has occured while parsing 
-            wx.MessageBox("Error while parsing circuit definition. See error log in Output.",
-                          "Simulation Failed", wx.ICON_ERROR | wx.OK)
+        if cycles is not None:  # if the number of cycles provided is valid
+            self.monitors.reset_monitors()
+            print("".join(["Running for ", str(cycles), " cycle(s)"]))
+            self.devices.cold_startup()
+            if self.run_network(cycles):
+                self.global_vars.cycles_completed += cycles
+            self.set_gui_state(True)
+            self.canvas.render_signals()
 
     def continue_command(self, gui=False, gui_cycles=None):
         """Continue a previously run simulation."""
