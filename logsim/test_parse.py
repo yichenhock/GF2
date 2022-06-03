@@ -1,15 +1,15 @@
 """Test the parse module."""
 import pytest
 
-from logsim.names import Names
-from logsim.scanner import Scanner, Symbol
+from names import Names
+from scanner import Scanner, Symbol
 
-from logsim.monitors import Monitors
-from logsim.devices import Devices
-from logsim.network import Network
-from logsim.parse import Parser
+from monitors import Monitors
+from devices import Devices
+from network import Network
+from parse import Parser
 
-from logsim.error import SyntaxError, SemanticError
+from error import SyntaxError, SemanticError
 
 @pytest.fixture
 def new_names():

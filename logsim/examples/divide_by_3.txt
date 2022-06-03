@@ -10,7 +10,7 @@ devices(
 initialise(
     a has 2 inputs;
     sw1, sw2, sw3, sw4 are LOW;
-    clk1 cycle length 9;
+    clk1 cycle length 2;
 )
 
 connections(
@@ -35,5 +35,5 @@ connections(
 )
 
 monitors(
-    c.Q;
+    c.Q, clk1;
 )

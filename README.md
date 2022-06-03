@@ -54,7 +54,7 @@ All Python modules written for this simulator have associated unit tests.
   
 To execute the unit tests, run
 ```
-python -m pytest logsim/tests
+python -m pytest logsim
 ```
 
 ### Code Conventions

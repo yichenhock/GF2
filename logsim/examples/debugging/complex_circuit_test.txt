@@ -1,0 +1,62 @@
+#Example circuit - Complex circuit (As per first interim report);
+
+devices(
+    a is NOR;
+    b, c, d, e are NAND;
+    f is DTYPE;
+    g is XOR;
+    sw1, sw2 are SWITCH;
+    clk1 is CLOCK;
+)
+
+initialise(
+    a, b, c, d, e, g have 2 inputs;
+    sw1, sw2 are LOW;
+    clk1 cycle length 5;
+)
+
+connections(
+    f(  
+        d to f.CLK;
+        f.QBAR to f.DATA;
+        sw1 to f.SET;
+        sw2 to f.CLEAR;
+    )
+    
+    a(
+        e to a.I1;
+        e to a.I2;
+    )
+
+    b(  
+        e to b.I1;
+        clk1 to b.I2;
+    )
+
+    c(  
+        clk1 to c.I1;
+        a to c.I2;
+    )
+
+    d(
+        b to d.I1;
+        e to d.I2;
+    )
+
+    e(  
+        d to e.I1;
+        c to e.I2;
+    )
+
+    g(  
+        d to g.I1;
+        f.Q to g.I2;
+    )
+)
+
+monitors(
+    d, f.Q, g;
+)
+
+
+#2 bit counter with outputs XOR;

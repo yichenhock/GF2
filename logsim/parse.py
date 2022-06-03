@@ -9,14 +9,12 @@ Classes
 Parser - parses the definition file and builds the logic network.
 """
 
-from errno import ENOTCONN
-from pickletools import read_unicodestring1
-from re import S
-from names import Names
-from scanner import Symbol, Scanner
-from devices import Device, Devices
-from network import Network
-from monitors import Monitors
+
+# from names import Names
+# from scanner import Symbol, Scanner
+# from devices import Device, Devices
+# from network import Network
+# from monitors import Monitors
 from error import SemanticError, SyntaxError
 
 class Parser:

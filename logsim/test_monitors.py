@@ -1,10 +1,10 @@
 """Test the monitors module."""
 import pytest
 
-from logsim.names import Names
-from logsim.network import Network
-from logsim.devices import Devices
-from logsim.monitors import Monitors
+from names import Names
+from network import Network
+from devices import Devices
+from monitors import Monitors
 
 
 @pytest.fixture

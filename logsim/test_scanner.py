@@ -1,8 +1,8 @@
 """Test the scanner module."""
 import pytest
 
-from logsim.names import Names
-from logsim.scanner import Scanner, Symbol
+from names import Names
+from scanner import Scanner, Symbol
 
 
 @pytest.fixture
