@@ -15,9 +15,9 @@ class SemanticError():
     def __init__(self):
         """Set parameters to report error."""
 
-        self.id_list = [self.WRONG_GATE_FOR_NAME, self.NAME_ALREADY_EXISTS, self.NAME_FOR_INITIALISE_NOT_DEFINED, self.NAME_FOR_CONNECTIONS_NOT_DEFINED, self.WRONG_INPUT_GATE_NAME, self.NAME_FOR_MONITORS_NOT_DEFINED, self.PORT_DOES_NOT_EXIST] = range(7)
+        self.id_list = [self.WRONG_GATE_FOR_NAME, self.NAME_ALREADY_EXISTS, self.NAME_FOR_INITIALISE_NOT_DEFINED, self.NAME_FOR_CONNECTIONS_NOT_DEFINED, self.WRONG_INPUT_GATE_NAME, self.NAME_FOR_MONITORS_NOT_DEFINED, self.PORT_DOES_NOT_EXIST, self.TOO_MANY_INPUTS, self.EMPTY_INPUTS] = range(7)
 
-        self.error_type_list = ["WRONG_GATE_FOR_NAME", "NAME_ALREADY_EXISTS", "NAME_FOR_INITIALISE_NOT_DEFINED", "NAME_FOR_CONNECTIONS_NOT_DEFINED", "WRONG_INPUT_GATE_NAME", "NAME_FOR_MONITORS_NOT_DEFINED", "PORT_DOES_NOT_EXIST"]
+        self.error_type_list = ["WRONG GATE FOR NAME", "NAME ALREADY EXISTS", "NAME FOR INITIALISE NOT DEFINED", "NAME FOR CONNECTIONS NOT DEFINED", "WRONG INPUT GATE NAME", "NAME FOR MONITORS NOT DEFINED", "PORT DOES NOT EXIST", "TOO MANY INPUTS", "EMPTY INPUTS"]
 
         self.error_code_count = 0
 
@@ -37,7 +37,7 @@ class SemanticError():
         "The device name {} provided in the initialisation section has not been defined in the devices section.".format(symbol1), 
         "The device name {} provided in the connections section has not been defined in the devices section.".format(symbol1), 
         "Wrong input gate name for connection section subheader. The subheader name should be the name of the device receiving inputs. Expected {}, got {}.".format(symbol1, symbol2), 
-        "The device name {} provided in the monitors section has not been defined in the devices section.".format(symbol1), "The input port specified does not exist."]
+        "The device name {} provided in the monitors section has not been defined in the devices section.".format(symbol1), "The input port specified does not exist.", "Too many inputs have been defined for the gate specified.", "Some input gates to DTYPE device have not been connected to any signal."]
 
         self.message = "Parser Semantic Error: {}".format(self.message_list[id])
         
@@ -59,14 +59,14 @@ class SyntaxError():
 
         self.NO_MONITOR_NAME, self.EXTRA_INFORMATION_AFTER_MONITORS] = range(30)
 
-        self.error_type_list = ["NO_OPEN_BRACKET", "NO_CLOSE_BRACKET", "DEVICE_LETTER_CAPITAL", "NO_DEVICE_NAME", "NO_HEADER", "HEADER_NAME_ERROR", "NO_DEFINITION_KEYWORD", "NO_POSSESSION_KEYWORD", "DEVICE_TYPE_ERROR", "INCORRECT_SWITCH_NAME", "INCORRECT_CLOCK_NAME", "NO_SEMICOLON", "INCONSISTENT_DEVICE_NAMES", "MISSING_SECTION",
+        self.error_type_list = ["NO OPEN BRACKET", "NO CLOSE BRACKET", "DEVICE LETTER_CAPITAL", "NO DEVICE NAME", "NO HEADER", "HEADER NAME ERROR", "NO DEFINITION KEYWORD", "NO POSSESSION KEYWORD", "DEVICE TYPE ERROR", "INCORRECT SWITCH NAME", "INCORRECT CLOCK NAME", "NO SEMICOLON", "INCONSISTENT DEVICE NAMES", "MISSING SECTION",
 
-        "INPUT_NUMBER_ERROR", "INPUTS_KEYWORD_ERROR", "SWITCH_LEVEL_ERROR", "NO_CYCLE_KEYWORD", "NO_LENGTH_KEYWORD", "NO_CYCLE_LENGTH", 
+        "INPUT NUMBER ERROR", "INPUTS KEYWORD ERROR", "SWITCH LEVEL ERROR", "NO CYCLE KEYWORD", "NO LENGTH KEYWORD", "NO CYCLE LENGTH", 
 
-        "NO_CONNECTION_KEYWORD", "NO_INPUT_GATE_NAME", "NO_INPUT_PORT_NAME", "MISSING_DOT_INPUT", 
-        "PORT_NAME_ERROR", "CONNECTION_SUBHEADER_NAME_ERROR", "DTYPE_OUTPUT_NAME_ERROR", "DOT_UNEXPECTED",
+        "NO CONNECTION KEYWORD", "NO INPUT GATE NAME", "NO INPUT PORT NAME", "MISSING DOT INPUT", 
+        "PORT NAME ERROR", "CONNECTION SUBHEADER NAME_ERROR", "DTYPE OUTPUT NAME ERROR", "DOT UNEXPECTED",
 
-        "NO_MONITOR_NAME", "EXTRA_INFORMATION_AFTER_MONITORS"]
+        "NO MONITOR NAME", "EXTRA INFORMATION AFTER MONITORS"]
 
         self.error_code_count = 0
 
