@@ -66,7 +66,7 @@ class Gui(wx.Frame):
         if self.path is None:  # open up the file dialog
             if not self.open_file():
                 print("Application must be run with a circuit "
-                    "definition file.")
+                      "definition file.")
                 self.Close(True)  # exit the application
                 sys.exit()
 
@@ -86,7 +86,7 @@ class Gui(wx.Frame):
         # notify AUI which frame to use
         self.mgr.SetManagedWindow(self)
 
-        # # main monitor part
+        # main monitor part
         self.main_panel = wx.Panel(
             self, wx.ID_ANY, size=(wx.EXPAND, wx.EXPAND))
         self.main_sizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -226,7 +226,7 @@ class Gui(wx.Frame):
                             wx.BITMAP_TYPE_PNG).ConvertToBitmap(),
                    shortHelp="Reset the simulation")
 
-        self.spin = wx.SpinCtrl(tb, wx.ID_ANY, "10")
+        self.spin = wx.SpinCtrl(tb, wx.ID_ANY, "6")
         # Configure spin
         self.spin.SetMin(1)
         self.spin.SetMax(1000)
@@ -270,8 +270,9 @@ class Gui(wx.Frame):
         if Id == wx.ID_EXIT:
             self.Close(True)
         if Id == wx.ID_ABOUT:
-            wx.MessageBox("Logic Simulator\nCreated by Yi Chen Hock, Michael \
-                          Stevens and Cindy Wu\n2022",
+            wx.MessageBox("Logic Simulator\n"
+                          "Created by Yi Chen Hock, Michael Stevens "
+                          "and Cindy Wu\n2022",
                           "About Logsim", wx.ICON_INFORMATION | wx.OK)
         if Id == wx.ID_SAVEAS:
             self.save_file_as()
@@ -340,7 +341,8 @@ class Gui(wx.Frame):
         self.network.__init__(self.names, self.devices)
         self.monitors.__init__(self.names, self.devices, self.network)
         self.scanner.__init__(self.path, self.names)
-        self.parser.__init__(self.names, self.devices, self.network, self.monitors, self.scanner)
+        self.parser.__init__(self.names, self.devices,
+                             self.network, self.monitors, self.scanner)
 
         try:
             if self.parser.parse_network():
@@ -402,8 +404,11 @@ class Gui(wx.Frame):
 
     def on_help_button(self):
         """Display a helpful message box."""
-        wx.MessageBox("Press the buttons :D",
-                      "Help", wx.ICON_INFORMATION | wx.OK)
+        with open('./logsim/help.txt') as f:
+            help_text = f.read()
+
+        wx.MessageBox(help_text,
+                      "Help", wx.ICON_QUESTION | wx.OK)
 
     def on_close(self, event):
         """Deinitialise the frame manager on close."""
@@ -471,11 +476,12 @@ class Gui(wx.Frame):
                 # CREATE A NEW FILE HERE AND SET THAT AS THE NEW PATH!
                 try:
                     # open(pathname, 'w').close()
-                    with open('logsim/examples/blank.txt','r') as examplefile, open(pathname,'w') as newfile:
+                    with open('logsim/examples/blank.txt', 'r') \
+                            as examplefile, open(pathname, 'w') as newfile:
                         # read content from first file
                         for line in examplefile:
-                                # append content to second file
-                                newfile.write(line)
+                            # append content to second file
+                            newfile.write(line)
 
                 except OSError:
                     print('Failed creating the file')

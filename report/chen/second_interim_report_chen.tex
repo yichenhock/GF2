@@ -1,0 +1,82 @@
+%% LyX 2.2.4 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[english]{article}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage[latin9]{inputenc}
+\usepackage{geometry}
+\geometry{verbose,tmargin=2cm,bmargin=1.5cm,lmargin=2.5cm,rmargin=2.5cm}
+\usepackage{textcomp}
+\usepackage{amsmath, amstext}
+\usepackage{graphicx, float}
+\usepackage{pdfpages}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{pdfpages}
+\usepackage{fancyvrb}
+\usepackage{pdflscape}
+\usepackage{listings,multicol}
+
+\usepackage{enumitem,kantlipsum}
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{Yi Chen Hock / ych31}
+\lhead{GF2 Software}
+% \rfoot{something}
+
+\begin{document}
+\pagenumbering{gobble}
+\section*{Logic Simulator: User Guide}
+
+\vspace{-0.3cm}
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width = 0.9\textwidth]{gui_screenshot_labelled.png}
+\vspace{-0.1cm}
+\caption{Screenshot of the GUI\label{fig:gui}}
+\end{center}
+\end{figure}
+
+\vspace{-0.3cm}
+
+Logic Simulator is a tool that allows the user to read in, edit and simulate a logic circuit defined in a user-provided circuit definition file\footnote{Definition files follow the EBNF grammar defined in the first interim report.}. Figure \ref{fig:gui} shows a screenshot of the Graphical User Interface (GUI) labelled with the following features:
+
+\begin{multicols}{3}
+\begin{enumerate}[leftmargin=*]
+    \item Menubar containing 3 options: 
+    
+    \textit{About}, \textit{Save As} and \textit{Quit}.
+    \item Opens a definition file 
+    \item Saves the current definition file
+    \item Creates a new definition file
+    \item Compiles the edited definition file in the \textit{Circuit Definition} tab for any errors and initialises the inputs and monitors 
+    \item Runs the code for the specified number of simulation cycles from scratch. 
+    \item Continues the simulation for the specified number of cycles.
+    \item Resets the simulation.
+    \item Allows the user to specify the number of simulation cycles.
+    \item Saves the plot as an image.
+    \item Displays the user guide.
+    \item Quits the application.
+    \item Signal trace plot.
+    \item Side panel containing four tabs: 
+    
+    \textit{Output}: Console log. Text commands can also be run here.
+    
+    \textit{Circuit Definition}: Editable area for the loaded definition file.
+    
+    \textit{Inputs}: List of input switches. Has buttons which allow the switch states to be toggled ON or OFF.
+    
+    \textit{Monitors}: List of signals to be monitored. Allows components to be added or removed. 
+
+    \item Statusbar.
+    \item Path name of the current definition file. 
+\end{enumerate}
+\end{multicols}
+
+\noindent A command-line interface is also available by running \verb+python logsim/logsim.py -c <pathname>+. Typing \verb+h+ will display a list of possible commands. Example definition files can be found in the \verb+./logsim/examples+ folder\footnote{See overleaf for the circuit diagrams of the available example definition files.}. For further information on how to install and run the Logic Simulator, please consult the \verb+README.md+. 
+
+\includepdf[pages={1-}]{../second_interim_report/example_circuits.pdf}
+
+\end{document}
