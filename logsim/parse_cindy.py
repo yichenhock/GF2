@@ -133,7 +133,7 @@ class Parser:
             if self.symbol.id in [self.scanner.connections_id, self.scanner.monitors_id]:
                 self.syntax.printerror(self.syntax.MISSING_SECTION, "initialise")
             else:
-                self.syntax.printerror(self.syntax.HEADER_NAME_ERROR)
+                self.syntax.printerror(self.syntax.HEADER_NAME_ERROR, self.scanner)
             print("Skipping initialise block")
             eofcheck = self.skip_block(self.previous_block) 
             if eofcheck == True:
