@@ -12,10 +12,15 @@ from scanner import Scanner
 
 
 class SemanticError():
+    """Handle semantic errors in circuit definition file.
+    
+    Parameters
+    ----------
+    id: error id from error id list.
+    """
 
     def __init__(self):
         """Set parameters to report error."""
-
         self.id_list = [self.WRONG_GATE_FOR_NAME, self.NAME_ALREADY_EXISTS, self.NAME_FOR_INITIALISE_NOT_DEFINED, self.NAME_FOR_CONNECTIONS_NOT_DEFINED, self.WRONG_INPUT_GATE_NAME,
                         self.NAME_FOR_MONITORS_NOT_DEFINED, self.PORT_DOES_NOT_EXIST, self.TOO_MANY_INPUTS, self.EMPTY_INPUTS, self.KEYWORD_AS_NAME, self.DEVICE_NOT_INITIALISED] = range(11)
 
@@ -31,10 +36,8 @@ class SemanticError():
 
         Parameters
         -------
-
         'message': Output to be printed to terminal.
         """
-
         self.scanner = scanner
 
         self.message_list = ["Wrong gate type provided for device name chosen. Given {}, expected {}".format(symbol1, symbol2),
@@ -72,7 +75,6 @@ class SyntaxError():
 
     def __init__(self):
         """Set parameters to report error."""
-
         self.id_list = [self.NO_OPEN_BRACKET, self.NO_CLOSE_BRACKET, self.DEVICE_LETTER_CAPITAL, self.NO_DEVICE_NAME, self.NO_HEADER, self.HEADER_NAME_ERROR, self.NO_DEFINITION_KEYWORD, self.NO_POSSESSION_KEYWORD, self.DEVICE_TYPE_ERROR, self.INCORRECT_SWITCH_NAME, self.INCORRECT_CLOCK_NAME, self.NO_SEMICOLON, self.INCONSISTENT_DEVICE_NAMES, self.MISSING_SECTION,
 
                         self.INPUT_NUMBER_ERROR, self.INPUTS_KEYWORD_ERROR, self.SWITCH_LEVEL_ERROR, self.NO_CYCLE_KEYWORD, self.NO_LENGTH_KEYWORD, self.NO_CYCLE_LENGTH,
@@ -99,10 +101,8 @@ class SyntaxError():
 
         Parameters
         -------
-
         'message': Output to be printed to terminal.
         """
-
         self.scanner = scanner
 
         self.message_list = ["Missing open parentheses following section header. Parser will skip next line of code. Please fix and rerun.",
