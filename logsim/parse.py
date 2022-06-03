@@ -101,7 +101,7 @@ class Parser:
         # If the symbol we expect is any header but we get a bracket, then we can report the header as missing
         elif self.symbol.type == self.scanner.OPEN_BRACKET and self.previous_block == "":
             self.syntax.printerror(self.syntax.NO_HEADER, self.scanner)
-            print("Skipping devices block")
+            # print("Skipping devices block")
             eofcheck = self.skip_block(self.previous_block)
             if eofcheck == True:
                 return eofcheck
@@ -114,7 +114,7 @@ class Parser:
             else:
                 self.syntax.printerror(
                     self.syntax.HEADER_NAME_ERROR, self.scanner)
-            print("Skipping devices block")
+            # print("Skipping devices block")
             eofcheck = self.skip_block(self.previous_block)
             if eofcheck == True:
                 return eofcheck
@@ -142,7 +142,7 @@ class Parser:
             else:
                 self.syntax.printerror(
                     self.syntax.HEADER_NAME_ERROR, self.scanner)
-            print("Skipping initialise block")
+            # print("Skipping initialise block")
             eofcheck = self.skip_block(self.previous_block)
             if eofcheck == True:
                 return eofcheck
@@ -157,7 +157,7 @@ class Parser:
         # If the symbol we expect is any header but we get a bracket, then we can report the header as missing
         elif self.symbol.type == self.scanner.OPEN_BRACKET and self.previous_block == "initialise":
             self.syntax.printerror(self.syntax.NO_HEADER, self.scanner)
-            print("Skipping connections block")
+            # print("Skipping connections block")
             eofcheck = self.skip_block(self.previous_block)
             if eofcheck == True:
                 return eofcheck
@@ -165,11 +165,12 @@ class Parser:
         # Incorrect header
         elif self.previous_block == "initialise":
             if self.symbol.id == self.scanner.monitors_id:
-                print("User opted to not include connections block.")
+                pass
+                # print("User opted to not include connections block.")
             else:
                 self.syntax.printerror(
                     self.syntax.HEADER_NAME_ERROR, self.scanner)
-            print("Skipping connections block.")
+            # print("Skipping connections block.")
             eofcheck = self.skip_block(self.previous_block)
             if eofcheck == True:
                 return eofcheck
@@ -191,7 +192,8 @@ class Parser:
         # Incorrect header
         elif self.previous_block == "connections":
             if self.symbol.id == self.scanner.monitors_id:
-                print("User opted to not include monitors block.")
+                pass
+                # print("User opted to not include monitors block.")
             else:
                 self.syntax.printerror(
                     self.syntax.HEADER_NAME_ERROR, self.scanner)
@@ -230,7 +232,7 @@ class Parser:
         # Skip device block, end reached
         if self.symbol.type == self.scanner.CLOSE_BRACKET:
             eofcheck = False
-            print("Devices block is empty.")
+            # print("Devices block is empty.")
             self.symbol = self.scanner.get_symbol()
             return
 
@@ -250,13 +252,13 @@ class Parser:
                 self.read_name("devices")
 
             if self.name_type == "device":
-                print("Entering device definition method")
+                # print("Entering device definition method")
                 eofcheck = self.device_definition(self.current_name)
             elif self.name_type == "switch":
-                print("Entering switch definition method")
+                # print("Entering switch definition method")
                 self.switch_definition(self.current_name)
             elif self.name_type == "clock":
-                print("Entering clock definition method")
+                # print("Entering clock definition method")
                 self.clock_definition(self.current_name)
 
             # Read first symbol of next line
@@ -278,7 +280,7 @@ class Parser:
 
         Devices are given input number. Switches are given high or low at start. Clocks are given a cycle length.
         """
-        print("Entered initialise block")
+        # print("Entered initialise block")
         self.previous_block = "initialise"
         # Fetch next symbol after section heading and check it's a bracket
         self.symbol = self.scanner.get_symbol()
@@ -292,7 +294,7 @@ class Parser:
         # Skip device block, end reached
         if self.symbol.type == self.scanner.CLOSE_BRACKET:
             eofcheck = False
-            print("Devices block is empty.")
+            # print("Devices block is empty.")
             self.symbol = self.scanner.get_symbol()
             return eofcheck
 
@@ -362,7 +364,7 @@ class Parser:
         self.symbol = self.scanner.get_symbol()
         # Skip device block, end reached
         if self.symbol.type == self.scanner.CLOSE_BRACKET:
-            print("Connections block is empty.")
+            # print("Connections block is empty.")
             self.symbol = self.scanner.get_symbol()
             return False
 
@@ -400,7 +402,7 @@ class Parser:
         self.symbol = self.scanner.get_symbol()
         # Skip device block, end reached (for empty block)
         if self.symbol.type == self.scanner.CLOSE_BRACKET:
-            print("Devices block is empty.")
+            # print("Devices block is empty.")
             self.symbol = self.scanner.get_symbol()
             return False
 
@@ -439,7 +441,7 @@ class Parser:
                 return True
         else:
             self.syntax.printerror(self.syntax.NO_CLOSE_BRACKET, self.scanner)
-            print("More stuff found after monitors. Perhaps the order is wrong or more than one line used. The rest will not be read by the parser.")
+            # print("More stuff found after monitors. Perhaps the order is wrong or more than one line used. The rest will not be read by the parser.")
             return True
 
     def connections_sub_block(self):
@@ -468,7 +470,7 @@ class Parser:
         # Skip device block, end reached
         if self.symbol.type == self.scanner.CLOSE_BRACKET:
             eofcheck = False
-            print("Connections sub-block is empty.")
+            # print("Connections sub-block is empty.")
             self.symbol = self.scanner.get_symbol()
             return eofcheck
 
@@ -507,7 +509,8 @@ class Parser:
                     self.semantic.EMPTY_INPUTS, self.scanner)
                 break
         else:
-            print("All inputs populated")
+            # print("All inputs populated")
+            pass
 
         return False
 # ===========================================================================================================
@@ -563,7 +566,7 @@ class Parser:
         'device_type': The type of the device which is receiving an input.
         """
 
-        print("Entered connection definition block")
+        # print("Entered connection definition block")
         self.current_subsection = subsection
 
         if self.symbol.id == self.scanner.to_id:
@@ -592,7 +595,7 @@ class Parser:
                             self.syntax.NO_SEMICOLON, self.scanner)
                         return
             else:
-                print("Something funny has happened in connection_definition")
+                # print("Something funny has happened in connection_definition")
                 return
 
         elif self.symbol.id == self.scanner.is_id:
@@ -694,10 +697,11 @@ class Parser:
                         if make_device_error == self.devices.NO_ERROR:
                             device_object = self.devices.get_device(
                                 self.names.query(device))
-                            print(
-                                "In device_definition, successfully made d-type with inputs and outputs:")
+                            # print(
+                                # "In device_definition, successfully made d-type with inputs and outputs:")
                         else:
-                            print("Error on making dtype:", make_device_error)
+                            # print("Error on making dtype:", make_device_error)
+                            pass
                 self.symbol = self.scanner.get_symbol()
                 if self.symbol == self.scanner.EOF:
                     return True
@@ -915,7 +919,7 @@ class Parser:
                 else:
                     for device in devices_to_be_initialised:
                         device_kind = self.object_dict[device]
-                        print("Device:", device, ", inputs:", temp_inputs)
+                        # print("Device:", device, ", inputs:", temp_inputs)
                         if device_kind == "XOR":
                             self.devices.make_device(self.names.query(
                                 device), self.device_kind_dict[device_kind])
@@ -1070,7 +1074,7 @@ class Parser:
 
         Return current read name.
         """
-        print("Entered read name function in block {}".format(block))
+        # print("Entered read name function in block {}".format(block))
 
         # If first symbol is of type NAME (for all gates and DTYPE)
         if self.symbol.type == self.scanner.NAME:
@@ -1222,9 +1226,10 @@ class Parser:
                         self.connected = self.network.make_connection(
                             self.output_device_id, self.output_device_port_id, self.input_device_id, self.input_device_port_id)
                         if self.connected == self.network.NO_ERROR:
-                            print("Successfully connected gate")
+                            # print("Successfully connected gate")
+                            pass
                         else:
-                            print("Parser Semantic Error for gate connection.")
+                            # print("Parser Semantic Error for gate connection.")
                             self.total_errors += 1
                             self.scanner.skip_line()
                             return
@@ -1284,7 +1289,7 @@ class Parser:
                 if self.connected == self.network.NO_ERROR:
                     pass
                 else:
-                    print("Parser Semantic Error for dtype connection.")
+                    # print("Parser Semantic Error for dtype connection.")
                     self.total_errors += 1
                     self.scanner.skip_line()
                     return
@@ -1319,7 +1324,7 @@ class Parser:
             return False
         # Skip device block, end reached
         if self.symbol.type == self.scanner.CLOSE_BRACKET:
-            print("Connections block is empty.")
+            # print("Connections block is empty.")
             return False
         # Set output device id
         self.output_device_id = self.symbol.id
@@ -1377,23 +1382,23 @@ class Parser:
         self.eofcheck = False
         self.symbol = self.scanner.get_symbol()
         if self.symbol.type == self.scanner.EOF:
-            print("Syntax Error: Empty file found.")
+            # print("Syntax Error: Empty file found.")
             return False
         else:
             self.eofcheck = self.circuit_description()
 
         if self.eofcheck == True:
-            for device in self.devices.devices_list:
-                print("Device", self.names.get_name_string(device.device_id),
-                      "Inputs:", device.inputs, "Outputs:", device.outputs)
-            print(self.devices.find_devices(self.devices.SWITCH))
-            print(self.monitors.monitors_dictionary)
+            # for device in self.devices.devices_list:
+                # print("Device", self.names.get_name_string(device.device_id),
+                    #   "Inputs:", device.inputs, "Outputs:", device.outputs)
+            # print(self.devices.find_devices(self.devices.SWITCH))
+            # print(self.monitors.monitors_dictionary)
             self.scanner.file.close()
 
         self.total_errors += self.semantic.error_code_count + self.syntax.error_code_count
         if self.total_errors != 0:
-            print("Parser reached end of file with {} errors".format(
-                self.total_errors))
+            # print("Parser reached end of file with {} errors".format(
+                # self.total_errors))
             return False
         else:
             return True

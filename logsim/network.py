@@ -140,7 +140,7 @@ class Network:
                 first_device.inputs[first_port_id] = (second_device_id,
                                                       second_port_id)
                 error_type = self.NO_ERROR
-                print("No error")
+                # print("No error")
             else:  # second_port_id is not a valid input or output port
                 print("Second port absent")
                 error_type = self.PORT_ABSENT
@@ -160,7 +160,7 @@ class Network:
                     second_device.inputs[second_port_id] = (first_device_id,
                                                             first_port_id)
                     error_type = self.NO_ERROR
-                    print("No error")
+                    # print("No error")
             else:
                 print("Port absent")
                 error_type = self.PORT_ABSENT
