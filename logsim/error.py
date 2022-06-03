@@ -12,6 +12,12 @@ from scanner import Scanner
 
 
 class SemanticError():
+    """Handle semantic errors in circuit definition file.
+    
+    Parameters
+    ----------
+    id: error id from error id list.
+    """
 
     def __init__(self):
         """Set parameters to report error."""
