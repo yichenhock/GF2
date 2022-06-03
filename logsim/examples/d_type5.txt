@@ -9,7 +9,7 @@ devices(
 
 initialise(
     a, b, c, d, e have 2 inputs;
-    clk1 cycle 5;
+    clk1 cycle length 5;
     sw1, sw2 are LOW;
 )
 

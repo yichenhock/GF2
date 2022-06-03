@@ -325,8 +325,7 @@ class Parser:
             # Check that everything defined in devices has been initialised
             for object in self.object_dict:
                 object_id = self.names.query(object)
-                device = self.devices.get_device(object_id)
-                if device.outputs == {}:
+                if self.devices.get_device(object_id) == None:
                     self.semantic.printerror(self.semantic.DEVICE_NOT_INITIALISED, self.scanner)
                     return False
             self.symbol = self.scanner.get_symbol()
@@ -558,19 +557,18 @@ class Parser:
             if device_type != "DTYPE":
                 # Call method to parse gate input name - checks if the device name matches the subsection header and has a valid port name
                 self.gate_input_name(self.current_subsection)
-                if self.connection_error == self.network.NO_ERROR:
+                if self.connected == self.network.NO_ERROR:
                     # Get semicolon
                     self.symbol = self.scanner.get_symbol()
                     if self.symbol.type != self.scanner.SEMICOLON:
                         self.syntax.printerror(self.syntax.NO_SEMICOLON, self.scanner)
                         return         
                 else:
-                    self.symbol = self.scanner.get_symbol()
                     return
             elif device_type == "DTYPE":
                 # Call method to parse dtype input name - checks if the device name matches the subsection header and has a valid port name
                 self.dtype_input_name(self.current_subsection)
-                if self.connection_error == self.network.NO_ERROR:
+                if self.connected == self.network.NO_ERROR:
                     # Get semicolon
                     self.symbol = self.scanner.get_symbol()
                     if self.symbol.type != self.scanner.SEMICOLON:
@@ -1151,9 +1149,8 @@ class Parser:
                     self.input_device_port = self.names.get_name_string(self.symbol.id)
                     # Only make connection in case where port id and device id exist
                     if self.devices.get_signal_name(self.input_device_id, self.input_device_port_id) != None:
-                        # Error ID returned in Network class for make_connection function
-                        self.connection_error = self.network.make_connection(self.output_device_id, self.output_device_port_id, self.input_device_id, self.input_device_port_id)
-                        if self.connection_error == self.network.NO_ERROR:
+                        self.connected = self.network.make_connection(self.output_device_id, self.output_device_port_id, self.input_device_id, self.input_device_port_id)
+                        if self.connected == self.network.NO_ERROR:
                             print("Successfully connected gate")
                         else:
                             print("Parser Semantic Error for gate connection.")
