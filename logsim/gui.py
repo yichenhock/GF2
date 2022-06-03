@@ -475,7 +475,8 @@ class Gui(wx.Frame):
                 # CREATE A NEW FILE HERE AND SET THAT AS THE NEW PATH!
                 try:
                     # open(pathname, 'w').close()
-                    with open('logsim/examples/blank.txt', 'r') as examplefile, open(pathname, 'w') as newfile:
+                    with open('logsim/examples/blank.txt', 'r') \
+                            as examplefile, open(pathname, 'w') as newfile:
                         # read content from first file
                         for line in examplefile:
                             # append content to second file
