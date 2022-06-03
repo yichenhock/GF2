@@ -275,14 +275,13 @@ class Parser:
         Devices are given input number. Switches are given high or low at start. Clocks are given a cycle length.
         """
         print("Entered initialise block")
-
+        self.previous_block = "initialise"
         # Fetch next symbol after section heading and check it's a bracket
         self.symbol = self.scanner.get_symbol()
 
         if self.symbol.type != self.scanner.OPEN_BRACKET:
             self.syntax.printerror(self.syntax.NO_OPEN_BRACKET, self.scanner)
-
-        self.previous_block = "initialise"
+            return False
 
         self.symbol = self.scanner.get_symbol()
         if self.symbol.type == self.scanner.EOF:
@@ -350,15 +349,14 @@ class Parser:
         
         """
 
-        print("============================================Entered connections block")
+        self.previous_block = "connections"
 
         # Fetch next symbol after section heading and check it's a bracket
         self.symbol = self.scanner.get_symbol()
 
         if self.symbol.type != self.scanner.OPEN_BRACKET:
             self.syntax.printerror(self.syntax.NO_OPEN_BRACKET, self.scanner)
-
-        self.previous_block = "connections"
+            return False
 
         # Fetch name subheader
         self.symbol = self.scanner.get_symbol()
@@ -378,12 +376,20 @@ class Parser:
             if eofcheck: # If missing close bracket in subsection, parser refuses to read and sees end of file
                 return True
             # At this point, we have exited the sub-block. Raise a semantic error if the wrong number of inputs have been defined.
-            if self.object_dict[self.current_subsection] == "DTYPE":
-                dtype_device = self.devices.get_device(self.names.query(self.current_subsection))
-                for input in dtype_device.inputs:
-                    if input == None:
-                        self.semantic.printerror(self.semantic.EMPTY_INPUTS)
-        
+            device = self.devices.get_device(self.names.query(self.current_subsection))
+            if device.device_kind == self.devices.D_TYPE:
+                print("Checking all inputs connected for dtype")
+                for input, output_ids in device.inputs:
+                    if output_ids[0] == None:
+                        self.semantic.printerror(self.semantic.EMPTY_INPUTS, self.scanner)
+                        return False
+            else:
+                print("Checking all inputs connected for non dtype")
+                for input, output_ids in device.inputs:
+                    if output_ids[0] == None:
+                        self.semantic.printerror(self.semantic.EMPTY_INPUTS, self.scanner)
+                        return False
+
         # If for whatever reason we end up at a close bracket, get next symbol (subheader)
         if self.symbol.type == self.scanner.CLOSE_BRACKET:
             # Get symbol after close bracket
