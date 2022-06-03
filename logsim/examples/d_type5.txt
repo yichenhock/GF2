@@ -1,0 +1,43 @@
+#D Type made of gates;
+
+devices(
+    a is NOR;
+    b, c, d, e are NAND;
+    clk1 is CLOCK;
+)
+
+initialise(
+    a, b, c, d, e have 2 inputs;
+    clk1 cycle length 5;
+)
+
+connections(
+    a(
+        e to a.I1;
+        e to a.I2;
+    )
+
+    b(  
+        e to b.I1;
+        clk1 to b.I2;
+    )
+
+    c(  
+        clk1 to c.I1;
+        a to c.I2;
+    )
+
+    d(
+        b to d.I1;
+        e to d.I2;
+    )
+
+    e(  
+        d to e.I1;
+        c to e.I2;
+    )
+)
+
+monitors(
+    d;
+)
