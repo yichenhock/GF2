@@ -20,7 +20,7 @@ class InputsTab(wx.Panel):
     # ----------------------------------------------------------------------
 
     def __init__(self, parent, names, devices, canvas, statusbar):
-        """."""
+        """"""
         wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
 
         self.names = names

@@ -151,8 +151,8 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         self.curr_wavelength = self.wavelength * self.zoom
 
         # update plot height (initial_y is used as bottom/top margin)
-        self.plot_height = self.initial_y * 2 + self.clock_vspace + \
-            self.component_vspace * len(self.monitors.monitors_dictionary)
+        self.plot_height = self.initial_y*2 + self.clock_vspace + \
+            self.component_vspace*len(self.monitors.monitors_dictionary)
 
         # update plot width (initial_x is used as left/right margin)
         # print(self.parent.GetParent().cycles_completed)
@@ -428,9 +428,9 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             # Mouse is to the left of the grid
             pass
 
-    def render_text(self, text, x_pos, y_pos,
-                    z_pos=0, font=GLUT.GLUT_BITMAP_HELVETICA_12,
-                    flush=True, clear=True):
+    def render_text(self, text: str, x_pos: float, y_pos: float,
+                    z_pos: float = 0, font=GLUT.GLUT_BITMAP_HELVETICA_12,
+                    flush: bool = True, clear: bool = True):
         """Handle text drawing operations."""
         GL.glColor3f(0.0, 0.0, 0.0)  # text is black
         GL.glRasterPos2f(x_pos, y_pos)
