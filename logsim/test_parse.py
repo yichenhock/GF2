@@ -26,7 +26,7 @@ def new_names():
 #     return Scanner(path, new_names)
 
 
-def test_no_open_bracket():
-    "devices"
+# def test_no_open_bracket():
+#     "devices"
 
-    assert SyntaxError.NO_OPEN_BRACKET
+#     assert SyntaxError.NO_OPEN_BRACKET
