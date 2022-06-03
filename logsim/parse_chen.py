@@ -17,8 +17,8 @@ from monitors import Monitors
 
 from error_chen import ParserError
 
-class Parser:
 
+class Parser:
     """Parse the definition file and build the logic network.
 
     The parser deals with error handling. It analyses the syntactic and
@@ -42,7 +42,6 @@ class Parser:
 
     def __init__(self, names, devices, network, monitors, scanner):
         """Initialise constants."""
-
         # names class object
         self.names = names
         self.devices = devices
@@ -50,7 +49,7 @@ class Parser:
         self.scanner = scanner
         self.monitors = monitors
 
-        self.in_block = False # True if parser inside a block
+        self.in_block = False  # True if parser inside a block
 
         self.syntax_error_count = 0
         self.semantic_error_count = 0
@@ -60,127 +59,133 @@ class Parser:
         self.input_not_connected_errors = []
         self.name_symbols = []
         self.input_symbols = []
-        self.output_symbol = None 
+        self.output_symbol = None
         self.monitor_symbols = []
-        self.device_input_num = {} # {device_id: number_inputs}
+        self.device_input_num = {}  # {device_id: number_inputs}
         # num inputs only for AND, NAND, OR, NOR
 
         self.definition_statements = [self.scanner.is_id, self.scanner.are_id]
-        self.possession_statements = [self.scanner.has_id, self.scanner.have_id]
+        self.possession_statements = [
+            self.scanner.has_id, self.scanner.have_id]
 
-    def devices_block(self): 
-        """Check if symbols form a device block
-        
-        """
+    def devices_block(self):
+        """Check if symbols form a device block."""
         next_sym = self.scanner.get_symbol()
 
         if next_sym.type == self.scanner.OPEN_BRACKET:
-            self.in_block = True 
+            self.in_block = True
             next_sym = self.scanner.get_symbol()
 
-            while next_sym.type != self.scanner.CLOSE_BRACKET: 
-                if next_sym.type == self.scanner.EOF: 
-                    raise ParserError # raise a close bracket error
+            while next_sym.type != self.scanner.CLOSE_BRACKET:
+                if next_sym.type == self.scanner.EOF:
+                    raise ParserError  # raise a close bracket error
                 next_sym = self.devices_subrule(next_sym)
-            self.in_block = False 
+            self.in_block = False
             next_sym = self.scanner.get_symbol()
-        else: 
-            raise ParserError # raise open bracket error
+        else:
+            raise ParserError  # raise open bracket error
         return next_sym
 
-    def devices_subrule(self, symbol: Symbol) -> Symbol:
-        try: 
-            substatement = [[], [], []] # [devices, connection, type]
+    def devices_subrule(self, symbol):
+        """."""
+        try:
+            substatement = [[], [], []]  # [devices, connection, type]
 
-            if symbol.type == self.scanner.NAME: 
+            if symbol.type == self.scanner.NAME:
                 # loop until it gets to 'IS' or 'ARE'
                 next_sym = self.scanner.get_symbol()
 
                 device_ids = []
-                while next_sym.type != self.scanner.is_id: 
+                while next_sym.type != self.scanner.is_id:
                     if next_sym.type == self.scanner.EOF:
-                        raise ParserError # raise expected a 'IS' or 'ARE'
-                    
+                        raise ParserError  # raise expected a 'IS' or 'ARE'
+
                     # if next_sym.type
                     next_sym = self.scanner.get_symbol()
 
-            else: 
-                raise ParserError # expected a name
+            else:
+                raise ParserError  # expected a name
 
-
-            if next_sym.type == self.scanner.SEMICOLON: 
+            if next_sym.type == self.scanner.SEMICOLON:
                 pass
-            else: 
-                raise ParserError # expected a semicolon
+            else:
+                raise ParserError  # expected a semicolon
 
             next_sym = self.scanner.get_symbol()
 
-        except ParserError as e: 
+        except ParserError as e:
             self.add_error(e)
             next_symbol = self.skip_error(e)
 
         return next_symbol
 
     def initialise_block(self):
-        return 
+        """."""
+        return
 
-    def connections_block(self): 
-        return 
-    
-    def monitors_block(self): 
-        return 
+    def connections_block(self):
+        """."""
+        return
 
-#===========================================================================================================
-#===========================================================================================================
+    def monitors_block(self):
+        """."""
+        return
+
+# ===========================================================================================================
+# ===========================================================================================================
 
     def check_all_inputs_connected(self):
-        return 
+        """."""
+        return
 
     def add_error(self, error):
+        """."""
         pass
-  
-    def skip_error(self, error): # skip to end of current statement/block
-        if self.in_block: # skip until next semicolon or closed bracket
+
+    def skip_error(self, error):
+        """Skip to end of current statement/block."""
+        if self.in_block:  # skip until next semicolon or closed bracket
             pass
-        else: # skip until the next 
+        else:  # skip until the next
             pass
 
         next_sym = self.scanner.get_symbol()
         return next_sym
 
     def print_errors(self):
+        """."""
         pass
 
-#===========================================================================================================
-#===========================================================================================================
+# ===========================================================================================================
+# ===========================================================================================================
 
     def parse_network(self):
         """Parse the circuit definition file."""
         symbol = self.scanner.get_symbol()
 
-        while symbol.type != self.scanner.EOF: 
-            try: 
-                if symbol.type == self.scanner.KEYWORD: 
-                    if symbol.id == self.scanner.devices_id: 
+        while symbol.type != self.scanner.EOF:
+            try:
+                if symbol.type == self.scanner.KEYWORD:
+                    if symbol.id == self.scanner.devices_id:
                         next_sym = self.devices_block()
                     elif symbol.id == self.scanner.initialise_id:
                         next_sym = self.initialise_block()
                     elif symbol.id == self.scanner.connections_id:
                         next_sym = self.connections_block()
-                    elif symbol.id == self.scanner.monitors_id: 
+                    elif symbol.id == self.scanner.monitors_id:
                         next_sym = self.monitors_block()
-                    else: 
-                        raise ParserError # expected a block header
+                    else:
+                        raise ParserError  # expected a block header
                 else:
-                    raise ParserError # expected a keyword
-            except ParserError as e: 
-                # add the error 
+                    raise ParserError  # expected a keyword
+            except ParserError as e:
+                # add the error
                 self.add_error(e)
-                # skip to the next error 
+                # skip to the next error
                 next_sym = self.skip_error(e)
             symbol = next_sym
-        
+
         self.check_all_inputs_connected()
         self.print_errors()
 
-        return True # only if there are no errors
+        return True  # only if there are no errors

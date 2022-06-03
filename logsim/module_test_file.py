@@ -1,8 +1,9 @@
-#This file is for testing various functions developed in each module
+"""This file is for testing various functions developed in each module."""
+
 import sys
 from names import Names
 from scanner import Scanner
-from parse_cindy import Parser
+from parse import Parser
 from devices import Devices
 from network import Network
 from monitors import Monitors
