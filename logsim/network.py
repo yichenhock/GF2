@@ -71,7 +71,8 @@ class Network:
          self.DEVICE_ABSENT] = self.names.unique_error_codes(6)
         self.steady_state = True  # for checking if signals have settled
 
-        self.error_dict = {self.NO_ERROR: "No error", self.INPUT_TO_INPUT: "Input to input", self.OUTPUT_TO_OUTPUT: "Output to output", self.INPUT_CONNECTED: "Input connected", self.PORT_ABSENT: "Port absent"}
+        self.error_dict = {self.NO_ERROR: "No error", self.INPUT_TO_INPUT: "Input to input",
+                           self.OUTPUT_TO_OUTPUT: "Output to output", self.INPUT_CONNECTED: "Input connected", self.PORT_ABSENT: "Port absent"}
 
     def get_connected_output(self, device_id, input_id):
         """Return the output connected to the given input.
