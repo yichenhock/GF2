@@ -492,8 +492,6 @@ class Parser:
         # This recursively reads each connection line until a close bracket is found
         while (self.bracket_count%2) == 1:
 
-            print("In method connections_sub_block, reading device name inside {} subsection in connections".format(self.current_subsection))
-
             if self.symbol.type == self.scanner.CLOSE_BRACKET:
                 self.bracket_count += 1
                 break
@@ -584,18 +582,19 @@ class Parser:
             if device_type != "DTYPE":
                 # Call method to parse gate input name - checks if the device name matches the subsection header and has a valid port name
                 self.gate_input_name(self.current_subsection)
-                if self.connected == self.network.NO_ERROR:
+                if self.connection_error == self.network.NO_ERROR:
                     # Get semicolon
                     self.symbol = self.scanner.get_symbol()
                     if self.symbol.type != self.scanner.SEMICOLON:
                         self.syntax.printerror(self.syntax.NO_SEMICOLON, self.scanner)
                         return         
                 else:
+                    self.symbol = self.scanner.get_symbol()
                     return
             elif device_type == "DTYPE":
                 # Call method to parse dtype input name - checks if the device name matches the subsection header and has a valid port name
                 self.dtype_input_name(self.current_subsection)
-                if self.connected == self.network.NO_ERROR:
+                if self.connection_error == self.network.NO_ERROR:
                     # Get semicolon
                     self.symbol = self.scanner.get_symbol()
                     if self.symbol.type != self.scanner.SEMICOLON:
@@ -1235,11 +1234,12 @@ class Parser:
                     self.input_device_port = self.names.get_name_string(self.symbol.id)
                     # Only make connection in case where port id and device id exist
                     if self.devices.get_signal_name(self.input_device_id, self.input_device_port_id) != None:
-                        self.connected = self.network.make_connection(self.output_device_id, self.output_device_port_id, self.input_device_id, self.input_device_port_id)
-                        if self.connected == self.network.NO_ERROR:
+                        # Error ID returned in Network class for make_connection function
+                        self.connection_error = self.network.make_connection(self.output_device_id, self.output_device_port_id, self.input_device_id, self.input_device_port_id)
+                        if self.connection_error == self.network.NO_ERROR:
                             print("Successfully connected gate")
                         else:
-                            print("Gate connection issue")
+                            print("Parser Semantic Error (gate connection issue):", self.network.error_list[self.connected])
                         return 
                     elif self.devices.get_signal_name(self.input_device_id, self.input_device_port_id) == None:
                         self.semantic.printerror(self.semantic.PORT_DOES_NOT_EXIST, self.scanner)
@@ -1287,8 +1287,8 @@ class Parser:
                 # Set input device port id
                 self.input_device_port_id = self.symbol.id
                 # Valid port name found
-                self.connected = self.network.make_connection(self.output_device_id, self.output_device_port_id, self.input_device_id, self.input_device_port_id)
-                if self.connected == self.network.NO_ERROR:
+                self.connection_error = self.network.make_connection(self.output_device_id, self.output_device_port_id, self.input_device_id, self.input_device_port_id)
+                if self.connection_error == self.network.NO_ERROR:
                     print("Dtype successfully connected with ports:", self.names.get_name_string(self.input_device_port_id), "for device ", "and input ", self.names.get_name_string(self.output_device_id), self.names.get_name_string(self.input_device_id))
                 else:
                     print("Issue with dtype connection")        
@@ -1389,10 +1389,6 @@ class Parser:
             for device in self.devices.devices_list:
                 print("Device", self.names.get_name_string(device.device_id), "Inputs:", device.inputs, "Outputs:", device.outputs)
             print(self.monitors.monitors_dictionary)
-            for device in self.object_dict:
-                device_object = self.devices.get_device(self.names.query(device))
-                if device_object.clock_half_period != None:
-                    print("Half period of clock {}".format(device), device_object.clock_half_period)
             self.scanner.file.close()
 
         self.total_errors = self.semantic.error_code_count + self.syntax.error_code_count
