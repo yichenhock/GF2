@@ -1,4 +1,4 @@
-"""Initialise dummy constants to go into the network, monitors and devices
+"""Initialise dummy constants to go into the network, monitors and devices.
 
 Contains NO error checks!
 """
@@ -19,7 +19,10 @@ monitors = Monitors(names, devices, network)
 
 
 class DummyParser:
+    """."""
+
     def __init__(self, names, devices, network, monitors, scanner):
+        """."""
         self.names = names
         self.devices = devices
         self.network = network
@@ -43,6 +46,7 @@ class DummyParser:
         self.sw2.type = self.scanner.NAME
 
     def parse_network(self):
+        """."""
         # f = Symbol()
         # f.id = self.names.query('f')
         # f.type = self.scanner.NAME

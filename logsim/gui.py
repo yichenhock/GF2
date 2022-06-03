@@ -86,7 +86,7 @@ class Gui(wx.Frame):
         # notify AUI which frame to use
         self.mgr.SetManagedWindow(self)
 
-        # # main monitor part
+        # main monitor part
         self.main_panel = wx.Panel(
             self, wx.ID_ANY, size=(wx.EXPAND, wx.EXPAND))
         self.main_sizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -404,8 +404,11 @@ class Gui(wx.Frame):
 
     def on_help_button(self):
         """Display a helpful message box."""
-        wx.MessageBox("Press the buttons :D",
-                      "Help", wx.ICON_INFORMATION | wx.OK)
+        with open('./logsim/help.txt') as f:
+            help_text = f.read()
+
+        wx.MessageBox(help_text,
+                      "Help", wx.ICON_QUESTION | wx.OK)
 
     def on_close(self, event):
         """Deinitialise the frame manager on close."""

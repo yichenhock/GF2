@@ -1,4 +1,4 @@
-"""Description of that this does
+"""Description of that this does.
 
 Classes:
 --------
@@ -13,26 +13,30 @@ from parse import Parser
 
 
 class RedirectText(object):
+    """."""
+
     def __init__(self, aWxTextCtrl):
+        """."""
         self.out = aWxTextCtrl
 
     def write(self, string):
+        """."""
         self.out.AppendText(string)
 
     def flush(self):
+        """."""
         pass
 
 
 class ConsoleOutTab(wx.Panel):
-    """
-    A simple wx.Panel class
-    """
+    """A simple wx.Panel class."""
+
     # ----------------------------------------------------------------------
 
     def __init__(self, parent, path, names, devices, network,
                  monitors, parser, inputsPanel, set_gui_state,
                  global_vars, canvas, save_file):
-        """"""
+        """."""
         wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
 
         self.parent = parent

@@ -1,7 +1,7 @@
-PWD c:\Users\Yi Chen\OneDrive - University of Cambridge\Cambridge\Part IIA\GF2\report\first_interim_report
+PWD c:\Users\Yi Chen\OneDrive - University of Cambridge\Cambridge\Part IIA\GF2\report\chen
 INPUT C:\Users\Yi Chen\AppData\Local\MiKTeX\miktex\data\le\pdftex\pdflatex.fmt
-INPUT c:\Users\Yi Chen\OneDrive - University of Cambridge\Cambridge\Part IIA\GF2\report\first_interim_report\first_interim_report.tex
-OUTPUT first_interim_report.log
+INPUT c:\Users\Yi Chen\OneDrive - University of Cambridge\Cambridge\Part IIA\GF2\report\chen\second_interim_report_chen.tex
+OUTPUT second_interim_report_chen.log
 INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\base\article.cls
 INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\base\article.cls
 INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\base\article.cls
@@ -388,29 +388,39 @@ INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\tools\multicol.st
 INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\tools\multicol.sty
 INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\tools\multicol.sty
 INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\tools\multicol.sty
-INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\generic\babel\babel.sty
-INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\generic\babel\babel.sty
-INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\generic\babel\babel.sty
-INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\generic\babel\babel.sty
-INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\generic\babel\babel.sty
-INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\generic\babel\babel.sty
-INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\generic\babel\babel.sty
-INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\generic\babel\babel.sty
-INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\generic\babel\babel.sty
-INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\generic\babel\babel.sty
-INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\generic\babel\babel.sty
-INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\generic\babel\babel.def
-INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\generic\babel\txtbabel.def
-INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\arabi\bblopts.cfg
-INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\arabi\bblopts.cfg
-INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\arabi\bblopts.cfg
-INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\arabi\bblopts.cfg
-INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\babel-english\english.ldf
-INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\babel-english\english.ldf
-INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\babel-english\english.ldf
-INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\babel-english\english.ldf
-INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\babel-english\english.ldf
-INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\babel-english\english.ldf
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\enumitem\enumitem.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\enumitem\enumitem.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\enumitem\enumitem.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\enumitem\enumitem.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\enumitem\enumitem.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\enumitem\enumitem.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\enumitem\enumitem.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\enumitem\enumitem.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\enumitem\enumitem.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\enumitem\enumitem.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\enumitem\enumitem.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\kantlipsum\kantlipsum.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\kantlipsum\kantlipsum.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\kantlipsum\kantlipsum.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\kantlipsum\kantlipsum.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\kantlipsum\kantlipsum.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\kantlipsum\kantlipsum.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\kantlipsum\kantlipsum.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\kantlipsum\kantlipsum.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\kantlipsum\kantlipsum.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\kantlipsum\kantlipsum.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\kantlipsum\kantlipsum.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\l3kernel\expl3.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\l3kernel\expl3.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\l3kernel\expl3.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\l3kernel\expl3.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\l3kernel\expl3.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\l3kernel\expl3.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\l3kernel\expl3.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\l3kernel\expl3.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\l3kernel\expl3.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\l3kernel\expl3.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\l3kernel\expl3.sty
 INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\l3backend\l3backend-pdftex.def
 INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\l3backend\l3backend-pdftex.def
 INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\l3backend\l3backend-pdftex.def
@@ -422,10 +432,33 @@ INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\l3backend\l3backe
 INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\l3backend\l3backend-pdftex.def
 INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\l3backend\l3backend-pdftex.def
 INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\l3backend\l3backend-pdftex.def
-INPUT .\first_interim_report.aux
-INPUT first_interim_report.aux
-INPUT first_interim_report.aux
-OUTPUT first_interim_report.aux
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\l3packages\xparse\xparse.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\l3packages\xparse\xparse.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\l3packages\xparse\xparse.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\l3packages\xparse\xparse.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\l3packages\xparse\xparse.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\l3packages\xparse\xparse.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\l3packages\xparse\xparse.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\l3packages\xparse\xparse.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\l3packages\xparse\xparse.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\l3packages\xparse\xparse.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\l3packages\xparse\xparse.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\l3kernel\expl3.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\fancyhdr\fancyhdr.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\fancyhdr\fancyhdr.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\fancyhdr\fancyhdr.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\fancyhdr\fancyhdr.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\fancyhdr\fancyhdr.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\fancyhdr\fancyhdr.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\fancyhdr\fancyhdr.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\fancyhdr\fancyhdr.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\fancyhdr\fancyhdr.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\fancyhdr\fancyhdr.sty
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\fancyhdr\fancyhdr.sty
+INPUT .\second_interim_report_chen.aux
+INPUT second_interim_report_chen.aux
+INPUT second_interim_report_chen.aux
+OUTPUT second_interim_report_chen.aux
 INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\context\base\mkii\supp-pdf.mkii
 INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\context\base\mkii\supp-pdf.mkii
 INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\context\base\mkii\supp-pdf.mkii
@@ -446,13 +479,16 @@ INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\00miktex\epstopdf
 INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\00miktex\epstopdf-sys.cfg
 INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\00miktex\epstopdf-sys.cfg
 INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\pdflscape\pdflscape.sty
-INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmbx10.tfm
-INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmbxi10.tfm
 INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmr12.tfm
 INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmbx12.tfm
-INPUT .\first_interim_report.toc
-INPUT first_interim_report.toc
-INPUT first_interim_report.toc
+INPUT .\gui_screenshot_labelled.png
+INPUT .\gui_screenshot_labelled.png
+INPUT gui_screenshot_labelled.png
+INPUT .\gui_screenshot_labelled.png
+OUTPUT second_interim_report_chen.pdf
+INPUT .\gui_screenshot_labelled.png
+INPUT .\gui_screenshot_labelled.png
+INPUT .\gui_screenshot_labelled.png
 INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\lm\ot1lmr.fd
 INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\lm\ot1lmr.fd
 INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\lm\ot1lmr.fd
@@ -479,52 +515,201 @@ INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\lm\omxlmex.fd
 INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\lm\omxlmex.fd
 INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\lm\omxlmex.fd
 INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\lmex10.tfm
-OUTPUT first_interim_report.toc
-OUTPUT first_interim_report.pdf
-INPUT C:\Users\Yi Chen\AppData\Local\MiKTeX\fonts\map\pdftex\pdftex.map
-INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmr12.tfm
-INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmbx12.tfm
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmr7.tfm
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmr8.tfm
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\rm-lmr8.tfm
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\rm-lmr6.tfm
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\lmmi8.tfm
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\lmmi6.tfm
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\lmsy8.tfm
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\lmsy6.tfm
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmr6.tfm
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmri10.tfm
 INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\lm\t1lmtt.fd
 INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\lm\t1lmtt.fd
 INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\lm\t1lmtt.fd
 INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\tex\latex\lm\t1lmtt.fd
 INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmtt10.tfm
-INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmr9.tfm
-INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmtt9.tfm
-INPUT .\Simple Circuit.png
-INPUT .\Simple Circuit.png
-INPUT Simple Circuit.png
-INPUT .\Simple Circuit.png
-INPUT .\Simple Circuit.png
-INPUT .\Simple Circuit.png
-INPUT .\Simple Circuit.png
-INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmr5.tfm
-INPUT .\Complex Circuit.png
-INPUT .\Complex Circuit.png
-INPUT Complex Circuit.png
-INPUT .\Complex Circuit.png
-INPUT .\Complex Circuit.png
-INPUT .\Complex Circuit.png
-INPUT .\Complex Circuit.png
-INPUT .\Gantt Chart.pdf
-INPUT .\Gantt Chart.pdf
-INPUT Gantt Chart.pdf
-INPUT .\Gantt Chart.pdf
-INPUT .\Gantt Chart.pdf
-INPUT .\Gantt Chart.pdf
-INPUT first_interim_report.aux
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT C:\Users\Yi Chen\AppData\Local\MiKTeX\fonts\map\pdftex\pdftex.map
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT ..\second_interim_report\example_circuits.pdf
+INPUT second_interim_report_chen.aux
 INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\fonts\enc\dvips\lm\lm-ec.enc
-INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmbx10.pfb
-INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmbx10.pfb
 INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmbx12.pfb
 INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmbx12.pfb
-INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmbxi10.pfb
-INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmbxi10.pfb
 INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmr10.pfb
 INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmr10.pfb
 INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmr5.pfb
 INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmr5.pfb
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmr6.pfb
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmr6.pfb
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmr7.pfb
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmr7.pfb
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmr8.pfb
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmr8.pfb
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmri10.pfb
+INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmri10.pfb
 INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmtt10.pfb
 INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmtt10.pfb
-INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmtt9.pfb
-INPUT C:\Users\Yi Chen\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmtt9.pfb
