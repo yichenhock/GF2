@@ -1,8 +1,8 @@
 """
 Tab showing the list of monitored components.
 
-Allows the user to add/remove components easily. 
-Changes will reflect immediately in the signal trace output. 
+Allows the user to add/remove components easily.
+Changes will reflect immediately in the signal trace output.
 
 Classes
 -------
@@ -142,8 +142,8 @@ class MonitorsTab(wx.Panel):
         monitored_signals = self.monitors.get_signal_names()[0]
         for signal in monitored_signals:
             self.append_to_monitors_list(signal)
-            signal_id, signal_name, output_id, output_name = self.get_signal_and_output_id(
-                signal)
+            signal_id, signal_name, output_id, output_name = \
+                self.get_signal_and_output_id(signal)
         self.combo_types.SetValue('All')
         self.initialise_combo_names()
         try:
@@ -152,6 +152,7 @@ class MonitorsTab(wx.Panel):
             pass
 
     def get_signal_and_output_id(self, signal):
+        """Get `signal_id` and `output_id` based on signal name."""
         name_arr = signal.split('.')
         signal_name = name_arr[0]
         signal_id = self.names.query(signal_name)
@@ -167,8 +168,8 @@ class MonitorsTab(wx.Panel):
     def append_to_monitors_list(self, signal):
         """Add an entry to `self.monitors_list`."""
         # signal name may be a dtype
-        signal_id, signal_name, output_id, output_name = self.get_signal_and_output_id(
-            signal)
+        signal_id, signal_name, output_id, output_name = \
+            self.get_signal_and_output_id(signal)
 
         index = self.monitors_list.InsertStringItem(
             len(self.displayed_signals), signal)
@@ -211,7 +212,7 @@ class MonitorsTab(wx.Panel):
                 self.combo_names.Append(name)
 
     def on_add_button(self, event):
-        """Handles the event when the user adds a component to monitor."""
+        """Handle the event when the user adds a component to monitor."""
         name_to_add = self.combo_names.GetValue()
         if name_to_add == "":
             self.statusbar.SetStatusText('Select a component first!')
@@ -223,7 +224,7 @@ class MonitorsTab(wx.Panel):
                 self.add_monitor(name_to_add)
 
     def on_add_all_button(self, event):
-        """Handles the event when the user adds all components to monitor."""
+        """Handle the event when the user adds all components to monitor."""
         names_list = self.combo_names.GetItems()
 
         for name in names_list:
@@ -232,8 +233,8 @@ class MonitorsTab(wx.Panel):
 
     def add_monitor(self, name_to_add):
         """Add components to `self.monitors_list`."""
-        signal_id, signal_name, output_id, output_name = self.get_signal_and_output_id(
-            name_to_add)
+        signal_id, signal_name, output_id, output_name = \
+            self.get_signal_and_output_id(name_to_add)
 
         self.monitors.make_monitor(signal_id, output_id)
         # append the component to the list
@@ -242,6 +243,7 @@ class MonitorsTab(wx.Panel):
         print('{} added to monitor.'.format(name_to_add))
 
     def get_signal_full_name(self, signal_id, output_id):
+        """Get signal name from `signal_id` and `output_id`."""
         if output_id:
             signal_name = "".join([self.names.get_name_string(
                 signal_id), '.', self.names.get_name_string(output_id)])
@@ -250,7 +252,7 @@ class MonitorsTab(wx.Panel):
         return signal_name
 
     def on_remove(self, event):
-        """Handles the event when the user removes a component."""
+        """Handle the event when the user removes a component."""
         button = event.GetEventObject()
         signal_id = button.signal_id
         output_id = button.output_id

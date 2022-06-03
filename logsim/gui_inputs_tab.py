@@ -1,7 +1,7 @@
 """
 Inputs tab.
 
-Displays all the inputs for the current compiled definition file. 
+Displays all the inputs for the current compiled definition file.
 Allows the state of the buttons to be toggled ON and OFF.
 
 Classes
@@ -20,7 +20,7 @@ class InputsTab(wx.Panel):
     # ----------------------------------------------------------------------
 
     def __init__(self, parent, names, devices, canvas, statusbar):
-        """"""
+        """Initialise switch list widget."""
         wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
 
         self.names = names
