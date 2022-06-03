@@ -1,0 +1,25 @@
+#Basic D Type;
+
+devices(
+    a is DTYPE;
+    sw1, sw2, sw3 are SWITCH;
+    clk1 is CLOCK;
+)
+
+initialise(
+    sw1, sw2, sw3 are LOW;
+    clk1 cycle length 2;
+)
+
+connections(
+    a(  
+        clk1 to a.CLK;
+        sw1 to a.DATA;
+        sw2 to a.SET;
+        sw3 to a.CLEAR;
+    )
+)
+
+monitors(
+    a.Q;
+)
