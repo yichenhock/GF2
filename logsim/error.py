@@ -21,7 +21,6 @@ class ParserSyntaxError(ParserError):
     """Base class for all syntax errors."""
     pass 
 
-
 # Semantic errors
 
 class UndefinedError(ParserSemanticError):

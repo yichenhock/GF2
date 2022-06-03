@@ -15,7 +15,21 @@ from devices import Device, Devices
 from network import Network
 from monitors import Monitors
 
-from error_chen import ParserError
+from error import ParserError, ParserSemanticError, ParserSyntaxError
+
+# Semantic errors
+from error import (
+    UndefinedError,
+    RedefinedError,
+)
+
+# Syntax errors
+from error import (
+    BlockError,
+    SemicolonError,
+    OpenBracketError,
+    CloseBracketError,
+)
 
 class Parser:
 
@@ -52,8 +66,8 @@ class Parser:
 
         self.in_block = False # True if parser inside a block
 
-        self.syntax_error_count = 0
-        self.semantic_error_count = 0
+        # self.syntax_error_count = 0
+        # self.semantic_error_count = 0
 
         self.syntax_errors = []
         self.semantic_errors = []
@@ -69,9 +83,10 @@ class Parser:
         self.possession_statements = [self.scanner.has_id, self.scanner.have_id]
 
     def devices_block(self): 
-        """Check if symbols form a device block
+        """Check if symbols form a device block.
         
         """
+        print('devices block')
         next_sym = self.scanner.get_symbol()
 
         if next_sym.type == self.scanner.OPEN_BRACKET:
@@ -80,55 +95,61 @@ class Parser:
 
             while next_sym.type != self.scanner.CLOSE_BRACKET: 
                 if next_sym.type == self.scanner.EOF: 
-                    raise ParserError # raise a close bracket error
+                    raise CloseBracketError(next_sym) # raise a close bracket error
                 next_sym = self.devices_subrule(next_sym)
             self.in_block = False 
             next_sym = self.scanner.get_symbol()
         else: 
-            raise ParserError # raise open bracket error
+            raise OpenBracketError(next_sym) # raise open bracket error
         return next_sym
 
-    def devices_subrule(self, symbol: Symbol) -> Symbol:
+    def devices_subrule(self, symbol):
         try: 
-            substatement = [[], [], []] # [devices, connection, type]
+            print(symbol.id)
+            # print(self.names.get_name_string(symbol.id))
 
-            if symbol.type == self.scanner.NAME: 
-                # loop until it gets to 'IS' or 'ARE'
-                next_sym = self.scanner.get_symbol()
+            # substatement = [[], [], []] # [devices, connection, type]
 
-                device_ids = []
-                while next_sym.type != self.scanner.is_id: 
-                    if next_sym.type == self.scanner.EOF:
-                        raise ParserError # raise expected a 'IS' or 'ARE'
+            # if symbol.type == self.scanner.NAME: 
+            #     # loop until it gets to 'IS' or 'ARE'
+            #     next_sym = self.scanner.get_symbol()
+
+            #     device_ids = []
+            #     while next_sym.type != self.scanner.is_id: 
+            #         if next_sym.type == self.scanner.EOF:
+            #             raise ParserError # raise expected a 'IS' or 'ARE'
                     
-                    # if next_sym.type
-                    next_sym = self.scanner.get_symbol()
+            #         # if next_sym.type
+            #         next_sym = self.scanner.get_symbol()
 
-            else: 
-                raise ParserError # expected a name
+            # else: 
+            #     raise ParserError # expected a name
 
 
-            if next_sym.type == self.scanner.SEMICOLON: 
-                pass
-            else: 
-                raise ParserError # expected a semicolon
+            # if next_sym.type == self.scanner.SEMICOLON: 
+            #     pass
+            # else: 
+            #     raise ParserError # expected a semicolon
 
             next_sym = self.scanner.get_symbol()
 
         except ParserError as e: 
             self.add_error(e)
-            next_symbol = self.skip_error(e)
+            next_sym = self.skip_error(e)
 
-        return next_symbol
+        return next_sym
 
-    def initialise_block(self):
-        return 
+    def initialise_block(self, symbol):
+        print('initialise block')
+        return self.scanner.getsymbol()
 
-    def connections_block(self): 
-        return 
+    def connections_block(self, symbol): 
+        print('connections block')
+        return self.scanner.getsymbol()
     
-    def monitors_block(self): 
-        return 
+    def monitors_block(self, symbol): 
+        print('monitors block')
+        return self.scanner.getsymbol()
 
 #===========================================================================================================
 #===========================================================================================================
@@ -137,19 +158,56 @@ class Parser:
         return 
 
     def add_error(self, error):
-        pass
+        if isinstance(error, ParserSyntaxError):
+            self.syntax_errors.append(error)
+        elif isinstance(error, ParserSemanticError):
+            self.semantic_errors.append(error)
+        else:
+            raise error
   
     def skip_error(self, error): # skip to end of current statement/block
+        next_sym = error.symbol
+
         if self.in_block: # skip until next semicolon or closed bracket
-            pass
-        else: # skip until the next 
-            pass
+            
+            end_ids = [self.scanner.SEMICOLON, self.scanner.CLOSE_BRACKET, self.scanner.EOF]
+            while next_sym.type not in end_ids: # skip until the next 
+                next_sym = self.scanner.get_symbol() 
+
+            if next_sym.type == self.scanner.ClOSE_BRACKET: # returns close bracket to exit the block
+                return next_sym
+
+        else: 
+            next_sym = error.symbol
+            end_ids = [self.scanner.CLOSE_BRACKET, self.scanner.EOF]
+            while next_sym not in end_ids:
+                next_symbol = self.scanner.get_symbol()
 
         next_sym = self.scanner.get_symbol()
         return next_sym
 
     def print_errors(self):
-        pass
+        """Print all the errors that have been caught."""
+        if len(self.syntax_errors) > 0: 
+            for error in self.syntax_errors:
+                symbol = error.symbol
+                message = error.message
+                # self.scanner.print_error_line()
+                print(symbol, message)
+
+        if len(self.semantic_errors) > 0:
+            for error in self.semantic_errors:
+                symbol = error.symbol
+                message = error.message
+                # self.scanner.print_error_line()
+                print(symbol, message)
+
+        if len(self.input_not_connected_errors) > 0:
+            for error in self.input_not_connected_errors:
+                symbol = error.symbol
+                message = error.message
+                # self.scanner.print_error_line()
+                print(symbol, message)
 
 #===========================================================================================================
 #===========================================================================================================
@@ -158,7 +216,9 @@ class Parser:
         """Parse the circuit definition file."""
         symbol = self.scanner.get_symbol()
 
+        # keep checking symbols until the end of the file
         while symbol.type != self.scanner.EOF: 
+            print(symbol.id)
             try: 
                 if symbol.type == self.scanner.KEYWORD: 
                     if symbol.id == self.scanner.devices_id: 
@@ -170,17 +230,19 @@ class Parser:
                     elif symbol.id == self.scanner.monitors_id: 
                         next_sym = self.monitors_block()
                     else: 
-                        raise ParserError # expected a block header
+                        raise BlockError(symbol) # expected a block header
                 else:
-                    raise ParserError # expected a keyword
+                    raise BlockError(symbol) # expected a keyword
             except ParserError as e: 
                 # add the error 
                 self.add_error(e)
                 # skip to the next error 
                 next_sym = self.skip_error(e)
             symbol = next_sym
-        
+
         self.check_all_inputs_connected()
         self.print_errors()
 
-        return True # only if there are no errors
+        return len(self.syntax_errors) == 0 and \
+            len(self.semantic_errors) == 0 and \
+            len(self.input_not_connected_errors) == 0
