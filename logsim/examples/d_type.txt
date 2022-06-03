@@ -1,7 +1,11 @@
 #Example circuit - D Type;
 
 devices(
+<<<<<<< HEAD
     f is DTYPE;
+=======
+    a is DTYPE;
+>>>>>>> b53320c877b1468357448bd4d3b46d1a6820f571
     sw1, sw2, sw3 are SWITCH;
     clk1 is CLOCK;
 )
@@ -12,7 +16,11 @@ initialise(
 )
 
 connections(
+<<<<<<< HEAD
     f(  
+=======
+    a(  
+>>>>>>> b53320c877b1468357448bd4d3b46d1a6820f571
         clk1 to f.CLK;
         sw1 to f.DATA;
         sw2 to f.SET;
@@ -21,5 +29,10 @@ connections(
 )
 
 monitors(
+<<<<<<< HEAD
     f.Q;
 )
+=======
+    a.Q;
+)
+>>>>>>> b53320c877b1468357448bd4d3b46d1a6820f571
