@@ -69,3 +69,8 @@ To verify compliance using ```pydocstyle``` for a specific file, run
 ```
 python -m pydocstyle <file path>
 ```
+
+### Authors
+Yi Chen Hock, Michael Stevens, Cindy Wu, 2022
+	
+Based on work by Mojisola Agboola, 2017
