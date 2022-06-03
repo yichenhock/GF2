@@ -1062,7 +1062,7 @@ class Parser:
                 if self.symbol.type == self.scanner.NUMBER:
                     # Make and initialise clock device
                     print("Making clock device")
-                    self.devices.make_device(self.names.query(self.current_name), self.devices.CLOCK, int(self.symbol.id/2))
+                    self.devices.make_device(self.names.query(self.current_name), self.devices.CLOCK, self.symbol.id)
 
                     self.symbol = self.scanner.get_symbol()
                     if self.symbol == self.scanner.EOF:
@@ -1350,11 +1350,6 @@ class Parser:
                 signal_name = ".".join((self.names.get_name_string(self.output_device_id), self.names.get_name_string(self.output_device_port_id)))
                 if block == "connections" and signal_name not in self.signal_names:
                     self.signal_names.append(signal_name)
-                # Cannot have multiple of same signal name for d-type
-                elif block == "connections" and signal_name in self.signal_names:
-                    self.semantic.printerror(self.semantic.SIGNAL_ALREADY_EXISTS, self.scanner)
-                    return False
-                # No risk of undefined name here - as long as it's in dtype outputs and the dtype exists, then the signal also exists
                 if block == "monitors":
                     # Add to list of monitors to add
                     self.monitors_to_add.append(signal_name)
@@ -1393,8 +1388,11 @@ class Parser:
         if self.eofcheck == True:
             for device in self.devices.devices_list:
                 print("Device", self.names.get_name_string(device.device_id), "Inputs:", device.inputs, "Outputs:", device.outputs)
-            print(self.devices.find_devices(self.devices.SWITCH))
             print(self.monitors.monitors_dictionary)
+            for device in self.object_dict:
+                device_object = self.devices.get_device(self.names.query(device))
+                if device_object.clock_half_period != None:
+                    print("Half period of clock {}".format(device), device_object.clock_half_period)
             self.scanner.file.close()
 
         self.total_errors = self.semantic.error_code_count + self.syntax.error_code_count
