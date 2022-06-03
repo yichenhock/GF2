@@ -1,4 +1,4 @@
-#Example circuit - D Type;
+#Basic D Type;
 
 devices(
     a is DTYPE;
@@ -13,10 +13,10 @@ initialise(
 
 connections(
     a(  
-        clk1 to f.CLK;
-        sw1 to f.DATA;
-        sw2 to f.SET;
-        sw3 to f.CLEAR;
+        clk1 to a.CLK;
+        sw1 to a.DATA;
+        sw2 to a.SET;
+        sw3 to a.CLEAR;
     )
 )
 
