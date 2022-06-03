@@ -1,0 +1,25 @@
+#Example circuit - D Type;
+
+devices(
+    a is DTYPE;
+    sw1, sw2, sw3 are SWITCH;
+    clk1 is CLOCK;
+)
+
+initialise(
+    sw1, sw2, sw3 are LOW;
+    clk1 cycle length 2;
+)
+
+connections(
+    a(  
+        clk1 to f.CLK;
+        sw1 to f.DATA;
+        sw2 to f.SET;
+        sw3 to f.CLEAR;
+    )
+)
+
+monitors(
+    a.Q;
+)
