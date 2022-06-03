@@ -163,10 +163,6 @@ class Scanner:
         symbol = Symbol()
         self.skip_spaces()  # Current character is now not whitespace
 
-        if self.current_character == "#":  # Comment Check
-            self.skip_comment()
-            symbol = self.get_symbol()
-
         symbol.line_number = self.current_line
         symbol.line_position = self.current_character_position
 
@@ -212,8 +208,11 @@ class Scanner:
         elif self.current_character == "":  # End of File
             symbol.type = self.EOF
 
+        elif self.current_character == "#":  # Comment Check
+            self.skip_comment()
+            symbol = self.get_symbol()
+
         else:  # Not a valid character (symbol.type == None)
             self.advance()
 
-        print(symbol.line_number, symbol.line_position)
         return symbol

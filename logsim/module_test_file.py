@@ -41,11 +41,12 @@ else:
 print(scanner.file.read())
 scanner.file.seek(0)
 x = scanner.get_symbol()
+print(x.line_number, x.line_position, x.type, x.id)
 type_id_list = []
 while x.type != 9:
     x = scanner.get_symbol()
     type_id_list.append([x.type, x.id])
-    print(x.line_position, x.line_number, x.type, x.id)
+    print(x.line_number, x.line_position, x.type, x.id)
     # print(name.names)
 
 #print(type_id_list)
