@@ -66,7 +66,7 @@ class Gui(wx.Frame):
         if self.path is None:  # open up the file dialog
             if not self.open_file():
                 print("Application must be run with a circuit "
-                    "definition file.")
+                      "definition file.")
                 self.Close(True)  # exit the application
                 sys.exit()
 
@@ -340,7 +340,8 @@ class Gui(wx.Frame):
         self.network.__init__(self.names, self.devices)
         self.monitors.__init__(self.names, self.devices, self.network)
         self.scanner.__init__(self.path, self.names)
-        self.parser.__init__(self.names, self.devices, self.network, self.monitors, self.scanner)
+        self.parser.__init__(self.names, self.devices, self.network,
+                             self.monitors, self.scanner)
 
         try:
             if self.parser.parse_network():
@@ -471,11 +472,12 @@ class Gui(wx.Frame):
                 # CREATE A NEW FILE HERE AND SET THAT AS THE NEW PATH!
                 try:
                     # open(pathname, 'w').close()
-                    with open('logsim/examples/blank.txt','r') as examplefile, open(pathname,'w') as newfile:
+                    with open('logsim/examples/blank.txt', 'r'
+                              ) as examplefile, open(pathname, 'w') as newfile:
                         # read content from first file
                         for line in examplefile:
-                                # append content to second file
-                                newfile.write(line)
+                            # append content to second file
+                            newfile.write(line)
 
                 except OSError:
                     print('Failed creating the file')
