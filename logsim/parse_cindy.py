@@ -133,7 +133,7 @@ class Parser:
             if self.symbol.id in [self.scanner.connections_id, self.scanner.monitors_id]:
                 self.syntax.printerror(self.syntax.MISSING_SECTION, "initialise")
             else:
-                self.syntax.printerror(self.syntax.HEADER_NAME_ERROR)
+                self.syntax.printerror(self.syntax.HEADER_NAME_ERROR, self.scanner)
             print("Skipping initialise block")
             eofcheck = self.skip_block(self.previous_block) 
             if eofcheck == True:
@@ -1422,14 +1422,12 @@ class Parser:
     def parse_network(self):
         """Parse the circuit definition file."""
 
-
         self.eofcheck = False
         self.symbol = self.scanner.get_symbol()
-        # Check for empty file
         if self.symbol.type == self.scanner.EOF:
             print("Syntax Error: Empty file found.")
             return False
-        else:# Tree structure: split into blocks
+        else:
             self.eofcheck = self.circuit_description()
 
         if self.eofcheck == True:
