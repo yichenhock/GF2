@@ -38,22 +38,22 @@ else:
     print("\nNow opening file...")
     scanner = Scanner(path, names)
 
-# print(scanner.file.read())
-# scanner.file.seek(0)
-# x = scanner.get_symbol()
-# type_id_list = []
-# while x.type != 9:
-#     x = scanner.get_symbol()
-#     type_id_list.append([x.type, x.id])
-#     print(x.type, x.id)
-#     # print(name.names)
+print(scanner.file.read())
+scanner.file.seek(0)
+x = scanner.get_symbol()
+type_id_list = []
+while x.type != 9:
+    x = scanner.get_symbol()
+    type_id_list.append([x.type, x.id])
+    print(x.line_position, x.line_number, x.type, x.id)
+    # print(name.names)
 
-# #print(type_id_list)
+#print(type_id_list)
 
-"""parser.py tests"""
-devices = Devices(names)
-network = Network(names, devices)
-monitors = Monitors(names, devices, network)
+# """parser.py tests"""
+# devices = Devices(names)
+# network = Network(names, devices)
+# monitors = Monitors(names, devices, network)
 
-parse = Parser(names, devices, network, monitors, scanner)
-parse.parse_network()
+# parse = Parser(names, devices, network, monitors, scanner)
+# parse.parse_network()
