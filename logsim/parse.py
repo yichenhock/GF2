@@ -69,7 +69,7 @@ class Parser:
 
         self.other_keywords_ids = [self.scanner.to_id, self.scanner.connected_id, self.scanner.input_id, self.scanner.inputs_id, self.scanner.cycle_id, self.scanner.length_id]
 
-        self.gate_type_ids = [self.scanner.AND_id, self.scanner.OR_id, self.scanner.NOR_id, self.scanner.XOR_id, self.scanner.NAND_id, self.scanner.DTYPE_id]
+        self.device_ids = [self.scanner.AND_id, self.scanner.OR_id, self.scanner.NOR_id, self.scanner.XOR_id, self.scanner.NAND_id, self.scanner.DTYPE_id]
 
         self.switch_level = [self.scanner.HIGH_id, self.scanner.LOW_id]
 
@@ -678,7 +678,7 @@ class Parser:
         if self.symbol.type == self.scanner.KEYWORD and self.symbol.id in self.definition_ids:
             self.symbol = self.scanner.get_symbol()
             # Check if next symbol is gate type id
-            if self.symbol.id not in self.gate_type_ids:
+            if self.symbol.id not in self.device_ids:
                 # If symbol is an id but not valid gate type (gate or dtype)
                 if self.symbol.id in [self.scanner.SWITCH_id, self.scanner.CLOCK_id]:
                     self.semantic.printerror(self.semantic.WRONG_GATE_FOR_NAME, self.scanner.keywords_list(self.symbol.id),  "AND, OR, NOR, XOR, NAND, or DTYPE")
@@ -1040,7 +1040,7 @@ class Parser:
                 if self.symbol.type == self.scanner.NUMBER:
                     # Make and initialise clock device
                     print("Making clock device")
-                    self.devices.make_device(self.names.query(self.current_name), self.devices.CLOCK, int(self.symbol.id/2))
+                    self.devices.make_device(self.names.query(self.current_name), self.devices.CLOCK, self.symbol.id)
 
                     self.symbol = self.scanner.get_symbol()
                     if self.symbol == self.scanner.EOF:
@@ -1395,11 +1395,6 @@ class Parser:
                 signal_name = ".".join((self.names.get_name_string(self.output_device_id), self.names.get_name_string(self.output_device_port_id)))
                 if block == "connections" and signal_name not in self.signal_names:
                     self.signal_names.append(signal_name)
-                # Cannot have multiple of same signal name for d-type
-                elif block == "connections" and signal_name in self.signal_names:
-                    self.semantic.printerror(self.semantic.SIGNAL_ALREADY_EXISTS, self.scanner)
-                    return False
-                # No risk of undefined name here - as long as it's in dtype outputs and the dtype exists, then the signal also exists
                 if block == "monitors":
                     # Add to list of monitors to add
                     self.monitors_to_add.append(signal_name)
@@ -1438,6 +1433,10 @@ class Parser:
             for device in self.devices.devices_list:
                 print("Device", self.names.get_name_string(device.device_id), "Inputs:", device.inputs, "Outputs:", device.outputs)
             print(self.monitors.monitors_dictionary)
+            for device in self.object_dict:
+                device_object = self.devices.get_device(self.names.query(device))
+                if device_object.clock_half_period != None:
+                    print("Half period of clock {}".format(device), device_object.clock_half_period)
             self.scanner.file.close()
             
         self.total_errors = self.semantic.error_code_count + self.syntax.error_code_count
