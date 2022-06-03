@@ -1,4 +1,13 @@
+"""
+Inputs tab.
 
+Displays all the inputs for the current compiled definition file. 
+Allows the state of the buttons to be toggled ON and OFF.
+
+Classes
+-------
+`InputsTab`
+"""
 import wx
 import wx.lib.agw.ultimatelistctrl as ULC
 
@@ -6,9 +15,8 @@ from gui_listctrl import ListCtrl
 
 
 class InputsTab(wx.Panel):
-    """
-    A simple wx.Panel class
-    """
+    """A wx.Panel class to display a list of input switches."""
+
     # ----------------------------------------------------------------------
 
     def __init__(self, parent, names, devices, canvas, statusbar):
@@ -38,6 +46,7 @@ class InputsTab(wx.Panel):
         self.refresh_list()
 
     def refresh_list(self):
+        """Refresh the list with inputs from last compiled file."""
         self.switch_list.DeleteAllItems()
         switch_ids = self.devices.find_devices(self.devices.SWITCH)
 
@@ -49,7 +58,7 @@ class InputsTab(wx.Panel):
 
     def append_to_switch_list(self, i: int, switch_id: int,
                               initial_state: int):
-
+        """Add a switch to the list."""
         switch_name = self.names.get_name_string(switch_id)
 
         state = initial_state == 1

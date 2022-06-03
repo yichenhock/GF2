@@ -1,8 +1,9 @@
-"""Description of that this does
+"""
+Draws signal trace plot.
 
 Classes:
 --------
-MyGLCanvas - handles all canvas drawing operations.
+`MyGLCanvas`: handles all canvas drawing operations.
 
 """
 import math
@@ -134,6 +135,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         GL.glScaled(self.zoom, self.zoom, self.zoom)
 
     def render_signals(self, set_scroll=True, flush_pan=False):
+        """Render the signal trace."""
         # set left margin width
         cycle_chars = 4  # cycle name is about 4 characters wide
         if self.monitors.get_margin() is not None:
@@ -201,6 +203,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         self.SwapBuffers()
 
     def draw_cycle_axis(self):
+        """Draw the axis for the number of cycles."""
         cycles = len(list(self.monitors.monitors_dictionary.values())[0])
         x = self.initial_x
         y = self.initial_y - self.clock_name_offset
@@ -247,6 +250,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             x += axis_interval * self.curr_wavelength
 
     def draw_signal_trace(self):
+        """Draw individual signal trace."""
         # Reset y coordinate and offset
         y = self.initial_y + self.clock_vspace
 
@@ -401,15 +405,18 @@ class MyGLCanvas(wxcanvas.GLCanvas):
 
         self.Refresh()
 
-    def enforce_pan_y_limits(self, new_pan_y: float) -> None:
+    def enforce_pan_y_limits(self, new_pan_y):
+        """Limit y pan."""
         height_limit = max(0, self.plot_height - self.height)
         self.pan_y = max(min(new_pan_y, 0), - height_limit)
 
-    def enforce_pan_x_limits(self, new_pan_x: float) -> None:
+    def enforce_pan_x_limits(self, new_pan_x):
+        """Limit x pan."""
         width_limit = max(0, self.plot_width - self.width)
         self.pan_x = max(min(new_pan_x, 0), - width_limit)
 
-    def adjust_pan_x(self, event: wx.Event, old_zoom: float) -> None:
+    def adjust_pan_x(self, event, old_zoom):
+        """Adjust x pan."""
         offset = event.GetX() - self.pan_x - self.origin_x
         if offset > 0:
             # The mouse is within the grid
@@ -436,18 +443,8 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             else:
                 GLUT.glutBitmapCharacter(font, ord(character))
 
-    def save(self, filename: str) -> None:
-        """
-        Save the current view to a PNG image file.
-
-        Parameters
-        ----------
-        `filename`: filename for the image file
-
-        Returns
-        -------
-        `None`
-        """
+    def save(self, filename):
+        """Save the current view to a PNG image file."""
         self.update_dimensions()
         data = GL.glReadPixels(0, 0, self.width, self.height, GL.GL_RGB,
                                GL.GL_UNSIGNED_BYTE, None)

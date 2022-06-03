@@ -1,6 +1,10 @@
 """Initialise dummy constants to go into the network, monitors and devices
 
 Contains NO error checks!
+
+Classes
+-------
+`DummyParser`
 """
 
 from names import Names
@@ -17,8 +21,12 @@ devices = Devices(names)
 network = Network(names, devices)
 monitors = Monitors(names, devices, network)
 
-class DummyParser: 
+
+class DummyParser:
+    """Replaces the parser for testing purposes."""
+
     def __init__(self, names, devices, network, monitors, scanner):
+        """Initialises required components."""
         self.names = names
         self.devices = devices
         self.network = network
@@ -47,6 +55,10 @@ class DummyParser:
 
         
     def parse_network(self):
+        """Returns True so the GUI can be run.
+
+        Makes required devices, connections and monitor.
+        """
         # f = Symbol()
         # f.id = self.names.query('f')
         # f.type = self.scanner.NAME
