@@ -15,11 +15,13 @@ class SemanticError():
     def __init__(self):
         """Set parameters to report error."""
 
-        self.id_list = [self.WRONG_GATE_FOR_NAME, self.NAME_ALREADY_EXISTS, self.NAME_FOR_INITIALISE_NOT_DEFINED, self.NAME_FOR_CONNECTIONS_NOT_DEFINED, self.WRONG_INPUT_GATE_NAME, self.NAME_FOR_MONITORS_NOT_DEFINED, self.PORT_DOES_NOT_EXIST, self.TOO_MANY_INPUTS, self.EMPTY_INPUTS] = range(9)
+        self.id_list = [self.WRONG_GATE_FOR_NAME, self.NAME_ALREADY_EXISTS, self.NAME_FOR_INITIALISE_NOT_DEFINED, self.NAME_FOR_CONNECTIONS_NOT_DEFINED, self.WRONG_INPUT_GATE_NAME, self.NAME_FOR_MONITORS_NOT_DEFINED, self.PORT_DOES_NOT_EXIST, self.TOO_MANY_INPUTS, self.EMPTY_INPUTS, self.KEYWORD_AS_NAME, self.DEVICE_NOT_INITIALISED] = range(11)
 
-        self.error_type_list = ["WRONG GATE FOR NAME", "NAME ALREADY EXISTS", "NAME FOR INITIALISE NOT DEFINED", "NAME FOR CONNECTIONS NOT DEFINED", "WRONG INPUT GATE NAME", "NAME FOR MONITORS NOT DEFINED", "PORT DOES NOT EXIST", "TOO MANY INPUTS", "EMPTY INPUTS"]
+        self.error_type_list = ["WRONG GATE FOR NAME", "NAME ALREADY EXISTS", "NAME FOR INITIALISE NOT DEFINED", "NAME FOR CONNECTIONS NOT DEFINED", "WRONG INPUT GATE NAME", "NAME FOR MONITORS NOT DEFINED", "PORT DOES NOT EXIST", "TOO MANY INPUTS", "EMPTY INPUTS", "KEYWORD AS NAME", "DEVICE NOT INITIALISED"]
 
         self.error_code_count = 0
+
+        self.array_of_errors = []
 
     def printerror(self, id, scanner, symbol1=None, symbol2=None):
         """Print error message to terminal and skip line.
@@ -37,14 +39,24 @@ class SemanticError():
         "The device name {} provided in the initialisation section has not been defined in the devices section.".format(symbol1), 
         "The device name {} provided in the connections section has not been defined in the devices section.".format(symbol1), 
         "Wrong input gate name for connection section subheader. The subheader name should be the name of the device receiving inputs. Expected {}, got {}.".format(symbol1, symbol2), 
-        "The device name {} provided in the monitors section has not been defined in the devices section.".format(symbol1), "The input port specified does not exist.", "Too many inputs have been defined for the gate specified.", "Some input gates to DTYPE device have not been connected to any signal."]
+        "The device name {} provided in the monitors section has not been defined in the devices section.".format(symbol1), "The input port specified does not exist.", "Too many inputs have been defined for the gate specified.", "Some input gates to device have not been connected to any signal.", "Reserved keyword in place of device name. Please observe the list of keywords.", "A gate, dtype, switch or clock defined in the devices section has not been initialised."]
 
         self.message = "Parser Semantic Error: {}".format(self.message_list[id])
+
+        if id == self.EMPTY_INPUTS:
+            print("Error type: EMPTY INPUTS")
+            print(self.scanner.lines[self.scanner.current_line-2])
+            print("^ Error after this line")
+            print(self.message)
+            self.error_code_count += 1
+            self.array_of_errors.append(self.EMPTY_INPUTS)
         
-        # Print error to terminal using method in Scanner class.
-        # Skip line to resume parsing after the next semicolon.
-        self.scanner.print_error_line(self.error_type_list[id], self.message)
-        self.error_code_count += 1
+        else:
+            # Print error to terminal using method in Scanner class.
+            # Skip line to resume parsing after the next semicolon.
+            self.scanner.print_error_line(self.error_type_list[id], self.message)
+            self.array_of_errors.append(id)
+            self.error_code_count += 1
         
 class SyntaxError():
 
@@ -64,11 +76,13 @@ class SyntaxError():
         "INPUT NUMBER ERROR", "INPUTS KEYWORD ERROR", "SWITCH LEVEL ERROR", "NO CYCLE KEYWORD", "NO LENGTH KEYWORD", "NO CYCLE LENGTH", 
 
         "NO CONNECTION KEYWORD", "NO INPUT GATE NAME", "NO INPUT PORT NAME", "MISSING DOT INPUT", 
-        "PORT NAME ERROR", "CONNECTION SUBHEADER NAME_ERROR", "DTYPE OUTPUT NAME ERROR", "DOT UNEXPECTED",
+        "PORT NAME ERROR", "CONNECTION SUBHEADER NAME ERROR", "DTYPE OUTPUT NAME ERROR", "DOT UNEXPECTED",
 
         "NO MONITOR NAME", "EXTRA INFORMATION AFTER MONITORS"]
 
         self.error_code_count = 0
+
+        self.array_of_errors = []
 
     def printerror(self, id, scanner, symbol1=None):
         """Print error message to terminal and skip line.
@@ -120,14 +134,16 @@ class SyntaxError():
         # Print error
         # Do not skip line
         if id == self.NO_CLOSE_BRACKET:
-            print("Error type: NO_CLOSE_BRACKET")
+            print("Error type: NO CLOSE BRACKET")
             print(self.scanner.lines[self.scanner.current_line])
             print("^ Error before this line")
             print(self.message)
             self.error_code_count += 1
+            self.array_of_errors.append(self.NO_CLOSE_BRACKET)
             
         # Print error to terminal using method in Scanner class.
         # Skip line to resume parsing after the next semicolon.
         else:
             self.scanner.print_error_line(self.error_type_list[id], self.message)
+            self.array_of_errors.append(id)
             self.error_code_count += 1

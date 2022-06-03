@@ -21,6 +21,7 @@ connections(
 
     b(  
         sw1 to b.I1;
+        clk1 to b.I2;
     )
 
     c(  
