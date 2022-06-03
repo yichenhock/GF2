@@ -19,7 +19,6 @@ from error import SemanticError, SyntaxError
 
 
 class Parser:
-
     """Parse the definition file and build the logic network.
 
     The parser deals with error handling. It analyses the syntactic and
@@ -38,12 +37,49 @@ class Parser:
 
     Public methods
     --------------
-    parse_network(self): Parses the circuit definition file.
+    circuit_description(self): Read the header of each section and call relevant functions to read each section.
+
+    devices_block(self): Read everything in a devices block. Define the device type of unique user-defined names.
+
+    initialise_block(self): Read everything in an initialise block. Set the number of inputs, HIGH/LOW initial status of switches, and clock cycle half length.
+
+    connections_block(self): Read everything in a connections block. Make connections between input and output ports.
+
+    monitors_block(self): Read everything in a monitors block and create monitors for defined signal names.
+
+    connections_sub_block(self): Read everything in a connection sub-block. This is a sub-block where each line is associated with inputs to the device whose name is given in the header.
+
+    skip_block(self, block): Due to header errors, skip entire block. This is due to mispelling or missing header name.
+
+    skip_subheading_block(self): Due to sub-header errors, skip entire sub-block. This may be due to a mispelled/invalid header name or a name which is not a gate or dtype.
+
+    connection_definition(self, subsection, device_type): Read a line inside the connection block. Call on read_signal and gate_input_name or dtype_input_name.
+
+    device_definition(self, currentname): Read a line inside the device definition block and save device type as any gate type or d-type.
+
+    switch_definition(self, currentname): Read a line inside the device defintion block and save device as switch.
+
+    clock_definition(self, currentname): Read a line inside the device definition block and save device as clock.
+
+    device_initialisation(self, currentname): Read a line inside the initialisation block.
+
+    switch_initialisation(self, currentname): Read a line inside the initialisation block.
+
+    clock_initialisation(self, currentname): Read a line inside the initialisation block.
+
+    read_name(self, block): Read a name where a name is expected and save it to the attributed current_name.
+
+    gate_input_name(self, block): Read a gate input name and create connection from a device to the gate input port.
+
+    dtype_input_name(self, block): Read a d-type input name and create connection from a device to the gate input port.
+
+    read_signal(self, block): Read a device output name. Used in connections and also monitors.
+
+    parse_network(self): Parse the circuit definition file.
     """
 
     def __init__(self, names, devices, network, monitors, scanner):
         """Initialise constants."""
-
         # names class object
         self.names = names
         self.devices = devices
@@ -89,7 +125,6 @@ class Parser:
 
     def circuit_description(self):
         """Check the header for each block exists, that it is not misspelled and call the relevant block function."""
-
         self.previous_block = ""
         # Check if first keyword is a devices
         if (self.symbol.type == self.scanner.KEYWORD
@@ -211,7 +246,6 @@ class Parser:
 
         Returns
         -------
-
         'True' or 'False': Binary variable to track whether parser has reached end of the the file.   
 
         'eofcheck': Binary variable passed from device_definition method with same purpose as above.  
@@ -349,9 +383,7 @@ class Parser:
         """Operate at level of parsing a device block.
 
         Finish after reading the first symbol of the next line.
-
         """
-
         self.previous_block = "connections"
         # Fetch next symbol after section heading and check it's a bracket
         self.symbol = self.scanner.get_symbol()
@@ -388,7 +420,6 @@ class Parser:
         """Operate at level of parsing a monitor block.
 
         Finish after reading the first symbol of the next line.
-
         """
         # Saves a list of signal names as in Devices class
         self.monitors_to_add = []
@@ -447,7 +478,6 @@ class Parser:
 
         Start at point where subheader name has been read. Finish on the symbol that should be a closed bracket, without reading first symbol of next line. The sub blocks are headed by the name of the device to receive inputs.
         """
-
         # Sets device to receive inputs
         self.current_subsection = self.current_name
         # Fetch next symbol after section subheading and check it's a bracket
@@ -518,7 +548,6 @@ class Parser:
 
         Method used for subheader name errors inside connections block, because it is not possible to know what is supposed to be inside a block if the header is poorly named. Start when cursor is on a bad header name. Finish after having read the first symbol of the next block (header).
         """
-
         while (self.symbol.id not in self.block_ids and self.symbol.type != self.scanner.EOF):
             self.scanner.skip_line()
             self.symbol = self.scanner.get_symbol()
@@ -539,16 +568,12 @@ class Parser:
 
         Method used for subheader name errors inside connections block, because it is not possible to know what is supposed to be inside a block if the header is poorly named. Start when cursor is on a bad header name. Finish after having read the first symbol of the next block (header).
         """
-
         while (self.symbol.type != self.scanner.CLOSE_BRACKET):
             self.scanner.skip_line()
             self.symbol = self.scanner.get_symbol()
         # Read first symbol on next line
         self.symbol = self.scanner.get_symbol()
         return
-
-# ===========================================================================================================
-# ===========================================================================================================
 
     def connection_definition(self, subsection, device_type):
         """Parse one line of connection definition for a gate subsection.
@@ -558,11 +583,9 @@ class Parser:
 
         Parameters
         -------
-
         'currentname': Most recent name read from calling read_name() inside the devices block.
         'device_type': The type of the device which is receiving an input.
         """
-
         print("Entered connection definition block")
         self.current_subsection = subsection
 
@@ -641,10 +664,8 @@ class Parser:
 
         Parameters
         -------
-
         'currentname': the current name read from calling read_name() inside the devices block.
         """
-
         self.current_name = currentname
         devices_to_add = [currentname]
         self.symbol = self.scanner.get_symbol()
@@ -721,10 +742,8 @@ class Parser:
 
         Parameters
         -------
-
         'currentname': the current name read from calling read_name() inside the devices block.
         """
-
         self.current_name = currentname
         devices_to_add = [currentname]
         self.symbol = self.scanner.get_symbol()
@@ -787,10 +806,8 @@ class Parser:
 
         Parameters
         -------
-
         'currentname': the current name read from calling read_name() inside the devices block.
         """
-
         self.current_name = currentname
         devices_to_add = [currentname]
         self.symbol = self.scanner.get_symbol()
@@ -858,10 +875,8 @@ class Parser:
 
         Parameters
         -------
-
         'currentname': the current name read from calling read_name() inside the devices block.
         """
-
         # Store names of devices to be initialised
         devices_to_be_initialised = [currentname]
         self.current_name = currentname
@@ -944,10 +959,8 @@ class Parser:
 
         Parameters
         -------
-
         'currentname': the current name read from calling read_name() inside the devices block.
         """
-
         # List of switch names to initialise
         switches_to_be_initialised = [currentname]
         self.current_name = currentname
@@ -1014,7 +1027,6 @@ class Parser:
 
         'currentname': the current name read from calling read_name() inside the devices block.
         """
-
         self.current_name = currentname
         self.symbol = self.scanner.get_symbol()
         if self.symbol.type == self.scanner.EOF:
@@ -1065,7 +1077,6 @@ class Parser:
 
         Parameters
         -------
-
         'block': The block in which this function is called. This is important to check as new device names should not be initialised anywhere other than in the devices block.
 
         Return current read name.
@@ -1182,15 +1193,12 @@ class Parser:
 
         Parameters
         -------
-
         'subsection': The subsection inside 'connections' block in which this is called. This is necessary to check that the gate input name matches that of the subsection.
 
         Returns
         --------
-
         'True' or 'False': Binary variable to track if error recovery is necessary in caller method.
         """
-
         # Error if input gate name does not match subsection header
         if self.names.get_name_string(self.symbol.id) != subsection:
             self.semantic.printerror(self.semantic.WRONG_INPUT_GATE_NAME, self.scanner,
@@ -1252,15 +1260,12 @@ class Parser:
 
         Parameters
         -------
-
         'subsection': The subsection inside 'connections' block in which this is called. This is necessary to check that the gate input name matches that of the subsection.
 
         Returns
         --------
-
         'True' or 'False': Binary variable to track if error recovery is necessary in caller method.
         """
-
         # Error if input gate name does not match subsection header
         if self.names.get_name_string(self.symbol.id) != subsection:
             self.semantic.printerror(self.semantic.WRONG_INPUT_GATE_NAME, self.scanner,
@@ -1299,21 +1304,26 @@ class Parser:
     def read_signal(self, block):
         """Read the name of signal (output) by calling on read_name. 
 
-        Start at the point where first symbol of each line has already been obtained from the scanner and return True if it is a valid output name and False otherwise. If the device name is legit, return the next symbol after the output device name. Append the signal name to list in parser __init__ method and sets the output device id and port id (for dtype only). If device type is gate, then port id = None. Sets the input device id and port id (if the input is a DTYPE output only, corresponding to Q or QBAR in Names; otherwise None).
+        Start at the point where first symbol of each line has already been obtained from the scanner 
+        and return True if it is a valid output name and False otherwise. 
+        If the device name is legit, return the next symbol after the output device name. 
+        Append the signal name to list in parser __init__ method and sets the output device id and port id (for dtype only). 
+        If device type is gate, then port id = None. Sets the input device id and port id (if the input is a DTYPE output only, 
+        corresponding to Q or QBAR in Names; otherwise None).
 
         Also deal with error recovery for case in connection block where subsection close bracket in previous subsection has been missed. 
 
         Parameters:
         -------
-
-        'block': name of the block in which this function is called. This is either 'connections' or 'monitors'. This determines whether an error is returned - connections is allowed to include signal names that have not yet been created, but monitors is not.
+        'block': name of the block in which this function is called. 
+        This is either 'connections' or 'monitors'. 
+        This determines whether an error is returned - connections is allowed to include signal names 
+        that have not yet been created, but monitors is not.
 
         Returns:
         -------
-
         'True' or 'False': binary variable tracks whether name read has been successful.
         """
-
         self.read_name("connections")
         if self.is_legal_name == False:
             return False
@@ -1373,7 +1383,6 @@ class Parser:
 
     def parse_network(self):
         """Parse the circuit definition file."""
-
         self.eofcheck = False
         self.symbol = self.scanner.get_symbol()
         if self.symbol.type == self.scanner.EOF:
