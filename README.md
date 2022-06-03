@@ -37,8 +37,8 @@ Please note that the circuit definition file must be a .txt file.
 When running in text-based mode, commands can be input into the terminal to run the simulation. Entering "h" into the terminal will list the possible user commands, such as setting switches or adding/removing monitor outputs.
 
 Upon startup in graphical mode, a GUI will pop up as shown below
-  
-![GUI Image](https://user-images.githubusercontent.com/73239265/171258402-575e7b14-da80-4474-a7ec-2107f4d075f9.png)
+![gui_screenshot](https://user-images.githubusercontent.com/35310170/171794423-ec032add-9e44-47c6-aa03-a5c8cd2b14b1.png)
+<!-- ![GUI Image](https://user-images.githubusercontent.com/73239265/171258402-575e7b14-da80-4474-a7ec-2107f4d075f9.png) -->
 
 The toolbar at the top has buttons to perform various functions (such as running the program or browsing for circuit defintion files). The "Help" button within the toolbar gives more detailed instructions on how to navigate the GUI.
   
