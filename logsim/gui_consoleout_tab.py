@@ -1,42 +1,40 @@
-"""Description of that this does.
+"""
+Console out/Output tab.
 
 Classes:
 --------
-Description of classes
-
+`RedirectText`
+`ConsoleOutTab`
 """
 import sys
 import wx
 
-from scanner import Scanner
-from parse import Parser
-
 
 class RedirectText(object):
-    """."""
+    """Redirect the console log output to the text ctrl in `ConsoleOutTab`."""
 
     def __init__(self, aWxTextCtrl):
-        """."""
+        """Initialise the output text widget."""
         self.out = aWxTextCtrl
 
     def write(self, string):
-        """."""
+        """Write to output."""
         self.out.AppendText(string)
 
     def flush(self):
-        """."""
+        """Flush output."""
         pass
 
 
 class ConsoleOutTab(wx.Panel):
-    """A simple wx.Panel class."""
+    """A wx.Panel class to display the console output."""
 
     # ----------------------------------------------------------------------
 
     def __init__(self, parent, path, names, devices, network,
                  monitors, parser, inputsPanel, set_gui_state,
                  global_vars, canvas, save_file):
-        """."""
+        """Initialise with useful variables and configure layout."""
         wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
 
         self.parent = parent
