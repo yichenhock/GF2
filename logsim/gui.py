@@ -226,7 +226,7 @@ class Gui(wx.Frame):
                             wx.BITMAP_TYPE_PNG).ConvertToBitmap(),
                    shortHelp="Reset the simulation")
 
-        self.spin = wx.SpinCtrl(tb, wx.ID_ANY, "10")
+        self.spin = wx.SpinCtrl(tb, wx.ID_ANY, "6")
         # Configure spin
         self.spin.SetMin(1)
         self.spin.SetMax(1000)
@@ -402,8 +402,11 @@ class Gui(wx.Frame):
 
     def on_help_button(self):
         """Display a helpful message box."""
-        wx.MessageBox("Press the buttons :D",
-                      "Help", wx.ICON_INFORMATION | wx.OK)
+        with open('./logsim/help.txt') as f:
+            help_text = f.read()
+
+        wx.MessageBox(help_text,
+                      "Help", wx.ICON_QUESTION | wx.OK)
 
     def on_close(self, event):
         """Deinitialise the frame manager on close."""

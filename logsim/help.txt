@@ -1,0 +1,37 @@
+Toolbar Buttons:
+	Browse    ->  Browses for a circuit definition file (Must be .txt)
+	Save      ->  Saves text in "Circuit Definition" tab to file
+	New       ->  Creates a blank circuit definition file to be written to
+	Run       ->  Runs the simulation for n cycles (where n is specified in the "Cycles" box)
+		        (Note that this button will be disabled after the simulation has begun)
+	Continue  ->  Continues the current simulation for n cycles (where n is specified in the "Cycles" box)
+			  (Note that this button will only be active after the simulation has begun)
+	Reset     ->  Resets the simulation
+	Save Plot ->  Saves a .png file of the current signal outputs
+	Quit      ->  Exits the program
+
+
+File -> Save As:
+	Saves text in "Circuit Definition" tab to a new file. Allows file to be named and stored as desired.
+
+
+Panel Tabs:
+	Output -> This tab acts as the main console for the simulation.
+		    It logs the simulation command.
+		    Enter h for a full list of possible commands.
+
+	Circuit Definition -> This tab allows the circuit definition file to be read and edited.
+				    The file cannot be edited once the simulation has begun.
+
+	Inputs -> This tab allows switch levels to be changed.
+		    Click ON/OFF to change the level for the corresponding switch.
+
+	Monitors -> This tab allows displayed monitors to be added and removed.
+			Remove monitors by clicking "Remove" next to the corresponding monitor.
+			Add monitors by clicking "Add" after selecting the desired output.
+
+
+Notes:
+	- The bottom left of the window indicates any current status messages.
+	- The bottom right of the window indicates the current circuit definition file path.
+	- Navigate the canvas using the scroll bars on the right and bottom.
