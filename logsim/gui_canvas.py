@@ -1,4 +1,4 @@
-"""Description of that this does.
+"""Description of that this does
 
 Classes:
 --------
@@ -134,7 +134,6 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         GL.glScaled(self.zoom, self.zoom, self.zoom)
 
     def render_signals(self, set_scroll=True, flush_pan=False):
-        """."""
         # set left margin width
         cycle_chars = 4  # cycle name is about 4 characters wide
         if self.monitors.get_margin() is not None:
@@ -150,8 +149,8 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         self.curr_wavelength = self.wavelength * self.zoom
 
         # update plot height (initial_y is used as bottom/top margin)
-        self.plot_height = self.initial_y * 2 + self.clock_vspace + \
-            self.component_vspace * len(self.monitors.monitors_dictionary)
+        self.plot_height = self.initial_y*2 + self.clock_vspace + \
+            self.component_vspace*len(self.monitors.monitors_dictionary)
 
         # update plot width (initial_x is used as left/right margin)
         # print(self.parent.GetParent().cycles_completed)
@@ -202,7 +201,6 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         self.SwapBuffers()
 
     def draw_cycle_axis(self):
-        """."""
         cycles = len(list(self.monitors.monitors_dictionary.values())[0])
         x = self.initial_x
         y = self.initial_y - self.clock_name_offset
@@ -249,7 +247,6 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             x += axis_interval * self.curr_wavelength
 
     def draw_signal_trace(self):
-        """."""
         # Reset y coordinate and offset
         y = self.initial_y + self.clock_vspace
 
@@ -404,18 +401,15 @@ class MyGLCanvas(wxcanvas.GLCanvas):
 
         self.Refresh()
 
-    def enforce_pan_y_limits(self, new_pan_y):
-        """."""
+    def enforce_pan_y_limits(self, new_pan_y: float) -> None:
         height_limit = max(0, self.plot_height - self.height)
         self.pan_y = max(min(new_pan_y, 0), - height_limit)
 
-    def enforce_pan_x_limits(self, new_pan_x):
-        """."""
+    def enforce_pan_x_limits(self, new_pan_x: float) -> None:
         width_limit = max(0, self.plot_width - self.width)
         self.pan_x = max(min(new_pan_x, 0), - width_limit)
 
-    def adjust_pan_x(self, event, old_zoom):
-        """."""
+    def adjust_pan_x(self, event: wx.Event, old_zoom: float) -> None:
         offset = event.GetX() - self.pan_x - self.origin_x
         if offset > 0:
             # The mouse is within the grid
@@ -427,9 +421,9 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             # Mouse is to the left of the grid
             pass
 
-    def render_text(self, text, x_pos, y_pos,
-                    z_pos=0, font=GLUT.GLUT_BITMAP_HELVETICA_12,
-                    flush=True, clear=True):
+    def render_text(self, text: str, x_pos: float, y_pos: float,
+                    z_pos: float = 0, font=GLUT.GLUT_BITMAP_HELVETICA_12,
+                    flush: bool = True, clear: bool = True):
         """Handle text drawing operations."""
         GL.glColor3f(0.0, 0.0, 0.0)  # text is black
         GL.glRasterPos2f(x_pos, y_pos)
@@ -442,7 +436,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             else:
                 GLUT.glutBitmapCharacter(font, ord(character))
 
-    def save(self, filename):
+    def save(self, filename: str) -> None:
         """
         Save the current view to a PNG image file.
 

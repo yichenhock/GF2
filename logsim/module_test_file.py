@@ -1,5 +1,4 @@
-"""This file is for testing various functions developed in each module."""
-
+#This file is for testing various functions developed in each module
 import sys
 from names import Names
 from scanner import Scanner
