@@ -69,7 +69,7 @@ class Parser:
 
         self.other_keywords_ids = [self.scanner.to_id, self.scanner.connected_id, self.scanner.input_id, self.scanner.inputs_id, self.scanner.cycle_id, self.scanner.length_id]
 
-        self.gate_type_ids = [self.scanner.AND_id, self.scanner.OR_id, self.scanner.NOR_id, self.scanner.XOR_id, self.scanner.NAND_id, self.scanner.DTYPE_id]
+        self.device_ids = [self.scanner.AND_id, self.scanner.OR_id, self.scanner.NOR_id, self.scanner.XOR_id, self.scanner.NAND_id, self.scanner.DTYPE_id]
 
         self.switch_id = [self.scanner.SWITCH_id]
 
@@ -682,7 +682,7 @@ class Parser:
             self.symbol = self.scanner.get_symbol()
 
             # Check if next symbol is gate type id
-            if self.symbol.id not in self.gate_type_ids:
+            if self.symbol.id not in self.device_ids:
                 # If symbol is an id but not valid gate type (gate or dtype)
                 if self.symbol.id in (self.switch_id or self.clock_id):
                     # Skip to next line and exit function
