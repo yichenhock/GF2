@@ -250,11 +250,18 @@ class Network:
                 return False
             input_signal_list.append(input_signal)
 
-            if device.device_kind != self.devices.XOR:
+            if device.device_kind != (self.devices.XOR or self.devices.NOT):
                 if input_signal != x:
                     output_signal = self.invert_signal(y)
                     break
                 output_signal = y
+        
+        # if device.device_kind == self.devices.NOT:
+        #     # Output is opposite of input
+        #     if input_signal == self.devices.LOW:
+        #         output_signal = self.devices.HIGH
+        #     else:
+        #         output_signal = self.devices.LOW
 
         if device.device_kind == self.devices.XOR:
             # Output is high only if both inputs are different
