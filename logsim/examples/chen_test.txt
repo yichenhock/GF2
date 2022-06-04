@@ -29,3 +29,8 @@ connections(
         sw4 to c.CLEAR;
 
 )
+
+
+monitors(
+    c.Q, clk1;
+)

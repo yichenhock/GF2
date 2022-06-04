@@ -81,14 +81,20 @@ class NoDTYPEOutputPortError(ParserSemanticError):
     def __init__(self, symbol): 
         message = "D-TYPEs need an output port to be specified."
         super().__init__(symbol, message)
+
+class InvalidBlockHeader(ParserSemanticError): 
+    def __init__(self, symbol): 
+        message = "Invalid block header (expected either 'devices', 'initialise', 'connections' or 'monitor')."
+        super().__init__(symbol, message)
+
 #===========================================================================================================
 #===========================================================================================================
 
 # Syntax errors
 
-class BlockError(ParserSyntaxError): 
+class InvalidBlockHeaderOrder(ParserSyntaxError): 
     def __init__(self, symbol): 
-        message = "Expected a block header (either 'devices', 'initialise', 'connections' or 'monitor')"
+        message = "Block headers should be initialised in this order: 'devices', 'initialise', 'connections', 'monitor'."
         super().__init__(symbol, message)
 
 class SemicolonError(ParserSyntaxError):

@@ -29,12 +29,13 @@ from error import (
     InvalidXORInputNumber,
     InvalidNOTInputNumber,
     AttemptToDefineDTYPEInputs,
-    NoDTYPEOutputPortError
+    NoDTYPEOutputPortError,
+    InvalidBlockHeaderOrder
 )
 
 # Syntax errors
 from error import (
-    BlockError,
+    InvalidBlockHeader,
     SemicolonError,
     OpenBracketError,
     CloseBracketError,
@@ -107,7 +108,6 @@ class Parser:
         """Check if symbols form a device block.
         
         """
-        print('devices_block')
         next_sym = self.scanner.get_symbol()
 
         if next_sym.type == self.scanner.OPEN_BRACKET:
@@ -124,7 +124,6 @@ class Parser:
         return next_sym
 
     def devices_subrule(self, symbol):
-        print('devices_subrule')
         try: 
             connect = [self.scanner.is_id, self.scanner.are_id]
             types = [self.scanner.AND_id,
@@ -257,7 +256,6 @@ class Parser:
         return next_sym
 
     def initialise_subrule(self, symbol):
-        print('initialise_subrule')
         try:
             if symbol.type == self.scanner.NAME:
                 if symbol.id in self.device_dict:
@@ -285,7 +283,6 @@ class Parser:
         return next_sym
 
     def init_switch(self, symbol):
-        print('init switch')
         next_sym = symbol
         connect = [self.scanner.is_id, self.scanner.are_id]
         checking_devices = True
@@ -335,7 +332,6 @@ class Parser:
         return next_sym
 
     def init_clock(self, symbol):
-        print('init clock')
         next_sym = symbol
         connect = [self.scanner.cycle_id]
         checking_devices = True
@@ -390,7 +386,6 @@ class Parser:
         return next_sym
 
     def init_gate(self, symbol):
-        print('init gate')
         next_sym = symbol
         connect = [self.scanner.has_id, self.scanner.have_id]
         device_types = [self.scanner.AND_id,
@@ -485,7 +480,6 @@ class Parser:
         """Check if symbols form a connections block.
         
         """
-        print('connections block')
         next_sym = self.scanner.get_symbol()
 
         if next_sym.type == self.scanner.OPEN_BRACKET:
@@ -502,7 +496,6 @@ class Parser:
         return next_sym
     
     def connections_subrule(self, symbol):
-        print('connections subrule')
         self.input_symbols = []
         try:
             next_sym = self.parse_output_rule(symbol)
@@ -620,7 +613,6 @@ class Parser:
                     self.scanner.NAND_id]
 
         if device_type == self.scanner.DTYPE_id:
-            print('HELLLOOOO')
             possible_inputs = [
                 self.scanner.CLK_id, 
                 self.scanner.SET_id, 
@@ -652,7 +644,6 @@ class Parser:
         """Check if symbols form a monitors block.
         
         """
-        print('monitors block')
         next_sym = self.scanner.get_symbol()
 
         if next_sym.type == self.scanner.OPEN_BRACKET:
@@ -669,8 +660,27 @@ class Parser:
         return next_sym
     
     def monitors_subrule(self, symbol):
-        print('monitors subrule')
-        pass
+        # we can only monitor outputs
+        try: 
+            next_sym = self.parse_output_rule(symbol)
+            self.make_monitor()
+
+            while next_sym.type == self.scanner.COMMA: 
+                next_sym = self.scanner.get_symbol()
+                next_sym = self.parse_output_rule(next_sym)
+                self.make_monitor()
+
+            if next_sym.type != self.scanner.SEMICOLON:
+                raise SemicolonError(next_sym)
+
+            next_sym = self.scanner.get_symbol()
+
+        except ParserError as e:
+            # add the error 
+            self.add_error(e)
+            # skip to the next error 
+            next_sym = self.skip_error(e)
+        return next_sym
 
 #===========================================================================================================
 #===========================================================================================================
@@ -683,7 +693,6 @@ class Parser:
             self.devices.make_device(device_id, type, property)
 
     def make_connections(self):
-        print(self.input_symbols)
         for input, input_port_symbol in self.input_symbols:
             output_id = self.output_symbol[0].id
             output_port = self.output_symbol[1]
@@ -698,13 +707,32 @@ class Parser:
             
             self.network.make_connection(input_id, input_port_id, output_id, output_port_id)
 
+    def make_monitor(self):
+        output = self.output_symbol[0]
+        output_id = output.id
+
+        output_port = self.output_symbol[1]
+        output_port_id = None
+        if output_port:
+            output_port_id = output_port.id
+
+        self.monitors.make_monitor(output_id, output_port_id)
+        
 #===========================================================================================================
 #===========================================================================================================
 
     def check_all_inputs_connected(self):
         # check that everything that is an input has been connected to something
-        print('network check: ', self.network.check_network())
-        return 
+        # specify exactly which input has not been connected
+        for device in self.devices.devices_list:
+            for input_id, connection in device.inputs.items():
+                if connection is None:
+                    self.input_not_connected_errors.append(
+                        (
+                            self.names.get_name_string(device.device_id),
+                            self.names.get_name_string(input_id)
+                        )
+                    )
 
     def add_error(self, error):
         if isinstance(error, ParserSyntaxError):
@@ -748,49 +776,50 @@ class Parser:
                     symbol.line_position, error.message)
 
         if len(self.input_not_connected_errors) > 0:
-            for error in self.input_not_connected_errors:
-                symbol = error.symbol
-                self.scanner.print_error_line(symbol.line_number, 
-                    symbol.line_position, error.message)
+            for device_name, input_name in self.input_not_connected_errors:
+                print("'{}.{}' is not connected"
+                      .format(device_name, input_name))
+            print("{} unconnected inputs found.".format(
+                len(self.input_not_connected_errors)
+            ))
 
 #===========================================================================================================
 #===========================================================================================================
 
     def parse_network(self):
         """Parse the circuit definition file."""
-        # print('testing scanner: ', self.scanner.CLOSE_BRACKET)
         symbol = self.scanner.get_symbol()
+
+        # blocks need to be discovered in the right order and not repeated
+        header_order = [self.scanner.devices_id, self.scanner.initialise_id, self.scanner.connections_id, self.scanner.monitors_id]
+        header_functions = [self.devices_block, self.initialise_block, self.connections_block, self.monitors_block]
+
+        header_index = 0
 
         # keep checking symbols until the end of the file
         while symbol.type != self.scanner.EOF: 
             try: 
                 if symbol.type == self.scanner.KEYWORD: 
-                    if symbol.id == self.scanner.devices_id: 
-                        next_sym = self.devices_block(symbol)
-                    elif symbol.id == self.scanner.initialise_id:
-                        next_sym = self.initialise_block(symbol)
-                    elif symbol.id == self.scanner.connections_id:
-                        next_sym = self.connections_block(symbol)
-                    # elif symbol.id == self.scanner.monitors_id: 
-                    #     next_sym = self.monitors_block(symbol)
-                    else: 
-                        raise BlockError(symbol) # expected a block header
+
+                    if symbol.id == header_order[header_index]:
+                        next_sym = header_functions[header_index](symbol)
+                        header_index += 1
+                    else:
+
+                        raise InvalidBlockHeaderOrder(symbol) # expected a block header
+
                 else:
-                    raise BlockError(symbol) # expected a keyword
+                    raise InvalidBlockHeader(symbol) # expected a keyword
             except ParserError as e: 
                 # add the error 
                 self.add_error(e)
                 # skip to the next error 
                 next_sym = self.skip_error(e)
             symbol = next_sym
-        
-        print(self.device_dict)
-        # self.make_devices()
 
         self.check_all_inputs_connected()
         self.print_errors()
         
-
         return len(self.syntax_errors) == 0 and \
             len(self.semantic_errors) == 0 and \
             len(self.input_not_connected_errors) == 0
