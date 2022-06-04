@@ -1,4 +1,5 @@
 
+
 class ParserError(Exception):
     """Base class for all input file processing errors."""
     def __init__(self, symbol, message): 
@@ -68,4 +69,19 @@ class DeviceTypeError(ParserSyntaxError):
 class InvalidDeviceName(ParserSyntaxError):
     def __init__(self, symbol): 
         message = "Expected a device name."
+        super().__init__(symbol, message)
+
+class WrongDeviceName(ParserSyntaxError):
+    def __init__(self, symbol, name): 
+        message = "Device name should not be {} (must not begin with 'sw' or 'clk').".format(name)
+        super().__init__(symbol, message)
+
+class WrongSwitchName(ParserSyntaxError):
+    def __init__(self, symbol, name): 
+        message = "Switch name should not be {} (must begin with 'sw' followed by a number).".format(name)
+        super().__init__(symbol, message)
+        
+class WrongClockName(ParserSyntaxError):
+    def __init__(self, symbol, name): 
+        message = "Clock name should not be {} (must begin with 'clk' followed by a number).".format(name)
         super().__init__(symbol, message)

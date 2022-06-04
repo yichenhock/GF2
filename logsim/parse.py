@@ -31,7 +31,10 @@ from error import (
     CloseBracketError,
     InvalidDeviceRule,
     DeviceTypeError,
-    InvalidDeviceName
+    InvalidDeviceName,
+    WrongDeviceName,
+    WrongSwitchName,
+    WrongClockName,
 )
 
 class Parser:
@@ -124,13 +127,12 @@ class Parser:
 
             while checking_devices:
                 if next_sym.type == self.scanner.NAME:
-                    
+
                     if self.names.get_name_string(next_sym.id) in self.names_parsed:
                         raise RedefinedError(next_sym, self.names.get_name_string(next_sym.id))
                     else: 
                         self.names_parsed.append(self.names.get_name_string(next_sym.id))
                         name_symbols.append(next_sym)
-
 
                     # now expect either 'IS/ARE' or 'COMMA, NAME'
                     next_sym = self.scanner.get_symbol()
@@ -139,6 +141,10 @@ class Parser:
                         checking_devices = False
                         next_sym = self.scanner.get_symbol()
                         if next_sym.id in types:
+                            # first check if the names are legal
+                            for name_symbol in name_symbols: 
+                                self.check_name_legal(name_symbol, next_sym.id)
+
                             # connect the device
                             self.make_device(next_sym.id, name_symbols)
                         else:
@@ -149,7 +155,6 @@ class Parser:
                             raise SemicolonError(next_sym)
 
                     elif next_sym.type == self.scanner.COMMA: 
-                        print('comma')
                         next_sym = self.scanner.get_symbol()
 
                     else:
@@ -166,6 +171,50 @@ class Parser:
             next_sym = self.skip_error(e)
 
         return next_sym
+
+    def check_name_legal(self, name_symbol, component_type):
+        name = self.names.get_name_string(name_symbol.id)
+        if component_type == self.scanner.SWITCH_id:
+            # check if the name of the device is the right syntax for a switch
+            if not self.is_switch_legal(name):
+                raise WrongSwitchName(name_symbol, name)
+        elif component_type == self.scanner.CLOCK_id:
+            print('issa clock')
+            # check if the name of the device is the right syntax for a clock
+            if not self.is_clock_legal(name):
+                raise WrongClockName(name_symbol, name)
+        else:
+            print('is some udder devic')
+            if self.is_switch_legal(name) == True or self.is_clock_legal(name) == True:
+                raise WrongDeviceName(name_symbol, name)
+    
+    def is_switch_legal(self, name):
+        # returns true if name starts with 'sw' followed by a number or nothing
+
+        if len(name) == 2: 
+            if name == 'sw': 
+                return True
+        elif len(name) > 2:
+            if name[:2] == 'sw': 
+                if name[2:].isnumeric():
+                    return True
+                else:
+                    return False
+            else:
+                return False
+    
+    def is_clock_legal(self, name):
+        if len(name) == 3: 
+            if name == 'clk': 
+                return True
+        elif len(name) > 3:
+            if name[:3] == 'clk': 
+                if name[3:].isnumeric():
+                    return True
+                else:
+                    return False
+            else:
+                return False
 
     def initialise_block(self, symbol):
         print('initialise block')
@@ -185,23 +234,21 @@ class Parser:
     def make_device(self, device_type, name_symbols=[]):
 
         if device_type == self.scanner.AND_id:
-            print('AND gate!')
-            for n in name_symbols:
-                print(self.names.get_name_string(n.id))
+            print('Make AND gate!')
         elif device_type == self.scanner.OR_id:
-            print('OR gate!')
+            print('Make OR gate!')
         elif device_type == self.scanner.NOR_id:
-            print('NOR gate!')
+            print('Make NOR gate!')
         elif device_type == self.scanner.XOR_id:
-            print('XOR gate!')
+            print('Make XOR gate!')
         elif device_type == self.scanner.NAND_id:
-            print('NAND gate!')
+            print('Make NAND gate!')
         elif device_type == self.scanner.DTYPE_id:
-            print('DTYPE!')
+            print('Make DTYPE!')
         elif device_type == self.scanner.SWITCH_id:
-            print('SWITCH!')
+            print('Make SWITCH!')
         elif device_type == self.scanner.CLOCK_id:
-            print('CLOCK!')
+            print('Make CLOCK!')
 
 #===========================================================================================================
 #===========================================================================================================
@@ -222,13 +269,11 @@ class Parser:
         if self.in_block: # skip until next semicolon or closed bracket
             print('in block error')
             end_types = [self.scanner.SEMICOLON, self.scanner.CLOSE_BRACKET, self.scanner.EOF]
+            
             while next_sym.type not in end_types: # skip until the next 
                 next_sym = self.scanner.get_symbol() 
-            print('uwu1')
             if next_sym.type == self.scanner.CLOSE_BRACKET: # returns close bracket to exit the block
-                print('uwu2')
                 return next_sym
-            print('uwu3')
 
         else: 
             print('not inblock error')
@@ -236,9 +281,9 @@ class Parser:
             end_types = [self.scanner.CLOSE_BRACKET, self.scanner.EOF]
             while next_sym.type not in end_types:
                 next_sym = self.scanner.get_symbol()
-        next_sym = self.scanner.get_symbol()
 
-        return self.scanner.get_symbol()
+        next_sym = self.scanner.get_symbol()
+        return next_sym
 
     def print_errors(self):
         """Print all the errors that have been caught."""
@@ -294,7 +339,7 @@ class Parser:
                 # skip to the next error 
                 next_sym = self.skip_error(e)
             symbol = next_sym
-
+            
         self.check_all_inputs_connected()
         self.print_errors()
 

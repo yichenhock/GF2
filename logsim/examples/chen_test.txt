@@ -1,3 +1,7 @@
 devices( 
-      a, b, d, q, b is 
-AND;)
+      sw, q, b is 
+AND;
+      clk is SWITCH;      
+      a is CLOCK;
+
+)
