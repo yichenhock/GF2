@@ -36,20 +36,25 @@ class MonitorsTab(wx.Panel):
             ULC.ULC_SHOW_TOOLTIPS
         self.monitors_list = ListCtrl(self, wx.ID_ANY,
                                       agwStyle=self.monitors_list_style)
+
+        font = wx.Font(wx.FontInfo().Encoding(wx.FONTENCODING_CP950))
+
         self.monitors_list.InsertColumn(0, "Component")
         self.monitors_list.InsertColumn(1, "")  # remove from monitor buttons
 
         # configure the drop down boxes
-        self.label_types = wx.StaticText(self, wx.ID_ANY, _("Type"))
+        self.label_types = wx.StaticText(self, wx.ID_ANY, _(u"Type"))
+        self.label_types.SetFont(font)
         self.combo_types = wx.ComboBox(self, wx.ID_ANY,
-                                       choices=[_('All'), _('Gate'), _('Switch'),
-                                                _('Clock'), _('D-Type')],
+                                       choices=[_(u'All'), _(u'Gate'), _(u'Switch'),
+                                                _(u'Clock'), _(u'D-Type')],
                                        style=wx.CB_READONLY)
-        self.label_names = wx.StaticText(self, wx.ID_ANY, _("Name"))
+        self.combo_types.SetFont(font)
+        self.label_names = wx.StaticText(self, wx.ID_ANY, _(u"Name"))
         self.combo_names = wx.ComboBox(
             self, wx.ID_ANY, choices=[], style=wx.CB_READONLY)
-        self.add_button = wx.Button(self, wx.ID_ANY, _('Add'))
-        self.add_all_button = wx.Button(self, wx.ID_ANY, _('Add All'))
+        self.add_button = wx.Button(self, wx.ID_ANY, _(u'Add'))
+        self.add_all_button = wx.Button(self, wx.ID_ANY, _(u'Add All'))
 
         # initialise the combo boxes with default values
         self.combo_types.SetValue("All")
@@ -79,7 +84,7 @@ class MonitorsTab(wx.Panel):
 
         # static boxes for layout
         self.static_box = wx.StaticBox(
-            self, wx.ID_ANY, _("Add Component To Monitor"))
+            self, wx.ID_ANY, _(u"Add Component To Monitor"))
         self.bottom_sizer = wx.StaticBoxSizer(self.static_box, wx.VERTICAL)
         self.bottom_sizer.Add(self.warning_text, 0, wx.ALL, 3)
         self.bottom_sizer.Add(self.grid_sizer, 0, wx.EXPAND | wx.ALL, 10)
@@ -266,7 +271,7 @@ class MonitorsTab(wx.Panel):
                                       .FindItem(-1, signal))
         self.displayed_signals.remove((signal_id, output_id))
         self.statusbar.SetStatusText(_(u"Component removed from monitor."))
-        print(_(u'{} removed from monitor.').format(
+        print(_(u"{} removed from monitor.").format(
             self.names.get_name_string(signal_id)))
         try:
             self.canvas.render_signals(flush_pan=True)

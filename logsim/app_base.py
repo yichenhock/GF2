@@ -99,4 +99,4 @@ class BaseApp(wx.App, InspectionMixin):
             self.locale.AddCatalog(appC.langDomain)
         else:
             self.locale = None
-            
+        print("System encoding:", self.locale.GetSystemEncoding())

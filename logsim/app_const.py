@@ -10,5 +10,6 @@ import wx
 langDomain = "logsim_chinese_translation"
 # languages you want to support
 supLang = {u"en": wx.LANGUAGE_ENGLISH,
-           u"cn": wx.LANGUAGE_CHINESE_SIMPLIFIED
+           u"cn": wx.LANGUAGE_CHINESE_SIMPLIFIED,
+           #u"fr": wx.LANGUAGE_FRENCH
           }

@@ -105,7 +105,7 @@ class AppI18N(sc.SizedFrame):
 if __name__ == '__main__':
     import app_base as ab
     app = ab.BaseApp(redirect=False)
-    app.updateLanguage('cn')
+    app.updateLanguage('fr')
     frame = AppI18N(None)
     frame.Show()
     app.MainLoop()

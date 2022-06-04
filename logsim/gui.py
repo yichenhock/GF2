@@ -196,32 +196,32 @@ class Gui(wx.Frame):
         tb = wx.ToolBar(self, - 1, style=wx.TB_TEXT)
         self.ToolBar = tb
 
-        tb.AddTool(1, _(u'Browse'),
+        tb.AddTool(1, _(u"Browse"),
                    wx.Image("./logsim/imgs/browse.png",
                             wx.BITMAP_TYPE_PNG).ConvertToBitmap(),
                    shortHelp=_(u"Browse for a file"))
-        tb.AddTool(2, _(u'Save'),
+        tb.AddTool(2, _(u"Save"),
                    wx.Image("./logsim/imgs/save.png",
                             wx.BITMAP_TYPE_PNG).ConvertToBitmap(),
                    shortHelp=_(u"Save the file"))
-        tb.AddTool(3, _(u'New'),
+        tb.AddTool(3, _(u"New"),
                    wx.Image("./logsim/imgs/new file.png",
                             wx.BITMAP_TYPE_PNG).ConvertToBitmap(),
                    shortHelp=_(u"Create a new file"))
         tb.AddStretchableSpace()
-        tb.AddTool(4, _(u'Compile'),
+        tb.AddTool(4, _(u"Compile"),
                    wx.Image("./logsim/imgs/compile.png",
                             wx.BITMAP_TYPE_PNG).ConvertToBitmap(),
                    shortHelp="Compile the circuit definition")
-        tb.AddTool(5, _(u'Run'),
+        tb.AddTool(5, _(u"Run"),
                    wx.Image("./logsim/imgs/run.png",
                             wx.BITMAP_TYPE_PNG).ConvertToBitmap(),
                    shortHelp=_(u"Run the simulation"))
-        tb.AddTool(6, _(u'Continue'),
+        tb.AddTool(6, _(u"Continue"),
                    wx.Image("./logsim/imgs/continue.png",
                             wx.BITMAP_TYPE_PNG).ConvertToBitmap(),
                    shortHelp=_(u"Continue the simulation"))
-        tb.AddTool(7, _(u'Reset'),
+        tb.AddTool(7, _(u"Reset"),
                    wx.Image("./logsim/imgs/reset.png",
                             wx.BITMAP_TYPE_PNG).ConvertToBitmap(),
                    shortHelp=_(u"Reset the simulation"))
@@ -318,8 +318,8 @@ class Gui(wx.Frame):
         elif event.GetId() == 10:  # quit
             # check first if user has any unsaved changes!!
             if self.global_vars.def_edited:
-                resp = wx.MessageBox(_("Changes you made may not be saved."),
-                                     _("Quit application?"), wx.ICON_WARNING |
+                resp = wx.MessageBox(_(u"Changes you made may not be saved."),
+                                     _(u"Quit application?"), wx.ICON_WARNING |
                                      wx.OK | wx.CANCEL)
                 if resp == wx.OK:
                     self.Close(True)
@@ -352,11 +352,11 @@ class Gui(wx.Frame):
                 self.set_gui_state(sim_running=False)
 
                 self.statusbar.SetStatusText(
-                    _(u'File saved and compiled successfully.'))
+                    _(u"File saved and compiled successfully."))
                 return True
             else:
                 # error has occured while parsing
-                self.statusbar.SetStatusText(_(u'File compiled with errors.'))
+                self.statusbar.SetStatusText(_(u"File compiled with errors."))
                 return False
         except Exception as e:
             print(e)
@@ -370,7 +370,7 @@ class Gui(wx.Frame):
             return
 
         self.consoleOutPanel.run_command(True, self.spin.GetValue())
-        self.update_statusbar(_("Run button pressed."))
+        self.update_statusbar(_(u"Run button pressed."))
         self.set_gui_state(sim_running=True)
         self.canvas.render_signals(flush_pan=True)
 

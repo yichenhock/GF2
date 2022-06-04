@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2022-06-04 20:42+0100\n"
-"PO-Revision-Date: 2022-06-04 22:36+0100\n"
+"PO-Revision-Date: 2022-06-04 23:20+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: zh\n"
@@ -157,7 +157,7 @@ msgstr "正在编译."
 
 #: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:355
 msgid "File saved and compiled successfully."
-msgstr "文件已保存"
+msgstr "文件已保存."
 
 #: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:359
 msgid "File compiled with errors."
@@ -169,7 +169,7 @@ msgstr "操你妈 :("
 
 #: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:369
 msgid "No monitors."
-msgstr "没有显示器"
+msgstr "没有显示器."
 
 #: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:373
 msgid "Run button pressed."
@@ -185,7 +185,7 @@ msgstr "模拟键重置."
 
 #: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:390
 msgid "Reset button pressed."
-msgstr "重置键被按下"
+msgstr "重置键被按下."
 
 #: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:421
 msgid "Open a new file?"
@@ -213,7 +213,7 @@ msgstr "保存文件"
 
 #: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:466
 msgid "new_definition_file"
-msgstr "new definition file"
+msgstr "操你妈"
 
 #: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:467
 #: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:525
@@ -250,11 +250,11 @@ msgstr "周期"
 
 #: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_canvas.py:322
 msgid "Canvas redrawn on paint event, size is "
-msgstr "画布重绘在绘画事件, 方面是"
+msgstr "画布重绘在绘画事件, 方面是 "
 
 #: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_circuitdef_tab.py:62
 msgid "Reset the simulation first to edit!"
-msgstr "首先重置模拟为了编辑"
+msgstr "首先重置模拟为了编辑!"
 
 #: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:82
 msgid "Type commands here"
@@ -266,7 +266,7 @@ msgstr "误差! 错误的指令!"
 
 #: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:118
 msgid "User commands:"
-msgstr "使用者指令"
+msgstr "使用者指令:"
 
 #: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:119
 msgid "run the simulation for N cycles"
@@ -294,7 +294,7 @@ msgstr "帮助 (这个指令)"
 
 #: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:133
 msgid "Successfully set switch."
-msgstr "成功设置开关"
+msgstr "成功设置开关."
 
 #: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:136
 msgid "Error! Invalid switch."
@@ -307,11 +307,11 @@ msgstr "有误差! 电路摆动."
 
 #: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:164
 msgid " cycle(s)"
-msgstr "周期"
+msgstr " 周期"
 
 #: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:164
 msgid "Running for "
-msgstr "运行"
+msgstr "运行 "
 
 #: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:180
 msgid "Error! Nothing to continue. Run first."
@@ -327,7 +327,7 @@ msgstr "周期."
 
 #: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:184
 msgid "Total:"
-msgstr "总数"
+msgstr "总数:"
 
 #: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:213
 msgid "Error! Expected a name."
@@ -344,7 +344,7 @@ msgstr "有误差! 预料数字."
 #: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:268
 #: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:273
 msgid "Number out of range."
-msgstr "数字"
+msgstr "数字."
 
 #: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_inputs_tab.py:67
 #: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_inputs_tab.py:101
@@ -438,11 +438,11 @@ msgstr "从显示器中取出的 {}."
 
 #: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_monitors_tab.py:286
 msgid " Reset simulation to add components!"
-msgstr "重置以添加构件!"
+msgstr " 重置以添加构件!"
 
 #: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:17
 msgid "The I18N sample application"
-msgstr "The I18N sample application"
+msgstr "操你妈"
 
 #: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:28
 msgid "Close"
@@ -450,7 +450,7 @@ msgstr "关"
 
 #: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:29
 msgid "Close the application"
-msgstr "关应用软件?"
+msgstr "关应用软件"
 
 #: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:31
 msgid "&File"
@@ -482,11 +482,11 @@ msgstr "&帮助"
 
 #: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:58
 msgid "A nice label for the TextCtrl"
-msgstr "A nice label for the TextCtrl"
+msgstr "操你妈"
 
 #: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:63
 msgid "a search control"
-msgstr "a search control"
+msgstr "操你妈"
 
 #: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:70
 msgid "Open a file dialog"
