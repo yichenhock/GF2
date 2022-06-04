@@ -28,6 +28,8 @@ class Symbol:
         """Initialise symbol properties."""
         self.type = None
         self.id = None
+        self.line_number = None
+        self.line_position = None
 
 
 class Scanner:
@@ -64,8 +66,6 @@ class Scanner:
 
         self.names = names
 
-        self.type_list = [",", ".", ";", "=",
-                          "(", ")", "keyword", "number", "name"]
         # Define all symbol types
         self.symbol_type_list = [self.COMMA, self.DOT, self.SEMICOLON,
                                  self.EQUALS, self.OPEN_BRACKET,
@@ -125,20 +125,20 @@ class Scanner:
         self.advance()
         return
 
-    def print_error_line(self, error_type, error_message=""):
+    def print_error_line(self, line_number, line_position, error_message=""):
         """Print current line with marker pointing where the error is."""
-        print("Error type:", error_type)
-        print(self.lines[self.current_line])
-        print(" " * (self.current_character_position - 1) + "^ Error here")
-        print(error_message)
-        self.skip_line()
 
-    def skip_line(self):
-        """Skips until next semicolon, bracket or EOF."""
-        while self.current_character not in [";", "(", ")", ""]:
-            self.advance()
-        self.advance()
-        return
+        print("Line {}, {}: {}".format(line_number, line_position, error_message))
+        print(self.lines[line_number])
+        print(" " * (line_position - 1) + "^ Error here")
+        # self.skip_line()
+
+    # def skip_line(self):
+    #     """Skips until next semicolon, bracket or EOF."""
+    #     while self.current_character not in [";", "(", ")", ""]:
+    #         self.advance()
+    #     self.advance()
+    #     return
 
     def get_name(self):
         """Read and returns the next name (word made up of only letters)."""
@@ -160,6 +160,10 @@ class Scanner:
         """Translate the next sequence of characters into a symbol."""
         symbol = Symbol()
         self.skip_spaces()  # Current character is now not whitespace
+
+        symbol.line_number = self.current_line
+        symbol.line_position = self.current_character_position
+
 
         if self.current_character.isalpha():  # Name
             name_string = self.get_name()
@@ -202,7 +206,7 @@ class Scanner:
         elif self.current_character == "":  # End of File
             symbol.type = self.EOF
 
-        elif self.current_character == "#":
+        elif self.current_character == "#":  # Comment Check
             self.skip_comment()
             symbol = self.get_symbol()
 
