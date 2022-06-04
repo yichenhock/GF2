@@ -17,11 +17,6 @@ Parser - parses the definition file and builds the logic network.
 # from monitors import Monitors
 from error import SemanticError, SyntaxError
 
-<<<<<<< HEAD
-=======
-
-class Parser:
->>>>>>> 2ba9019927988c41309f8398e85fff5a9c0a71e9
 
 class Parser:
     """Parse the definition file and build the logic network.
