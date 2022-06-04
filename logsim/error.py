@@ -71,6 +71,16 @@ class InvalidNOTInputNumber(ParserSemanticError):
     def __init__(self, symbol): 
         message = "Number of inputs for NOT must be 1."
         super().__init__(symbol, message)
+
+class AttemptToDefineDTYPEInputs(ParserSemanticError):
+    def __init__(self, symbol): 
+        message = "D-TYPE input number does not need to be specified."
+        super().__init__(symbol, message)
+
+class NoDTYPEOutputPortError(ParserSemanticError):
+    def __init__(self, symbol): 
+        message = "D-TYPEs need an output port to be specified."
+        super().__init__(symbol, message)
 #===========================================================================================================
 #===========================================================================================================
 
@@ -149,4 +159,24 @@ class InputNumberMissing(ParserSyntaxError):
 class InputsDefinedIncorrectly(ParserSyntaxError):
     def __init__(self, symbol): 
         message = "Expected 'input' or 'inputs."
+        super().__init__(symbol, message)
+
+class ConnectedToError(ParserSyntaxError):
+    def __init__(self, symbol): 
+        message = "Expected 'to' or 'is connected to'."
+        super().__init__(symbol, message)
+
+class OutputPortError(ParserSyntaxError):
+    def __init__(self, symbol): 
+        message = "Invalid output port."
+        super().__init__(symbol, message)
+
+class InputPortError(ParserSyntaxError):
+    def __init__(self, symbol): 
+        message = "Invalid input port."
+        super().__init__(symbol, message)
+
+class DotError(ParserSyntaxError):
+    def __init__(self, symbol): 
+        message = "Invalid output port."
         super().__init__(symbol, message)
