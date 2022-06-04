@@ -22,6 +22,9 @@ class ParserSyntaxError(ParserError):
     """Base class for all syntax errors."""
     pass 
 
+#===========================================================================================================
+#===========================================================================================================
+
 # Semantic errors
 
 class UndefinedError(ParserSemanticError):
@@ -33,6 +36,34 @@ class RedefinedError(ParserSemanticError):
     def __init__(self, symbol, name): 
         message = "Device {} has been previously defined.".format(name)
         super().__init__(symbol, message)
+
+class WrongDeviceName(ParserSemanticError):
+    def __init__(self, symbol, name): 
+        message = "Device name should not be {} (must not begin with 'sw' or 'clk').".format(name)
+        super().__init__(symbol, message)
+
+class InvalidClockLength(ParserSemanticError):
+    def __init__(self, symbol): 
+        message = "Clock length needs to be an integer between 1 and 1000."
+        super().__init__(symbol, message)
+
+class WrongSwitchName(ParserSemanticError):
+    def __init__(self, symbol, name): 
+        message = "Switch name should not be {} (must begin with 'sw' followed by a number).".format(name)
+        super().__init__(symbol, message)
+        
+class WrongClockName(ParserSemanticError):
+    def __init__(self, symbol, name): 
+        message = "Clock name should not be {} (must begin with 'clk' followed by a number).".format(name)
+        super().__init__(symbol, message)
+
+class InvalidInputNumber(ParserSemanticError):
+    def __init__(self, symbol): 
+        message = "Number of inputs must be between 1-16."
+        super().__init__(symbol, message)
+
+#===========================================================================================================
+#===========================================================================================================
 
 # Syntax errors
 
@@ -86,11 +117,6 @@ class InvalidDeviceName(ParserSyntaxError):
         message = "Expected a device name."
         super().__init__(symbol, message)
 
-class WrongDeviceName(ParserSyntaxError):
-    def __init__(self, symbol, name): 
-        message = "Device name should not be {} (must not begin with 'sw' or 'clk').".format(name)
-        super().__init__(symbol, message)
-
 class InvalidClockName(ParserSyntaxError):
     def __init__(self, symbol): 
         message = "Expected a clock name."
@@ -106,17 +132,12 @@ class InvalidSwitchState(ParserSyntaxError):
         message = "Expected 'HIGH' or 'LOW'."
         super().__init__(symbol, message)
 
-class InvalidClockLength(ParserSyntaxError):
+class InputNumberMissing(ParserSyntaxError):
     def __init__(self, symbol): 
-        message = "Clock length needs to be an integer between 1 and 1000."
+        message = "Expected an input number between 1 and 16."
         super().__init__(symbol, message)
 
-class WrongSwitchName(ParserSyntaxError):
-    def __init__(self, symbol, name): 
-        message = "Switch name should not be {} (must begin with 'sw' followed by a number).".format(name)
-        super().__init__(symbol, message)
-        
-class WrongClockName(ParserSyntaxError):
-    def __init__(self, symbol, name): 
-        message = "Clock name should not be {} (must begin with 'clk' followed by a number).".format(name)
+class InputsDefinedIncorrectly(ParserSyntaxError):
+    def __init__(self, symbol): 
+        message = "Expected 'input' or 'inputs."
         super().__init__(symbol, message)

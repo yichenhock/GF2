@@ -7,4 +7,7 @@ AND;
 )
 
 initialise(
-    sw, sw1 is HIGH;clk cycle 100;)
+    sw, sw1 is HIGH; 
+    clk cycle 100;
+    a, q has 4 inputs;
+)

@@ -21,6 +21,11 @@ from error import ParserError, ParserSemanticError, ParserSyntaxError
 from error import (
     UndefinedError,
     RedefinedError,
+    WrongDeviceName,
+    WrongSwitchName,
+    WrongClockName,
+    InvalidClockLength,
+    InvalidInputNumber
 )
 
 # Syntax errors
@@ -38,10 +43,8 @@ from error import (
     InvalidClockName,
     InvalidSwitchName,
     InvalidSwitchState,
-    InvalidClockLength,
-    WrongDeviceName,
-    WrongSwitchName,
-    WrongClockName,
+    InputNumberMissing,
+    InputsDefinedIncorrectly
 )
 
 class Parser:
@@ -279,7 +282,7 @@ class Parser:
         next_sym = symbol
         connect = [self.scanner.is_id, self.scanner.are_id]
         checking_devices = True
-        print(self.names.get_name_string(next_sym.id))
+        device_symbols = []
         while checking_devices:
             if next_sym.type != self.scanner.NAME:
                 raise InvalidDeviceName(next_sym)
@@ -288,12 +291,14 @@ class Parser:
             if next_sym.id not in self.device_dict:
                 raise UndefinedError(next_sym, device_name)
 
-            symbol_type = self.device_dict[next_sym.id]['type']
-            if symbol_type != self.scanner.SWITCH_id:
+            device_type = self.device_dict[next_sym.id]['type']
+            if device_type != self.scanner.SWITCH_id:
                 raise InvalidSwitchName(next_sym, device_name)
 
+            device_symbols.append(next_sym)
+
             next_sym = self.scanner.get_symbol()
-            # next one is either a connection work or a comma
+            # next one is either a connection word or a comma
             if next_sym.id in connect:
                 checking_devices = False
                 # next word has to be HIGH/LOW
@@ -304,7 +309,8 @@ class Parser:
                     else:
                         state = 0
                     # edit the device property for making devices later
-                    self.device_dict[symbol.id]['property'] = state
+                    for sym in device_symbols:
+                        self.device_dict[sym.id]['property'] = state
                 else:
                     raise InvalidSwitchState(next_sym)
                 
@@ -326,6 +332,7 @@ class Parser:
         next_sym = symbol
         connect = [self.scanner.cycle_id]
         checking_devices = True
+        device_symbols = []
         while checking_devices:
             if next_sym.type != self.scanner.NAME:
                 raise InvalidDeviceName(next_sym)
@@ -334,15 +341,16 @@ class Parser:
             if next_sym.id not in self.device_dict:
                 raise UndefinedError(next_sym, device_name)
 
-            symbol_type = self.device_dict[next_sym.id]['type']
-            if symbol_type != self.scanner.CLOCK_id:
+            device_type = self.device_dict[next_sym.id]['type']
+            if device_type != self.scanner.CLOCK_id:
                 raise InvalidClockName(next_sym, device_name)
+
+            device_symbols.append(next_sym)
 
             next_sym = self.scanner.get_symbol()
             # next one is either a connection work or a comma
             if next_sym.id in connect:
                 checking_devices = False
-                # next word has to be HIGH/LOW
                 next_sym = self.scanner.get_symbol()
                 # ignore 'length' if it appears
                 if next_sym.id == self.scanner.length_id:
@@ -354,17 +362,18 @@ class Parser:
                     clock_length = next_sym.id
                     if clock_length <= 1000:
                         # add this to device property
-                        self.device_dict[symbol.id]['property'] = clock_length
-                        next_sym = self.scanner.get_symbol()
+                        for sym in device_symbols:
+                            self.device_dict[sym.id]['property'] = clock_length
                     else:
                         InvalidClockLength(next_sym)
                 else:
                     raise InvalidClockLength(next_sym)
 
+                next_sym = self.scanner.get_symbol()
                 if next_sym.type != self.scanner.SEMICOLON:
                     raise SemicolonError(next_sym)
 
-            elif next_sym.id == self.scanner.COMMA:
+            elif next_sym.type == self.scanner.COMMA:
                 next_sym = self.scanner.get_symbol()
 
             else:
@@ -377,8 +386,65 @@ class Parser:
         print('init gate')
         next_sym = symbol
         connect = [self.scanner.has_id, self.scanner.have_id]
+        device_types = [self.scanner.AND_id,
+                self.scanner.OR_id, 
+                self.scanner.NOR_id, 
+                self.scanner.XOR_id, 
+                self.scanner.NAND_id, 
+                self.scanner.DTYPE_id]
         checking_devices = True
+        device_symbols = []
+        while checking_devices:
+            if next_sym.type != self.scanner.NAME:
+                raise InvalidDeviceName(next_sym)
+                
+            device_name = self.names.get_name_string(next_sym.id)
+            if next_sym.id not in self.device_dict:
+                raise UndefinedError(next_sym, device_name)
 
+            device_type = self.device_dict[next_sym.id]['type']
+            if device_type not in device_types:
+                raise InvalidDeviceName(next_sym, device_name)
+            
+            device_symbols.append(next_sym)
+            
+            next_sym = self.scanner.get_symbol()
+            # next one is either a connection word or a comma
+            if next_sym.id in connect:
+                checking_devices = False
+                next_sym = self.scanner.get_symbol()
+                # define number of inputs
+                # next symbol has to be a number between 1-16 unless NOT or XOR
+                # NOT has one input only
+                # XOR has two inputs
+                
+                if next_sym.type == self.scanner.NUMBER:
+                    if next_sym.id > 16:
+                        raise InvalidInputNumber(next_sym)
+                    input_number = next_sym.id
+                    # check if the next symbol says 'inputs'
+                    next_sym = self.scanner.get_symbol()
+                    inputs = [self.scanner.inputs_id, self.scanner.input_id]
+                    if next_sym.id in inputs:
+                        # add this to the device for connecting up later
+                        for sym in device_symbols:
+                            self.device_dict[sym.id]['property'] = input_number
+                    else:
+                        raise InputsDefinedIncorrectly(next_sym)
+
+                else:
+                    raise InputNumberMissing(next_sym) # expected an input number
+
+                next_sym = self.scanner.get_symbol()
+                if next_sym.type != self.scanner.SEMICOLON:
+                    raise SemicolonError(next_sym)
+
+            elif next_sym.type == self.scanner.COMMA:
+                next_sym = self.scanner.get_symbol()
+
+            else:
+                checking_devices = False
+                raise InvalidInitDeviceRule(next_sym)
 
         return next_sym
 
