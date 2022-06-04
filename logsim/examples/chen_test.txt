@@ -1,0 +1,3 @@
+devices( 
+      a, b, d, q, b is 
+AND;)

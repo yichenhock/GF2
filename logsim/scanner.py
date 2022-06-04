@@ -66,8 +66,9 @@ class Scanner:
 
         self.names = names
 
-        self.type_list = [",", ".", ";", "=",
-                          "(", ")", "keyword", "number", "name"]
+        # self.type_list = [",", ".", ";", "=",
+        #                   "(", ")", "keyword", "number", "name"]
+        
         # Define all symbol types
         self.symbol_type_list = [self.COMMA, self.DOT, self.SEMICOLON,
                                  self.EQUALS, self.OPEN_BRACKET,
@@ -127,20 +128,23 @@ class Scanner:
         self.advance()
         return
 
-    def print_error_line(self, error_type, error_message=""):
+    def print_error_line(self, line_number, line_position, error_message=""):
         """Print current line with marker pointing where the error is."""
-        print("Error type:", error_type)
-        print(self.lines[self.current_line])
-        print(" " * (self.current_character_position - 1) + "^ Error here")
-        print(error_message)
-        self.skip_line()
+        # print("Error type:", error_type)
 
-    def skip_line(self):
-        """Skips until next semicolon, bracket or EOF."""
-        while self.current_character not in [";", "(", ")", ""]:
-            self.advance()
-        self.advance()
-        return
+        print("Line {}, {}: {}".format(line_number, line_position, error_message))
+        # print(self.lines[self.current_line])
+        # print(" " * (self.current_character_position - 1) + "^ Error here")
+        print(self.lines[line_number])
+        print(" " * (line_position - 1) + "^ Error here")
+        # self.skip_line()
+
+    # def skip_line(self):
+    #     """Skips until next semicolon, bracket or EOF."""
+    #     while self.current_character not in [";", "(", ")", ""]:
+    #         self.advance()
+    #     self.advance()
+    #     return
 
     def get_name(self):
         """Read and returns the next name (word made up of only letters)."""

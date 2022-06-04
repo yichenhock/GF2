@@ -55,3 +55,17 @@ class CloseBracketError(ParserSyntaxError):
         message = "Expected a ')'"
         super().__init__(symbol, message)
 
+class InvalidDeviceRule(ParserSyntaxError):
+    def __init__(self, symbol): 
+        message = "Invalid device statement (expected ',' or 'is'/'are')."
+        super().__init__(symbol, message)
+
+class DeviceTypeError(ParserSyntaxError):
+    def __init__(self, symbol): 
+        message = "Expected a device type."
+        super().__init__(symbol, message)
+
+class InvalidDeviceName(ParserSyntaxError):
+    def __init__(self, symbol): 
+        message = "Expected a device name."
+        super().__init__(symbol, message)

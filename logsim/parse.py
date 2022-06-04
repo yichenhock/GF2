@@ -29,6 +29,9 @@ from error import (
     SemicolonError,
     OpenBracketError,
     CloseBracketError,
+    InvalidDeviceRule,
+    DeviceTypeError,
+    InvalidDeviceName
 )
 
 class Parser:
@@ -66,13 +69,11 @@ class Parser:
 
         self.in_block = False # True if parser inside a block
 
-        # self.syntax_error_count = 0
-        # self.semantic_error_count = 0
-
         self.syntax_errors = []
         self.semantic_errors = []
         self.input_not_connected_errors = []
-        self.name_symbols = []
+
+        self.names_parsed = []
         self.input_symbols = []
         self.output_symbol = None 
         self.monitor_symbols = []
@@ -82,19 +83,19 @@ class Parser:
         self.definition_statements = [self.scanner.is_id, self.scanner.are_id]
         self.possession_statements = [self.scanner.has_id, self.scanner.have_id]
 
-    def devices_block(self): 
+    def devices_block(self, symbol): 
         """Check if symbols form a device block.
         
         """
-        print('devices block')
+        print('devices_block')
         next_sym = self.scanner.get_symbol()
 
         if next_sym.type == self.scanner.OPEN_BRACKET:
             self.in_block = True 
             next_sym = self.scanner.get_symbol()
-
             while next_sym.type != self.scanner.CLOSE_BRACKET: 
                 if next_sym.type == self.scanner.EOF: 
+                    print('hihi')
                     raise CloseBracketError(next_sym) # raise a close bracket error
                 next_sym = self.devices_subrule(next_sym)
             self.in_block = False 
@@ -104,32 +105,59 @@ class Parser:
         return next_sym
 
     def devices_subrule(self, symbol):
+        print('devices_subrule')
         try: 
-            print(symbol.id)
-            # print(self.names.get_name_string(symbol.id))
+            connect = [self.scanner.is_id, self.scanner.are_id]
+            types = [self.scanner.AND_id,
+                    self.scanner.OR_id, 
+                    self.scanner.NOR_id, 
+                    self.scanner.XOR_id, 
+                    self.scanner.NAND_id, 
+                    self.scanner.DTYPE_id,
+                    self.scanner.SWITCH_id, 
+                    self.scanner.CLOCK_id]
 
-            # substatement = [[], [], []] # [devices, connection, type]
+            name_symbols = []
 
-            # if symbol.type == self.scanner.NAME: 
-            #     # loop until it gets to 'IS' or 'ARE'
-            #     next_sym = self.scanner.get_symbol()
+            next_sym = symbol
+            checking_devices = True 
 
-            #     device_ids = []
-            #     while next_sym.type != self.scanner.is_id: 
-            #         if next_sym.type == self.scanner.EOF:
-            #             raise ParserError # raise expected a 'IS' or 'ARE'
+            while checking_devices:
+                if next_sym.type == self.scanner.NAME:
                     
-            #         # if next_sym.type
-            #         next_sym = self.scanner.get_symbol()
+                    if self.names.get_name_string(next_sym.id) in self.names_parsed:
+                        raise RedefinedError(next_sym, self.names.get_name_string(next_sym.id))
+                    else: 
+                        self.names_parsed.append(self.names.get_name_string(next_sym.id))
+                        name_symbols.append(next_sym)
 
-            # else: 
-            #     raise ParserError # expected a name
 
+                    # now expect either 'IS/ARE' or 'COMMA, NAME'
+                    next_sym = self.scanner.get_symbol()
 
-            # if next_sym.type == self.scanner.SEMICOLON: 
-            #     pass
-            # else: 
-            #     raise ParserError # expected a semicolon
+                    if next_sym.id in connect: # go to detect the device!
+                        checking_devices = False
+                        next_sym = self.scanner.get_symbol()
+                        if next_sym.id in types:
+                            # connect the device
+                            self.make_device(next_sym.id, name_symbols)
+                        else:
+                            raise DeviceTypeError(next_sym) # expected a device type
+                        
+                        next_sym = self.scanner.get_symbol()
+                        if next_sym.type != self.scanner.SEMICOLON:
+                            raise SemicolonError(next_sym)
+
+                    elif next_sym.type == self.scanner.COMMA: 
+                        print('comma')
+                        next_sym = self.scanner.get_symbol()
+
+                    else:
+                        checking_devices = False
+                        raise InvalidDeviceRule(next_sym) # invalid device subrule statement
+                else:
+                    checking_devices = False
+                    raise InvalidDeviceName(symbol) # expected a valid device name 
 
             next_sym = self.scanner.get_symbol()
 
@@ -141,15 +169,39 @@ class Parser:
 
     def initialise_block(self, symbol):
         print('initialise block')
-        return self.scanner.getsymbol()
+        return self.scanner.get_symbol()
 
     def connections_block(self, symbol): 
         print('connections block')
-        return self.scanner.getsymbol()
+        return self.scanner.get_symbol()
     
     def monitors_block(self, symbol): 
         print('monitors block')
-        return self.scanner.getsymbol()
+        return self.scanner.get_symbol()
+
+#===========================================================================================================
+#===========================================================================================================
+
+    def make_device(self, device_type, name_symbols=[]):
+
+        if device_type == self.scanner.AND_id:
+            print('AND gate!')
+            for n in name_symbols:
+                print(self.names.get_name_string(n.id))
+        elif device_type == self.scanner.OR_id:
+            print('OR gate!')
+        elif device_type == self.scanner.NOR_id:
+            print('NOR gate!')
+        elif device_type == self.scanner.XOR_id:
+            print('XOR gate!')
+        elif device_type == self.scanner.NAND_id:
+            print('NAND gate!')
+        elif device_type == self.scanner.DTYPE_id:
+            print('DTYPE!')
+        elif device_type == self.scanner.SWITCH_id:
+            print('SWITCH!')
+        elif device_type == self.scanner.CLOCK_id:
+            print('CLOCK!')
 
 #===========================================================================================================
 #===========================================================================================================
@@ -167,24 +219,26 @@ class Parser:
   
     def skip_error(self, error): # skip to end of current statement/block
         next_sym = error.symbol
-
         if self.in_block: # skip until next semicolon or closed bracket
-            
-            end_ids = [self.scanner.SEMICOLON, self.scanner.CLOSE_BRACKET, self.scanner.EOF]
-            while next_sym.type not in end_ids: # skip until the next 
+            print('in block error')
+            end_types = [self.scanner.SEMICOLON, self.scanner.CLOSE_BRACKET, self.scanner.EOF]
+            while next_sym.type not in end_types: # skip until the next 
                 next_sym = self.scanner.get_symbol() 
-
-            if next_sym.type == self.scanner.ClOSE_BRACKET: # returns close bracket to exit the block
+            print('uwu1')
+            if next_sym.type == self.scanner.CLOSE_BRACKET: # returns close bracket to exit the block
+                print('uwu2')
                 return next_sym
+            print('uwu3')
 
         else: 
+            print('not inblock error')
             next_sym = error.symbol
-            end_ids = [self.scanner.CLOSE_BRACKET, self.scanner.EOF]
-            while next_sym not in end_ids:
-                next_symbol = self.scanner.get_symbol()
-
+            end_types = [self.scanner.CLOSE_BRACKET, self.scanner.EOF]
+            while next_sym.type not in end_types:
+                next_sym = self.scanner.get_symbol()
         next_sym = self.scanner.get_symbol()
-        return next_sym
+
+        return self.scanner.get_symbol()
 
     def print_errors(self):
         """Print all the errors that have been caught."""
@@ -192,43 +246,44 @@ class Parser:
             for error in self.syntax_errors:
                 symbol = error.symbol
                 message = error.message
-                # self.scanner.print_error_line()
-                print(symbol, message)
+                self.scanner.print_error_line(symbol.line_number, 
+                    symbol.line_position, error.message)
 
         if len(self.semantic_errors) > 0:
             for error in self.semantic_errors:
                 symbol = error.symbol
                 message = error.message
-                # self.scanner.print_error_line()
-                print(symbol, message)
+                self.scanner.print_error_line(symbol.line_number, 
+                    symbol.line_position, error.message)
 
         if len(self.input_not_connected_errors) > 0:
             for error in self.input_not_connected_errors:
                 symbol = error.symbol
                 message = error.message
-                # self.scanner.print_error_line()
-                print(symbol, message)
+                self.scanner.print_error_line(symbol.line_number, 
+                    symbol.line_position, error.message)
 
 #===========================================================================================================
 #===========================================================================================================
 
     def parse_network(self):
         """Parse the circuit definition file."""
+        # print('testing scanner: ', self.scanner.CLOSE_BRACKET)
         symbol = self.scanner.get_symbol()
 
         # keep checking symbols until the end of the file
         while symbol.type != self.scanner.EOF: 
-            print(symbol.id)
+            # print('something_parser:',self.names.get_name_string(symbol.id))
             try: 
                 if symbol.type == self.scanner.KEYWORD: 
                     if symbol.id == self.scanner.devices_id: 
-                        next_sym = self.devices_block()
-                    elif symbol.id == self.scanner.initialise_id:
-                        next_sym = self.initialise_block()
-                    elif symbol.id == self.scanner.connections_id:
-                        next_sym = self.connections_block()
-                    elif symbol.id == self.scanner.monitors_id: 
-                        next_sym = self.monitors_block()
+                        next_sym = self.devices_block(symbol)
+                    # elif symbol.id == self.scanner.initialise_id:
+                    #     next_sym = self.initialise_block(symbol)
+                    # elif symbol.id == self.scanner.connections_id:
+                    #     next_sym = self.connections_block(symbol)
+                    # elif symbol.id == self.scanner.monitors_id: 
+                    #     next_sym = self.monitors_block(symbol)
                     else: 
                         raise BlockError(symbol) # expected a block header
                 else:
