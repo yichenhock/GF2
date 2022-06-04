@@ -16,7 +16,7 @@ def new_test_scanner():
     """Return a new instance of the Scanner class with predefined path."""
     new_names = Names()
     # Text file containing scanner tests for get_symbol
-    path = "logsim/tests/test_scanner.txt"
+    path = "logsim/test_scanner.txt"
     return Scanner(path, new_names)
 
 
