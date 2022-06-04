@@ -28,6 +28,8 @@ class Symbol:
         """Initialise symbol properties."""
         self.type = None
         self.id = None
+        self.line_number = None
+        self.line_position = None
 
 
 class Scanner:
@@ -161,6 +163,10 @@ class Scanner:
         symbol = Symbol()
         self.skip_spaces()  # Current character is now not whitespace
 
+        symbol.line_number = self.current_line
+        symbol.line_position = self.current_character_position
+
+
         if self.current_character.isalpha():  # Name
             name_string = self.get_name()
             # print(name_string) # For tests
@@ -202,7 +208,7 @@ class Scanner:
         elif self.current_character == "":  # End of File
             symbol.type = self.EOF
 
-        elif self.current_character == "#":
+        elif self.current_character == "#":  # Comment Check
             self.skip_comment()
             symbol = self.get_symbol()
 
