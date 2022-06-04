@@ -1370,7 +1370,7 @@ class Parser:
             self.eofcheck = self.circuit_description()
 
         if self.eofcheck == True:
-            for device in self.devices.devices_list:
+            # for device in self.devices.devices_list:
             #     print("Device", self.names.get_name_string(device.device_id),
             #           "Inputs:", device.inputs, "Outputs:", device.outputs)
             # print(self.devices.find_devices(self.devices.SWITCH))

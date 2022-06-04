@@ -77,7 +77,7 @@ class Scanner:
                               "monitors", "has", "have", "is", "are", "to",
                               "connected", "input", "inputs", "cycle",
                               "length", "AND", "OR", "NOR",
-                              "XOR", "NAND", "NOT" "DTYPE", "SWITCH", "CLOCK",
+                              "XOR", "NAND", "NOT", "DTYPE", "SWITCH", "CLOCK",
                               "HIGH", "LOW", "DATA", "CLK", "SET",
                               "CLEAR", "Q", "QBAR"]
         [self.devices_id, self.initialise_id, self.connections_id,
