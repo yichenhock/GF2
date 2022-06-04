@@ -40,16 +40,16 @@ class MonitorsTab(wx.Panel):
         self.monitors_list.InsertColumn(1, "")  # remove from monitor buttons
 
         # configure the drop down boxes
-        self.label_types = wx.StaticText(self, wx.ID_ANY, "Type")
+        self.label_types = wx.StaticText(self, wx.ID_ANY, _("Type"))
         self.combo_types = wx.ComboBox(self, wx.ID_ANY,
-                                       choices=['All', 'Gate', 'Switch',
-                                                'Clock', 'D-Type'],
+                                       choices=[_('All'), _('Gate'), _('Switch'),
+                                                _('Clock'), _('D-Type')],
                                        style=wx.CB_READONLY)
-        self.label_names = wx.StaticText(self, wx.ID_ANY, "Name")
+        self.label_names = wx.StaticText(self, wx.ID_ANY, _("Name"))
         self.combo_names = wx.ComboBox(
             self, wx.ID_ANY, choices=[], style=wx.CB_READONLY)
-        self.add_button = wx.Button(self, wx.ID_ANY, 'Add')
-        self.add_all_button = wx.Button(self, wx.ID_ANY, 'Add All')
+        self.add_button = wx.Button(self, wx.ID_ANY, _('Add'))
+        self.add_all_button = wx.Button(self, wx.ID_ANY, _('Add All'))
 
         # initialise the combo boxes with default values
         self.combo_types.SetValue("All")
@@ -79,7 +79,7 @@ class MonitorsTab(wx.Panel):
 
         # static boxes for layout
         self.static_box = wx.StaticBox(
-            self, wx.ID_ANY, "Add Component To Monitor")
+            self, wx.ID_ANY, _("Add Component To Monitor"))
         self.bottom_sizer = wx.StaticBoxSizer(self.static_box, wx.VERTICAL)
         self.bottom_sizer.Add(self.warning_text, 0, wx.ALL, 3)
         self.bottom_sizer.Add(self.grid_sizer, 0, wx.EXPAND | wx.ALL, 10)
@@ -176,7 +176,7 @@ class MonitorsTab(wx.Panel):
         attr = "signal_" + str(signal_id) + "_" + str(output_id)
         setattr(self, attr,
                 wx.ToggleButton(self.monitors_list, wx.ID_ANY,
-                                str("Remove")))
+                                str(_(u"Remove"))))
         button = getattr(self, attr)
         # Right cell is the remove button
         self.monitors_list.SetItemWindow(index, 1, button)
@@ -215,11 +215,11 @@ class MonitorsTab(wx.Panel):
         """Handle the event when the user adds a component to monitor."""
         name_to_add = self.combo_names.GetValue()
         if name_to_add == "":
-            self.statusbar.SetStatusText('Select a component first!')
+            self.statusbar.SetStatusText(_(u'Select a component first!'))
         else:
             monitored_signals = self.monitors.get_signal_names()[0]
             if name_to_add in monitored_signals:
-                self.statusbar.SetStatusText('Component already added!')
+                self.statusbar.SetStatusText(_(u'Component already added!'))
             else:
                 self.add_monitor(name_to_add)
 
@@ -239,8 +239,8 @@ class MonitorsTab(wx.Panel):
         self.monitors.make_monitor(signal_id, output_id)
         # append the component to the list
         self.append_to_monitors_list(name_to_add)
-        self.statusbar.SetStatusText('Added component to monitor.')
-        print('{} added to monitor.'.format(name_to_add))
+        self.statusbar.SetStatusText(_(u'Added component to monitor.'))
+        print(u'{} added to monitor.'.format(name_to_add))
 
     def get_signal_full_name(self, signal_id, output_id):
         """Get signal name from `signal_id` and `output_id`."""
@@ -265,8 +265,8 @@ class MonitorsTab(wx.Panel):
         self.monitors_list.DeleteItem(self.monitors_list
                                       .FindItem(-1, signal))
         self.displayed_signals.remove((signal_id, output_id))
-        self.statusbar.SetStatusText("Component removed from monitor.")
-        print('{} removed from monitor.'.format(
+        self.statusbar.SetStatusText(_(u"Component removed from monitor."))
+        print(_(u'{} removed from monitor.').format(
             self.names.get_name_string(signal_id)))
         try:
             self.canvas.render_signals(flush_pan=True)
@@ -283,4 +283,4 @@ class MonitorsTab(wx.Panel):
             self.warning_text.SetLabel('')
         else:
             self.warning_text.SetLabel(
-                " Reset simulation to add components!")
+                _(u" Reset simulation to add components!"))

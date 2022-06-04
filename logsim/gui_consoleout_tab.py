@@ -79,7 +79,7 @@ class ConsoleOutTab(wx.Panel):
 
         # self.commands.SetBackgroundColour("black")
         # self.commands.SetForegroundColour("white")
-        self.commands.SetHint('Type commands here')
+        self.commands.SetHint(_('Type commands here'))
 
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(self.log, wx.EXPAND, wx.EXPAND, 0)
@@ -111,17 +111,17 @@ class ConsoleOutTab(wx.Panel):
             self.continue_command()
         else:
             if command:
-                print("Error! Invalid command!")
+                print(_("Error! Invalid command!"))
 
     def help_command(self):
         """Print a list of valid commands."""
-        print("User commands:")
-        print("r N       - run the simulation for N cycles")
-        print("            (from scratch)")
-        print("c N       - continue the simulation for N")
-        print("            cycles")
-        print("s X N     - set switch X to N (0 or 1)")
-        print("h         - help (this command)")
+        print(_(u"User commands:"))
+        print("r N       - " + _(u"run the simulation for N cycles"))
+        print("            " + _(u"(from scratch)"))
+        print("c N       - " + _(u"continue the simulation for N"))
+        print("            " + _(u"cycles"))
+        print("s X N     - "+ _(u"set switch X to N (0 or 1)"))
+        print("h         - " + _(u"help (this command)"))
 
     def switch_command(self):
         """Set the specified switch to the specified signal level."""
@@ -130,10 +130,10 @@ class ConsoleOutTab(wx.Panel):
             switch_state = self.read_number(0, 1)
             if switch_state is not None:
                 if self.devices.set_switch(switch_id, switch_state):
-                    print("Successfully set switch.")
+                    print(_(u"Successfully set switch."))
                     self.inputsPanel.refresh_list()
                 else:
-                    print("Error! Invalid switch.")
+                    print(_(u"Error! Invalid switch."))
 
     def run_network(self, cycles):
         """Run the network for the specified number of simulation cycles.
@@ -145,8 +145,8 @@ class ConsoleOutTab(wx.Panel):
                 self.monitors.record_signals()
             else:
                 self.parent.GetParent().statusbar\
-                    .SetStatusText("Error! Network oscillating.")
-                print("Error! Network oscillating.")
+                    .SetStatusText(_("Error! Network oscillating."))
+                print(_(u"Error! Network oscillating."))
                 return False
         # self.monitors.display_signals()
         return True
@@ -161,7 +161,7 @@ class ConsoleOutTab(wx.Panel):
 
         if cycles is not None:  # if the number of cycles provided is valid
             self.monitors.reset_monitors()
-            print("".join(["Running for ", str(cycles), " cycle(s)"]))
+            print("".join([_(u"Running for "), str(cycles), _(" cycle(s)")]))
             self.devices.cold_startup()
             if self.run_network(cycles):
                 self.global_vars.cycles_completed += cycles
@@ -177,11 +177,11 @@ class ConsoleOutTab(wx.Panel):
 
         if cycles is not None:  # if the number of cycles provided is valid
             if self.global_vars.cycles_completed == 0:
-                print("Error! Nothing to continue. Run first.")
+                print(_(u"Error! Nothing to continue. Run first."))
             elif self.run_network(cycles):
                 self.global_vars.cycles_completed += cycles
-                print(" ".join(["Continuing for", str(cycles), "cycles.",
-                                "Total:",
+                print(" ".join([_(u"Continuing for"), str(cycles), _(u"cycles."),
+                                _(u"Total:"),
                                 str(self.global_vars.cycles_completed)]))
                 self.canvas.render_signals()
                 self.set_gui_state(True)
@@ -210,7 +210,7 @@ class ConsoleOutTab(wx.Panel):
         self.skip_spaces()
         name_string = ""
         if not self.character.isalpha():  # the string must start with a letter
-            print("Error! Expected a name.")
+            print(_(u"Error! Expected a name."))
             return None
         while self.character.isalnum():
             name_string = "".join([name_string, self.character])
@@ -228,7 +228,7 @@ class ConsoleOutTab(wx.Panel):
         else:
             name_id = self.names.query(name_string)
         if name_id is None:
-            print("Error! Unknown name.")
+            print(_(u"Error! Unknown name."))
         return name_id
 
     def read_signal_name(self):
@@ -256,7 +256,7 @@ class ConsoleOutTab(wx.Panel):
         self.skip_spaces()
         number_string = ""
         if not self.character.isdigit():
-            print("Error! Expected a number.")
+            print(_(u"Error! Expected a number."))
             return None
         while self.character.isdigit():
             number_string = "".join([number_string, self.character])
@@ -265,12 +265,12 @@ class ConsoleOutTab(wx.Panel):
 
         if upper_bound is not None:
             if number > upper_bound:
-                print("Number out of range.")
+                print(_(u"Number out of range."))
                 return None
 
         if lower_bound is not None:
             if number < lower_bound:
-                print("Number out of range.")
+                print(_(u"Number out of range."))
                 return None
 
         return number

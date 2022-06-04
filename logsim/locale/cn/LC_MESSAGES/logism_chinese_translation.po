@@ -1,0 +1,497 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2022-06-04 20:42+0100\n"
+"PO-Revision-Date: 2022-06-04 22:36+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: zh\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"Generated-By: pygettext.py 1.5\n"
+"X-Generator: Poedit 3.0.1\n"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:68
+msgid "Application must be run with a circuit definition file."
+msgstr "应用程序必须与电路定义文件一起运行。"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:136
+msgid "Output"
+msgstr "输出"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:137
+msgid "Circuit Definition"
+msgstr "电路定义"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:138
+msgid "Inputs"
+msgstr "导入"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:139
+msgid "Monitors"
+msgstr "监测"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:174
+msgid ""
+"Logic Simulator: interactive graphical user interface.\n"
+"Enter 'h' for help."
+msgstr ""
+"逻辑模拟器：交互式图形用户界面。\n"
+"输入“h”以获取帮助。"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:199
+msgid "Browse"
+msgstr "浏览"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:202
+msgid "Browse for a file"
+msgstr "浏览文件"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:203
+msgid "Save"
+msgstr "保存"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:206
+msgid "Save the file"
+msgstr "保存文件"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:207
+msgid "New"
+msgstr "新"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:210
+msgid "Create a new file"
+msgstr "制作新文件"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:212
+msgid "Compile"
+msgstr "编译代码"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:216
+msgid "Run"
+msgstr "运行"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:219
+msgid "Run the simulation"
+msgstr "运行模拟"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:220
+msgid "Continue"
+msgstr "继续"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:223
+msgid "Continue the simulation"
+msgstr "继续模拟"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:224
+msgid "Reset"
+msgstr "重置"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:227
+msgid "Reset the simulation"
+msgstr "重置模拟"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:233
+msgid "Cycles"
+msgstr "周期"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:236
+msgid "Save Plot"
+msgstr "保存图表"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:239
+msgid "Save signal trace as an image"
+msgstr "将图表另存为图像"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:240
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:243
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:410
+msgid "Help"
+msgstr "帮助"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:244
+msgid "Quit"
+msgstr "退出"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:247
+msgid "Quit Logic Simulator"
+msgstr "退出逻辑模拟器"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:273
+msgid ""
+"Logic Simulator\n"
+"Created by Yi Chen Hock, Michael                           Stevens and Cindy "
+"Wu\n"
+"2022"
+msgstr ""
+"逻辑模拟器\n"
+"由 Yi Chen Hock, Michael Stevens 和 Cindy Wu 创建\n"
+"2022"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:275
+msgid "About Logsim"
+msgstr "逻辑模拟器相关知识"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:283
+msgid "Number of simulation cycles set to: {}"
+msgstr "周期数量被设定为: {}"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:321
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:420
+msgid "Changes you made may not be saved."
+msgstr "您所做的更改未必保存."
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:322
+msgid "Quit application?"
+msgstr "退出应用软件?"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:333
+msgid "Compiling..."
+msgstr "正在编译."
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:355
+msgid "File saved and compiled successfully."
+msgstr "文件已保存"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:359
+msgid "File compiled with errors."
+msgstr "文件编译有错误."
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:363
+msgid "Parser failed to work :("
+msgstr "操你妈 :("
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:369
+msgid "No monitors."
+msgstr "没有显示器"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:373
+msgid "Run button pressed."
+msgstr "执行键被按下."
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:380
+msgid "Continue button pressed."
+msgstr "继续键被按下."
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:389
+msgid "Simulation reset."
+msgstr "模拟键重置."
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:390
+msgid "Reset button pressed."
+msgstr "重置键被按下"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:421
+msgid "Open a new file?"
+msgstr "打开新文件?"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:432
+msgid "Open File"
+msgstr "打开文件"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:448
+msgid "Error opening file."
+msgstr "打开文件出错."
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:449
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:488
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:515
+msgid "Error"
+msgstr "有错误"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:465
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:495
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:523
+msgid "Save File"
+msgstr "保存文件"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:466
+msgid "new_definition_file"
+msgstr "new definition file"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:467
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:525
+msgid "Text documents"
+msgstr "文本文件"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:487
+msgid "Error creating file."
+msgstr "错误制作文件."
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:490
+msgid "File created successfully in {}"
+msgstr "文件创建成功在{}"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:496
+msgid "image"
+msgstr "图片"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:497
+msgid "PNG files"
+msgstr "PNG 文件"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:514
+msgid "Error saving file."
+msgstr "保存文件出错."
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:518
+msgid "File saved."
+msgstr "文件已保存."
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_canvas.py:210
+msgid "Cycle"
+msgstr "周期"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_canvas.py:322
+msgid "Canvas redrawn on paint event, size is "
+msgstr "画布重绘在绘画事件, 方面是"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_circuitdef_tab.py:62
+msgid "Reset the simulation first to edit!"
+msgstr "首先重置模拟为了编辑"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:82
+msgid "Type commands here"
+msgstr "在这里打字指令"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:114
+msgid "Error! Invalid command!"
+msgstr "误差! 错误的指令!"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:118
+msgid "User commands:"
+msgstr "使用者指令"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:119
+msgid "run the simulation for N cycles"
+msgstr "运行模拟 N 个周期"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:120
+msgid "(from scratch)"
+msgstr "(从头开始)"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:121
+msgid "continue the simulation for N"
+msgstr "继续模拟 N"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:122
+msgid "cycles"
+msgstr "周期"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:123
+msgid "set switch X to N (0 or 1)"
+msgstr "开关 X 调成 N (0 或者 1)"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:124
+msgid "help (this command)"
+msgstr "帮助 (这个指令)"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:133
+msgid "Successfully set switch."
+msgstr "成功设置开关"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:136
+msgid "Error! Invalid switch."
+msgstr "有误差! 开关错误."
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:148
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:149
+msgid "Error! Network oscillating."
+msgstr "有误差! 电路摆动."
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:164
+msgid " cycle(s)"
+msgstr "周期"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:164
+msgid "Running for "
+msgstr "运行"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:180
+msgid "Error! Nothing to continue. Run first."
+msgstr "有误差! 没有什么可继续的. 先运行代码."
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:183
+msgid "Continuing for"
+msgstr "继续"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:183
+msgid "cycles."
+msgstr "周期."
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:184
+msgid "Total:"
+msgstr "总数"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:213
+msgid "Error! Expected a name."
+msgstr "有误差! 预料名."
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:231
+msgid "Error! Unknown name."
+msgstr "有误差! 未知的名."
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:259
+msgid "Error! Expected a number."
+msgstr "有误差! 预料数字."
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:268
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:273
+msgid "Number out of range."
+msgstr "数字"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_inputs_tab.py:67
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_inputs_tab.py:101
+msgid "ON"
+msgstr "开"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_inputs_tab.py:69
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_inputs_tab.py:109
+msgid "OFF"
+msgstr "关"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_inputs_tab.py:102
+msgid "Set switch {} to 1."
+msgstr "将开关{}设置为 1."
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_inputs_tab.py:105
+msgid "Switch {} set to 1."
+msgstr "将开关{}被设置为 1."
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_inputs_tab.py:110
+msgid "Set switch {} to 0."
+msgstr "将开关{}设置为 0."
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_inputs_tab.py:112
+msgid "Switch {} set to 0."
+msgstr "将开关{}被设置为 0."
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_monitors_tab.py:43
+msgid "Type"
+msgstr "机型"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_monitors_tab.py:45
+msgid "All"
+msgstr "所有"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_monitors_tab.py:45
+msgid "Gate"
+msgstr "逻辑门"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_monitors_tab.py:45
+msgid "Switch"
+msgstr "开关"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_monitors_tab.py:46
+msgid "Clock"
+msgstr "钟"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_monitors_tab.py:46
+msgid "D-Type"
+msgstr "D-型"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_monitors_tab.py:48
+msgid "Name"
+msgstr "名字"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_monitors_tab.py:51
+msgid "Add"
+msgstr "加"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_monitors_tab.py:52
+msgid "Add All"
+msgstr "全部加"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_monitors_tab.py:82
+msgid "Add Component To Monitor"
+msgstr "将组件添加到显示器"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_monitors_tab.py:179
+msgid "Remove"
+msgstr "消除"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_monitors_tab.py:218
+msgid "Select a component first!"
+msgstr "首先选择零件!"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_monitors_tab.py:222
+msgid "Component already added!"
+msgstr "零件已经被加了!"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_monitors_tab.py:242
+msgid "Added component to monitor."
+msgstr "零件添加到显示器."
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_monitors_tab.py:268
+msgid "Component removed from monitor."
+msgstr "从显示器中取出的零件."
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_monitors_tab.py:269
+msgid "{} removed from monitor."
+msgstr "从显示器中取出的 {}."
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_monitors_tab.py:286
+msgid " Reset simulation to add components!"
+msgstr "重置以添加构件!"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:17
+msgid "The I18N sample application"
+msgstr "The I18N sample application"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:28
+msgid "Close"
+msgstr "关"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:29
+msgid "Close the application"
+msgstr "关应用软件?"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:31
+msgid "&File"
+msgstr "&文件"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:36
+msgid "Edit something"
+msgstr "编辑东西"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:37
+msgid "Edit an entry of something"
+msgstr "编辑条目"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:40
+msgid "&Edit"
+msgstr "&编辑"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:45
+msgid "&About"
+msgstr "&关于"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:46
+msgid "About the program"
+msgstr "关于软件"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:48
+msgid "&Help"
+msgstr "&帮助"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:58
+msgid "A nice label for the TextCtrl"
+msgstr "A nice label for the TextCtrl"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:63
+msgid "a search control"
+msgstr "a search control"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:70
+msgid "Open a file dialog"
+msgstr "打开文件对白"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:82
+msgid "Choose a file"
+msgstr "选择文件"

@@ -64,9 +64,9 @@ class InputsTab(wx.Panel):
         state = initial_state == 1
 
         if state:
-            button_label = "ON"
+            button_label = _("ON")
         else:
-            button_label = "OFF"
+            button_label = _("OFF")
 
         index = self.switch_list.InsertStringItem(i, switch_name)
         attr = "switch_" + str(switch_id)
@@ -98,18 +98,18 @@ class InputsTab(wx.Panel):
         state = event.GetEventObject().GetValue()
         switch_id = event.GetEventObject().switch_id
         if state:
-            event.GetEventObject().SetLabel("ON")
-            self.statusbar.SetStatusText("Set switch {} to 1.".format(
+            event.GetEventObject().SetLabel(_(u"ON"))
+            self.statusbar.SetStatusText(_("Set switch {} to 1.").format(
                 self.names.get_name_string(switch_id)))
             self.devices.set_switch(switch_id, 1)
-            print("Switch {} set to 1.".format(
+            print(_(u"Switch {} set to 1.").format(
                 self.names.get_name_string(switch_id)))
             event.GetEventObject().SetForegroundColour('green')
         else:
-            event.GetEventObject().SetLabel("OFF")
-            self.statusbar.SetStatusText("Set switch {} to 0.".format(
+            event.GetEventObject().SetLabel(_(u"OFF"))
+            self.statusbar.SetStatusText(_("Set switch {} to 0.").format(
                 self.names.get_name_string(switch_id)))
-            print("Switch {} set to 0.".format(
+            print(_(u"Switch {} set to 0.").format(
                 self.names.get_name_string(switch_id)))
             self.devices.set_switch(switch_id, 0)
             event.GetEventObject().SetForegroundColour('red')
