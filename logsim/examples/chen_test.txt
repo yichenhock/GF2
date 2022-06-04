@@ -1,6 +1,7 @@
 devices( 
-      a, q, b is 
+      a, q, b are 
 AND;
+      c is XOR;
       sw, sw1 is SWITCH;      
       clk is CLOCK;
 
@@ -10,4 +11,5 @@ initialise(
     sw, sw1 is HIGH; 
     clk cycle 100;
     a, q has 4 inputs;
+    c has 3 inputs;
 )

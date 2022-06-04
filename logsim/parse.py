@@ -25,7 +25,9 @@ from error import (
     WrongSwitchName,
     WrongClockName,
     InvalidClockLength,
-    InvalidInputNumber
+    InvalidInputNumber,
+    InvalidXORInputNumber,
+    InvalidNOTInputNumber
 )
 
 # Syntax errors
@@ -394,7 +396,13 @@ class Parser:
                 self.scanner.DTYPE_id]
         checking_devices = True
         device_symbols = []
+
+        has_XOR = False
+        has_NOT = False
+
         while checking_devices:
+            symbol = next_sym
+            
             if next_sym.type != self.scanner.NAME:
                 raise InvalidDeviceName(next_sym)
                 
@@ -406,11 +414,17 @@ class Parser:
             if device_type not in device_types:
                 raise InvalidDeviceName(next_sym, device_name)
             
+            if device_type == self.scanner.XOR_id:
+                has_XOR = True 
+            # elif device_type == self.scanner.NOT_id:
+            #     has_NOT = True
+
             device_symbols.append(next_sym)
             
             next_sym = self.scanner.get_symbol()
             # next one is either a connection word or a comma
             if next_sym.id in connect:
+                
                 checking_devices = False
                 next_sym = self.scanner.get_symbol()
                 # define number of inputs
@@ -419,8 +433,19 @@ class Parser:
                 # XOR has two inputs
                 
                 if next_sym.type == self.scanner.NUMBER:
-                    if next_sym.id > 16:
-                        raise InvalidInputNumber(next_sym)
+                    # if XOR, inputs need to be exactly 2
+                    
+                    if has_XOR:
+                        if next_sym.id != 2:
+                            raise InvalidXORInputNumber(next_sym) # XOR inputs error
+                    #if NOT, inputs need to be exactly 1
+                    #elif has_NOT:
+                        # if next_sym.id != 1:
+                        #     raise InvalidNOTInputNumber# NOT inputs error
+                    else:
+                        if next_sym.id > 16:
+                            raise InvalidInputNumber(next_sym)
+
                     input_number = next_sym.id
                     # check if the next symbol says 'inputs'
                     next_sym = self.scanner.get_symbol()

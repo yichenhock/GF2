@@ -62,6 +62,15 @@ class InvalidInputNumber(ParserSemanticError):
         message = "Number of inputs must be between 1-16."
         super().__init__(symbol, message)
 
+class InvalidXORInputNumber(ParserSemanticError):
+    def __init__(self, symbol): 
+        message = "Number of inputs for XOR must be 2."
+        super().__init__(symbol, message)
+
+class InvalidNOTInputNumber(ParserSemanticError):
+    def __init__(self, symbol): 
+        message = "Number of inputs for NOT must be 1."
+        super().__init__(symbol, message)
 #===========================================================================================================
 #===========================================================================================================
 
