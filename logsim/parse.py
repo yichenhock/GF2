@@ -820,6 +820,8 @@ class Parser:
         self.check_all_inputs_connected()
         self.print_errors()
         
+        self.scanner.file.close()
+
         return len(self.syntax_errors) == 0 and \
             len(self.semantic_errors) == 0 and \
             len(self.input_not_connected_errors) == 0
