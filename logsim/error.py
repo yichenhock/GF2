@@ -61,6 +61,21 @@ class InvalidDeviceRule(ParserSyntaxError):
         message = "Invalid device statement (expected ',' or 'is'/'are')."
         super().__init__(symbol, message)
 
+class InvalidInitDeviceRule(ParserSyntaxError):
+    def __init__(self, symbol): 
+        message = "Invalid initialise statement (expected ',' or 'has'/'have')."
+        super().__init__(symbol, message)
+
+class InvalidInitSwitchRule(ParserSyntaxError):
+    def __init__(self, symbol): 
+        message = "Invalid initialise statement (expected ',' or 'is'/'are')."
+        super().__init__(symbol, message)
+
+class InvalidInitClockRule(ParserSyntaxError):
+    def __init__(self, symbol): 
+        message = "Invalid initialise statement (expected ',' or 'cycle'/'cycle length')."
+        super().__init__(symbol, message)
+
 class DeviceTypeError(ParserSyntaxError):
     def __init__(self, symbol): 
         message = "Expected a device type."
@@ -74,6 +89,26 @@ class InvalidDeviceName(ParserSyntaxError):
 class WrongDeviceName(ParserSyntaxError):
     def __init__(self, symbol, name): 
         message = "Device name should not be {} (must not begin with 'sw' or 'clk').".format(name)
+        super().__init__(symbol, message)
+
+class InvalidClockName(ParserSyntaxError):
+    def __init__(self, symbol): 
+        message = "Expected a clock name."
+        super().__init__(symbol, message)
+
+class InvalidSwitchName(ParserSyntaxError):
+    def __init__(self, symbol): 
+        message = "Expected a switch name."
+        super().__init__(symbol, message)
+
+class InvalidSwitchState(ParserSyntaxError):
+    def __init__(self, symbol): 
+        message = "Expected 'HIGH' or 'LOW'."
+        super().__init__(symbol, message)
+
+class InvalidClockLength(ParserSyntaxError):
+    def __init__(self, symbol): 
+        message = "Clock length needs to be an integer between 1 and 1000."
         super().__init__(symbol, message)
 
 class WrongSwitchName(ParserSyntaxError):

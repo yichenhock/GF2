@@ -1,7 +1,10 @@
 devices( 
-      sw, q, b is 
+      a, q, b is 
 AND;
-      clk is SWITCH;      
-      a is CLOCK;
+      sw, sw1 is SWITCH;      
+      clk is CLOCK;
 
 )
+
+initialise(
+    sw, sw1 is HIGH;clk cycle 100;)

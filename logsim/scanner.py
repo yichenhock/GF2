@@ -66,9 +66,6 @@ class Scanner:
 
         self.names = names
 
-        # self.type_list = [",", ".", ";", "=",
-        #                   "(", ")", "keyword", "number", "name"]
-        
         # Define all symbol types
         self.symbol_type_list = [self.COMMA, self.DOT, self.SEMICOLON,
                                  self.EQUALS, self.OPEN_BRACKET,
@@ -130,11 +127,8 @@ class Scanner:
 
     def print_error_line(self, line_number, line_position, error_message=""):
         """Print current line with marker pointing where the error is."""
-        # print("Error type:", error_type)
 
         print("Line {}, {}: {}".format(line_number, line_position, error_message))
-        # print(self.lines[self.current_line])
-        # print(" " * (self.current_character_position - 1) + "^ Error here")
         print(self.lines[line_number])
         print(" " * (line_position - 1) + "^ Error here")
         # self.skip_line()
