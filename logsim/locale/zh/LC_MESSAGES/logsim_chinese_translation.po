@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2022-06-04 20:42+0100\n"
-"PO-Revision-Date: 2022-06-05 17:15+0100\n"
+"POT-Creation-Date: 2022-06-04 23:38+0100\n"
+"PO-Revision-Date: 2022-06-05 17:43+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: zh\n"
@@ -213,6 +213,7 @@ msgid "Save File"
 msgstr "保存文件"
 
 #: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:466
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:524
 msgid "new_definition_file"
 msgstr "操你妈"
 
@@ -496,3 +497,15 @@ msgstr "打开文件对白"
 #: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:82
 msgid "Choose a file"
 msgstr "选择文件"
+
+#, fuzzy
+#~ msgid "&Save As"
+#~ msgstr "保存"
+
+#, fuzzy
+#~ msgid "Compile the circuit definition"
+#~ msgstr "电路定义"
+
+#, fuzzy
+#~ msgid "Logic Simulator"
+#~ msgstr "退出逻辑模拟器"

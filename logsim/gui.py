@@ -55,6 +55,8 @@ class Gui(wx.Frame):
 
         self.SetIcon(wx.Icon('logsim/imgs/favicon.ico'))
 
+        self.SetTitle(_(u"Logic Simulator"))
+
         self.path = path
         self.names = names
         self.devices = devices

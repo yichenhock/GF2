@@ -42,6 +42,7 @@ pyGettext = os.path.join(pyI18nFolder, 'pygettext.py')
 pyMsgfmt = os.path.join(pyI18nFolder, 'msgfmt.py')
 outFolder = os.path.join(appFolder, 'locale')
 encoding = "zh_CN[.UTF-8]"
+potLocation = os.path.join(outFolder, 'logsim_chinese_translation.pot')
 
 # build command for pygettext
 gtOptions = '-a -d %s -o %s.pot -p %s %s'
@@ -65,3 +66,5 @@ for tLang in supportedLang:
     print ("cmd: %s" % tCmd)
     rCode = subprocess.call(tCmd)
     print ("return code: %s\n\n" % rCode)
+    #rCode2 = subprocess.call('msgmerge -U ' + poFile + ' ' + potLocation)
+    #print("return code for merge: %s\n\n" % rCode2)
