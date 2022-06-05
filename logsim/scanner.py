@@ -77,15 +77,15 @@ class Scanner:
                               "monitors", "has", "have", "is", "are", "to",
                               "connected", "input", "inputs", "cycle",
                               "length", "AND", "OR", "NOR",
-                              "XOR", "NAND", "DTYPE", "SWITCH", "CLOCK",
+                              "XOR", "NAND", "NOT", "DTYPE", "SWITCH", "CLOCK",
                               "HIGH", "LOW", "DATA", "CLK", "SET",
                               "CLEAR", "Q", "QBAR"]
         [self.devices_id, self.initialise_id, self.connections_id,
          self.monitors_id, self.has_id, self.have_id, self.is_id, self.are_id,
          self.to_id, self.connected_id, self.input_id, self.inputs_id,
          self.cycle_id, self.length_id, self.AND_id,
-         self.OR_id, self.NOR_id, self.XOR_id, self.NAND_id, self.DTYPE_id,
-         self.SWITCH_id, self.CLOCK_id, self.HIGH_id, self.LOW_id,
+         self.OR_id, self.NOR_id, self.XOR_id, self.NAND_id, self.NOT_id,
+         self.DTYPE_id, self.SWITCH_id, self.CLOCK_id, self.HIGH_id, self.LOW_id,
          self.DATA_id, self.CLK_id, self.SET_id, self.CLEAR_id, self.Q_id,
          self.QBAR_id] = self.names.lookup(self.keywords_list)
 

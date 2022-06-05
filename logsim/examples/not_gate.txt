@@ -1,0 +1,20 @@
+# Simple NOT gate;
+
+devices(
+
+	sw1 is SWITCH;
+	a is NOT;
+)
+
+initialise(
+	sw1 is HIGH;
+	a has 1 input;
+)
+
+connections(
+		sw1 is connected to a.I1;
+)
+
+monitors(
+	sw1, a;
+)
