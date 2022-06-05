@@ -104,8 +104,6 @@ class Parser:
         self.input_symbols = []
         self.output_symbol = None  # (output_id_symbol, output_port_id_symbol)
 
-        self.monitor_symbols = []  # all symbols that can possibly be monitored
-
     def devices_block(self, symbol):
         """Check if symbols form a device block.
 
