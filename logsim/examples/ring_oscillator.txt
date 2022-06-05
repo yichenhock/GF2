@@ -9,17 +9,11 @@ initialise(
 )
 
 connections(
-    a(
         c to a.I1;
-    )
 
-    b(  
         a to b.I1;
-    )
 
-    c(  
         b to c.I1;
-    )
 )
 
 monitors(

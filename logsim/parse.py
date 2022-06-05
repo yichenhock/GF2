@@ -725,7 +725,6 @@ class Parser:
             input_port_id = None
             if input_port_symbol:
                 input_port_id = input_port_symbol.id
-
             self.network.make_connection(
                 input_id, input_port_id, output_id, output_port_id)
 

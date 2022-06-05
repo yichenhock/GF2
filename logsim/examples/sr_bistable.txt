@@ -13,25 +13,17 @@ initialise(
 )
 
 connections(
-    a(
         sw1 to a.I1;
         clk1 to a.I2;
-    )
 
-    b(  
         clk1 to b.I1;
         sw2 to b.I2;
-    )
 
-    c(  
         a to c.I1;
         d to c.I2;
-    )
 
-    d(  
         c to d.I1;
         b to d.I2;
-    )
 )
 
 monitors(

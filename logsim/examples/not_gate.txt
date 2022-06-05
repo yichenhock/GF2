@@ -1,8 +1,9 @@
 # Simple NOT gate;
 
 devices(
-	a is NOT;
+
 	sw1 is SWITCH;
+	a is NOT;
 )
 
 initialise(

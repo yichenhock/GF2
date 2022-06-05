@@ -119,9 +119,7 @@ class Network:
         """
         first_device = self.devices.get_device(first_device_id)
         second_device = self.devices.get_device(second_device_id)
-
         if first_device is None or second_device is None:
-            print("Device absent")
             error_type = self.DEVICE_ABSENT
             print("Device absent")
 
