@@ -133,6 +133,7 @@ class Parser:
                      self.scanner.OR_id,
                      self.scanner.NOR_id,
                      self.scanner.XOR_id,
+                     self.scanner.NOT_id,
                      self.scanner.NAND_id,
                      self.scanner.DTYPE_id,
                      self.scanner.SWITCH_id,
@@ -405,6 +406,7 @@ class Parser:
                         self.scanner.OR_id,
                         self.scanner.NOR_id,
                         self.scanner.XOR_id,
+                        self.scanner.NOT_id,
                         self.scanner.NAND_id]
         checking_devices = True
         device_symbols = []
@@ -429,8 +431,8 @@ class Parser:
 
             elif device_type == self.scanner.XOR_id:
                 has_XOR = True
-            # elif device_type == self.scanner.NOT_id:
-            #     has_NOT = True
+            elif device_type == self.scanner.NOT_id:
+                has_NOT = True
 
             device_symbols.append(next_sym)
 
@@ -453,9 +455,9 @@ class Parser:
                             raise InvalidXORInputNumber(
                                 next_sym)  # XOR inputs error
                     # if NOT, inputs need to be exactly 1
-                    # elif has_NOT:
-                        # if next_sym.id != 1:
-                        #     raise InvalidNOTInputNumber# NOT inputs error
+                    elif has_NOT:
+                        if next_sym.id != 1:
+                            raise InvalidNOTInputNumber# NOT inputs error
                     else:
                         if next_sym.id > 16:
                             raise InvalidInputNumber(next_sym)
@@ -627,6 +629,7 @@ class Parser:
                              self.scanner.OR_id,
                              self.scanner.NOR_id,
                              self.scanner.XOR_id,
+                             self.scanner.NOT_id,
                              self.scanner.NAND_id]
 
         if device_type == self.scanner.DTYPE_id:

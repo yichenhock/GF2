@@ -324,6 +324,7 @@ class Devices:
                     error_type = self.QUALIFIER_PRESENT
                 else:
                     self.make_gate(device_id, device_kind, 1)
+                    error_type = self.NO_ERROR
 
             else:  # other gates
                 if device_property is None:
