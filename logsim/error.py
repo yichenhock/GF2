@@ -77,15 +77,15 @@ class InvalidInputNumber(ParserSemanticError):
         super().__init__(symbol, message)
 
 
-class InvalidXORInputNumber(ParserSemanticError):
+class AttemptToDefineXORInputs(ParserSemanticError):
     def __init__(self, symbol):
-        message = "Number of inputs for XOR must be 2."
+        message = "XOR input number does not need to be specified (2 inputs by default)."
         super().__init__(symbol, message)
 
 
-class InvalidNOTInputNumber(ParserSemanticError):
+class AttemptToDefineNOTInputs(ParserSemanticError):
     def __init__(self, symbol):
-        message = "Number of inputs for NOT must be 1."
+        message = "NOT gate input number does not need to be specified (1 input by default)."
         super().__init__(symbol, message)
 
 

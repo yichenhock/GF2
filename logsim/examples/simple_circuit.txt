@@ -15,20 +15,14 @@ initialise(
 )
 
 connections(
-    a(
         sw1 is connected to a.I1;
         sw2 is connected to a.I2;
-    )
 
-    b(  
         sw1 is connected to b.I1;
         sw2 is connected to b.I2;
-    )
 
-    c(  
         a is connected to c.I1;
         b is connected to c.I2;
-    )
 )
 
 monitors(

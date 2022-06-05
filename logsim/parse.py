@@ -26,8 +26,8 @@ from error import (
     WrongClockName,
     InvalidClockLength,
     InvalidInputNumber,
-    InvalidXORInputNumber,
-    InvalidNOTInputNumber,
+    AttemptToDefineXORInputs,
+    AttemptToDefineNOTInputs,
     AttemptToDefineDTYPEInputs,
     NoDTYPEOutputPortError,
     InvalidBlockHeaderOrder
@@ -104,8 +104,6 @@ class Parser:
         self.input_symbols = []
         self.output_symbol = None  # (output_id_symbol, output_port_id_symbol)
 
-        self.monitor_symbols = []  # all symbols that can possibly be monitored
-
     def devices_block(self, symbol):
         """Check if symbols form a device block.
 
@@ -133,6 +131,7 @@ class Parser:
                      self.scanner.OR_id,
                      self.scanner.NOR_id,
                      self.scanner.XOR_id,
+                     self.scanner.NOT_id,
                      self.scanner.NAND_id,
                      self.scanner.DTYPE_id,
                      self.scanner.SWITCH_id,
@@ -405,12 +404,10 @@ class Parser:
                         self.scanner.OR_id,
                         self.scanner.NOR_id,
                         self.scanner.XOR_id,
+                        self.scanner.NOT_id,
                         self.scanner.NAND_id]
         checking_devices = True
         device_symbols = []
-
-        has_XOR = False
-        has_NOT = False
 
         while checking_devices:
             symbol = next_sym
@@ -428,9 +425,10 @@ class Parser:
                 raise AttemptToDefineDTYPEInputs(next_sym)
 
             elif device_type == self.scanner.XOR_id:
-                has_XOR = True
-            # elif device_type == self.scanner.NOT_id:
-            #     has_NOT = True
+                raise AttemptToDefineXORInputs(next_sym)
+
+            elif device_type == self.scanner.NOT_id:
+                raise AttemptToDefineNOTInputs(next_sym)
 
             device_symbols.append(next_sym)
 
@@ -446,19 +444,8 @@ class Parser:
                 # XOR has two inputs
 
                 if next_sym.type == self.scanner.NUMBER:
-                    # if XOR, inputs need to be exactly 2
-
-                    if has_XOR:
-                        if next_sym.id != 2:
-                            raise InvalidXORInputNumber(
-                                next_sym)  # XOR inputs error
-                    # if NOT, inputs need to be exactly 1
-                    # elif has_NOT:
-                        # if next_sym.id != 1:
-                        #     raise InvalidNOTInputNumber# NOT inputs error
-                    else:
-                        if next_sym.id > 16:
-                            raise InvalidInputNumber(next_sym)
+                    if next_sym.id > 16:
+                        raise InvalidInputNumber(next_sym)
 
                     input_number = next_sym.id
                     # check if the next symbol says 'inputs'
@@ -627,6 +614,7 @@ class Parser:
                              self.scanner.OR_id,
                              self.scanner.NOR_id,
                              self.scanner.XOR_id,
+                             self.scanner.NOT_id,
                              self.scanner.NAND_id]
 
         if device_type == self.scanner.DTYPE_id:
@@ -722,7 +710,6 @@ class Parser:
             input_port_id = None
             if input_port_symbol:
                 input_port_id = input_port_symbol.id
-
             self.network.make_connection(
                 input_id, input_port_id, output_id, output_port_id)
 

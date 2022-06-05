@@ -119,9 +119,7 @@ class Network:
         """
         first_device = self.devices.get_device(first_device_id)
         second_device = self.devices.get_device(second_device_id)
-
         if first_device is None or second_device is None:
-            print("Device absent")
             error_type = self.DEVICE_ABSENT
             print("Device absent")
 
@@ -140,7 +138,7 @@ class Network:
                 first_device.inputs[first_port_id] = (second_device_id,
                                                       second_port_id)
                 error_type = self.NO_ERROR
-                # print("No error")
+                print("No error")
             else:  # second_port_id is not a valid input or output port
                 print("Second port absent")
                 error_type = self.PORT_ABSENT
@@ -250,11 +248,15 @@ class Network:
                 return False
             input_signal_list.append(input_signal)
 
-            if device.device_kind != self.devices.XOR:
+            if device.device_kind != (self.devices.XOR or self.devices.NOT):
                 if input_signal != x:
                     output_signal = self.invert_signal(y)
                     break
                 output_signal = y
+        
+        if device.device_kind == self.devices.NOT:
+            # Output is opposite of input
+            output_signal = self.invert_signal(input_signal)
 
         if device.device_kind == self.devices.XOR:
             # Output is high only if both inputs are different
@@ -376,6 +378,7 @@ class Network:
         nand_devices = self.devices.find_devices(self.devices.NAND)
         nor_devices = self.devices.find_devices(self.devices.NOR)
         xor_devices = self.devices.find_devices(self.devices.XOR)
+        not_devices = self.devices.find_devices(self.devices.NOT)
 
         # This sets clock signals to RISING or FALLING, where necessary
         self.update_clocks()
@@ -417,6 +420,9 @@ class Network:
                                          self.devices.HIGH):
                     return False
             for device_id in xor_devices:  # execute XOR devices
+                if not self.execute_gate(device_id, None, None):
+                    return False
+            for device_id in not_devices:  # execute NOT devices
                 if not self.execute_gate(device_id, None, None):
                     return False
             if self.steady_state:

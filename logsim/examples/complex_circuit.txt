@@ -12,24 +12,18 @@ initialise(
 )
 
 connections(
-    e(
         clk1 to e.CLK;
         e.QBAR to e.DATA;
         sw1 to e.SET;
         sw2 to e.CLEAR;
-    )
 
-    f(
         e.Q to f.CLK;
         f.QBAR to f.DATA;
         sw1 to f.SET;
         sw2 to f.CLEAR;
-    )
 
-    g(
         e.Q to g.I1;
         f.Q to g.I2;
-    )
 )
 
 monitors(
