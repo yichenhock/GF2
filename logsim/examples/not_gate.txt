@@ -11,9 +11,7 @@ initialise(
 )
 
 connections(
-	a(
 		sw1 is connected to a.I1;
-	)
 )
 
 monitors(
