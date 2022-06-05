@@ -53,7 +53,8 @@ from error import (
     ConnectedToError,
     OutputPortError,
     InputPortError,
-    DotError
+    DotError,
+    ExtraInfoAfterMonitors
 )
 
 
@@ -810,20 +811,29 @@ class Parser:
 
         header_index = 0
 
+        if symbol.type == self.scanner.EOF:
+            # Blank file
+            print('Definition file is blank!')
+            return True
+
         # keep checking symbols until the end of the file
         while symbol.type != self.scanner.EOF:
             try:
                 if symbol.type == self.scanner.KEYWORD:
-                    
+
+                    if header_index == 4:
+                        raise ExtraInfoAfterMonitors(symbol)
+
                     if symbol.id == header_order[header_index]:
                         next_sym = header_functions[header_index](symbol)
                         header_index += 1
                     else:
-
                         raise InvalidBlockHeaderOrder(
                             symbol)  # expected a block header
 
                 else:
+                    if header_index == 4:
+                        raise ExtraInfoAfterMonitors(symbol)
                     raise InvalidBlockHeader(symbol)  # expected a keyword
             except ParserError as e:
                 # add the error
