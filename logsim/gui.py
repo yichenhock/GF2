@@ -275,8 +275,7 @@ class Gui(wx.Frame):
         if Id == wx.ID_EXIT:
             self.Close(True)
         if Id == wx.ID_ABOUT:
-            wx.MessageBox(_(u"Logic Simulator\nCreated by Yi Chen Hock, Michael \
-                          Stevens and Cindy Wu\n2022"),
+            wx.MessageBox(_(u"Logic Simulator\nCreated by Yi Chen Hock, Michael Stevens and Cindy Wu\n2022"),
                           _(u"About Logsim"), wx.ICON_INFORMATION | wx.OK)
         if Id == wx.ID_SAVEAS:
             self.save_file_as()
@@ -456,10 +455,15 @@ class Gui(wx.Frame):
         self.path = pathname
         try:
             self.statusbar.SetStatusText(pathname, 1)
+            # write to circuit definition panel
             self.circuitDefPanel.replace_text(f.read())
+            # flush the console output
+            self.consoleOutPanel.clear_console()
+            print(_(u"Logic Simulator: interactive graphical user interface.\n"
+              "Enter 'h' for help."))
+
         except AttributeError:
             pass
-        # write to circuit definition panel
         self.global_vars.def_edited = False
         f.close()
         return True
