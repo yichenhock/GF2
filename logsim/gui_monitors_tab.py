@@ -46,8 +46,8 @@ class MonitorsTab(wx.Panel):
         self.label_types = wx.StaticText(self, wx.ID_ANY, _(u"Type"))
         self.label_types.SetFont(font)
         self.combo_types = wx.ComboBox(self, wx.ID_ANY,
-                                       choices=[_(u"All"), _(u"Gate"), _(u"Switch"),
-                                                _(u"Clock"), _(u"D-Type")],
+                                       choices=[_(u"ALL"), _(u"GATE"), _(u"SWITCH"),
+                                                _(u"CLOCK"), _(u"D-TYPE")],
                                        style=wx.CB_READONLY)
         self.combo_types.SetFont(font)
         self.label_names = wx.StaticText(self, wx.ID_ANY, _(u"Name"))
@@ -57,7 +57,7 @@ class MonitorsTab(wx.Panel):
         self.add_all_button = wx.Button(self, wx.ID_ANY, _(u"Add All"))
 
         # initialise the combo boxes with default values
-        self.combo_types.SetValue(_(u"All"))
+        self.combo_types.SetValue(_(u"ALL"))
         # self.initialise_combo_names()
         # self.initialise_monitor_list()
 
@@ -103,10 +103,10 @@ class MonitorsTab(wx.Panel):
 
     def on_combo_type_select(self, event):
         """Update `combo_names` when a component type is selected."""
-        if self.combo_types.GetValue() == _(u"All"):
+        if self.combo_types.GetValue() == _(u"ALL"):
             self.initialise_combo_names()
 
-        elif self.combo_types.GetValue() == _(u"Gate"):
+        elif self.combo_types.GetValue() == _(u"GATE"):
             gate_ids = []
             gate_ids.extend(self.devices.find_devices(self.devices.AND))
             gate_ids.extend(self.devices.find_devices(self.devices.OR))
@@ -117,17 +117,17 @@ class MonitorsTab(wx.Panel):
             self.refresh_combo_names(
                 [self.names.get_name_string(id) for id in gate_ids])
 
-        elif self.combo_types.GetValue() == _(u"Switch"):
+        elif self.combo_types.GetValue() == _(u"SWITCH"):
             switch_ids = self.devices.find_devices(self.devices.SWITCH)
             self.refresh_combo_names(
                 [self.names.get_name_string(id) for id in switch_ids])
 
-        elif self.combo_types.GetValue() == _(u"Clock"):
+        elif self.combo_types.GetValue() == _(u"CLOCK"):
             clock_ids = self.devices.find_devices(self.devices.CLOCK)
             self.refresh_combo_names(
                 [self.names.get_name_string(id) for id in clock_ids])
 
-        elif self.combo_types.GetValue() == _(u"D-Type"):  # DTYPE IS SPECIAL!
+        elif self.combo_types.GetValue() == _(u"D-TYPE"):  # DTYPE IS SPECIAL!
             dtype_ids = self.devices.find_devices(self.devices.D_TYPE)
             self.refresh_combo_names(
                 [self.names.get_name_string(id) for id in dtype_ids])

@@ -800,6 +800,7 @@ class Parser:
     def parse_network(self):
         """Parse the circuit definition file."""
         symbol = self.scanner.get_symbol()
+        print('\n---------- COMPLING SIMULATION ----------')
 
         # blocks need to be discovered in the right order and not repeated
         header_order = [self.scanner.devices_id, self.scanner.initialise_id,
@@ -813,7 +814,7 @@ class Parser:
         while symbol.type != self.scanner.EOF:
             try:
                 if symbol.type == self.scanner.KEYWORD:
-
+                    
                     if symbol.id == header_order[header_index]:
                         next_sym = header_functions[header_index](symbol)
                         header_index += 1
@@ -836,6 +837,11 @@ class Parser:
 
         self.scanner.file.close()
 
-        return len(self.syntax_errors) == 0 and \
+        success = len(self.syntax_errors) == 0 and \
             len(self.semantic_errors) == 0 and \
             len(self.input_not_connected_errors) == 0
+        
+        if success: 
+            print('File compiled successfully with 0 errors.')
+
+        return success
