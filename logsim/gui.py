@@ -18,6 +18,7 @@ from monitors import Monitors
 from scanner import Scanner
 from parse import Parser
 
+from gui_connections_tab import ConnectionsTab
 from gui_consoleout_tab import ConsoleOutTab
 from gui_circuitdef_tab import CircuitDefTab
 from gui_inputs_tab import InputsTab
@@ -121,6 +122,8 @@ class Gui(wx.Frame):
             notebook, names, devices, self.canvas, self.statusbar)
         self.monitorsPanel = MonitorsTab(
             notebook, names, devices, monitors, self.canvas, self.statusbar)
+        self.connectionsPanel = ConnectionsTab(
+            notebook, names, devices, self.canvas, self.statusbar)
 
         self.consoleOutPanel = ConsoleOutTab(notebook, self.path, names,
                                              devices, network,
@@ -134,20 +137,22 @@ class Gui(wx.Frame):
             self.circuitDefPanel.replace_text(f.read())
 
         notebook.AddPage(self.consoleOutPanel, _(u"Output"), True)
-        notebook.AddPage(self.circuitDefPanel, _(u"Circuit Definition"), False)
+        notebook.AddPage(self.circuitDefPanel, _(u"Definition"), False)
         notebook.AddPage(self.inputsPanel, _(u"Inputs"), False)
         notebook.AddPage(self.monitorsPanel, _(u"Monitors"), False)
+        notebook.AddPage(self.connectionsPanel, _(u"Connections"), False)
 
         # disable close buttons
         notebook.SetCloseButton(0, False)
         notebook.SetCloseButton(1, False)
         notebook.SetCloseButton(2, False)
         notebook.SetCloseButton(3, False)
+        notebook.SetCloseButton(4, False)
 
         self.mgr.AddPane(notebook,
                          aui.AuiPaneInfo().CaptionVisible(False).
                          Right().PaneBorder(False).Floatable(False)
-                         .GripperTop(False).MinSize(330, 150)
+                         .GripperTop(False).MinSize(340, 150)
                          .CloseButton(False))
 
         # setting docking guides fixes docking issue (problem with wxTimer)
