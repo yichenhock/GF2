@@ -41,6 +41,7 @@ pyI18nFolder = os.path.join(pyToolsFolder, 'i18n')
 pyGettext = os.path.join(pyI18nFolder, 'pygettext.py')
 pyMsgfmt = os.path.join(pyI18nFolder, 'msgfmt.py')
 outFolder = os.path.join(appFolder, 'locale')
+encoding = "zh_CN[.UTF-8]"
 
 # build command for pygettext
 gtOptions = '-a -d %s -o %s.pot -p %s %s'
@@ -48,6 +49,7 @@ tCmd = pyExe + ' ' + pyGettext + ' ' + (gtOptions % (appC.langDomain,
                                                      appC.langDomain,
                                                      outFolder,
                                                      appFolder))
+                                                     
 print ("Generating the .pot file")
 print ("cmd: %s" % tCmd)
 rCode = subprocess.call(tCmd)

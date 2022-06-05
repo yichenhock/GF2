@@ -46,18 +46,18 @@ class MonitorsTab(wx.Panel):
         self.label_types = wx.StaticText(self, wx.ID_ANY, _(u"Type"))
         self.label_types.SetFont(font)
         self.combo_types = wx.ComboBox(self, wx.ID_ANY,
-                                       choices=[_(u'All'), _(u'Gate'), _(u'Switch'),
-                                                _(u'Clock'), _(u'D-Type')],
+                                       choices=[_(u"All"), _(u"Gate"), _(u"Switch"),
+                                                _(u"Clock"), _(u"D-Type")],
                                        style=wx.CB_READONLY)
         self.combo_types.SetFont(font)
         self.label_names = wx.StaticText(self, wx.ID_ANY, _(u"Name"))
         self.combo_names = wx.ComboBox(
             self, wx.ID_ANY, choices=[], style=wx.CB_READONLY)
-        self.add_button = wx.Button(self, wx.ID_ANY, _(u'Add'))
-        self.add_all_button = wx.Button(self, wx.ID_ANY, _(u'Add All'))
+        self.add_button = wx.Button(self, wx.ID_ANY, _(u"Add"))
+        self.add_all_button = wx.Button(self, wx.ID_ANY, _(u"Add All"))
 
         # initialise the combo boxes with default values
-        self.combo_types.SetValue("All")
+        self.combo_types.SetValue(_(u"All"))
         # self.initialise_combo_names()
         # self.initialise_monitor_list()
 
@@ -103,10 +103,10 @@ class MonitorsTab(wx.Panel):
 
     def on_combo_type_select(self, event):
         """Update `combo_names` when a component type is selected."""
-        if self.combo_types.GetValue() == 'All':
+        if self.combo_types.GetValue() == _(u"All"):
             self.initialise_combo_names()
 
-        elif self.combo_types.GetValue() == 'Gate':
+        elif self.combo_types.GetValue() == _(u"Gate"):
             gate_ids = []
             gate_ids.extend(self.devices.find_devices(self.devices.AND))
             gate_ids.extend(self.devices.find_devices(self.devices.OR))
@@ -117,17 +117,17 @@ class MonitorsTab(wx.Panel):
             self.refresh_combo_names(
                 [self.names.get_name_string(id) for id in gate_ids])
 
-        elif self.combo_types.GetValue() == 'Switch':
+        elif self.combo_types.GetValue() == _(u"Switch"):
             switch_ids = self.devices.find_devices(self.devices.SWITCH)
             self.refresh_combo_names(
                 [self.names.get_name_string(id) for id in switch_ids])
 
-        elif self.combo_types.GetValue() == 'Clock':
+        elif self.combo_types.GetValue() == _(u"Clock"):
             clock_ids = self.devices.find_devices(self.devices.CLOCK)
             self.refresh_combo_names(
                 [self.names.get_name_string(id) for id in clock_ids])
 
-        elif self.combo_types.GetValue() == 'D-Type':  # DTYPE IS SPECIAL!
+        elif self.combo_types.GetValue() == _(u"D-Type"):  # DTYPE IS SPECIAL!
             dtype_ids = self.devices.find_devices(self.devices.D_TYPE)
             self.refresh_combo_names(
                 [self.names.get_name_string(id) for id in dtype_ids])
@@ -149,7 +149,7 @@ class MonitorsTab(wx.Panel):
             self.append_to_monitors_list(signal)
             signal_id, signal_name, output_id, output_name = \
                 self.get_signal_and_output_id(signal)
-        self.combo_types.SetValue('All')
+        self.combo_types.SetValue(_(u"All"))
         self.initialise_combo_names()
         try:
             self.canvas.render_signals(flush_pan=True)
@@ -220,11 +220,11 @@ class MonitorsTab(wx.Panel):
         """Handle the event when the user adds a component to monitor."""
         name_to_add = self.combo_names.GetValue()
         if name_to_add == "":
-            self.statusbar.SetStatusText(_(u'Select a component first!'))
+            self.statusbar.SetStatusText(_(u"Select a component first!"))
         else:
             monitored_signals = self.monitors.get_signal_names()[0]
             if name_to_add in monitored_signals:
-                self.statusbar.SetStatusText(_(u'Component already added!'))
+                self.statusbar.SetStatusText(_(u"Component already added!"))
             else:
                 self.add_monitor(name_to_add)
 
@@ -244,7 +244,7 @@ class MonitorsTab(wx.Panel):
         self.monitors.make_monitor(signal_id, output_id)
         # append the component to the list
         self.append_to_monitors_list(name_to_add)
-        self.statusbar.SetStatusText(_(u'Added component to monitor.'))
+        self.statusbar.SetStatusText(_(u"Added component to monitor."))
         print(u'{} added to monitor.'.format(name_to_add))
 
     def get_signal_full_name(self, signal_id, output_id):

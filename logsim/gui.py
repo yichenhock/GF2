@@ -180,12 +180,12 @@ class Gui(wx.Frame):
     def create_menu(self):
         """Create a menu."""
         fileMenu = wx.Menu()
-        fileMenu.Append(wx.ID_ABOUT, "&About")
-        fileMenu.Append(wx.ID_SAVEAS, "&Save As")
-        fileMenu.Append(wx.ID_EXIT, "&Exit")
+        fileMenu.Append(wx.ID_ABOUT, _(u"&About"))
+        fileMenu.Append(wx.ID_SAVEAS, _(u"&Save As"))
+        fileMenu.Append(wx.ID_EXIT, _(u"&Exit"))
 
         menuBar = wx.MenuBar()
-        menuBar.Append(fileMenu, "&File")
+        menuBar.Append(fileMenu, _(u"&File"))
 
         self.SetMenuBar(menuBar)
 
@@ -212,7 +212,7 @@ class Gui(wx.Frame):
         tb.AddTool(4, _(u"Compile"),
                    wx.Image("./logsim/imgs/compile.png",
                             wx.BITMAP_TYPE_PNG).ConvertToBitmap(),
-                   shortHelp="Compile the circuit definition")
+                   shortHelp=_(u"Compile the circuit definition"))
         tb.AddTool(5, _(u"Run"),
                    wx.Image("./logsim/imgs/run.png",
                             wx.BITMAP_TYPE_PNG).ConvertToBitmap(),
@@ -230,18 +230,18 @@ class Gui(wx.Frame):
         # Configure spin
         self.spin.SetMin(1)
         self.spin.SetMax(1000)
-        tb.AddControl(self.spin, _(u'Cycles'))
+        tb.AddControl(self.spin, _(u"Cycles"))
 
         tb.AddStretchableSpace()
-        tb.AddTool(8, _(u'Save Plot'),
+        tb.AddTool(8, _(u"Save Plot"),
                    wx.Image("./logsim/imgs/save image.png",
                             wx.BITMAP_TYPE_PNG).ConvertToBitmap(),
                    shortHelp=_(u"Save signal trace as an image"))
-        tb.AddTool(9, _('Help'),
+        tb.AddTool(9, _(u"Help"),
                    wx.Image("./logsim/imgs/help.png",
                             wx.BITMAP_TYPE_PNG).ConvertToBitmap(),
                    shortHelp=_(u"Help"))
-        tb.AddTool(10, _(u'Quit'),
+        tb.AddTool(10, _(u"Quit"),
                    wx.Image("./logsim/imgs/quit.png",
                             wx.BITMAP_TYPE_PNG).ConvertToBitmap(),
                    shortHelp=_(u"Quit Logic Simulator"))
@@ -330,7 +330,7 @@ class Gui(wx.Frame):
         """Compiles/parses the circuit definition file."""
         # save the file first
         self.save_file(self.path)
-        self.statusbar.SetStatusText(_(u'Compiling...'))
+        self.statusbar.SetStatusText(_(u"Compiling..."))
 
         self.monitorsPanel.clear_monitor_list()
 

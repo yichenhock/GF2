@@ -35,7 +35,7 @@ class BaseApp(wx.App, InspectionMixin):
         # work around for Python stealing "_"
         sys.displayhook = _displayHook
         
-        self.appName = "I18N sample application"
+        self.appName = "Logic Simulator"
         
         self.doConfig()
         
@@ -66,7 +66,7 @@ class BaseApp(wx.App, InspectionMixin):
 
         if not self.appConfig.HasEntry(u'Language'):
             # on first run we default to French
-            self.appConfig.Write(key=u'Language', value=u'cn')
+            self.appConfig.Write(key=u'Language', value=u'zh')
             
         self.appConfig.Flush()
 
@@ -99,4 +99,3 @@ class BaseApp(wx.App, InspectionMixin):
             self.locale.AddCatalog(appC.langDomain)
         else:
             self.locale = None
-        print("System encoding:", self.locale.GetSystemEncoding())

@@ -35,8 +35,8 @@ class InputsTab(wx.Panel):
             ULC.ULC_SHOW_TOOLTIPS | ULC.ULC_NO_HEADER
         self.switch_list = ListCtrl(self, wx.ID_ANY,
                                     agwStyle=switch_list_style)
-        self.switch_list.InsertColumn(0, "Switch")
-        self.switch_list.InsertColumn(1, "State")
+        self.switch_list.InsertColumn(0, _(u"Switch"))
+        self.switch_list.InsertColumn(1, _(u"State"))
 
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(self.switch_list, wx.EXPAND, wx.EXPAND, 0)

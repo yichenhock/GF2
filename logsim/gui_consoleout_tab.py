@@ -79,7 +79,7 @@ class ConsoleOutTab(wx.Panel):
 
         # self.commands.SetBackgroundColour("black")
         # self.commands.SetForegroundColour("white")
-        self.commands.SetHint(_('Type commands here'))
+        self.commands.SetHint(_(u"Type commands here"))
 
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(self.log, wx.EXPAND, wx.EXPAND, 0)
@@ -111,7 +111,7 @@ class ConsoleOutTab(wx.Panel):
             self.continue_command()
         else:
             if command:
-                print(_("Error! Invalid command!"))
+                print(_(u"Error! Invalid command!"))
 
     def help_command(self):
         """Print a list of valid commands."""
@@ -120,7 +120,7 @@ class ConsoleOutTab(wx.Panel):
         print("            " + _(u"(from scratch)"))
         print("c N       - " + _(u"continue the simulation for N"))
         print("            " + _(u"cycles"))
-        print("s X N     - "+ _(u"set switch X to N (0 or 1)"))
+        print("s X N     - " + _(u"set switch X to N (0 or 1)"))
         print("h         - " + _(u"help (this command)"))
 
     def switch_command(self):
@@ -145,7 +145,7 @@ class ConsoleOutTab(wx.Panel):
                 self.monitors.record_signals()
             else:
                 self.parent.GetParent().statusbar\
-                    .SetStatusText(_("Error! Network oscillating."))
+                    .SetStatusText(_(u"Error! Network oscillating."))
                 print(_(u"Error! Network oscillating."))
                 return False
         # self.monitors.display_signals()
@@ -161,7 +161,7 @@ class ConsoleOutTab(wx.Panel):
 
         if cycles is not None:  # if the number of cycles provided is valid
             self.monitors.reset_monitors()
-            print("".join([_(u"Running for "), str(cycles), _(" cycle(s)")]))
+            print("".join([_(u"Running for "), str(cycles), _(u" cycle(s)")]))
             self.devices.cold_startup()
             if self.run_network(cycles):
                 self.global_vars.cycles_completed += cycles
