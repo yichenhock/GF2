@@ -26,8 +26,8 @@ from error import (
     WrongClockName,
     InvalidClockLength,
     InvalidInputNumber,
-    InvalidXORInputNumber,
-    InvalidNOTInputNumber,
+    AttemptToDefineXORInputs,
+    AttemptToDefineNOTInputs,
     AttemptToDefineDTYPEInputs,
     NoDTYPEOutputPortError,
     InvalidBlockHeaderOrder
@@ -411,9 +411,6 @@ class Parser:
         checking_devices = True
         device_symbols = []
 
-        has_XOR = False
-        has_NOT = False
-
         while checking_devices:
             symbol = next_sym
 
@@ -430,9 +427,10 @@ class Parser:
                 raise AttemptToDefineDTYPEInputs(next_sym)
 
             elif device_type == self.scanner.XOR_id:
-                has_XOR = True
+                raise AttemptToDefineXORInputs(next_sym)
+
             elif device_type == self.scanner.NOT_id:
-                has_NOT = True
+                raise AttemptToDefineNOTInputs(next_sym)
 
             device_symbols.append(next_sym)
 
@@ -448,19 +446,8 @@ class Parser:
                 # XOR has two inputs
 
                 if next_sym.type == self.scanner.NUMBER:
-                    # if XOR, inputs need to be exactly 2
-
-                    if has_XOR:
-                        if next_sym.id != 2:
-                            raise InvalidXORInputNumber(
-                                next_sym)  # XOR inputs error
-                    # if NOT, inputs need to be exactly 1
-                    elif has_NOT:
-                        if next_sym.id != 1:
-                            raise InvalidNOTInputNumber# NOT inputs error
-                    else:
-                        if next_sym.id > 16:
-                            raise InvalidInputNumber(next_sym)
+                    if next_sym.id > 16:
+                        raise InvalidInputNumber(next_sym)
 
                     input_number = next_sym.id
                     # check if the next symbol says 'inputs'
