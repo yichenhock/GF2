@@ -12,7 +12,6 @@ import wx
 import wx.lib.agw.ultimatelistctrl as ULC
 
 from wx.adv import BitmapComboBox
-from zmq import device
 
 from gui_listctrl import ListCtrl
 
