@@ -614,9 +614,9 @@ class Parser:
         multi_input_gates = [self.scanner.AND_id,
                              self.scanner.OR_id,
                              self.scanner.NOR_id,
-                             self.scanner.XOR_id,
-                             self.scanner.NOT_id,
-                             self.scanner.NAND_id]
+                            #  self.scanner.XOR_id,
+                            #  self.scanner.NOT_id,
+                             self.scanner.NAND_id] # excluding XOR
 
         if device_type == self.scanner.DTYPE_id:
             possible_inputs = [
@@ -627,6 +627,13 @@ class Parser:
             ]
             return port_symbol.id in possible_inputs
 
+        elif device_type == self.scanner.XOR_id:
+            # inputs should only be I1 or I2
+            port_name = self.names.get_name_string(port_symbol.id)
+            if port_name == 'I1' or port_name == 'I2':
+                return True
+            return False
+            
         elif device_type in multi_input_gates:
             num_inputs = self.device_dict[name_symbol.id]['property']
             # inputs have format I1, I2 ...

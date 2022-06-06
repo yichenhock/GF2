@@ -199,7 +199,6 @@ class MonitorsTab(wx.Panel):
 
     def initialise_combo_names(self):
         """Initialise `combo_names` with a list of all device names."""
-        # THIS DOES NOT WORK WITH DTYPES YET!
         self.refresh_combo_names([self.names.get_name_string(
             device.device_id) for device in self.devices.devices_list])
 

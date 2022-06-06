@@ -123,7 +123,7 @@ class Gui(wx.Frame):
         self.monitorsPanel = MonitorsTab(
             notebook, names, devices, monitors, self.canvas, self.statusbar)
         self.connectionsPanel = ConnectionsTab(
-            notebook, names, devices, self.canvas, self.statusbar)
+            notebook, names, devices, monitors, self.canvas, self.statusbar)
 
         self.consoleOutPanel = ConsoleOutTab(notebook, self.path, names,
                                              devices, network,
@@ -337,6 +337,7 @@ class Gui(wx.Frame):
         self.statusbar.SetStatusText(_(u"Compiling..."))
 
         self.monitorsPanel.clear_monitor_list()
+        self.connectionsPanel.clear_connections_list()
 
         # reinitialise instances
         self.names.__init__()
@@ -353,6 +354,7 @@ class Gui(wx.Frame):
                 self.inputsPanel.refresh_list()
                 # update the monitors panel
                 self.monitorsPanel.initialise_monitor_list()
+                self.connectionsPanel.initialise_connections_list()
                 self.set_gui_state(sim_running=False)
 
                 self.statusbar.SetStatusText(
@@ -404,6 +406,7 @@ class Gui(wx.Frame):
         # text box only editable when the simulation is not running
         self.circuitDefPanel.set_textbox_state(not sim_running)
         self.monitorsPanel.enable_monitor(not sim_running)
+        self.connectionsPanel.enable_connections(not sim_running)
 
     def on_help_button(self):
         """Display a helpful message box."""
