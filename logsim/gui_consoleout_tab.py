@@ -151,8 +151,8 @@ class ConsoleOutTab(wx.Panel):
                 self.monitors.record_signals()
             else:
                 self.parent.GetParent().statusbar\
-                    .SetStatusText(_(u"Error! Network oscillating."))
-                print(_(u"Error! Network oscillating."))
+                    .SetStatusText("Error! Network oscillating.")
+                print("Error! Network oscillating.")
                 return False
         # self.monitors.display_signals()
         return True
@@ -171,8 +171,8 @@ class ConsoleOutTab(wx.Panel):
             self.devices.cold_startup()
             if self.run_network(cycles):
                 self.global_vars.cycles_completed += cycles
-            self.set_gui_state(True)
-            self.canvas.render_signals()
+                self.set_gui_state(True)
+                self.canvas.render_signals()
 
     def continue_command(self, gui=False, gui_cycles=None):
         """Continue a previously run simulation."""

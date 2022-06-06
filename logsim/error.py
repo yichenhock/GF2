@@ -122,6 +122,13 @@ class NotInitialisedError(ParserSemanticError):
     def __init__(self, symbol):
         super().__init__(symbol, "")
 
+class ConnectionPresent(ParserSemanticError):
+    def __init__(self, symbol, name, suffix):
+        if suffix:
+            message = "Input '{}.{}' already connected to an output".format(name, suffix)
+        else:
+            message = "Input '{}' already connected to an output".format(name)
+        super().__init__(symbol, message)
 # ===========================================================================================================
 # ===========================================================================================================
 

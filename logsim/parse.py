@@ -34,7 +34,8 @@ from error import (
     DeviceNotInitialised,
     SwitchNotInitialised,
     ClockNotInitialised,
-    NotInitialisedError
+    NotInitialisedError,
+    ConnectionPresent
 )
 
 # Syntax errors
@@ -648,7 +649,7 @@ class Parser:
             port_name = ""
             return True
 
-        elif device_type in multi_input_gates:
+        elif device_type in self.multi_input_gates:
             num_inputs = self.device_dict[name_symbol.id]['property']
             # inputs have format I1, I2 ...
             port_name = self.names.get_name_string(port_symbol.id)
@@ -750,11 +751,20 @@ class Parser:
                 output_port_id = output_port.id
 
             input_id = input.id
+            input_name = self.names.get_name_string(input_id)
             input_port_id = None
+            input_suffix = None
             if input_port_symbol:
                 input_port_id = input_port_symbol.id
-            self.network.make_connection(
+                input_suffix = self.names.get_name_string(input_port_id)
+            error = self.network.make_connection(
                 input_id, input_port_id, output_id, output_port_id)
+            # all possible errors should have been caught prior to this.
+            # only error not caught is connecting an already connected input to some output. 
+            # this is not allowed by network class
+            if error == self.network.INPUT_CONNECTED:
+                self.add_error(ConnectionPresent(input_port_symbol, input_name, input_suffix))
+
 
     def make_monitor(self):
         output = self.output_symbol[0]
@@ -843,7 +853,8 @@ class Parser:
     def parse_network(self):
         """Parse the circuit definition file."""
         symbol = self.scanner.get_symbol()
-        print('\n---------- COMPILING SIMULATION ----------')
+        print('\n'+self.scanner.path)
+        print('---------- COMPILING SIMULATION ----------')
 
         # blocks need to be discovered in the right order and not repeated
         header_order = [self.scanner.devices_id, self.scanner.initialise_id,
@@ -902,16 +913,11 @@ class Parser:
             len(self.input_not_connected_errors) == 0 and \
             len(self.not_initialised_errors) == 0
         
-        total_errors = len(self.syntax_errors) + \
-            len(self.semantic_errors) + \
-            len(self.input_not_connected_errors) + \
-            len(self.not_initialised_errors)
-
         if success: 
-            print('\n--------- COMPILATION COMPLETE ---------')
-            print('File compiled successfully with 0 errors.')
+            print('\nFile compiled successfully with 0 errors.')
+            print('---------- COMPILATION COMPLETE ----------\n')
         else:
-            print('---------- COMPILATION FAILED ----------')
-            print('File compiled unsuccessfully with {} errors.'.format(total_errors))
+            print('\nFile compiled unsuccessfully with errors.')
+            print('----------- COMPILATION FAILED -----------\n')
 
         return success
