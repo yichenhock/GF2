@@ -159,6 +159,10 @@ class ConsoleOutTab(wx.Panel):
 
     def run_command(self, gui=False, gui_cycles=None):
         """Run the simulation from scratch."""
+        if not self.global_vars.compilation_success:
+            print('Cannot run simulation with errors.')
+            return
+
         self.global_vars.cycles_completed = 0
         if gui:
             cycles = gui_cycles

@@ -72,7 +72,7 @@ class Gui(wx.Frame):
                 sys.exit()
 
         self.scanner = Scanner(self.path, names)
-        self.parser = Parser(names, devices, network, monitors, self.scanner)
+        self.parser = Parser(names, devices, network, monitors, self.scanner, self.global_vars)
 
         # Create the menu, toolbar and statusbar
         self.create_menu()
@@ -339,7 +339,7 @@ class Gui(wx.Frame):
         self.monitorsPanel.clear_monitor_list()
         self.connectionsPanel.clear_connections_list()
         self.consoleOutPanel.clear_console()
-        
+
         # reinitialise instances
         self.names.__init__()
         self.devices.__init__(self.names)
@@ -347,7 +347,7 @@ class Gui(wx.Frame):
         self.monitors.__init__(self.names, self.devices, self.network)
         self.scanner.__init__(self.path, self.names)
         self.parser.__init__(self.names, self.devices,
-                             self.network, self.monitors, self.scanner)
+                             self.network, self.monitors, self.scanner, self.global_vars)
 
         try:
             if self.parser.parse_network():
@@ -363,6 +363,8 @@ class Gui(wx.Frame):
             else:
                 # error has occured while parsing
                 self.statusbar.SetStatusText(_(u"File compiled with errors."))
+                # disable run button
+                self.ToolBar.EnableTool(5, False)
                 return False
         except Exception as e:
             print(e)

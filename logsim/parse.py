@@ -16,6 +16,7 @@ from network import Network
 from monitors import Monitors
 
 from error import ParserError, ParserSemanticError, ParserSyntaxError
+from global_vars import GlobalVars
 
 # Semantic errors
 from error import (
@@ -86,7 +87,7 @@ class Parser:
     parse_network(self): Parses the circuit definition file.
     """
 
-    def __init__(self, names, devices, network, monitors, scanner):
+    def __init__(self, names, devices, network, monitors, scanner, global_vars):
         """Initialise constants."""
 
         # names class object
@@ -95,6 +96,7 @@ class Parser:
         self.network = network
         self.scanner = scanner
         self.monitors = monitors
+        self.global_vars = global_vars
 
         self.in_block = False  # True if parser inside a block
 
@@ -931,5 +933,7 @@ class Parser:
         else:
             print('\nFile compiled unsuccessfully with errors.')
             print('----------- COMPILATION FAILED -----------\n')
+
+        self.global_vars.compilation_success = success
 
         return success

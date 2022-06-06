@@ -23,6 +23,7 @@ from scanner import Scanner
 from parse import Parser
 from userint import UserInterface
 from gui import Gui
+from global_vars import GlobalVars
 
 
 def main(arg_list):
@@ -57,8 +58,9 @@ def main(arg_list):
             print(usage_message)
             sys.exit()
         elif option == "-c":  # use the command line user interface
+            global_vars = GlobalVars()
             scanner = Scanner(path, names)
-            parser = Parser(names, devices, network, monitors, scanner)
+            parser = Parser(names, devices, network, monitors, scanner, global_vars)
 
             if parser.parse_network():
                 # Initialise an instance of the userint.UserInterface() class
