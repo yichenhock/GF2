@@ -152,7 +152,7 @@ class Gui(wx.Frame):
         self.mgr.AddPane(notebook,
                          aui.AuiPaneInfo().CaptionVisible(False).
                          Right().PaneBorder(False).Floatable(False)
-                         .GripperTop(False).MinSize(340, 150)
+                         .GripperTop(False).MinSize(388, 150)
                          .CloseButton(False))
 
         # setting docking guides fixes docking issue (problem with wxTimer)
