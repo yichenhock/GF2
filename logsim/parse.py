@@ -458,7 +458,7 @@ class Parser:
                 # XOR has two inputs
 
                 if next_sym.type == self.scanner.NUMBER:
-                    if next_sym.id > 16:
+                    if next_sym.id > 16 or next_sym.id == 0:
                         raise InvalidInputNumber(next_sym)
 
                     input_number = next_sym.id
