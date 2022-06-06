@@ -58,8 +58,6 @@ class MonitorsTab(wx.Panel):
 
         # initialise the combo boxes with default values
         self.combo_types.SetValue(_(u"ALL"))
-        # self.initialise_combo_names()
-        # self.initialise_monitor_list()
 
         # Create a sizer.
         self.grid_sizer = wx.FlexGridSizer(2, 2, (5, 5))
@@ -113,6 +111,7 @@ class MonitorsTab(wx.Panel):
             gate_ids.extend(self.devices.find_devices(self.devices.NAND))
             gate_ids.extend(self.devices.find_devices(self.devices.NOR))
             gate_ids.extend(self.devices.find_devices(self.devices.XOR))
+            gate_ids.extend(self.devices.find_devices(self.devices.NOT))
 
             self.refresh_combo_names(
                 [self.names.get_name_string(id) for id in gate_ids])

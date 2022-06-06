@@ -633,7 +633,7 @@ class Parser:
             if port_name == 'I1' or port_name == 'I2':
                 return True
             return False
-            
+
         elif device_type in multi_input_gates:
             num_inputs = self.device_dict[name_symbol.id]['property']
             # inputs have format I1, I2 ...
@@ -808,7 +808,7 @@ class Parser:
     def parse_network(self):
         """Parse the circuit definition file."""
         symbol = self.scanner.get_symbol()
-        print('\n---------- COMPLING SIMULATION ----------')
+        print('\n---------- COMPILING SIMULATION ----------')
 
         # blocks need to be discovered in the right order and not repeated
         header_order = [self.scanner.devices_id, self.scanner.initialise_id,

@@ -123,7 +123,7 @@ class Gui(wx.Frame):
         self.monitorsPanel = MonitorsTab(
             notebook, names, devices, monitors, self.canvas, self.statusbar)
         self.connectionsPanel = ConnectionsTab(
-            notebook, names, devices, monitors, self.canvas, self.statusbar)
+            notebook, names, devices, network, self.statusbar)
 
         self.consoleOutPanel = ConsoleOutTab(notebook, self.path, names,
                                              devices, network,
@@ -373,6 +373,7 @@ class Gui(wx.Frame):
         """Run the simulation for N cycles from scratch."""
         if not self.monitors.monitors_dictionary:
             self.statusbar.SetStatusText(_(u"No monitors."))
+            print('No monitors.')
             return
 
         self.consoleOutPanel.run_command(True, self.spin.GetValue())
