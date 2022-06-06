@@ -265,6 +265,7 @@ class MonitorsTab(wx.Panel):
         # remove the signal from monitors
         self.monitors.remove_monitor(signal_id, output_id)
         # remove the signal from the monitors list
+        print(self.monitors_list.FindItem(-1, signal))
         self.monitors_list.DeleteItem(self.monitors_list
                                       .FindItem(-1, signal))
         self.displayed_signals.remove((signal_id, output_id))

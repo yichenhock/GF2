@@ -12,6 +12,7 @@ import wx
 import wx.lib.agw.ultimatelistctrl as ULC
 
 from wx.adv import BitmapComboBox
+from zmq import device
 
 from gui_listctrl import ListCtrl
 
@@ -28,6 +29,9 @@ class ConnectionsTab(wx.Panel):
         self.network = network
         self.statusbar = statusbar
 
+        self.unique_id = 0
+        self.displayed_connections = [] # [(id, connection, button), ..]
+
         self.connections_list_style = \
             ULC.ULC_REPORT | \
             ULC.ULC_HRULES | ULC.ULC_SINGLE_SEL | \
@@ -38,7 +42,7 @@ class ConnectionsTab(wx.Panel):
 
         font = wx.Font(wx.FontInfo().Encoding(wx.FONTENCODING_CP950))
 
-        self.connections_list.InsertColumn(0, _(u"Output"))
+        self.connections_list.InsertColumn(0, "Output")
         self.connections_list.InsertColumn(1, _(u"To"))
         self.connections_list.InsertColumn(2, _(u"Input"))
         self.connections_list.InsertColumn(3, "")  # remove from monitor buttons
@@ -51,12 +55,12 @@ class ConnectionsTab(wx.Panel):
         self.label_input.SetForegroundColour('red')
 
         self.tick_bmp = wx.Bitmap(wx.Image('./logsim/imgs/tick.png'))
-        self.cross_bmp = wx.Bitmap(wx.Image('./logsim/imgs/cross.png'))
+        self.warning_bmp = wx.Bitmap(wx.Image('./logsim/imgs/warning.png'))
 
-        self.combo_output_devices = wx.ComboBox(self, wx.ID_ANY,
+        self.combo_output_devices = BitmapComboBox(self, wx.ID_ANY,
                                        choices=[],
                                        style=wx.CB_READONLY)
-        self.combo_output_ports = wx.ComboBox(self, wx.ID_ANY,
+        self.combo_output_ports = BitmapComboBox(self, wx.ID_ANY,
                                        choices=[],
                                        style=wx.CB_READONLY)
         self.combo_input_devices = BitmapComboBox(self, wx.ID_ANY,
@@ -129,8 +133,80 @@ class ConnectionsTab(wx.Panel):
         self.combo_input_devices.Bind(wx.EVT_COMBOBOX, self.on_combo_ip_devices_select)
         self.add_button.Bind(wx.EVT_LEFT_DOWN, self.on_add_button)
     
+    def get_full_name(self, device_id, device_port_id):
+        device_name = self.names.get_name_string(device_id)
+        if device_port_id:
+            port_name = self.names.get_name_string(device_port_id)
+            return ''.join([device_name, '.', port_name])
+        else:
+            return device_name
+
     def initialise_connections_list(self):
         """Initialise `self.connections_list` with circuit definition file."""
+        self.clear_connections_list()
+        self.displayed_connections = []
+        self.initialise_combo_boxes()
+        # need to add the existing connections to the list
+        for connection in self.network.connections:
+            self.append_to_connections_list(connection)
+            # (output_id, output_port_id, input_id, input_port_id) = connection
+            # output_name = self.get_full_name(output_id, output_port_id)
+            # input_name = self.get_full_name(input_id, input_port_id)
+            # print(output_name, input_name)
+
+    def append_to_connections_list(self, connection):
+        """Add an entry to `self.connections_list`."""
+        (output_id, output_port_id, input_id, input_port_id) = connection
+        output_name = self.get_full_name(output_id, output_port_id)
+        input_name = self.get_full_name(input_id, input_port_id)
+
+        index = self.connections_list.InsertStringItem(
+            len(self.displayed_connections), output_name
+        )
+
+        self.connections_list.SetStringItem(index, 1, '--->')
+        self.connections_list.SetStringItem(index, 2, input_name)
+
+        attr = "_".join(['connection', str(output_id), str(output_port_id), str(input_id), str(input_port_id)])
+        setattr(self, attr,
+                wx.ToggleButton(self.connections_list, wx.ID_ANY,
+                                _(u"Remove")))
+        button = getattr(self, attr)
+        # set attributes for event handler to access the ids
+        button.output_id = output_id
+        button.output_port_id = output_port_id
+        button.input_id = input_id
+        button.input_port_id = input_port_id
+        button.Bind(wx.EVT_TOGGLEBUTTON, self.on_remove)
+        button.id = self.unique_id
+
+        # Right-most cell is the remove button
+        self.connections_list.SetItemWindow(index, 3, button)
+
+        self.displayed_connections.append((self.unique_id, connection, button))
+        self.unique_id += 1
+
+    def on_remove(self, event):
+        """Handle the event when the user removes a connection."""
+        button = event.GetEventObject()
+        output_id = button.output_id
+        output_port_id = button.output_port_id
+        input_id = button.input_id
+        input_port_id = button.input_port_id
+
+        id = button.id
+        # locate the index of the connection containing the same id
+        index = 0
+        for i in range(len(self.displayed_connections)):
+            if self.displayed_connections[i][0] == id:
+                index = i
+                break
+
+        self.connections_list.DeleteItem(index)
+        del self.displayed_connections[index]
+        # NEED TO REMOVE THE CONNECTION FROM THE NETWORK TOO!
+
+        # reinitialise and refresh the combo boxes
         self.initialise_combo_boxes()
 
     def initialise_combo_boxes(self):
@@ -149,7 +225,9 @@ class ConnectionsTab(wx.Panel):
                     device.device_kind != self.devices.CLOCK:
                 input_devices.append(self.names.get_name_string(device.device_id))
         self.refresh_combo_input_devices(input_devices)
+        self.combo_output_ports.Clear()
         self.combo_output_ports.Enable(False)
+        self.combo_input_ports.Clear()
         self.combo_input_ports.Enable(False)
 
     def refresh_combo_output_devices(self, output_devices):
@@ -196,7 +274,7 @@ class ConnectionsTab(wx.Panel):
             num_inputs = len(device.inputs)
             # add the inputs to the combo box
             for n in range(1,num_inputs+1):
-                self.combo_input_ports.Append('I'+str(n), bitmap=self.cross_bmp)
+                self.combo_input_ports.Append('I'+str(n), bitmap=self.warning_bmp)
 
     def on_add_button(self, event):
         """Handle the event when the user adds a connection."""
@@ -211,35 +289,15 @@ class ConnectionsTab(wx.Panel):
             if self.combo_input_ports.GetValue() == '':
                 self.warning_text2.SetLabel('Input port required!') # error - input port required!
 
-    def on_remove(self, event):
-        """Handle the event when the user removes a connection."""
-        button = event.GetEventObject()
+        # if all the fields are correct make the connection
 
-    def append_to_connections_list(self, connection):
-        """Add an entry to `self.connections_list`."""
-        # connection = [output, output_port, input, input_port]
-        pass
+        # if add is successful, refresh
+        self.initialise_connections_list()
 
     def clear_connections_list(self):
         """Clear monitor list before initialisation."""
-        pass
-
-        # index = self.monitors_list.InsertStringItem(
-        #     len(self.displayed_signals), signal)
-        # attr = "connection_"
-        # setattr(self, attr,
-        #         wx.ToggleButton(self.monitors_list, wx.ID_ANY,
-        #                         str(_(u"Remove"))))
-        # button = getattr(self, attr)
-        # # Right cell is the remove button
-        # self.monitors_list.SetItemWindow(index, 3, button)
-        # # Set switch_id attribute so that event handler can access
-        # # the id
-        # # button.signal_id = signal_id
-        # # button.output_id = output_id
-        # button.Bind(wx.EVT_TOGGLEBUTTON, self.on_remove)
-
-        # # self.displayed_signals.append((signal_id, output_id))
+        self.connections_list.DeleteAllItems()
+        
 
     def enable_connections(self, state):
         """Allow connections to be added."""
@@ -253,8 +311,13 @@ class ConnectionsTab(wx.Panel):
 
         self.add_button.Enable(state)
 
+        # enable/disable the remove buttons too
+        for item in self.displayed_connections:
+            button = item[2]
+            button.Enable(state)
+
         if state:
             self.warning_text1.SetLabel('')
         else:
             self.warning_text1.SetLabel(
-                _(u" Reset simulation to add connections!"))
+                _(u" Reset simulation to add/remove connections!"))

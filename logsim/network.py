@@ -73,6 +73,9 @@ class Network:
 
         self.error_dict = {self.NO_ERROR: "No error", self.INPUT_TO_INPUT: "Input to input",
                            self.OUTPUT_TO_OUTPUT: "Output to output", self.INPUT_CONNECTED: "Input connected", self.PORT_ABSENT: "Port absent"}
+        
+        # list of all connections
+        self.connections = [] # (output_id, output_port_id, input_id, input_port_id)
 
     def get_connected_output(self, device_id, input_id):
         """Return the output connected to the given input.
@@ -121,50 +124,56 @@ class Network:
         second_device = self.devices.get_device(second_device_id)
         if first_device is None or second_device is None:
             error_type = self.DEVICE_ABSENT
-            print("Device absent")
+            # print("Device absent")
 
         elif first_port_id in first_device.inputs:
             if first_device.inputs[first_port_id] is not None:
                 # Input is already in a connection
-                print("Input connected")
+                # print("Input connected")
                 error_type = self.INPUT_CONNECTED
             elif (second_port_id in second_device.inputs) and (
                 second_port_id not in second_device.outputs):
                 # Both ports are inputs
-                print("Input to input")
+                # print("Input to input")
                 error_type = self.INPUT_TO_INPUT
             elif second_port_id in second_device.outputs:
                 # Make connection
                 first_device.inputs[first_port_id] = (second_device_id,
                                                       second_port_id)
                 error_type = self.NO_ERROR
-                print("No error")
+                # print("No error")
             else:  # second_port_id is not a valid input or output port
-                print("Second port absent")
+                # print("Second port absent")
                 error_type = self.PORT_ABSENT
         elif first_port_id in first_device.outputs:
             if second_port_id in second_device.outputs and (
                 second_port_id not in second_device.inputs):
                 # Both ports are outputs
-                print("output connected to output")
+                # print("output connected to output")
                 error_type = self.OUTPUT_TO_OUTPUT
             elif second_port_id in second_device.inputs:
                 if second_device.inputs[second_port_id] is not None:
                     # Input is already in a connection
-                    print("Input connected")
+                    # print("Input connected")
                     error_type = self.INPUT_CONNECTED
                 else:
                     second_device.inputs[second_port_id] = (first_device_id,
                                                             first_port_id)
                     error_type = self.NO_ERROR
-                    print("No error")
+                    # print("No error")
             else:
-                print("Port absent")
+                # print("Port absent")
                 error_type = self.PORT_ABSENT
 
         else:  # first_port_id not a valid input or output port
-            print("First port absent")
+            # print("First port absent")
             error_type = self.PORT_ABSENT
+        
+        if error_type == self.NO_ERROR:
+            # append the connection to the list of connections
+            self.connections.append((first_device_id, first_port_id,
+                second_device_id, second_port_id))
+
         return error_type
 
     def check_network(self):

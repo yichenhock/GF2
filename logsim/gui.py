@@ -338,7 +338,8 @@ class Gui(wx.Frame):
 
         self.monitorsPanel.clear_monitor_list()
         self.connectionsPanel.clear_connections_list()
-
+        self.consoleOutPanel.clear_console()
+        
         # reinitialise instances
         self.names.__init__()
         self.devices.__init__(self.names)
@@ -356,7 +357,6 @@ class Gui(wx.Frame):
                 self.monitorsPanel.initialise_monitor_list()
                 self.connectionsPanel.initialise_connections_list()
                 self.set_gui_state(sim_running=False)
-
                 self.statusbar.SetStatusText(
                     _(u"File saved and compiled successfully."))
                 return True
