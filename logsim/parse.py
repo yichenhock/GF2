@@ -600,7 +600,11 @@ class Parser:
         else:
             raise InvalidDeviceName(symbol)
 
-        device_kind = self.devices.get_device(name_symbol.id).device_kind
+        device = self.devices.get_device(name_symbol.id)
+        if not device:
+            raise UndefinedError(symbol, self.names.get_name_string(name_symbol.id))
+
+        device_kind = device.device_kind
         if device_kind == self.scanner.NOT_id:
             input_port_symbol = None
 

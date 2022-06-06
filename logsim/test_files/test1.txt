@@ -1,8 +1,8 @@
 #Example circuit - divide (clock frequency) by 3;
 
 devices(
-    HIGH is AND;
-    b, c are DTYPE;
+    a is AND;
+    a, c are DTYPE;
     sw1, sw2, sw3, sw4 are SWITCH;
     clk1 is CLOCK;
 )
