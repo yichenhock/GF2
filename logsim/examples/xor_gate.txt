@@ -1,21 +1,19 @@
 # Simple AND gate;
 
 devices(
-	a is AND;
+	a is XOR;
 	sw1, sw2 are SWITCH;
 )
 
 initialise(
-
 	sw1, sw2 are HIGH;
-	a has 2 inputs;
 )
 
 connections(
-		sw1 is connected to a.I1;
-		sw2 is connected to a.I2;
+	sw1 is connected to a.I1;
+	sw2 is connected to a.I2;
 )
 
 monitors(
-	a;
+	sw1, sw2, a;
 )

@@ -119,21 +119,19 @@ class Network:
         """
         first_device = self.devices.get_device(first_device_id)
         second_device = self.devices.get_device(second_device_id)
-
         if first_device is None or second_device is None:
-            print("Device absent")
             error_type = self.DEVICE_ABSENT
-            print("Device absent")
+            # print("Device absent")
 
         elif first_port_id in first_device.inputs:
             if first_device.inputs[first_port_id] is not None:
                 # Input is already in a connection
-                print("Input connected")
+                # print("Input connected")
                 error_type = self.INPUT_CONNECTED
-                print("Input connected")
-            elif second_port_id in second_device.inputs:
+            elif (second_port_id in second_device.inputs) and (
+                second_port_id not in second_device.outputs):
                 # Both ports are inputs
-                print("Input to input")
+                # print("Input to input")
                 error_type = self.INPUT_TO_INPUT
             elif second_port_id in second_device.outputs:
                 # Make connection
@@ -142,35 +140,31 @@ class Network:
                 error_type = self.NO_ERROR
                 # print("No error")
             else:  # second_port_id is not a valid input or output port
-                print("Second port absent")
+                # print("Second port absent")
                 error_type = self.PORT_ABSENT
-                print("Port absent")
         elif first_port_id in first_device.outputs:
-            if second_port_id in second_device.outputs:
+            if second_port_id in second_device.outputs and (
+                second_port_id not in second_device.inputs):
                 # Both ports are outputs
-                print("output connected to output")
+                # print("output connected to output")
                 error_type = self.OUTPUT_TO_OUTPUT
             elif second_port_id in second_device.inputs:
                 if second_device.inputs[second_port_id] is not None:
                     # Input is already in a connection
-                    print("Input connected")
+                    # print("Input connected")
                     error_type = self.INPUT_CONNECTED
-                    print("Input connected")
                 else:
                     second_device.inputs[second_port_id] = (first_device_id,
                                                             first_port_id)
                     error_type = self.NO_ERROR
-                    print("No error")
+                    # print("No error")
             else:
-                print("Port absent")
+                # print("Port absent")
                 error_type = self.PORT_ABSENT
-                print("Port absent")
 
         else:  # first_port_id not a valid input or output port
-            print("First port absent")
+            # print("First port absent")
             error_type = self.PORT_ABSENT
-            print("Port absent")
-
         return error_type
 
     def check_network(self):
@@ -250,11 +244,15 @@ class Network:
                 return False
             input_signal_list.append(input_signal)
 
-            if device.device_kind != self.devices.XOR:
+            if device.device_kind != (self.devices.XOR or self.devices.NOT):
                 if input_signal != x:
                     output_signal = self.invert_signal(y)
                     break
                 output_signal = y
+        
+        if device.device_kind == self.devices.NOT:
+            # Output is opposite of input
+            output_signal = self.invert_signal(input_signal)
 
         if device.device_kind == self.devices.XOR:
             # Output is high only if both inputs are different
@@ -376,6 +374,7 @@ class Network:
         nand_devices = self.devices.find_devices(self.devices.NAND)
         nor_devices = self.devices.find_devices(self.devices.NOR)
         xor_devices = self.devices.find_devices(self.devices.XOR)
+        not_devices = self.devices.find_devices(self.devices.NOT)
 
         # This sets clock signals to RISING or FALLING, where necessary
         self.update_clocks()
@@ -417,6 +416,9 @@ class Network:
                                          self.devices.HIGH):
                     return False
             for device_id in xor_devices:  # execute XOR devices
+                if not self.execute_gate(device_id, None, None):
+                    return False
+            for device_id in not_devices:  # execute NOT devices
                 if not self.execute_gate(device_id, None, None):
                     return False
             if self.steady_state:

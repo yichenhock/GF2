@@ -207,7 +207,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         cycles = len(list(self.monitors.monitors_dictionary.values())[0])
         x = self.initial_x
         y = self.initial_y - self.clock_name_offset
-        self.render_text("Cycle", x - self.pan_x, y - self.pan_y,
+        self.render_text(_(u"Cycle"), x - self.pan_x, y - self.pan_y,
                          font=GLUT.GLUT_BITMAP_HELVETICA_12, flush=False)
         # account for pan
         x = self.origin_x
@@ -319,7 +319,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             self.init = True
 
         size = self.GetClientSize()
-        text = "".join(["Canvas redrawn on paint event, size is ",
+        text = "".join([_(u"Canvas redrawn on paint event, size is "),
                         str(size.width), ", ", str(size.height)])
         self.render_signals()
 

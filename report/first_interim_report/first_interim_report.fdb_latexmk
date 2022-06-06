@@ -1,10 +1,6 @@
 # Fdb version 3
-<<<<<<< HEAD
-["pdflatex"] 1653757935 "d:/Files/University/Year 3/Projects/GF2 Software/logsim/GF2/report/first_interim_report/first_interim_report.tex" "first_interim_report.pdf" "first_interim_report" 1653757935
-=======
-["pdflatex"] 1653754972 "d:/Files/University/Year 3/Projects/GF2 Software/logsim/GF2/report/first_interim_report/first_interim_report.tex" "first_interim_report.pdf" "first_interim_report" 1653754973
->>>>>>> michael/scanner_pytests
-  "C:/Users/micha/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1652801284 80909 eab91d9745dd2edfd62a31d53cd5fe15 ""
+["pdflatex"] 1654352412 "d:/Files/University/Year 3/Projects/GF2 Software/logsim/GF2/report/first_interim_report/first_interim_report.tex" "first_interim_report.pdf" "first_interim_report" 1654352414
+  "C:/Users/micha/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1654114787 82507 a9eef8696c92627b87e9975edea03b2a ""
   "C:/Users/micha/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1652545431 10251076 1da7f618a9167204d62d180ca93442a5 ""
   "C:/Users/micha/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-ec.enc" 1254938640 2375 baa924870cfb487815765f9094cf3728 ""
   "C:/Users/micha/AppData/Local/Programs/MiKTeX/fonts/tfm/public/lm/ec-lmbx10.tfm" 1254938640 12076 b54175e02101bea1addf6b2d0197ed12 ""
@@ -86,23 +82,13 @@
   "C:/Users/micha/AppData/Local/Programs/MiKTeX/tex/latex/tools/calc.sty" 1636713860 10214 00ce62e730d0cfe22b35e8f1c84949c7 ""
   "C:/Users/micha/AppData/Local/Programs/MiKTeX/tex/latex/tools/multicol.sty" 1636713860 32262 2bb622a0aa56c4a7a5cbdfe9d122c15a ""
   "C:/Users/micha/AppData/Local/Programs/MiKTeX/tex/latex/xcolor/xcolor.sty" 1636288472 56029 3f7889dab51d620aa43177c391b7b190 ""
-<<<<<<< HEAD
-  "Complex Circuit.png" 1653756604 17688 3967e1aa1683e896aa231acc12f3581e ""
+  "Complex Circuit.png" 1653856087 16856 60dd6dc2eb028a05b3a5c27138b31a48 ""
   "Gantt Chart.pdf" 1653736707 64686 179d50a19ef1c3f3fef8c169537538ba ""
-  "Simple Circuit.png" 1653756604 7741 f8d1b1afe2a19a5a1782324570410ba9 ""
-  "d:/Files/University/Year 3/Projects/GF2 Software/logsim/GF2/report/first_interim_report/first_interim_report.tex" 1653756604 17919 d23589ae5601259966bfc773bcbc8897 ""
-  "first_interim_report.aux" 1653757935 34 3985256e7290058c681f74d7a3565a19 "pdflatex"
-  "first_interim_report.tex" 1653756604 17919 d23589ae5601259966bfc773bcbc8897 ""
-  "first_interim_report.toc" 0 -1 0 "pdflatex"
-=======
-  "Complex Circuit.png" 1653752430 16856 60dd6dc2eb028a05b3a5c27138b31a48 ""
-  "Gantt Chart.pdf" 1653736707 64686 179d50a19ef1c3f3fef8c169537538ba ""
-  "Simple Circuit.png" 1653752430 7304 ee4fce0b52a92924e357daf4e5df7279 ""
-  "d:/Files/University/Year 3/Projects/GF2 Software/logsim/GF2/report/first_interim_report/first_interim_report.tex" 1653754971 18152 69c03d39d14adddcf02bc0cf4fa8418a ""
-  "first_interim_report.aux" 1653754973 1939 7e447f1bbaf03675afa212ea6ecb2a1d "pdflatex"
-  "first_interim_report.tex" 1653754971 18152 69c03d39d14adddcf02bc0cf4fa8418a ""
-  "first_interim_report.toc" 1653754973 778 08bcae56f0be9080ce92bcfd0df29043 "pdflatex"
->>>>>>> michael/scanner_pytests
+  "Simple Circuit.png" 1653856087 7304 ee4fce0b52a92924e357daf4e5df7279 ""
+  "d:/Files/University/Year 3/Projects/GF2 Software/logsim/GF2/report/first_interim_report/first_interim_report.tex" 1654352411 18160 453051abe3acd3caf629780b824155a4 ""
+  "first_interim_report.aux" 1654352413 1939 7e447f1bbaf03675afa212ea6ecb2a1d "pdflatex"
+  "first_interim_report.tex" 1654352411 18160 453051abe3acd3caf629780b824155a4 ""
+  "first_interim_report.toc" 1654352413 778 08bcae56f0be9080ce92bcfd0df29043 "pdflatex"
   (generated)
   "first_interim_report.aux"
   "first_interim_report.log"

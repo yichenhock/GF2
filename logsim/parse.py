@@ -26,11 +26,14 @@ from error import (
     WrongClockName,
     InvalidClockLength,
     InvalidInputNumber,
-    InvalidXORInputNumber,
-    InvalidNOTInputNumber,
+    AttemptToDefineXORInputs,
+    AttemptToDefineNOTInputs,
     AttemptToDefineDTYPEInputs,
     NoDTYPEOutputPortError,
-    InvalidBlockHeaderOrder
+    InvalidBlockHeaderOrder,
+    DeviceNotInitialised,
+    SwitchNotInitialised,
+    ClockNotInitialised
 )
 
 # Syntax errors
@@ -53,7 +56,8 @@ from error import (
     ConnectedToError,
     OutputPortError,
     InputPortError,
-    DotError
+    DotError,
+    ExtraInfoAfterMonitors
 )
 
 
@@ -104,8 +108,6 @@ class Parser:
         self.input_symbols = []
         self.output_symbol = None  # (output_id_symbol, output_port_id_symbol)
 
-        self.monitor_symbols = []  # all symbols that can possibly be monitored
-
     def devices_block(self, symbol):
         """Check if symbols form a device block.
 
@@ -133,6 +135,7 @@ class Parser:
                      self.scanner.OR_id,
                      self.scanner.NOR_id,
                      self.scanner.XOR_id,
+                     self.scanner.NOT_id,
                      self.scanner.NAND_id,
                      self.scanner.DTYPE_id,
                      self.scanner.SWITCH_id,
@@ -142,7 +145,6 @@ class Parser:
 
             while checking_devices:
                 if symbol.type == self.scanner.NAME:
-
                     if self.names.get_name_string(symbol.id) in \
                             self.names_parsed:
                         raise RedefinedError(
@@ -405,12 +407,10 @@ class Parser:
                         self.scanner.OR_id,
                         self.scanner.NOR_id,
                         self.scanner.XOR_id,
+                        self.scanner.NOT_id,
                         self.scanner.NAND_id]
         checking_devices = True
         device_symbols = []
-
-        has_XOR = False
-        has_NOT = False
 
         while checking_devices:
             symbol = next_sym
@@ -428,9 +428,10 @@ class Parser:
                 raise AttemptToDefineDTYPEInputs(next_sym)
 
             elif device_type == self.scanner.XOR_id:
-                has_XOR = True
-            # elif device_type == self.scanner.NOT_id:
-            #     has_NOT = True
+                raise AttemptToDefineXORInputs(next_sym)
+
+            elif device_type == self.scanner.NOT_id:
+                raise AttemptToDefineNOTInputs(next_sym)
 
             device_symbols.append(next_sym)
 
@@ -446,19 +447,8 @@ class Parser:
                 # XOR has two inputs
 
                 if next_sym.type == self.scanner.NUMBER:
-                    # if XOR, inputs need to be exactly 2
-
-                    if has_XOR:
-                        if next_sym.id != 2:
-                            raise InvalidXORInputNumber(
-                                next_sym)  # XOR inputs error
-                    # if NOT, inputs need to be exactly 1
-                    # elif has_NOT:
-                        # if next_sym.id != 1:
-                        #     raise InvalidNOTInputNumber# NOT inputs error
-                    else:
-                        if next_sym.id > 16:
-                            raise InvalidInputNumber(next_sym)
+                    if next_sym.id > 16:
+                        raise InvalidInputNumber(next_sym)
 
                     input_number = next_sym.id
                     # check if the next symbol says 'inputs'
@@ -515,7 +505,6 @@ class Parser:
         self.input_symbols = []
         try:
             next_sym = self.parse_output_rule(symbol)
-
             # check for 'to' or 'is connected to'
             if next_sym.id == self.scanner.to_id:
                 pass
@@ -587,25 +576,30 @@ class Parser:
 
     def parse_input_rule(self, symbol):
         """Check if the scanner symbols form an input."""
-        # name, ".", input_name
+        # (name, ".", input_name) or (name) for NOT
 
         if symbol.type == self.scanner.NAME:
             name_symbol = symbol
         else:
             raise InvalidDeviceName(symbol)
 
-        next_sym = self.scanner.get_symbol()
-        if next_sym.type == self.scanner.DOT:
-            # has output port
-            pass
-        else:
-            raise DotError(next_sym)
+        device_kind = self.devices.get_device(name_symbol.id).device_kind
+        if device_kind == self.scanner.NOT_id:
+            input_port_symbol = None
 
-        next_sym = self.scanner.get_symbol()
-        if self.is_input_port(name_symbol, next_sym):
-            input_port_symbol = next_sym
         else:
-            raise InputPortError(next_sym)
+            next_sym = self.scanner.get_symbol()
+            if next_sym.type == self.scanner.DOT:
+                # has output port
+                next_sym = self.scanner.get_symbol()
+                if self.is_input_port(name_symbol, next_sym):
+                    input_port_symbol = next_sym
+                else:
+                    raise InputPortError(next_sym)
+            else:
+                raise DotError(next_sym)
+
+
 
         next_sym = self.scanner.get_symbol()
         self.input_symbols.append((name_symbol, input_port_symbol))
@@ -626,8 +620,7 @@ class Parser:
         multi_input_gates = [self.scanner.AND_id,
                              self.scanner.OR_id,
                              self.scanner.NOR_id,
-                             self.scanner.XOR_id,
-                             self.scanner.NAND_id]
+                             self.scanner.NAND_id] # excluding XOR and NOT
 
         if device_type == self.scanner.DTYPE_id:
             possible_inputs = [
@@ -637,6 +630,18 @@ class Parser:
                 self.scanner.DATA_id,
             ]
             return port_symbol.id in possible_inputs
+
+        elif device_type == self.scanner.XOR_id:
+            # inputs should only be I1 or I2
+            port_name = self.names.get_name_string(port_symbol.id)
+            if port_name == 'I1' or port_name == 'I2':
+                return True
+            return False
+
+        elif device_type == self.scanner.NOT_id:
+            # inputs should be the device's name
+            port_name = ""
+            return True
 
         elif device_type in multi_input_gates:
             num_inputs = self.device_dict[name_symbol.id]['property']
@@ -722,7 +727,6 @@ class Parser:
             input_port_id = None
             if input_port_symbol:
                 input_port_id = input_port_symbol.id
-
             self.network.make_connection(
                 input_id, input_port_id, output_id, output_port_id)
 
@@ -813,6 +817,7 @@ class Parser:
     def parse_network(self):
         """Parse the circuit definition file."""
         symbol = self.scanner.get_symbol()
+        print('\n---------- COMPILING SIMULATION ----------')
 
         # blocks need to be discovered in the right order and not repeated
         header_order = [self.scanner.devices_id, self.scanner.initialise_id,
@@ -822,20 +827,29 @@ class Parser:
 
         header_index = 0
 
+        if symbol.type == self.scanner.EOF:
+            # Blank file
+            print('Definition file is blank!')
+            return True
+
         # keep checking symbols until the end of the file
         while symbol.type != self.scanner.EOF:
             try:
                 if symbol.type == self.scanner.KEYWORD:
 
+                    if header_index == 4:
+                        raise ExtraInfoAfterMonitors(symbol)
+
                     if symbol.id == header_order[header_index]:
                         next_sym = header_functions[header_index](symbol)
                         header_index += 1
                     else:
-
                         raise InvalidBlockHeaderOrder(
                             symbol)  # expected a block header
 
                 else:
+                    if header_index == 4:
+                        raise ExtraInfoAfterMonitors(symbol)
                     raise InvalidBlockHeader(symbol)  # expected a keyword
             except ParserError as e:
                 # add the error
@@ -849,6 +863,11 @@ class Parser:
 
         self.scanner.file.close()
 
-        return len(self.syntax_errors) == 0 and \
+        success = len(self.syntax_errors) == 0 and \
             len(self.semantic_errors) == 0 and \
             len(self.input_not_connected_errors) == 0
+        
+        if success: 
+            print('File compiled successfully with 0 errors.')
+
+        return success

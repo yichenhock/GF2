@@ -30,7 +30,6 @@ connections(
 
 )
 
-
 monitors(
     c.Q, clk1;
 )

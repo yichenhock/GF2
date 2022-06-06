@@ -72,9 +72,12 @@ def main(arg_list):
         else:
             [path] = arguments
 
-        # Initialise an instance of the gui.Gui() class
-        app = wx.App()
-        gui = Gui("Logic Simulator", path, names, devices, network,
+        # Initialise an instance of the gui.Gui() class and wxPython translation capability
+        import app_base as ab
+        app = ab.BaseApp(redirect=False)
+        app.updateLanguage('zh')
+        # app = wx.App()
+        gui = Gui(_(u"Logic Simulator"), path, names, devices, network,
                   monitors)
         gui.Show(True)
         app.MainLoop()

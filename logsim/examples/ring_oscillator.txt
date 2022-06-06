@@ -1,28 +1,18 @@
 #Example circuit - Ring Oscillator;
 
 devices(
-    a, b, c are NAND;
+    a, b, c are NOT;
 )
 
 initialise(
-    a, b, c have 2 inputs;
 )
 
 connections(
-    a(
-        c to a.I1;
-        c to a.I2;
-    )
+        c to a;
 
-    b(  
-        a to b.I1;
-        a to b.I2;
-    )
+        a to b;
 
-    c(  
-        b to c.I1;
-        b to c.I2;
-    )
+        b to c;
 )
 
 monitors(

@@ -59,7 +59,7 @@ class CircuitDefTab(wx.Panel):
     def on_edit_attempt(self, event):
         """Handle the event the user attempts to edit."""
         if not self.textBox.IsEditable():
-            self.statusbar.SetStatusText('Reset the simulation first to edit!')
+            self.statusbar.SetStatusText(_(u"Reset the simulation first to edit!"))
         else:
             event.Skip()
 
