@@ -2,12 +2,12 @@
 
 devices(
     a is AND;
-    sw1 sw2 are SWITCH;
+    sw1, sw2 are SWITCH;
 )
 
 initialise(
     sw1, sw2 are HIGH;
-    a has 2 inputs;
+    a has 0 inputs;
 )
 
 connections(
