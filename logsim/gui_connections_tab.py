@@ -78,7 +78,7 @@ class ConnectionsTab(wx.Panel):
         self.warning_text1.SetForegroundColour("red")
 
         # combo box fields required
-        self.warning_text2 = wx.StaticText(self, wx.ID_ANY, "*Required fields", size=(200,20))
+        self.warning_text2 = wx.StaticText(self, wx.ID_ANY, "", size=(200,20))
         self.warning_text2.SetForegroundColour("red")
 
         # Create a sizer.
@@ -155,7 +155,7 @@ class ConnectionsTab(wx.Panel):
 
     def append_to_connections_list(self, connection):
         """Add an entry to `self.connections_list`."""
-        (output_id, output_port_id, input_id, input_port_id) = connection
+        ( input_id, input_port_id, output_id, output_port_id) = connection
         output_name = self.get_full_name(output_id, output_port_id)
         input_name = self.get_full_name(input_id, input_port_id)
 
@@ -279,19 +279,46 @@ class ConnectionsTab(wx.Panel):
         """Handle the event when the user adds a connection."""
         # check that the fields are valid
         # if the port fields are enabled, it means a value must be selected
+        incomplete = False
 
-        if self.combo_output_ports.IsEnabled():
-            if self.combo_output_ports.GetValue() == '':
-                self.warning_text2.SetLabel('Output port required!') # error - output port required!
+        if self.combo_input_devices.GetValue() == '' or self.combo_input_devices.GetValue() == '':
+            incomplete = True
+        if self.combo_output_ports.IsEnabled() and self.combo_output_ports.GetValue() == '':
+            incomplete = True
+        if self.combo_input_ports.IsEnabled() and self.combo_input_ports.GetValue() == '':
+            incomplete = True
 
-        if self.combo_input_ports.IsEnabled():
-            if self.combo_input_ports.GetValue() == '':
-                self.warning_text2.SetLabel('Input port required!') # error - input port required!
+        if incomplete:
+            self.warning_text2.SetLabel('Output and input fields incomplete!')
+        else:
+            self.warning_text2.SetLabel('')
+            output_name = self.combo_output_devices.GetValue()
+            output_id = self.names.query(output_name)
+            output_port = self.combo_output_ports.GetValue()
+            output_port_id = self.names.query(output_port)
 
-        # if all the fields are correct make the connection
+            input_name = self.combo_input_devices.GetValue()
+            input_id = self.names.query(input_name)
+            input_port = self.combo_input_ports.GetValue()
+            input_port_id = self.names.query(input_port)
 
-        # if add is successful, refresh
-        self.initialise_connections_list()
+            # if all the fields are correct, try to add the connection
+            # first check if the connection already exists
+            # theres a unique error code in networks to detect this
+
+            # MAKE THE ACTUAL CONNECTION
+            error = self.network.make_connection(output_id, output_port_id, input_id, input_port_id)
+        
+            if error == self.network.INPUT_CONNECTED:
+                # if so, throw a warning text
+                self.warning_text2.SetLabel('Connection already present!')
+            else:
+                # append it to the monitors list
+                print('connection made')
+                # refresh the connections list
+                pass
+                # self.initialise_connections_list()
+            
 
     def clear_connections_list(self):
         """Clear monitor list before initialisation."""
