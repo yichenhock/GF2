@@ -30,7 +30,10 @@ from error import (
     AttemptToDefineNOTInputs,
     AttemptToDefineDTYPEInputs,
     NoDTYPEOutputPortError,
-    InvalidBlockHeaderOrder
+    InvalidBlockHeaderOrder,
+    DeviceNotInitialised,
+    SwitchNotInitialised,
+    ClockNotInitialised
 )
 
 # Syntax errors

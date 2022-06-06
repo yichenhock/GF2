@@ -69,6 +69,14 @@ class ConnectionsTab(wx.Panel):
 
         self.add_button = wx.Button(self, wx.ID_ANY, _(u"Add"))
 
+        # not all inputs connected / reset simulation to continue
+        self.warning_text1 = wx.StaticText(self, wx.ID_ANY, "")
+        self.warning_text1.SetForegroundColour("red")
+
+        # combo box fields required
+        self.warning_text2 = wx.StaticText(self, wx.ID_ANY, "*Required fields", size=(200,20))
+        self.warning_text2.SetForegroundColour("red")
+
         # Create a sizer.
         self.grid_sizer = wx.FlexGridSizer(3, 3, (5, 5))
 
@@ -94,18 +102,18 @@ class ConnectionsTab(wx.Panel):
         self.grid_sizer.AddGrowableCol(1, 1.5)
         self.grid_sizer.AddGrowableCol(2, 1.5)
 
-        self.btn_grid_sizer = wx.FlexGridSizer(1, 1, (5, 5))
-        self.btn_grid_sizer.Add(self.add_button, flag=wx.EXPAND)
+        self.btn_grid_sizer = wx.FlexGridSizer(1, 2, (5, 5))
+        self.btn_grid_sizer.Add(self.warning_text2, flag= wx.EXPAND)
+        self.btn_grid_sizer.Add(self.add_button, flag= wx.EXPAND)
         self.btn_grid_sizer.AddGrowableRow(0, 1)
-
-        self.warning_text = wx.StaticText(self, wx.ID_ANY, "* Not all inputs have been connected!")
-        self.warning_text.SetForegroundColour("red")
+        self.btn_grid_sizer.AddGrowableCol(0, 3)
+        self.btn_grid_sizer.AddGrowableCol(1, 1)
 
         # static boxes for layout
         self.static_box = wx.StaticBox(
             self, wx.ID_ANY, _(u"Add Connection"))
         self.bottom_sizer = wx.StaticBoxSizer(self.static_box, wx.VERTICAL)
-        self.bottom_sizer.Add(self.warning_text, 0, wx.ALL, 3)
+        self.bottom_sizer.Add(self.warning_text1, 0, wx.ALL, 3)
         self.bottom_sizer.Add(self.grid_sizer, 0, wx.EXPAND | wx.ALL, 10)
         self.bottom_sizer.Add(self.btn_grid_sizer, 0, wx.CENTER | wx.ALL, 10)
 
@@ -119,14 +127,6 @@ class ConnectionsTab(wx.Panel):
         self.combo_output_devices.Bind(wx.EVT_COMBOBOX, self.on_combo_op_devices_select)
         self.combo_input_devices.Bind(wx.EVT_COMBOBOX, self.on_combo_ip_devices_select)
         self.add_button.Bind(wx.EVT_LEFT_DOWN, self.on_add_button)
-
-    def on_add_button(self, event):
-        """Handle the event when the user adds a connection."""
-        pass
-
-    def on_remove(self, event):
-        """Handle the event when the user removes a connection."""
-        button = event.GetEventObject()
     
     def initialise_connections_list(self):
         """Initialise `self.connections_list` with circuit definition file."""
@@ -189,12 +189,30 @@ class ConnectionsTab(wx.Panel):
             self.combo_input_ports.Enable(True)
             for port in possible_ports:
                 self.combo_input_ports.Append(port)
-                print(port)
         else: # some other gate
             self.combo_input_ports.Enable(True)
             # get the number of inputs the gate has
+            num_inputs = len(device.inputs)
             # add the inputs to the combo box
-            pass
+            for n in range(1,num_inputs+1):
+                self.combo_input_ports.Append('I'+str(n))
+
+    def on_add_button(self, event):
+        """Handle the event when the user adds a connection."""
+        # check that the fields are valid
+        # if the port fields are enabled, it means a value must be selected
+
+        if self.combo_output_ports.IsEnabled():
+            if self.combo_output_ports.GetValue() == '':
+                self.warning_text2.SetLabel('Output port required!') # error - output port required!
+
+        if self.combo_input_ports.IsEnabled():
+            if self.combo_input_ports.GetValue() == '':
+                self.warning_text2.SetLabel('Input port required!') # error - input port required!
+
+    def on_remove(self, event):
+        """Handle the event when the user removes a connection."""
+        button = event.GetEventObject()
 
     def append_to_connections_list(self, connection):
         """Add an entry to `self.connections_list`."""
@@ -202,6 +220,7 @@ class ConnectionsTab(wx.Panel):
         pass
 
     def clear_connections_list(self):
+        """Clear monitor list before initialisation."""
         pass
 
         # index = self.monitors_list.InsertStringItem(
@@ -234,7 +253,7 @@ class ConnectionsTab(wx.Panel):
         self.add_button.Enable(state)
 
         if state:
-            self.warning_text.SetLabel('')
+            self.warning_text1.SetLabel('')
         else:
-            self.warning_text.SetLabel(
+            self.warning_text1.SetLabel(
                 _(u" Reset simulation to add connections!"))
