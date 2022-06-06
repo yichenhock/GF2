@@ -254,6 +254,11 @@ class Devices:
             [input_id] = self.names.lookup([input_name])
             self.add_input(device_id, input_id)
 
+    def make_not(self, device_id):
+        self.add_device(device_id, self.NOT)
+        self.add_input(device_id, input_id=None)
+        self.add_output(device_id, output_id=None)
+
     def make_d_type(self, device_id):
         """Make a D-type device."""
         self.add_device(device_id, self.D_TYPE)
@@ -313,18 +318,18 @@ class Devices:
         elif device_kind in self.gate_types:
             # Device property is the number of inputs
             if device_kind == self.XOR:
-            #     if device_property is not None:
-            #         error_type = self.QUALIFIER_PRESENT
-            #     else:
-                self.make_gate(device_id, device_kind, 2)
-                error_type = self.NO_ERROR
+                if device_property is not None:
+                    error_type = self.QUALIFIER_PRESENT
+                else:
+                    self.make_gate(device_id, device_kind, 2)
+                    error_type = self.NO_ERROR
 
             elif device_kind == self.NOT: #########################################################################
-                # if device_property is not None:
-                #     error_type = self.QUALIFIER_PRESENT
-                # else:
-                self.make_gate(device_id, device_kind, 1)
-                error_type = self.NO_ERROR
+                if device_property is not None:
+                    error_type = self.QUALIFIER_PRESENT
+                else:
+                    self.make_not(device_id)
+                    error_type = self.NO_ERROR
 
             else:  # other gates
                 if device_property is None:

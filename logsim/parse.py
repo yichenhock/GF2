@@ -153,7 +153,6 @@ class Parser:
 
             while checking_devices:
                 if symbol.type == self.scanner.NAME:
-
                     if self.names.get_name_string(symbol.id) in \
                             self.names_parsed:
                         raise RedefinedError(
@@ -515,7 +514,6 @@ class Parser:
         self.input_symbols = []
         try:
             next_sym = self.parse_output_rule(symbol)
-
             # check for 'to' or 'is connected to'
             if next_sym.id == self.scanner.to_id:
                 pass
@@ -587,25 +585,30 @@ class Parser:
 
     def parse_input_rule(self, symbol):
         """Check if the scanner symbols form an input."""
-        # name, ".", input_name
+        # (name, ".", input_name) or (name) for NOT
 
         if symbol.type == self.scanner.NAME:
             name_symbol = symbol
         else:
             raise InvalidDeviceName(symbol)
 
-        next_sym = self.scanner.get_symbol()
-        if next_sym.type == self.scanner.DOT:
-            # has output port
-            pass
-        else:
-            raise DotError(next_sym)
+        device_kind = self.devices.get_device(name_symbol.id).device_kind
+        if device_kind == self.scanner.NOT_id:
+            input_port_symbol = None
 
-        next_sym = self.scanner.get_symbol()
-        if self.is_input_port(name_symbol, next_sym):
-            input_port_symbol = next_sym
         else:
-            raise InputPortError(next_sym)
+            next_sym = self.scanner.get_symbol()
+            if next_sym.type == self.scanner.DOT:
+                # has output port
+                next_sym = self.scanner.get_symbol()
+                if self.is_input_port(name_symbol, next_sym):
+                    input_port_symbol = next_sym
+                else:
+                    raise InputPortError(next_sym)
+            else:
+                raise DotError(next_sym)
+
+
 
         next_sym = self.scanner.get_symbol()
         self.input_symbols.append((name_symbol, input_port_symbol))
@@ -640,7 +643,12 @@ class Parser:
                 return True
             return False
 
-        elif device_type in self.multi_input_gates:
+        elif device_type == self.scanner.NOT_id:
+            # inputs should be the device's name
+            port_name = ""
+            return True
+
+        elif device_type in multi_input_gates:
             num_inputs = self.device_dict[name_symbol.id]['property']
             # inputs have format I1, I2 ...
             port_name = self.names.get_name_string(port_symbol.id)

@@ -5,15 +5,14 @@ devices(
 )
 
 initialise(
-    a, b, c have 1 input;
 )
 
 connections(
-        c to a.I1;
+        c to a;
 
-        a to b.I1;
+        a to b;
 
-        b to c.I1;
+        b to c;
 )
 
 monitors(
