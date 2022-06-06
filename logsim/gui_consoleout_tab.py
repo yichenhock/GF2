@@ -109,9 +109,14 @@ class ConsoleOutTab(wx.Panel):
             self.run_command()
         elif command == "c":
             self.continue_command()
+        elif command == "q":
+            self.clear_console()
         else:
             if command:
                 print(_(u"Error! Invalid command!"))
+
+    def clear_console(self):
+        self.log.SetValue('')
 
     def help_command(self):
         """Print a list of valid commands."""
@@ -121,6 +126,7 @@ class ConsoleOutTab(wx.Panel):
         print("c N       - " + _(u"continue the simulation for N"))
         print("            " + _(u"cycles"))
         print("s X N     - " + _(u"set switch X to N (0 or 1)"))
+        print("q         - " + _(u"clear this console"))
         print("h         - " + _(u"help (this command)"))
 
     def switch_command(self):

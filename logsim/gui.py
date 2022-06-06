@@ -18,6 +18,7 @@ from monitors import Monitors
 from scanner import Scanner
 from parse import Parser
 
+from gui_connections_tab import ConnectionsTab
 from gui_consoleout_tab import ConsoleOutTab
 from gui_circuitdef_tab import CircuitDefTab
 from gui_inputs_tab import InputsTab
@@ -123,6 +124,8 @@ class Gui(wx.Frame):
             notebook, names, devices, self.canvas, self.statusbar)
         self.monitorsPanel = MonitorsTab(
             notebook, names, devices, monitors, self.canvas, self.statusbar)
+        self.connectionsPanel = ConnectionsTab(
+            notebook, names, devices, network, self.statusbar)
 
         self.consoleOutPanel = ConsoleOutTab(notebook, self.path, names,
                                              devices, network,
@@ -136,20 +139,22 @@ class Gui(wx.Frame):
             self.circuitDefPanel.replace_text(f.read())
 
         notebook.AddPage(self.consoleOutPanel, _(u"Output"), True)
-        notebook.AddPage(self.circuitDefPanel, _(u"Circuit Definition"), False)
+        notebook.AddPage(self.circuitDefPanel, _(u"Definition"), False)
         notebook.AddPage(self.inputsPanel, _(u"Inputs"), False)
         notebook.AddPage(self.monitorsPanel, _(u"Monitors"), False)
+        notebook.AddPage(self.connectionsPanel, _(u"Connections"), False)
 
         # disable close buttons
         notebook.SetCloseButton(0, False)
         notebook.SetCloseButton(1, False)
         notebook.SetCloseButton(2, False)
         notebook.SetCloseButton(3, False)
+        notebook.SetCloseButton(4, False)
 
         self.mgr.AddPane(notebook,
                          aui.AuiPaneInfo().CaptionVisible(False).
                          Right().PaneBorder(False).Floatable(False)
-                         .GripperTop(False).MinSize(330, 150)
+                         .GripperTop(False).MinSize(340, 150)
                          .CloseButton(False))
 
         # setting docking guides fixes docking issue (problem with wxTimer)
@@ -272,8 +277,7 @@ class Gui(wx.Frame):
         if Id == wx.ID_EXIT:
             self.Close(True)
         if Id == wx.ID_ABOUT:
-            wx.MessageBox(_(u"Logic Simulator\nCreated by Yi Chen Hock, Michael \
-                          Stevens and Cindy Wu\n2022"),
+            wx.MessageBox(_(u"Logic Simulator\nCreated by Yi Chen Hock, Michael Stevens and Cindy Wu\n2022"),
                           _(u"About Logsim"), wx.ICON_INFORMATION | wx.OK)
         if Id == wx.ID_SAVEAS:
             self.save_file_as()
@@ -335,6 +339,7 @@ class Gui(wx.Frame):
         self.statusbar.SetStatusText(_(u"Compiling..."))
 
         self.monitorsPanel.clear_monitor_list()
+        self.connectionsPanel.clear_connections_list()
 
         # reinitialise instances
         self.names.__init__()
@@ -351,6 +356,7 @@ class Gui(wx.Frame):
                 self.inputsPanel.refresh_list()
                 # update the monitors panel
                 self.monitorsPanel.initialise_monitor_list()
+                self.connectionsPanel.initialise_connections_list()
                 self.set_gui_state(sim_running=False)
 
                 self.statusbar.SetStatusText(
@@ -369,6 +375,7 @@ class Gui(wx.Frame):
         """Run the simulation for N cycles from scratch."""
         if not self.monitors.monitors_dictionary:
             self.statusbar.SetStatusText(_(u"No monitors."))
+            print('No monitors.')
             return
 
         self.consoleOutPanel.run_command(True, self.spin.GetValue())
@@ -402,6 +409,7 @@ class Gui(wx.Frame):
         # text box only editable when the simulation is not running
         self.circuitDefPanel.set_textbox_state(not sim_running)
         self.monitorsPanel.enable_monitor(not sim_running)
+        self.connectionsPanel.enable_connections(not sim_running)
 
     def on_help_button(self):
         """Display a helpful message box."""
@@ -453,10 +461,15 @@ class Gui(wx.Frame):
         self.path = pathname
         try:
             self.statusbar.SetStatusText(pathname, 1)
+            # write to circuit definition panel
             self.circuitDefPanel.replace_text(f.read())
+            # flush the console output
+            self.consoleOutPanel.clear_console()
+            print(_(u"Logic Simulator: interactive graphical user interface.\n"
+              "Enter 'h' for help."))
+
         except AttributeError:
             pass
-        # write to circuit definition panel
         self.global_vars.def_edited = False
         f.close()
         return True

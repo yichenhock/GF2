@@ -6,7 +6,7 @@ devices(
 )
 
 initialise(
-    g has 2 inputs;
+    #g has 2 inputs;
     sw1, sw2 are LOW;
     clk1 cycle length 3;
 )
