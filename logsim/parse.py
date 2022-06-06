@@ -882,6 +882,8 @@ class Parser:
 
         if len(self.not_initialised_errors) == 0:
             self.check_all_inputs_connected()
+        else:
+            print('Devices not initialised. Connections and monitors not added.')
             
         self.print_errors()
 
