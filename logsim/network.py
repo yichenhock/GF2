@@ -149,6 +149,65 @@ class Network:
                 # print("output connected to output")
                 error_type = self.OUTPUT_TO_OUTPUT
             elif second_port_id in second_device.inputs:
+                if second_device.inputs[second_port_id] is None:
+                    # Input is already in a connection
+                    print("Input already unconnected")
+                    error_type = self.INPUT_CONNECTED
+                    print("Input already unconnected")
+                else:
+                    second_device.inputs[second_port_id] = (first_device_id,
+                                                            first_port_id)
+                    error_type = self.NO_ERROR
+                    print("No error")
+            else:
+                print("Port absent")
+                error_type = self.PORT_ABSENT
+                print("Port absent")
+
+        else:  # first_port_id not a valid input or output port
+            print("First port absent")
+            error_type = self.PORT_ABSENT
+            print("Port absent")
+
+        return error_type
+
+    def remove_connection(self, first_device_id, first_port_id, second_device_id, second_port_id):
+        """Remove connection from the first device to the second device.
+
+        Return self.NO_ERROR if successful, or the corresponding error if not.
+        """
+        first_device = self.devices.get_device(first_device_id)
+        second_device = self.devices.get_device(second_device_id)
+        if first_device is None or second_device is None:
+            error_type = self.DEVICE_ABSENT
+            print("Device absent")
+
+        elif first_port_id in first_device.inputs:
+            if first_device.inputs[first_port_id] is None:
+                # Input is already in a connection
+                print("Input already unconnected")
+                error_type = self.INPUT_CONNECTED
+                print("Input already unconnected")
+            elif second_port_id in second_device.inputs:
+                # Both ports are inputs
+                print("Input to input")
+                error_type = self.INPUT_TO_INPUT
+            elif second_port_id in second_device.outputs:
+                # Make connection
+                first_device.inputs[first_port_id] = (second_device_id,
+                                                      second_port_id)
+                error_type = self.NO_ERROR
+                print("No error")
+            else:  # second_port_id is not a valid input or output port
+                print("Second port absent")
+                error_type = self.PORT_ABSENT
+                print("Port absent")
+        elif first_port_id in first_device.outputs:
+            if second_port_id in second_device.outputs:
+                # Both ports are outputs
+                print("output connected to output")
+                error_type = self.OUTPUT_TO_OUTPUT
+            elif second_port_id in second_device.inputs:
                 if second_device.inputs[second_port_id] is not None:
                     # Input is already in a connection
                     # print("Input connected")
@@ -169,7 +228,7 @@ class Network:
             error_type = self.PORT_ABSENT
             # print("Port absent")
 
-        return error_type
+        return error_type       
 
     def check_network(self):
         """Return True if all inputs in the network are connected."""

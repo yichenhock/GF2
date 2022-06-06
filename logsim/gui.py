@@ -26,7 +26,6 @@ from gui_monitors_tab import MonitorsTab
 from gui_canvas import MyGLCanvas
 from global_vars import GlobalVars
 
-
 class Gui(wx.Frame):
     """Configure the main window and all the widgets.
 
