@@ -33,7 +33,8 @@ from error import (
     InvalidBlockHeaderOrder,
     DeviceNotInitialised,
     SwitchNotInitialised,
-    ClockNotInitialised
+    ClockNotInitialised,
+    NotInitialisedError
 )
 
 # Syntax errors
@@ -99,6 +100,7 @@ class Parser:
         self.syntax_errors = []
         self.semantic_errors = []
         self.input_not_connected_errors = []
+        self.not_initialised_errors = []
 
         self.names_parsed = []
 
@@ -107,6 +109,12 @@ class Parser:
         # [(input_id_symbol, input_port_id_symbol), ...]
         self.input_symbols = []
         self.output_symbol = None  # (output_id_symbol, output_port_id_symbol)
+
+        self.multi_input_gates = [self.scanner.AND_id,
+                             self.scanner.OR_id,
+                             self.scanner.NOR_id,
+                             self.scanner.NAND_id] # excluding XOR and NOT
+
 
     def devices_block(self, symbol):
         """Check if symbols form a device block.
@@ -252,7 +260,7 @@ class Parser:
         """Check if symbols form a initialise block.
 
         """
-
+        initialise_symbol = symbol
         next_sym = self.scanner.get_symbol()
 
         if next_sym.type == self.scanner.OPEN_BRACKET:
@@ -267,7 +275,8 @@ class Parser:
             next_sym = self.scanner.get_symbol()
         else:
             raise OpenBracketError(next_sym)  # raise open bracket error
-        self.make_devices()
+
+        self.make_devices(initialise_symbol)
         return next_sym
 
     def initialise_subrule(self, symbol):
@@ -614,12 +623,6 @@ class Parser:
     def is_input_port(self, name_symbol, port_symbol):
         # input ports
         device_type = self.device_dict[name_symbol.id]['type']
-        multi_input_gates = [self.scanner.AND_id,
-                             self.scanner.OR_id,
-                             self.scanner.NOR_id,
-                            #  self.scanner.XOR_id,
-                            #  self.scanner.NOT_id,
-                             self.scanner.NAND_id] # excluding XOR
 
         if device_type == self.scanner.DTYPE_id:
             possible_inputs = [
@@ -637,7 +640,7 @@ class Parser:
                 return True
             return False
 
-        elif device_type in multi_input_gates:
+        elif device_type in self.multi_input_gates:
             num_inputs = self.device_dict[name_symbol.id]['property']
             # inputs have format I1, I2 ...
             port_name = self.names.get_name_string(port_symbol.id)
@@ -702,12 +705,33 @@ class Parser:
 # =============================================================================
 # =============================================================================
 
-    def make_devices(self):
+    def make_devices(self, symbol):
         for device_id, device_details in self.device_dict.items():
             type = device_details['type']
             property = device_details['property']
+
+            name = self.names.get_name_string(device_id)
             # need to check for errors here
-            self.devices.make_device(device_id, type, property)
+            if type in self.multi_input_gates:
+                # if the type is a gate (excluding XOR and NOT), 
+                # it needs to have a property (number of input gates)
+                if property == None:
+                    self.not_initialised_errors.append(DeviceNotInitialised(symbol, name))
+            elif type == self.scanner.SWITCH_id:
+                # if the type is a switch, it needs to have a
+                # property (initial state)
+                if property == None:
+                    self.not_initialised_errors.append(SwitchNotInitialised(symbol, name))
+            elif type == self.scanner.CLOCK_id:
+                # if the type is a clock, it needs to have a property (length)
+                if property == None:
+                    self.not_initialised_errors.append(ClockNotInitialised(symbol, name))
+            
+            if len(self.not_initialised_errors) == 0:
+                # if all good, make the device
+                self.devices.make_device(device_id, type, property)
+            else:
+                raise NotInitialisedError(symbol)
 
     def make_connections(self):
         for input, input_port_symbol in self.input_symbols:
@@ -846,22 +870,38 @@ class Parser:
                         raise ExtraInfoAfterMonitors(symbol)
                     raise InvalidBlockHeader(symbol)  # expected a keyword
             except ParserError as e:
+                if isinstance(e, NotInitialisedError):
+                    for error in self.not_initialised_errors:
+                        self.add_error(error)
+                    break
                 # add the error
                 self.add_error(e)
                 # skip to the next error
                 next_sym = self.skip_error(e)
             symbol = next_sym
 
-        self.check_all_inputs_connected()
+        if len(self.not_initialised_errors) == 0:
+            self.check_all_inputs_connected()
+            
         self.print_errors()
 
         self.scanner.file.close()
 
         success = len(self.syntax_errors) == 0 and \
             len(self.semantic_errors) == 0 and \
-            len(self.input_not_connected_errors) == 0
+            len(self.input_not_connected_errors) == 0 and \
+            len(self.not_initialised_errors) == 0
         
+        total_errors = len(self.syntax_errors) + \
+            len(self.semantic_errors) + \
+            len(self.input_not_connected_errors) + \
+            len(self.not_initialised_errors)
+
         if success: 
+            print('\n--------- COMPILATION COMPLETE ---------')
             print('File compiled successfully with 0 errors.')
+        else:
+            print('---------- COMPILATION FAILED ----------')
+            print('File compiled unsuccessfully with {} errors.'.format(total_errors))
 
         return success
