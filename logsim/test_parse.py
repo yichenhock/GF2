@@ -9,7 +9,7 @@ from devices import Devices
 from network import Network
 from parse import Parser
 
-from error import SyntaxError, SemanticError
+# from error import SyntaxError, SemanticError
 
 
 @pytest.fixture
