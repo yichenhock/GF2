@@ -799,15 +799,23 @@ class Parser:
         # connected to something
         # specify exactly which input has not been connected
         for device in self.devices.devices_list:
+    
             for input_id, connection in device.inputs.items():
                 if connection is None:
-                    self.input_not_connected_errors.append(
-                        (
-                            self.names.get_name_string(device.device_id),
-                            self.names.get_name_string(input_id)
+                    if device.device_kind != self.scanner.NOT_id:
+                        self.input_not_connected_errors.append(
+                            (
+                                self.names.get_name_string(device.device_id),
+                                self.names.get_name_string(input_id)
+                            )
                         )
-                    )
-
+                    else:
+                        self.input_not_connected_errors.append(
+                            (
+                                self.names.get_name_string(device.device_id),
+                                None
+                            )
+                        )
     def add_error(self, error):
         if isinstance(error, ParserSyntaxError):
             self.syntax_errors.append(error)
@@ -855,8 +863,12 @@ class Parser:
 
         if len(self.input_not_connected_errors) > 0:
             for device_name, input_name in self.input_not_connected_errors:
-                print("'{}.{}' is not connected"
-                      .format(device_name, input_name))
+                if input_name == None:
+                    print("'{}' is not connected"
+                          .format(device_name))
+                else:
+                    print("'{}.{}' is not connected"
+                          .format(device_name, input_name))
             print("{} unconnected inputs found.".format(
                 len(self.input_not_connected_errors)
             ))
