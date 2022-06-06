@@ -11,6 +11,8 @@ Classes
 import wx
 import wx.lib.agw.ultimatelistctrl as ULC
 
+from wx.adv import BitmapComboBox
+
 from gui_listctrl import ListCtrl
 
 
@@ -48,22 +50,21 @@ class ConnectionsTab(wx.Panel):
         self.label_input = wx.StaticText(self, wx.ID_ANY, _(u"Input*"))
         self.label_input.SetForegroundColour('red')
 
+        self.tick_bmp = wx.Bitmap(wx.Image('./logsim/imgs/tick.png'))
+        self.cross_bmp = wx.Bitmap(wx.Image('./logsim/imgs/cross.png'))
+
         self.combo_output_devices = wx.ComboBox(self, wx.ID_ANY,
                                        choices=[],
                                        style=wx.CB_READONLY)
         self.combo_output_ports = wx.ComboBox(self, wx.ID_ANY,
                                        choices=[],
                                        style=wx.CB_READONLY)
-        self.combo_input_devices = wx.ComboBox(self, wx.ID_ANY,
+        self.combo_input_devices = BitmapComboBox(self, wx.ID_ANY,
                                        choices=[],
                                        style=wx.CB_READONLY)
-        self.combo_input_ports = wx.ComboBox(self, wx.ID_ANY,
+        self.combo_input_ports = BitmapComboBox(self, wx.ID_ANY,
                                        choices=[],
                                        style=wx.CB_READONLY)
-
-        # # By default (when nothing selected), port selection is disabled
-        # self.combo_output_ports.Enable(False)
-        # self.combo_input_ports.Enable(False)
 
         self.blank = wx.StaticText(self, wx.ID_ANY,'')
 
@@ -159,7 +160,7 @@ class ConnectionsTab(wx.Panel):
     def refresh_combo_input_devices(self, input_devices):
         self.combo_input_devices.Clear()
         for device in input_devices: 
-            self.combo_input_devices.Append(device)
+            self.combo_input_devices.Append(device, bitmap=self.tick_bmp)
 
     def on_combo_op_devices_select(self, event):
         """Handles the event when user selects an output device."""
@@ -188,14 +189,14 @@ class ConnectionsTab(wx.Panel):
             possible_ports = ['DATA','CLK','SET','CLEAR']
             self.combo_input_ports.Enable(True)
             for port in possible_ports:
-                self.combo_input_ports.Append(port)
+                self.combo_input_ports.Append(port, bitmap=self.tick_bmp)
         else: # some other gate
             self.combo_input_ports.Enable(True)
             # get the number of inputs the gate has
             num_inputs = len(device.inputs)
             # add the inputs to the combo box
             for n in range(1,num_inputs+1):
-                self.combo_input_ports.Append('I'+str(n))
+                self.combo_input_ports.Append('I'+str(n), bitmap=self.cross_bmp)
 
     def on_add_button(self, event):
         """Handle the event when the user adds a connection."""
