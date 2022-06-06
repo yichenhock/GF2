@@ -128,8 +128,8 @@ class Network:
                 # Input is already in a connection
                 # print("Input connected")
                 error_type = self.INPUT_CONNECTED
-                # print("Input connected")
-            elif second_port_id in second_device.inputs:
+            elif (second_port_id in second_device.inputs) and (
+                second_port_id not in second_device.outputs):
                 # Both ports are inputs
                 # print("Input to input")
                 error_type = self.INPUT_TO_INPUT
@@ -142,9 +142,9 @@ class Network:
             else:  # second_port_id is not a valid input or output port
                 # print("Second port absent")
                 error_type = self.PORT_ABSENT
-                # print("Port absent")
         elif first_port_id in first_device.outputs:
-            if second_port_id in second_device.outputs:
+            if second_port_id in second_device.outputs and (
+                second_port_id not in second_device.inputs):
                 # Both ports are outputs
                 # print("output connected to output")
                 error_type = self.OUTPUT_TO_OUTPUT
@@ -212,7 +212,6 @@ class Network:
                     # Input is already in a connection
                     # print("Input connected")
                     error_type = self.INPUT_CONNECTED
-                    # print("Input connected")
                 else:
                     second_device.inputs[second_port_id] = (first_device_id,
                                                             first_port_id)
@@ -221,14 +220,17 @@ class Network:
             else:
                 # print("Port absent")
                 error_type = self.PORT_ABSENT
-                # print("Port absent")
 
         else:  # first_port_id not a valid input or output port
             # print("First port absent")
             error_type = self.PORT_ABSENT
+<<<<<<< HEAD
             # print("Port absent")
 
         return error_type       
+=======
+        return error_type
+>>>>>>> 448e8f188bbe2459e8f9c25b6b3b9f182345c714
 
     def check_network(self):
         """Return True if all inputs in the network are connected."""

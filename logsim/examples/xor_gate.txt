@@ -1,0 +1,19 @@
+# Simple AND gate;
+
+devices(
+	a is XOR;
+	sw1, sw2 are SWITCH;
+)
+
+initialise(
+	sw1, sw2 are HIGH;
+)
+
+connections(
+	sw1 is connected to a.I1;
+	sw2 is connected to a.I2;
+)
+
+monitors(
+	sw1, sw2, a;
+)

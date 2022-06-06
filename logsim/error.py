@@ -103,6 +103,21 @@ class InvalidBlockHeader(ParserSemanticError):
         message = "Invalid block header (expected either 'devices', 'initialise', 'connections' or 'monitor')."
         super().__init__(symbol, message)
 
+class DeviceNotInitialised(ParserSemanticError):
+    def __init__(self, symbol, name):
+        message = "Device {} not initialised with number of inputs.".format(name)
+        super().__init__(symbol, message)
+
+class SwitchNotInitialised(ParserSemanticError):
+    def __init__(self, symbol, name):
+        message = "Switch {} not initialised with initial state.".format(name)
+        super().__init__(symbol, message)
+
+class ClockNotInitialised(ParserSemanticError):
+    def __init__(self, symbol, name):
+        message = "Clock {} not initialised with clock length.".format(name)
+        super().__init__(symbol, message)
+
 # ===========================================================================================================
 # ===========================================================================================================
 
