@@ -153,52 +153,53 @@ class Parser:
             checking_devices = True
 
             while checking_devices:
-                if symbol.type == self.scanner.NAME:
-                    if self.names.get_name_string(symbol.id) in \
-                            self.names_parsed:
-                        raise RedefinedError(
-                            symbol, self.names.get_name_string(symbol.id))
-                    else:
-                        self.names_parsed.append(
-                            self.names.get_name_string(symbol.id))
-                        name_symbols.append(symbol)
-
-                    # now expect either 'IS/ARE' or 'COMMA, NAME'
-                    symbol = self.scanner.get_symbol()
-
-                    if symbol.id in connect:  # go to detect the device!
-                        checking_devices = False
-                        symbol = self.scanner.get_symbol()
-                        if symbol.id in types:
-                            # first check if the names are legal
-                            for name_symbol in name_symbols:
-                                self.check_name_legal(name_symbol, symbol.id)
-                                # add to devices for connecting up later
-                                # devices can only be connected after
-                                # initialise block
-                                self.device_dict[name_symbol.id] = {
-                                    'type': symbol.id,
-                                    'property': None
-                                }
-                        else:
-                            # expected a device type
-                            raise DeviceTypeError(symbol)
-
-                        symbol = self.scanner.get_symbol()
-                        if symbol.type != self.scanner.SEMICOLON:
-                            raise SemicolonError(symbol)
-
-                    elif symbol.type == self.scanner.COMMA:
-                        symbol = self.scanner.get_symbol()
-
-                    else:
-                        checking_devices = False
-                        # invalid device subrule statement
-                        raise InvalidDeviceRule(symbol)
-                else:
+                if symbol.type != self.scanner.NAME:
                     checking_devices = False
                     # expected a valid device name
                     raise InvalidDeviceName(symbol)
+
+                if self.names.get_name_string(symbol.id) in \
+                        self.names_parsed:
+                    raise RedefinedError(
+                        symbol, self.names.get_name_string(symbol.id))
+                else:
+                    self.names_parsed.append(
+                        self.names.get_name_string(symbol.id))
+                    name_symbols.append(symbol)
+
+                # now expect either 'IS/ARE' or 'COMMA, NAME'
+                symbol = self.scanner.get_symbol()
+
+                if symbol.id in connect:  # go to detect the device!
+                    checking_devices = False
+                    symbol = self.scanner.get_symbol()
+                    if symbol.id not in types:
+                        # expected a device type
+                        raise DeviceTypeError(symbol)
+
+                    # first check if the names are legal
+                    for name_symbol in name_symbols:
+                        self.check_name_legal(name_symbol, symbol.id)
+                        # add to devices for connecting up later
+                        # devices can only be connected after
+                        # initialise block
+                        self.device_dict[name_symbol.id] = {
+                            'type': symbol.id,
+                            'property': None
+                        }
+
+                    symbol = self.scanner.get_symbol()
+                    if symbol.type != self.scanner.SEMICOLON:
+                        raise SemicolonError(symbol)
+
+                elif symbol.type == self.scanner.COMMA:
+                    symbol = self.scanner.get_symbol()
+
+                else:
+                    checking_devices = False
+                    # invalid device subrule statement
+                    raise InvalidDeviceRule(symbol)
+                
 
             next_sym = self.scanner.get_symbol()
 
@@ -281,23 +282,23 @@ class Parser:
 
     def initialise_subrule(self, symbol):
         try:
-            if symbol.type == self.scanner.NAME:
-                if symbol.id in self.device_dict:
-                    device_type = self.device_dict[symbol.id]['type']
-                    # if device is a switch
-                    if device_type == self.scanner.SWITCH_id:
-                        next_sym = self.init_switch(symbol)
-                    # if device is a clock
-                    elif device_type == self.scanner.CLOCK_id:
-                        next_sym = self.init_clock(symbol)
-                    # if device is a gate
-                    else:
-                        next_sym = self.init_gate(symbol)
-                else:
-                    raise UndefinedError(
-                        symbol, self.names.get_name_string(symbol.id))
-            else:
+            if symbol.type != self.scanner.NAME:
                 raise InvalidDeviceName(symbol)
+
+            if symbol.id not in self.device_dict:
+                raise UndefinedError(
+                    symbol, self.names.get_name_string(symbol.id))
+
+            device_type = self.device_dict[symbol.id]['type']
+            # if device is a switch
+            if device_type == self.scanner.SWITCH_id:
+                next_sym = self.init_switch(symbol)
+            # if device is a clock
+            elif device_type == self.scanner.CLOCK_id:
+                next_sym = self.init_clock(symbol)
+            # if device is a gate
+            else:
+                next_sym = self.init_gate(symbol)
 
             next_sym = self.scanner.get_symbol()
 
@@ -385,17 +386,17 @@ class Parser:
                     next_sym = self.scanner.get_symbol()
 
                 # next symbol needs to be a number
-                if next_sym.type == self.scanner.NUMBER:
-                    # check if it is a number in the correct range
-                    clock_length = next_sym.id
-                    if clock_length <= 1000:
-                        # add this to device property
-                        for sym in device_symbols:
-                            self.device_dict[sym.id]['property'] = clock_length
-                    else:
-                        InvalidClockLength(next_sym)
-                else:
+                if next_sym.type != self.scanner.NUMBER:
                     raise InvalidClockLength(next_sym)
+                    
+                # check if it is a number in the correct range
+                clock_length = next_sym.id
+                if clock_length <= 1000:
+                    # add this to device property
+                    for sym in device_symbols:
+                        self.device_dict[sym.id]['property'] = clock_length
+                else:
+                    InvalidClockLength(next_sym)
 
                 next_sym = self.scanner.get_symbol()
                 if next_sym.type != self.scanner.SEMICOLON:
@@ -568,7 +569,11 @@ class Parser:
         else:
             # no output port
             # check if its a dtype and raise an error
-            device_type = self.device_dict[name_symbol.id]['type']
+            try:
+                device_type = self.device_dict[name_symbol.id]['type']
+            except KeyError:
+                raise UndefinedError(name_symbol, self.names.get_name_string(name_symbol.id))
+
             if device_type == self.scanner.DTYPE_id:
                 raise NoDTYPEOutputPortError(next_sym)
 
@@ -618,7 +623,11 @@ class Parser:
     def is_output_port(self, name_symbol, port_symbol):
         # output ports are only specified for d types
         # they can be either Q or QBAR
-        device_type = self.device_dict[name_symbol.id]['type']
+        try:
+            device_type = self.device_dict[name_symbol.id]['type']
+        except KeyError:
+            raise UndefinedError(name_symbol, self.names.get_name_string(name_symbol.id))
+
         if device_type == self.scanner.DTYPE_id:
             return port_symbol.id in [self.scanner.Q_id, self.scanner.QBAR_id]
         else:  # no other gates have different output ports
@@ -626,7 +635,10 @@ class Parser:
 
     def is_input_port(self, name_symbol, port_symbol):
         # input ports
-        device_type = self.device_dict[name_symbol.id]['type']
+        try:
+            device_type = self.device_dict[name_symbol.id]['type']
+        except KeyError:
+            raise UndefinedError(name_symbol, self.names.get_name_string(name_symbol.id))
 
         if device_type == self.scanner.DTYPE_id:
             possible_inputs = [
