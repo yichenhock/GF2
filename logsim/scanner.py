@@ -131,7 +131,7 @@ class Scanner:
 
         print("Line {}, {}: {}".format(line_number, line_position, error_message))
         print(self.lines[line_number])
-        print(" " * (line_position - 1) + "^ Error here")
+        print(" " * (line_position) + "^ Error here")
 
     def get_name(self):
         """Read and returns the next name (word made up of only letters)."""
