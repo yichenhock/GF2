@@ -152,7 +152,7 @@ class Gui(wx.Frame):
         self.mgr.AddPane(notebook,
                          aui.AuiPaneInfo().CaptionVisible(False).
                          Right().PaneBorder(False).Floatable(False)
-                         .GripperTop(False).MinSize(340, 150)
+                         .GripperTop(False).MinSize(388, 150)
                          .CloseButton(False))
 
         # setting docking guides fixes docking issue (problem with wxTimer)
@@ -377,16 +377,16 @@ class Gui(wx.Frame):
             return
 
         self.consoleOutPanel.run_command(True, self.spin.GetValue())
-        self.update_statusbar(_(u"Run button pressed."))
-        self.set_gui_state(sim_running=True)
+        # self.update_statusbar(_(u"Run button pressed."))
+        # self.set_gui_state(sim_running=True)
         self.canvas.render_signals(flush_pan=True)
 
     def on_cont_button(self):
         """Continue the simulation for N cycles."""
         self.consoleOutPanel.continue_command(True, self.spin.GetValue())
-        self.update_statusbar(_(u"Continue button pressed."))
+        # self.update_statusbar(_(u"Continue button pressed."))
         self.canvas.render_signals(flush_pan=True)
-        self.set_gui_state(sim_running=True)
+        # self.set_gui_state(sim_running=True)
 
     def on_reset_button(self):
         """Reset the simulation."""

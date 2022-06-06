@@ -65,6 +65,7 @@ class Scanner:
             raise TypeError("Expected path to be a string.")
 
         self.names = names
+        self.path = path
 
         # Define all symbol types
         self.symbol_type_list = [self.COMMA, self.DOT, self.SEMICOLON,

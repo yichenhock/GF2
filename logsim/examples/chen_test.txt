@@ -27,7 +27,7 @@ connections(
         clk1 to c.CLK;
         sw3 to c.SET;
         sw4 to c.CLEAR;
-
+        sw4 to c.CLEAR;
 )
 
 monitors(

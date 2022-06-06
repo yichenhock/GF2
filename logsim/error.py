@@ -34,19 +34,19 @@ class ParserSyntaxError(ParserError):
 
 class UndefinedError(ParserSemanticError):
     def __init__(self, symbol, name):
-        message = "Device {} must be defined before use.".format(name)
+        message = "Device '{}' must be defined before use.".format(name)
         super().__init__(symbol, message)
 
 
 class RedefinedError(ParserSemanticError):
     def __init__(self, symbol, name):
-        message = "Device {} has been previously defined.".format(name)
+        message = "Device '{}' has been previously defined.".format(name)
         super().__init__(symbol, message)
 
 
 class WrongDeviceName(ParserSemanticError):
     def __init__(self, symbol, name):
-        message = "Device name should not be {} (must not begin with 'sw' or 'clk').".format(name)
+        message = "Device name should not be '{}' (must not begin with 'sw' or 'clk').".format(name)
         super().__init__(symbol, message)
 
 
@@ -58,13 +58,13 @@ class InvalidClockLength(ParserSemanticError):
 
 class WrongSwitchName(ParserSemanticError):
     def __init__(self, symbol, name):
-        message = "Switch name should not be {} (must begin with 'sw' followed by a number).".format(name)
+        message = "Switch name should not be '{}' (must begin with 'sw' followed by a number).".format(name)
         super().__init__(symbol, message)
 
 
 class WrongClockName(ParserSemanticError):
     def __init__(self, symbol, name):
-        message = "Clock name should not be {} (must begin with 'clk' followed by a number).".format(name)
+        message = "Clock name should not be '{}' (must begin with 'clk' followed by a number).".format(name)
         super().__init__(symbol, message)
 
 
@@ -105,19 +105,30 @@ class InvalidBlockHeader(ParserSemanticError):
 
 class DeviceNotInitialised(ParserSemanticError):
     def __init__(self, symbol, name):
-        message = "Device {} not initialised with number of inputs.".format(name)
+        message = "Device '{}' not initialised with number of inputs.".format(name)
         super().__init__(symbol, message)
 
 class SwitchNotInitialised(ParserSemanticError):
     def __init__(self, symbol, name):
-        message = "Switch {} not initialised with initial state.".format(name)
+        message = "Switch '{}' not initialised with initial state.".format(name)
         super().__init__(symbol, message)
 
 class ClockNotInitialised(ParserSemanticError):
     def __init__(self, symbol, name):
-        message = "Clock {} not initialised with clock length.".format(name)
+        message = "Clock '{}' not initialised with clock length.".format(name)
         super().__init__(symbol, message)
 
+class NotInitialisedError(ParserSemanticError):
+    def __init__(self, symbol):
+        super().__init__(symbol, "")
+
+class ConnectionPresent(ParserSemanticError):
+    def __init__(self, symbol, name, suffix):
+        if suffix:
+            message = "Input '{}.{}' already connected to an output".format(name, suffix)
+        else:
+            message = "Input '{}' already connected to an output".format(name)
+        super().__init__(symbol, message)
 # ===========================================================================================================
 # ===========================================================================================================
 
