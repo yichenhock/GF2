@@ -143,7 +143,6 @@ class ConnectionsTab(wx.Panel):
     def initialise_connections_list(self):
         """Initialise `self.connections_list` with circuit definition file."""
         self.clear_connections_list()
-        self.displayed_connections = []
         self.refresh_combo_boxes()
         # need to add the existing connections to the list
         for _, connection in self.network.connections.items():
@@ -370,7 +369,9 @@ class ConnectionsTab(wx.Panel):
 
     def clear_connections_list(self):
         """Clear monitor list before initialisation."""
-        self.connections_list.DeleteAllItems()
+        for _ in range(len(self.displayed_connections)):
+            self.connections_list.DeleteItem(0)
+        self.displayed_connections = []
         
     def check_network(self):
         print('Checking the network... {}'.format(self.network.check_network()))
