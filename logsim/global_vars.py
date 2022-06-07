@@ -15,3 +15,5 @@ class GlobalVars:
         self.cycles_completed = 0
         # whether circuit definition file has been edited
         self.def_edited = False
+        # whether parse_network() returns True
+        self.compilation_success = False

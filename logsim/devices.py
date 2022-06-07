@@ -118,8 +118,9 @@ class Devices:
 
         self.signal_types = [self.LOW, self.HIGH, self.RISING,
                              self.FALLING, self.BLANK] = range(5)
-        self.gate_types = [self.AND, self.OR, self.NAND, self.NOR,
-                           self.XOR, self.NOT] = self.names.lookup(gate_strings)
+        self.gate_types = [self.AND, self.OR, self.NAND,
+                           self.NOR, self.XOR,
+                           self.NOT] = self.names.lookup(gate_strings)
         self.device_types = [self.CLOCK, self.SWITCH,
                              self.D_TYPE] = self.names.lookup(device_strings)
         self.dtype_input_ids = [self.CLK_ID, self.SET_ID, self.CLEAR_ID,
@@ -324,7 +325,7 @@ class Devices:
                     self.make_gate(device_id, device_kind, 2)
                     error_type = self.NO_ERROR
 
-            elif device_kind == self.NOT: #########################################################################
+            elif device_kind == self.NOT:
                 if device_property is not None:
                     error_type = self.QUALIFIER_PRESENT
                 else:

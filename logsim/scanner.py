@@ -65,6 +65,7 @@ class Scanner:
             raise TypeError("Expected path to be a string.")
 
         self.names = names
+        self.path = path
 
         # Define all symbol types
         self.symbol_type_list = [self.COMMA, self.DOT, self.SEMICOLON,
@@ -85,9 +86,9 @@ class Scanner:
          self.to_id, self.connected_id, self.input_id, self.inputs_id,
          self.cycle_id, self.length_id, self.AND_id,
          self.OR_id, self.NOR_id, self.XOR_id, self.NAND_id, self.NOT_id,
-         self.DTYPE_id, self.SWITCH_id, self.CLOCK_id, self.HIGH_id, self.LOW_id,
-         self.DATA_id, self.CLK_id, self.SET_id, self.CLEAR_id, self.Q_id,
-         self.QBAR_id] = self.names.lookup(self.keywords_list)
+         self.DTYPE_id, self.SWITCH_id, self.CLOCK_id, self.HIGH_id,
+         self.LOW_id, self.DATA_id, self.CLK_id, self.SET_id, self.CLEAR_id,
+         self.Q_id, self.QBAR_id] = self.names.lookup(self.keywords_list)
 
         self.current_character = " "
         self.current_line = 0
@@ -128,17 +129,10 @@ class Scanner:
     def print_error_line(self, line_number, line_position, error_message=""):
         """Print current line with marker pointing where the error is."""
 
-        print("Line {}, {}: {}".format(line_number, line_position, error_message))
+        print("Line {}, {}: {}".format(line_number, line_position,
+                                       error_message))
         print(self.lines[line_number])
-        print(" " * (line_position - 1) + "^ Error here")
-        # self.skip_line()
-
-    # def skip_line(self):
-    #     """Skips until next semicolon, bracket or EOF."""
-    #     while self.current_character not in [";", "(", ")", ""]:
-    #         self.advance()
-    #     self.advance()
-    #     return
+        print(" " * (line_position) + "^ Error here")
 
     def get_name(self):
         """Read and returns the next name (word made up of only letters)."""
@@ -163,7 +157,6 @@ class Scanner:
 
         symbol.line_number = self.current_line
         symbol.line_position = self.current_character_position
-
 
         if self.current_character.isalpha():  # Name
             name_string = self.get_name()

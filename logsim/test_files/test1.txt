@@ -2,7 +2,7 @@
 
 devices(
     a is AND;
-    b, c are DTYPE;
+    a, c are DTYPE;
     sw1, sw2, sw3, sw4 are SWITCH;
     clk1 is CLOCK;
 )
@@ -14,7 +14,6 @@ initialise(
 )
 
 connections(
-
         b.QBAR to a.I1;
         c.QBAR to a.I2;
 
@@ -22,7 +21,7 @@ connections(
         clk1 to b.CLK;
         sw1 to b.SET;
         sw2 to b.CLEAR;
-
+        
         b.Q to c.DATA;
         clk1 to c.CLK;
         sw3 to c.SET;

@@ -46,8 +46,11 @@ class MonitorsTab(wx.Panel):
         self.label_types = wx.StaticText(self, wx.ID_ANY, _(u"Type"))
         self.label_types.SetFont(font)
         self.combo_types = wx.ComboBox(self, wx.ID_ANY,
-                                       choices=[_(u"ALL"), _(u"GATE"), _(u"SWITCH"),
-                                                _(u"CLOCK"), _(u"D-TYPE")],
+                                       choices=[_(u"ALL"),
+                                                _(u"GATE"),
+                                                _(u"SWITCH"),
+                                                _(u"CLOCK"),
+                                                _(u"D-TYPE")],
                                        style=wx.CB_READONLY)
         self.combo_types.SetFont(font)
         self.label_names = wx.StaticText(self, wx.ID_ANY, _(u"Name"))
@@ -265,6 +268,7 @@ class MonitorsTab(wx.Panel):
         # remove the signal from monitors
         self.monitors.remove_monitor(signal_id, output_id)
         # remove the signal from the monitors list
+        print(self.monitors_list.FindItem(-1, signal))
         self.monitors_list.DeleteItem(self.monitors_list
                                       .FindItem(-1, signal))
         self.displayed_signals.remove((signal_id, output_id))

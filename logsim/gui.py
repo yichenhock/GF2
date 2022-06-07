@@ -73,7 +73,8 @@ class Gui(wx.Frame):
                 sys.exit()
 
         self.scanner = Scanner(self.path, names)
-        self.parser = Parser(names, devices, network, monitors, self.scanner)
+        self.parser = Parser(names, devices, network,
+                             monitors, self.scanner, self.global_vars)
 
         # Create the menu, toolbar and statusbar
         self.create_menu()
@@ -153,7 +154,7 @@ class Gui(wx.Frame):
         self.mgr.AddPane(notebook,
                          aui.AuiPaneInfo().CaptionVisible(False).
                          Right().PaneBorder(False).Floatable(False)
-                         .GripperTop(False).MinSize(340, 150)
+                         .GripperTop(False).MinSize(388, 150)
                          .CloseButton(False))
 
         # setting docking guides fixes docking issue (problem with wxTimer)
@@ -276,7 +277,8 @@ class Gui(wx.Frame):
         if Id == wx.ID_EXIT:
             self.Close(True)
         if Id == wx.ID_ABOUT:
-            wx.MessageBox(_(u"Logic Simulator\nCreated by Yi Chen Hock, Michael Stevens and Cindy Wu\n2022"),
+            wx.MessageBox(_(u"Logic Simulator\nCreated by Yi Chen Hock, "
+                          "Michael Stevens and Cindy Wu.\n2022"),
                           _(u"About Logsim"), wx.ICON_INFORMATION | wx.OK)
         if Id == wx.ID_SAVEAS:
             self.save_file_as()
@@ -339,6 +341,7 @@ class Gui(wx.Frame):
 
         self.monitorsPanel.clear_monitor_list()
         self.connectionsPanel.clear_connections_list()
+        self.consoleOutPanel.clear_console()
 
         # reinitialise instances
         self.names.__init__()
@@ -347,7 +350,8 @@ class Gui(wx.Frame):
         self.monitors.__init__(self.names, self.devices, self.network)
         self.scanner.__init__(self.path, self.names)
         self.parser.__init__(self.names, self.devices,
-                             self.network, self.monitors, self.scanner)
+                             self.network, self.monitors,
+                             self.scanner, self.global_vars)
 
         try:
             if self.parser.parse_network():
@@ -357,13 +361,14 @@ class Gui(wx.Frame):
                 self.monitorsPanel.initialise_monitor_list()
                 self.connectionsPanel.initialise_connections_list()
                 self.set_gui_state(sim_running=False)
-
                 self.statusbar.SetStatusText(
                     _(u"File saved and compiled successfully."))
                 return True
             else:
                 # error has occured while parsing
                 self.statusbar.SetStatusText(_(u"File compiled with errors."))
+                # disable run button
+                self.ToolBar.EnableTool(5, False)
                 return False
         except Exception as e:
             print(e)
@@ -378,16 +383,16 @@ class Gui(wx.Frame):
             return
 
         self.consoleOutPanel.run_command(True, self.spin.GetValue())
-        self.update_statusbar(_(u"Run button pressed."))
-        self.set_gui_state(sim_running=True)
+        # self.update_statusbar(_(u"Run button pressed."))
+        # self.set_gui_state(sim_running=True)
         self.canvas.render_signals(flush_pan=True)
 
     def on_cont_button(self):
         """Continue the simulation for N cycles."""
         self.consoleOutPanel.continue_command(True, self.spin.GetValue())
-        self.update_statusbar(_(u"Continue button pressed."))
+        # self.update_statusbar(_(u"Continue button pressed."))
         self.canvas.render_signals(flush_pan=True)
-        self.set_gui_state(sim_running=True)
+        # self.set_gui_state(sim_running=True)
 
     def on_reset_button(self):
         """Reset the simulation."""
@@ -465,7 +470,7 @@ class Gui(wx.Frame):
             # flush the console output
             self.consoleOutPanel.clear_console()
             print(_(u"Logic Simulator: interactive graphical user interface.\n"
-              "Enter 'h' for help."))
+                    "Enter 'h' for help."))
 
         except AttributeError:
             pass
@@ -478,7 +483,8 @@ class Gui(wx.Frame):
         if self.check_for_changes():
             with wx.FileDialog(self, _(u"Save File"),
                                defaultFile=_(u"new_definition_file") + ".txt",
-                               wildcard=_(u"Text documents") + " (*.txt)|*.txt",
+                               wildcard=_(u"Text documents") +
+                               " (*.txt)|*.txt",
                                style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT) as \
                     file_dialog:
                 if file_dialog.ShowModal() == wx.ID_CANCEL:
@@ -501,7 +507,8 @@ class Gui(wx.Frame):
                     wx.MessageBox(_(u"Error creating file."),
                                   _(u"Error"), wx.ICON_ERROR | wx.OK)
                 else:
-                    print(_(u'File created successfully in {}').format(pathname))
+                    print(_(u'File created successfully in {}')
+                          .format(pathname))
                     self.load_file(pathname)
 
     def save_plot(self):

@@ -1,4 +1,4 @@
-#This file is for testing various functions developed in each module
+# This file is for testing various functions developed in each module
 import sys
 from names import Names
 from scanner import Scanner
@@ -49,7 +49,7 @@ while x.type != 9:
     print(x.line_number, x.line_position, x.type, x.id)
     # print(name.names)
 
-#print(type_id_list)
+# print(type_id_list)
 
 # """parser.py tests"""
 # devices = Devices(names)

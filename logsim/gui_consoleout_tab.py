@@ -151,14 +151,18 @@ class ConsoleOutTab(wx.Panel):
                 self.monitors.record_signals()
             else:
                 self.parent.GetParent().statusbar\
-                    .SetStatusText(_(u"Error! Network oscillating."))
-                print(_(u"Error! Network oscillating."))
+                    .SetStatusText("Error! Network oscillating.")
+                print("Error! Network oscillating.")
                 return False
         # self.monitors.display_signals()
         return True
 
     def run_command(self, gui=False, gui_cycles=None):
         """Run the simulation from scratch."""
+        if not self.global_vars.compilation_success:
+            print('Cannot run simulation with errors.')
+            return
+
         self.global_vars.cycles_completed = 0
         if gui:
             cycles = gui_cycles
@@ -171,8 +175,8 @@ class ConsoleOutTab(wx.Panel):
             self.devices.cold_startup()
             if self.run_network(cycles):
                 self.global_vars.cycles_completed += cycles
-            self.set_gui_state(True)
-            self.canvas.render_signals()
+                self.set_gui_state(True)
+                self.canvas.render_signals()
 
     def continue_command(self, gui=False, gui_cycles=None):
         """Continue a previously run simulation."""
@@ -186,7 +190,8 @@ class ConsoleOutTab(wx.Panel):
                 print(_(u"Error! Nothing to continue. Run first."))
             elif self.run_network(cycles):
                 self.global_vars.cycles_completed += cycles
-                print(" ".join([_(u"Continuing for"), str(cycles), _(u"cycles."),
+                print(" ".join([_(u"Continuing for"), str(cycles),
+                                _(u"cycles."),
                                 _(u"Total:"),
                                 str(self.global_vars.cycles_completed)]))
                 self.canvas.render_signals()

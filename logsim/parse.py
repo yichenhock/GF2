@@ -16,6 +16,7 @@ from network import Network
 from monitors import Monitors
 
 from error import ParserError, ParserSemanticError, ParserSyntaxError
+from global_vars import GlobalVars
 
 # Semantic errors
 from error import (
@@ -33,7 +34,9 @@ from error import (
     InvalidBlockHeaderOrder,
     DeviceNotInitialised,
     SwitchNotInitialised,
-    ClockNotInitialised
+    ClockNotInitialised,
+    NotInitialisedError,
+    ConnectionPresent
 )
 
 # Syntax errors
@@ -84,7 +87,8 @@ class Parser:
     parse_network(self): Parses the circuit definition file.
     """
 
-    def __init__(self, names, devices, network, monitors, scanner):
+    def __init__(self, names, devices, network, monitors,
+                 scanner, global_vars):
         """Initialise constants."""
 
         # names class object
@@ -93,12 +97,14 @@ class Parser:
         self.network = network
         self.scanner = scanner
         self.monitors = monitors
+        self.global_vars = global_vars
 
         self.in_block = False  # True if parser inside a block
 
         self.syntax_errors = []
         self.semantic_errors = []
         self.input_not_connected_errors = []
+        self.not_initialised_errors = []
 
         self.names_parsed = []
 
@@ -107,6 +113,12 @@ class Parser:
         # [(input_id_symbol, input_port_id_symbol), ...]
         self.input_symbols = []
         self.output_symbol = None  # (output_id_symbol, output_port_id_symbol)
+
+        # excluding XOR and NOT
+        self.multi_input_gates = [self.scanner.AND_id,
+                                  self.scanner.OR_id,
+                                  self.scanner.NOR_id,
+                                  self.scanner.NAND_id]
 
     def devices_block(self, symbol):
         """Check if symbols form a device block.
@@ -144,52 +156,52 @@ class Parser:
             checking_devices = True
 
             while checking_devices:
-                if symbol.type == self.scanner.NAME:
-                    if self.names.get_name_string(symbol.id) in \
-                            self.names_parsed:
-                        raise RedefinedError(
-                            symbol, self.names.get_name_string(symbol.id))
-                    else:
-                        self.names_parsed.append(
-                            self.names.get_name_string(symbol.id))
-                        name_symbols.append(symbol)
-
-                    # now expect either 'IS/ARE' or 'COMMA, NAME'
-                    symbol = self.scanner.get_symbol()
-
-                    if symbol.id in connect:  # go to detect the device!
-                        checking_devices = False
-                        symbol = self.scanner.get_symbol()
-                        if symbol.id in types:
-                            # first check if the names are legal
-                            for name_symbol in name_symbols:
-                                self.check_name_legal(name_symbol, symbol.id)
-                                # add to devices for connecting up later
-                                # devices can only be connected after
-                                # initialise block
-                                self.device_dict[name_symbol.id] = {
-                                    'type': symbol.id,
-                                    'property': None
-                                }
-                        else:
-                            # expected a device type
-                            raise DeviceTypeError(symbol)
-
-                        symbol = self.scanner.get_symbol()
-                        if symbol.type != self.scanner.SEMICOLON:
-                            raise SemicolonError(symbol)
-
-                    elif symbol.type == self.scanner.COMMA:
-                        symbol = self.scanner.get_symbol()
-
-                    else:
-                        checking_devices = False
-                        # invalid device subrule statement
-                        raise InvalidDeviceRule(symbol)
-                else:
+                if symbol.type != self.scanner.NAME:
                     checking_devices = False
                     # expected a valid device name
                     raise InvalidDeviceName(symbol)
+
+                if self.names.get_name_string(symbol.id) in \
+                        self.names_parsed:
+                    raise RedefinedError(
+                        symbol, self.names.get_name_string(symbol.id))
+                else:
+                    self.names_parsed.append(
+                        self.names.get_name_string(symbol.id))
+                    name_symbols.append(symbol)
+
+                # now expect either 'IS/ARE' or 'COMMA, NAME'
+                symbol = self.scanner.get_symbol()
+
+                if symbol.id in connect:  # go to detect the device!
+                    checking_devices = False
+                    symbol = self.scanner.get_symbol()
+                    if symbol.id not in types:
+                        # expected a device type
+                        raise DeviceTypeError(symbol)
+
+                    # first check if the names are legal
+                    for name_symbol in name_symbols:
+                        self.check_name_legal(name_symbol, symbol.id)
+                        # add to devices for connecting up later
+                        # devices can only be connected after
+                        # initialise block
+                        self.device_dict[name_symbol.id] = {
+                            'type': symbol.id,
+                            'property': None
+                        }
+
+                    symbol = self.scanner.get_symbol()
+                    if symbol.type != self.scanner.SEMICOLON:
+                        raise SemicolonError(symbol)
+
+                elif symbol.type == self.scanner.COMMA:
+                    symbol = self.scanner.get_symbol()
+
+                else:
+                    checking_devices = False
+                    # invalid device subrule statement
+                    raise InvalidDeviceRule(symbol)
 
             next_sym = self.scanner.get_symbol()
 
@@ -251,7 +263,7 @@ class Parser:
         """Check if symbols form a initialise block.
 
         """
-
+        initialise_symbol = symbol
         next_sym = self.scanner.get_symbol()
 
         if next_sym.type == self.scanner.OPEN_BRACKET:
@@ -266,28 +278,29 @@ class Parser:
             next_sym = self.scanner.get_symbol()
         else:
             raise OpenBracketError(next_sym)  # raise open bracket error
-        self.make_devices()
+
+        self.make_devices(initialise_symbol)
         return next_sym
 
     def initialise_subrule(self, symbol):
         try:
-            if symbol.type == self.scanner.NAME:
-                if symbol.id in self.device_dict:
-                    device_type = self.device_dict[symbol.id]['type']
-                    # if device is a switch
-                    if device_type == self.scanner.SWITCH_id:
-                        next_sym = self.init_switch(symbol)
-                    # if device is a clock
-                    elif device_type == self.scanner.CLOCK_id:
-                        next_sym = self.init_clock(symbol)
-                    # if device is a gate
-                    else:
-                        next_sym = self.init_gate(symbol)
-                else:
-                    raise UndefinedError(
-                        symbol, self.names.get_name_string(symbol.id))
-            else:
+            if symbol.type != self.scanner.NAME:
                 raise InvalidDeviceName(symbol)
+
+            if symbol.id not in self.device_dict:
+                raise UndefinedError(
+                    symbol, self.names.get_name_string(symbol.id))
+
+            device_type = self.device_dict[symbol.id]['type']
+            # if device is a switch
+            if device_type == self.scanner.SWITCH_id:
+                next_sym = self.init_switch(symbol)
+            # if device is a clock
+            elif device_type == self.scanner.CLOCK_id:
+                next_sym = self.init_clock(symbol)
+            # if device is a gate
+            else:
+                next_sym = self.init_gate(symbol)
 
             next_sym = self.scanner.get_symbol()
 
@@ -375,17 +388,17 @@ class Parser:
                     next_sym = self.scanner.get_symbol()
 
                 # next symbol needs to be a number
-                if next_sym.type == self.scanner.NUMBER:
-                    # check if it is a number in the correct range
-                    clock_length = next_sym.id
-                    if clock_length <= 1000:
-                        # add this to device property
-                        for sym in device_symbols:
-                            self.device_dict[sym.id]['property'] = clock_length
-                    else:
-                        InvalidClockLength(next_sym)
-                else:
+                if next_sym.type != self.scanner.NUMBER:
                     raise InvalidClockLength(next_sym)
+
+                # check if it is a number in the correct range
+                clock_length = next_sym.id
+                if clock_length <= 1000:
+                    # add this to device property
+                    for sym in device_symbols:
+                        self.device_dict[sym.id]['property'] = clock_length
+                else:
+                    InvalidClockLength(next_sym)
 
                 next_sym = self.scanner.get_symbol()
                 if next_sym.type != self.scanner.SEMICOLON:
@@ -447,7 +460,7 @@ class Parser:
                 # XOR has two inputs
 
                 if next_sym.type == self.scanner.NUMBER:
-                    if next_sym.id > 16:
+                    if next_sym.id > 16 or next_sym.id == 0:
                         raise InvalidInputNumber(next_sym)
 
                     input_number = next_sym.id
@@ -558,7 +571,12 @@ class Parser:
         else:
             # no output port
             # check if its a dtype and raise an error
-            device_type = self.device_dict[name_symbol.id]['type']
+            try:
+                device_type = self.device_dict[name_symbol.id]['type']
+            except KeyError:
+                raise UndefinedError(
+                    name_symbol, self.names.get_name_string(name_symbol.id))
+
             if device_type == self.scanner.DTYPE_id:
                 raise NoDTYPEOutputPortError(next_sym)
 
@@ -583,7 +601,12 @@ class Parser:
         else:
             raise InvalidDeviceName(symbol)
 
-        device_kind = self.devices.get_device(name_symbol.id).device_kind
+        device = self.devices.get_device(name_symbol.id)
+        if not device:
+            raise UndefinedError(
+                symbol, self.names.get_name_string(name_symbol.id))
+
+        device_kind = device.device_kind
         if device_kind == self.scanner.NOT_id:
             input_port_symbol = None
 
@@ -599,8 +622,6 @@ class Parser:
             else:
                 raise DotError(next_sym)
 
-
-
         next_sym = self.scanner.get_symbol()
         self.input_symbols.append((name_symbol, input_port_symbol))
         return next_sym
@@ -608,7 +629,12 @@ class Parser:
     def is_output_port(self, name_symbol, port_symbol):
         # output ports are only specified for d types
         # they can be either Q or QBAR
-        device_type = self.device_dict[name_symbol.id]['type']
+        try:
+            device_type = self.device_dict[name_symbol.id]['type']
+        except KeyError:
+            raise UndefinedError(
+                name_symbol, self.names.get_name_string(name_symbol.id))
+
         if device_type == self.scanner.DTYPE_id:
             return port_symbol.id in [self.scanner.Q_id, self.scanner.QBAR_id]
         else:  # no other gates have different output ports
@@ -616,11 +642,11 @@ class Parser:
 
     def is_input_port(self, name_symbol, port_symbol):
         # input ports
-        device_type = self.device_dict[name_symbol.id]['type']
-        multi_input_gates = [self.scanner.AND_id,
-                             self.scanner.OR_id,
-                             self.scanner.NOR_id,
-                             self.scanner.NAND_id] # excluding XOR and NOT
+        try:
+            device_type = self.device_dict[name_symbol.id]['type']
+        except KeyError:
+            raise UndefinedError(
+                name_symbol, self.names.get_name_string(name_symbol.id))
 
         if device_type == self.scanner.DTYPE_id:
             possible_inputs = [
@@ -643,7 +669,7 @@ class Parser:
             port_name = ""
             return True
 
-        elif device_type in multi_input_gates:
+        elif device_type in self.multi_input_gates:
             num_inputs = self.device_dict[name_symbol.id]['property']
             # inputs have format I1, I2 ...
             port_name = self.names.get_name_string(port_symbol.id)
@@ -708,12 +734,36 @@ class Parser:
 # =============================================================================
 # =============================================================================
 
-    def make_devices(self):
+    def make_devices(self, symbol):
         for device_id, device_details in self.device_dict.items():
             type = device_details['type']
             property = device_details['property']
+
+            name = self.names.get_name_string(device_id)
             # need to check for errors here
-            self.devices.make_device(device_id, type, property)
+            if type in self.multi_input_gates:
+                # if the type is a gate (excluding XOR and NOT),
+                # it needs to have a property (number of input gates)
+                if property is None:
+                    self.not_initialised_errors.append(
+                        DeviceNotInitialised(symbol, name))
+            elif type == self.scanner.SWITCH_id:
+                # if the type is a switch, it needs to have a
+                # property (initial state)
+                if property is None:
+                    self.not_initialised_errors.append(
+                        SwitchNotInitialised(symbol, name))
+            elif type == self.scanner.CLOCK_id:
+                # if the type is a clock, it needs to have a property (length)
+                if property is None:
+                    self.not_initialised_errors.append(
+                        ClockNotInitialised(symbol, name))
+
+            if len(self.not_initialised_errors) == 0:
+                # if all good, make the device
+                self.devices.make_device(device_id, type, property)
+            else:
+                raise NotInitialisedError(symbol)
 
     def make_connections(self):
         for input, input_port_symbol in self.input_symbols:
@@ -724,11 +774,21 @@ class Parser:
                 output_port_id = output_port.id
 
             input_id = input.id
+            input_name = self.names.get_name_string(input_id)
             input_port_id = None
+            input_suffix = None
             if input_port_symbol:
                 input_port_id = input_port_symbol.id
-            self.network.make_connection(
+                input_suffix = self.names.get_name_string(input_port_id)
+            error = self.network.make_connection(
                 input_id, input_port_id, output_id, output_port_id)
+            # all possible errors should have been caught prior to this.
+            # only error not caught is connecting an already connected input
+            # to some output.
+            # this is not allowed by network class
+            if error == self.network.INPUT_CONNECTED:
+                self.add_error(ConnectionPresent(
+                    input_port_symbol, input_name, input_suffix))
 
     def make_monitor(self):
         output = self.output_symbol[0]
@@ -749,14 +809,23 @@ class Parser:
         # connected to something
         # specify exactly which input has not been connected
         for device in self.devices.devices_list:
+
             for input_id, connection in device.inputs.items():
                 if connection is None:
-                    self.input_not_connected_errors.append(
-                        (
-                            self.names.get_name_string(device.device_id),
-                            self.names.get_name_string(input_id)
+                    if device.device_kind != self.scanner.NOT_id:
+                        self.input_not_connected_errors.append(
+                            (
+                                self.names.get_name_string(device.device_id),
+                                self.names.get_name_string(input_id)
+                            )
                         )
-                    )
+                    else:
+                        self.input_not_connected_errors.append(
+                            (
+                                self.names.get_name_string(device.device_id),
+                                None
+                            )
+                        )
 
     def add_error(self, error):
         if isinstance(error, ParserSyntaxError):
@@ -805,8 +874,12 @@ class Parser:
 
         if len(self.input_not_connected_errors) > 0:
             for device_name, input_name in self.input_not_connected_errors:
-                print("'{}.{}' is not connected"
-                      .format(device_name, input_name))
+                if input_name is None:
+                    print("'{}' is not connected"
+                          .format(device_name))
+                else:
+                    print("'{}.{}' is not connected"
+                          .format(device_name, input_name))
             print("{} unconnected inputs found.".format(
                 len(self.input_not_connected_errors)
             ))
@@ -817,7 +890,8 @@ class Parser:
     def parse_network(self):
         """Parse the circuit definition file."""
         symbol = self.scanner.get_symbol()
-        print('\n---------- COMPILING SIMULATION ----------')
+        print('\n'+self.scanner.path)
+        print('---------- COMPILING SIMULATION ----------')
 
         # blocks need to be discovered in the right order and not repeated
         header_order = [self.scanner.devices_id, self.scanner.initialise_id,
@@ -852,22 +926,38 @@ class Parser:
                         raise ExtraInfoAfterMonitors(symbol)
                     raise InvalidBlockHeader(symbol)  # expected a keyword
             except ParserError as e:
+                if isinstance(e, NotInitialisedError):
+                    for error in self.not_initialised_errors:
+                        self.add_error(error)
+                    break
                 # add the error
                 self.add_error(e)
                 # skip to the next error
                 next_sym = self.skip_error(e)
             symbol = next_sym
 
-        self.check_all_inputs_connected()
+        if len(self.not_initialised_errors) == 0:
+            self.check_all_inputs_connected()
+        else:
+            print('Devices not initialised. Connections '
+                  'and monitors not added.')
+
         self.print_errors()
 
         self.scanner.file.close()
 
         success = len(self.syntax_errors) == 0 and \
             len(self.semantic_errors) == 0 and \
-            len(self.input_not_connected_errors) == 0
-        
-        if success: 
-            print('File compiled successfully with 0 errors.')
+            len(self.input_not_connected_errors) == 0 and \
+            len(self.not_initialised_errors) == 0
+
+        if success:
+            print('\nFile compiled successfully with 0 errors.')
+            print('---------- COMPILATION COMPLETE ----------\n')
+        else:
+            print('\nFile compiled unsuccessfully with errors.')
+            print('----------- COMPILATION FAILED -----------\n')
+
+        self.global_vars.compilation_success = success
 
         return success

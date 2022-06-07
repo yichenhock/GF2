@@ -26,6 +26,8 @@ from gui import Gui
 import app_const as appC
 import gettext
 import locale
+from global_vars import GlobalVars
+
 
 def main(arg_list):
     """Parse the command line options and arguments specified in arg_list.
@@ -59,8 +61,10 @@ def main(arg_list):
             print(usage_message)
             sys.exit()
         elif option == "-c":  # use the command line user interface
+            global_vars = GlobalVars()
             scanner = Scanner(path, names)
-            parser = Parser(names, devices, network, monitors, scanner)
+            parser = Parser(names, devices, network,
+                            monitors, scanner, global_vars)
 
             if parser.parse_network():
                 # Initialise an instance of the userint.UserInterface() class
@@ -74,7 +78,8 @@ def main(arg_list):
         else:
             [path] = arguments
 
-        # Initialise an instance of the gui.Gui() class and wxPython translation capability
+        # Initialise an instance of the gui.Gui() class and
+        # wxPython translation capability
         import app_base as ab
         app = ab.BaseApp(redirect=False)
         app.OnInit()
