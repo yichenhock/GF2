@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2022-06-04 20:42+0100\n"
-"PO-Revision-Date: 2022-06-05 17:15+0100\n"
+"POT-Creation-Date: 2022-06-04 23:38+0100\n"
+"PO-Revision-Date: 2022-06-05 17:43+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: zh\n"
@@ -213,6 +213,7 @@ msgid "Save File"
 msgstr "保存文件"
 
 #: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:466
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:524
 msgid "new_definition_file"
 msgstr "操你妈"
 
@@ -256,6 +257,34 @@ msgstr "画布重绘在绘画事件, 方面是 "
 #: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_circuitdef_tab.py:62
 msgid "Reset the simulation first to edit!"
 msgstr "首先重置模拟为了编辑!"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_connections_tab.py:40
+msgid "To"
+msgstr "对"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_connections_tab.py:41
+msgid "Input"
+msgstr "输入"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_connections_tab.py:45
+msgid "Device"
+msgstr "电器"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_connections_tab.py:46
+msgid "Port"
+msgstr "接口"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_connections_tab.py:48
+msgid "Input*"
+msgstr "输入*"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_connections_tab.py:114
+msgid "Add Connection"
+msgstr "加连接"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_connections_tab.py:259
+msgid " Reset simulation to add connections!"
+msgstr " 重置仿拟以添加连接!"
 
 #: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:82
 msgid "Type commands here"
@@ -401,6 +430,7 @@ msgstr "D-型"
 msgid "Name"
 msgstr "名字"
 
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_connections_tab.py:70
 #: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_monitors_tab.py:51
 msgid "Add"
 msgstr "加"
@@ -441,58 +471,86 @@ msgstr "从显示器中取出的 {}."
 msgid " Reset simulation to add components!"
 msgstr " 重置以添加构件!"
 
-#: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:17
-msgid "The I18N sample application"
-msgstr "操你妈"
+#  #: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:17
+#  msgid "The I18N sample application"
+#  msgstr "操你妈"
 
-#: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:28
-msgid "Close"
-msgstr "关"
+#  #: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:28
+#  msgid "Close"
+#  msgstr "关"
 
-#: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:29
-msgid "Close the application"
-msgstr "关应用软件"
+#  #: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:29
+#  msgid "Close the application"
+#  msgstr "关应用软件"
 
-#: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:31
-msgid "&File"
-msgstr "&文件"
+#  #: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:31
+#  msgid "&File"
+#  msgstr "&文件"
 
-#: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:36
-msgid "Edit something"
-msgstr "编辑东西"
+#  #: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:36
+#  msgid "Edit something"
+#  msgstr "编辑东西"
 
-#: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:37
-msgid "Edit an entry of something"
-msgstr "编辑条目"
+#  #: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:37
+#  msgid "Edit an entry of something"
+#  msgstr "编辑条目"
 
-#: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:40
-msgid "&Edit"
-msgstr "&编辑"
+#  #: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:40
+#  msgid "&Edit"
+#  msgstr "&编辑"
 
-#: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:45
+#  #: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:45
+#  msgid "&About"
+#  msgstr "&关于"
+
+#  #: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:46
+#  msgid "About the program"
+#  msgstr "关于软件"
+
+#  #: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:48
+#  msgid "&Help"
+#  msgstr "&帮助"
+
+#  #: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:58
+#  msgid "A nice label for the TextCtrl"
+#  msgstr "操你妈"
+
+#  #: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:63
+#  msgid "a search control"
+#  msgstr "操你妈"
+
+#  #: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:70
+#  msgid "Open a file dialog"
+#  msgstr "打开文件对白"
+
+#  #: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:82
+#  msgid "Choose a file"
+#  msgstr "选择文件"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:189
+msgid "&Save As"
+msgstr "保存"
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:188
 msgid "&About"
 msgstr "&关于"
 
-#: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:46
-msgid "About the program"
-msgstr "关于软件"
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:188
+msgid "&Exit"
+msgstr "&编辑"
 
-#: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:48
-msgid "&Help"
-msgstr "&帮助"
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:220
+msgid "Compile the circuit definition"
+msgstr "编译电路定义"
 
-#: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:58
-msgid "A nice label for the TextCtrl"
-msgstr "操你妈"
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\logsim.py:83
+msgid "Logic Simulator"
+msgstr "退出逻辑模拟器"
 
-#: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:63
-msgid "a search control"
-msgstr "操你妈"
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:140
+msgid "Definition"
+msgstr "定义"
 
-#: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:70
-msgid "Open a file dialog"
-msgstr "打开文件对白"
-
-#: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:82
-msgid "Choose a file"
-msgstr "选择文件"
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:143
+msgid "Connections"
+msgstr "联系"

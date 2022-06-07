@@ -12,7 +12,7 @@ Graphical user interface: logsim.py <file path>
 """
 import getopt
 import sys
-
+import os
 import wx
 
 from names import Names
@@ -23,7 +23,9 @@ from scanner import Scanner
 from parse import Parser
 from userint import UserInterface
 from gui import Gui
-
+import app_const as appC
+import gettext
+import locale
 
 def main(arg_list):
     """Parse the command line options and arguments specified in arg_list.
@@ -75,8 +77,8 @@ def main(arg_list):
         # Initialise an instance of the gui.Gui() class and wxPython translation capability
         import app_base as ab
         app = ab.BaseApp(redirect=False)
-        app.updateLanguage('zh')
-        # app = wx.App()
+        app.OnInit()
+        app.doConfig()
         gui = Gui(_(u"Logic Simulator"), path, names, devices, network,
                   monitors)
         gui.Show(True)
