@@ -191,6 +191,9 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             return
 
         self.draw_cycle_axis()
+        self.draw_signal_grid()
+        # self.draw_signal_grid2()
+        # self.draw_signal_grid3()
         self.draw_signal_trace()
 
         # Set scrollbar
@@ -236,18 +239,169 @@ class MyGLCanvas(wxcanvas.GLCanvas):
                 continue
 
             GL.glColor3f(0.80, 0.80, 0.80)  # grid lines are light grey
-            GL.glBegin(GL.GL_LINE_STRIP)
-            GL.glVertex2f(x, y - self.pan_y)  # account for pan
+            # make it a dotted line
+            y_bottom = y - self.pan_y
             y_top = y + self.component_vspace * number_devices + \
                 self.clock_vspace
-            GL.glVertex2f(x, y_top)
-            GL.glEnd()
+            
+            dashed_length = 1
+            dashed_spacing = 5
+            while y_bottom <= y_top:
+                GL.glBegin(GL.GL_LINE_STRIP)
+                GL.glVertex2f(x, y_bottom)
+                GL.glVertex2f(x, y_bottom + dashed_length)
+                GL.glEnd()
+                y_bottom += dashed_length + dashed_spacing
+            # GL.glVertex2f(x, y - self.pan_y)  # account for pan
+            # y_top = y + self.component_vspace * number_devices + \
+            #     self.clock_vspace
+            
+            # GL.glVertex2f(x, y_top)
+
             # Cycle labels
             self.render_text(str(i), x,
                              y - self.clock_name_offset - self.pan_y,
                              font=GLUT.GLUT_BITMAP_HELVETICA_10, flush=False,
                              clear=False)  # account for pan
             x += axis_interval * self.curr_wavelength
+
+    def draw_signal_grid(self):
+        """Draw signal trace lines."""
+        # Reset y coordinate and offset
+        y = self.initial_y + self.clock_vspace
+
+        for device_id, output_id in \
+                reversed(self.monitors.monitors_dictionary):
+            if y < self.initial_y + self.clock_vspace - self.pan_y:
+                # Don't render signals below visible area/obscuring cycle axis
+                y += self.component_vspace
+                continue
+            
+            x = self.origin_x  # reset x coordinate
+            signal_list = self.monitors.monitors_dictionary[
+                (device_id, output_id)]
+
+            GL.glColor3f(0.80, 0.80, 0.80)  # grid lines is light grey
+            
+            for signal in signal_list:
+                if x < self.origin_x - self.pan_x - self.curr_wavelength:
+                    # Don't render signals to the left of visible area
+                    x += self.curr_wavelength
+                    continue
+                elif x < self.origin_x - self.pan_x:
+                    # Partially visible, add offset to avoid waveform
+                    # obscuring labels
+                    offset = self.origin_x - self.pan_x - x
+                else:
+                    offset = 0
+                
+                # LOW signal grid lines for a particular device
+                GL.glBegin(GL.GL_LINE_STRIP)
+                GL.glVertex2f(x + offset, y)
+                GL.glVertex2f(x + self.curr_wavelength, y)
+                GL.glEnd()
+
+                # HIGH signal grid lines for a particular device
+                GL.glBegin(GL.GL_LINE_STRIP)
+                GL.glVertex2f(x + offset, y + self.amplitude)
+                GL.glVertex2f(x + self.curr_wavelength,
+                                y + self.amplitude)
+                GL.glEnd()
+
+                # Vertical lines
+                GL.glBegin(GL.GL_LINE_STRIP)
+                GL.glVertex2f(x + offset, y)
+                GL.glVertex2f(x + offset,
+                                y + self.amplitude)
+                GL.glEnd()
+
+                x += self.curr_wavelength
+
+            y += self.component_vspace
+
+    # def draw_signal_grid2(self):
+    #     """Draw signal trace lines."""
+    #     # Reset y coordinate and offset
+    #     y = self.initial_y + self.clock_vspace
+
+    #     for device_id, output_id in \
+    #             reversed(self.monitors.monitors_dictionary):
+    #         if y < self.initial_y + self.clock_vspace - self.pan_y:
+    #             # Don't render signals below visible area/obscuring cycle axis
+    #             y += self.component_vspace
+    #             continue
+            
+    #         x = self.origin_x  # reset x coordinate
+    #         signal_list = self.monitors.monitors_dictionary[
+    #             (device_id, output_id)]
+
+    #         GL.glColor3f(0.80, 0.80, 0.80)  # grid lines is light grey
+    #         GL.glBegin(GL.GL_LINE_STRIP)
+
+    #         for signal in signal_list:
+    #             if x < self.origin_x - self.pan_x - self.curr_wavelength:
+    #                 # Don't render signals to the left of visible area
+    #                 x += self.curr_wavelength
+    #                 continue
+    #             elif x < self.origin_x - self.pan_x:
+    #                 # Partially visible, add offset to avoid waveform
+    #                 # obscuring labels
+    #                 offset = self.origin_x - self.pan_x - x
+    #             else:
+    #                 offset = 0
+                
+    #             # LOW signal grid lines for a particular device
+    #             GL.glVertex2f(x + offset, y + self.amplitude)
+    #             GL.glVertex2f(x + self.curr_wavelength,
+    #                             y + self.amplitude)
+
+    #             x += self.curr_wavelength
+
+    #         GL.glEnd()
+    #         y += self.component_vspace
+        
+    # def draw_signal_grid3(self):
+    #     """Draw signal trace lines."""
+    #     # Reset y coordinate and offset
+    #     y = self.initial_y + self.clock_vspace
+
+    #     for device_id, output_id in \
+    #             reversed(self.monitors.monitors_dictionary):
+    #         if y < self.initial_y + self.clock_vspace - self.pan_y:
+    #             # Don't render signals below visible area/obscuring cycle axis
+    #             y += self.component_vspace
+    #             continue
+            
+    #         x = self.origin_x  # reset x coordinate
+    #         signal_list = self.monitors.monitors_dictionary[
+    #             (device_id, output_id)]
+
+    #         GL.glColor3f(0.80, 0.80, 0.80)  # grid lines is light grey
+    #         # GL.glBegin(GL.GL_LINE_STRIP)
+
+    #         for signal in signal_list:
+    #             if x < self.origin_x - self.pan_x - self.curr_wavelength:
+    #                 # Don't render signals to the left of visible area
+    #                 x += self.curr_wavelength
+    #                 continue
+    #             elif x < self.origin_x - self.pan_x:
+    #                 # Partially visible, add offset to avoid waveform
+    #                 # obscuring labels
+    #                 offset = self.origin_x - self.pan_x - x
+    #             else:
+    #                 offset = 0
+                
+    #             # LOW signal grid lines for a particular device
+    #             GL.glBegin(GL.GL_LINE_STRIP)
+    #             GL.glVertex2f(x + offset, y)
+    #             GL.glVertex2f(x,
+    #                             y + self.amplitude)
+    #             GL.glEnd()
+                
+    #             x += self.curr_wavelength
+
+    #         # GL.glEnd()
+    #         y += self.component_vspace
 
     def draw_signal_trace(self):
         """Draw individual signal trace."""
