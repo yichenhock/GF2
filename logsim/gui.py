@@ -72,7 +72,8 @@ class Gui(wx.Frame):
                 sys.exit()
 
         self.scanner = Scanner(self.path, names)
-        self.parser = Parser(names, devices, network, monitors, self.scanner, self.global_vars)
+        self.parser = Parser(names, devices, network,
+                             monitors, self.scanner, self.global_vars)
 
         # Create the menu, toolbar and statusbar
         self.create_menu()
@@ -275,7 +276,8 @@ class Gui(wx.Frame):
         if Id == wx.ID_EXIT:
             self.Close(True)
         if Id == wx.ID_ABOUT:
-            wx.MessageBox(_(u"Logic Simulator\nCreated by Yi Chen Hock, Michael Stevens and Cindy Wu\n2022"),
+            wx.MessageBox(_(u"Logic Simulator\nCreated by Yi Chen Hock, "
+                          "Michael Stevens and Cindy Wu.\n2022"),
                           _(u"About Logsim"), wx.ICON_INFORMATION | wx.OK)
         if Id == wx.ID_SAVEAS:
             self.save_file_as()
@@ -347,7 +349,8 @@ class Gui(wx.Frame):
         self.monitors.__init__(self.names, self.devices, self.network)
         self.scanner.__init__(self.path, self.names)
         self.parser.__init__(self.names, self.devices,
-                             self.network, self.monitors, self.scanner, self.global_vars)
+                             self.network, self.monitors,
+                             self.scanner, self.global_vars)
 
         try:
             if self.parser.parse_network():
@@ -466,7 +469,7 @@ class Gui(wx.Frame):
             # flush the console output
             self.consoleOutPanel.clear_console()
             print(_(u"Logic Simulator: interactive graphical user interface.\n"
-              "Enter 'h' for help."))
+                    "Enter 'h' for help."))
 
         except AttributeError:
             pass
@@ -479,7 +482,8 @@ class Gui(wx.Frame):
         if self.check_for_changes():
             with wx.FileDialog(self, _(u"Save File"),
                                defaultFile=_(u"new_definition_file") + ".txt",
-                               wildcard=_(u"Text documents") + " (*.txt)|*.txt",
+                               wildcard=_(u"Text documents") +
+                               " (*.txt)|*.txt",
                                style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT) as \
                     file_dialog:
                 if file_dialog.ShowModal() == wx.ID_CANCEL:
@@ -502,7 +506,8 @@ class Gui(wx.Frame):
                     wx.MessageBox(_(u"Error creating file."),
                                   _(u"Error"), wx.ICON_ERROR | wx.OK)
                 else:
-                    print(_(u'File created successfully in {}').format(pathname))
+                    print(_(u'File created successfully in {}')
+                          .format(pathname))
                     self.load_file(pathname)
 
     def save_plot(self):

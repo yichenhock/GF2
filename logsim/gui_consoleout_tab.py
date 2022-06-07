@@ -190,7 +190,8 @@ class ConsoleOutTab(wx.Panel):
                 print(_(u"Error! Nothing to continue. Run first."))
             elif self.run_network(cycles):
                 self.global_vars.cycles_completed += cycles
-                print(" ".join([_(u"Continuing for"), str(cycles), _(u"cycles."),
+                print(" ".join([_(u"Continuing for"), str(cycles),
+                                _(u"cycles."),
                                 _(u"Total:"),
                                 str(self.global_vars.cycles_completed)]))
                 self.canvas.render_signals()

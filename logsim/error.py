@@ -46,7 +46,8 @@ class RedefinedError(ParserSemanticError):
 
 class WrongDeviceName(ParserSemanticError):
     def __init__(self, symbol, name):
-        message = "Device name should not be '{}' (must not begin with 'sw' or 'clk').".format(name)
+        message = ("Device name should not be '{}' (must not begin with 'sw' "
+                   "or 'clk').").format(name)
         super().__init__(symbol, message)
 
 
@@ -58,13 +59,15 @@ class InvalidClockLength(ParserSemanticError):
 
 class WrongSwitchName(ParserSemanticError):
     def __init__(self, symbol, name):
-        message = "Switch name should not be '{}' (must begin with 'sw' followed by a number).".format(name)
+        message = ("Switch name should not be '{}' (must begin with 'sw' "
+                   "followed by a number).").format(name)
         super().__init__(symbol, message)
 
 
 class WrongClockName(ParserSemanticError):
     def __init__(self, symbol, name):
-        message = "Clock name should not be '{}' (must begin with 'clk' followed by a number).".format(name)
+        message = ("Clock name should not be '{}' (must begin with 'clk' "
+                   "followed by a number).").format(name)
         super().__init__(symbol, message)
 
 
@@ -76,13 +79,15 @@ class InvalidInputNumber(ParserSemanticError):
 
 class AttemptToDefineXORInputs(ParserSemanticError):
     def __init__(self, symbol):
-        message = "XOR input number does not need to be specified (2 inputs by default)."
+        message = ("XOR input number does not need to be specified (2 "
+                   "inputs by default).")
         super().__init__(symbol, message)
 
 
 class AttemptToDefineNOTInputs(ParserSemanticError):
     def __init__(self, symbol):
-        message = "NOT gate input number does not need to be specified (1 input by default)."
+        message = ("NOT gate input number does not need to be specified "
+                   "(1 input by default).")
         super().__init__(symbol, message)
 
 
@@ -100,32 +105,41 @@ class NoDTYPEOutputPortError(ParserSemanticError):
 
 class InvalidBlockHeader(ParserSemanticError):
     def __init__(self, symbol):
-        message = "Invalid block header (expected either 'devices', 'initialise', 'connections' or 'monitor')."
+        message = ("Invalid block header (expected either 'devices', "
+                   "'initialise', 'connections' or 'monitor').")
         super().__init__(symbol, message)
+
 
 class DeviceNotInitialised(ParserSemanticError):
     def __init__(self, symbol, name):
-        message = "Device '{}' not initialised with number of inputs.".format(name)
+        message = "Device '{}' not initialised with number of inputs.".format(
+            name)
         super().__init__(symbol, message)
+
 
 class SwitchNotInitialised(ParserSemanticError):
     def __init__(self, symbol, name):
-        message = "Switch '{}' not initialised with initial state.".format(name)
+        message = "Switch '{}' not initialised with initial state.".format(
+            name)
         super().__init__(symbol, message)
+
 
 class ClockNotInitialised(ParserSemanticError):
     def __init__(self, symbol, name):
         message = "Clock '{}' not initialised with clock length.".format(name)
         super().__init__(symbol, message)
 
+
 class NotInitialisedError(ParserSemanticError):
     def __init__(self, symbol):
         super().__init__(symbol, "")
 
+
 class ConnectionPresent(ParserSemanticError):
     def __init__(self, symbol, name, suffix):
         if suffix:
-            message = "Input '{}.{}' already connected to an output".format(name, suffix)
+            message = "Input '{}.{}' already connected to an output".format(
+                name, suffix)
         else:
             message = "Input '{}' already connected to an output".format(name)
         super().__init__(symbol, message)
@@ -137,7 +151,8 @@ class ConnectionPresent(ParserSemanticError):
 
 class InvalidBlockHeaderOrder(ParserSyntaxError):
     def __init__(self, symbol):
-        message = "Block headers should be initialised in this order: 'devices', 'initialise', 'connections', 'monitor'."
+        message = ("Block headers should be initialised in this order: "
+                   "'devices', 'initialise', 'connections', 'monitor'.")
         super().__init__(symbol, message)
 
 
@@ -167,7 +182,8 @@ class InvalidDeviceRule(ParserSyntaxError):
 
 class InvalidInitDeviceRule(ParserSyntaxError):
     def __init__(self, symbol):
-        message = "Invalid initialise statement (expected ',' or 'has'/'have')."
+        message = ("Invalid initialise statement (expected ',' "
+                   "or 'has'/'have').")
         super().__init__(symbol, message)
 
 
@@ -179,7 +195,8 @@ class InvalidInitSwitchRule(ParserSyntaxError):
 
 class InvalidInitClockRule(ParserSyntaxError):
     def __init__(self, symbol):
-        message = "Invalid initialise statement (expected ',' or 'cycle'/'cycle length')."
+        message = ("Invalid initialise statement (expected ',' or "
+                   "'cycle'/'cycle length').")
         super().__init__(symbol, message)
 
 
@@ -247,6 +264,7 @@ class DotError(ParserSyntaxError):
     def __init__(self, symbol):
         message = "Invalid output port."
         super().__init__(symbol, message)
+
 
 class ExtraInfoAfterMonitors(ParserSyntaxError):
     def __init__(self, symbol):

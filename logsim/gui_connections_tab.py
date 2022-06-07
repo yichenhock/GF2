@@ -30,7 +30,7 @@ class ConnectionsTab(wx.Panel):
         self.statusbar = statusbar
 
         self.unique_id = 0
-        self.displayed_connections = [] # [(id, connection, button), ..]
+        self.displayed_connections = []  # [(id, connection, button), ..]
 
         self.connections_list_style = \
             ULC.ULC_REPORT | \
@@ -38,14 +38,15 @@ class ConnectionsTab(wx.Panel):
             ULC.ULC_HAS_VARIABLE_ROW_HEIGHT | \
             ULC.ULC_SHOW_TOOLTIPS
         self.connections_list = ListCtrl(self, wx.ID_ANY,
-                                      agwStyle=self.connections_list_style)
+                                         agwStyle=self.connections_list_style)
 
         font = wx.Font(wx.FontInfo().Encoding(wx.FONTENCODING_CP950))
 
         self.connections_list.InsertColumn(0, "Output")
         self.connections_list.InsertColumn(1, _(u"To"))
         self.connections_list.InsertColumn(2, _(u"Input"))
-        self.connections_list.InsertColumn(3, "")  # remove from monitor buttons
+        self.connections_list.InsertColumn(
+            3, "")  # remove from monitor buttons
 
         # configure the drop down boxes
         self.label_device = wx.StaticText(self, wx.ID_ANY, _(u"Device"))
@@ -57,19 +58,19 @@ class ConnectionsTab(wx.Panel):
         self.warning_bmp = wx.Bitmap(wx.Image('./logsim/imgs/warning.png'))
 
         self.combo_output_devices = BitmapComboBox(self, wx.ID_ANY,
-                                       choices=[],
-                                       style=wx.CB_READONLY)
+                                                   choices=[],
+                                                   style=wx.CB_READONLY)
         self.combo_output_ports = BitmapComboBox(self, wx.ID_ANY,
-                                       choices=[],
-                                       style=wx.CB_READONLY)
+                                                 choices=[],
+                                                 style=wx.CB_READONLY)
         self.combo_input_devices = BitmapComboBox(self, wx.ID_ANY,
-                                       choices=[],
-                                       style=wx.CB_READONLY)
+                                                  choices=[],
+                                                  style=wx.CB_READONLY)
         self.combo_input_ports = BitmapComboBox(self, wx.ID_ANY,
-                                       choices=[],
-                                       style=wx.CB_READONLY)
+                                                choices=[],
+                                                style=wx.CB_READONLY)
 
-        self.blank = wx.StaticText(self, wx.ID_ANY,'')
+        self.blank = wx.StaticText(self, wx.ID_ANY, '')
 
         self.add_button = wx.Button(self, wx.ID_ANY, _(u"Add"))
 
@@ -78,7 +79,7 @@ class ConnectionsTab(wx.Panel):
         self.warning_text1.SetForegroundColour("red")
 
         # combo box fields required
-        self.warning_text2 = wx.StaticText(self, wx.ID_ANY, "", size=(200,20))
+        self.warning_text2 = wx.StaticText(self, wx.ID_ANY, "", size=(200, 20))
         self.warning_text2.SetForegroundColour("red")
 
         # Create a sizer.
@@ -107,8 +108,8 @@ class ConnectionsTab(wx.Panel):
         self.grid_sizer.AddGrowableCol(2, 1.5)
 
         self.btn_grid_sizer = wx.FlexGridSizer(1, 2, (5, 5))
-        self.btn_grid_sizer.Add(self.warning_text2, flag= wx.EXPAND)
-        self.btn_grid_sizer.Add(self.add_button, flag= wx.EXPAND)
+        self.btn_grid_sizer.Add(self.warning_text2, flag=wx.EXPAND)
+        self.btn_grid_sizer.Add(self.add_button, flag=wx.EXPAND)
         self.btn_grid_sizer.AddGrowableRow(0, 1)
         self.btn_grid_sizer.AddGrowableCol(0, 3)
         self.btn_grid_sizer.AddGrowableCol(1, 1)
@@ -128,10 +129,12 @@ class ConnectionsTab(wx.Panel):
 
         self.SetSizer(sizer)
 
-        self.combo_output_devices.Bind(wx.EVT_COMBOBOX, self.on_combo_op_devices_select)
-        self.combo_input_devices.Bind(wx.EVT_COMBOBOX, self.on_combo_ip_devices_select)
+        self.combo_output_devices.Bind(
+            wx.EVT_COMBOBOX, self.on_combo_op_devices_select)
+        self.combo_input_devices.Bind(
+            wx.EVT_COMBOBOX, self.on_combo_ip_devices_select)
         self.add_button.Bind(wx.EVT_LEFT_DOWN, self.on_add_button)
-    
+
     def get_full_name(self, device_id, device_port_id):
         device_name = self.names.get_name_string(device_id)
         if device_port_id:
@@ -150,7 +153,7 @@ class ConnectionsTab(wx.Panel):
 
     def append_to_connections_list(self, connection):
         """Add an entry to `self.connections_list`."""
-        ( input_id, input_port_id, output_id, output_port_id) = connection
+        (input_id, input_port_id, output_id, output_port_id) = connection
         output_name = self.get_full_name(output_id, output_port_id)
         input_name = self.get_full_name(input_id, input_port_id)
 
@@ -162,7 +165,7 @@ class ConnectionsTab(wx.Panel):
         self.connections_list.SetStringItem(index, 2, input_name)
 
         attr = "_".join([str(output_id), str(output_port_id),
-            str(input_id), str(input_port_id)])
+                         str(input_id), str(input_port_id)])
         setattr(self, attr,
                 wx.ToggleButton(self.connections_list, wx.ID_ANY,
                                 _(u"Remove")))
@@ -197,13 +200,16 @@ class ConnectionsTab(wx.Panel):
             if self.displayed_connections[i][0] == id:
                 index = i
                 break
-        
+
         self.connections_list.DeleteItem(index)
         del self.displayed_connections[index]
         # NEED TO REMOVE THE CONNECTION FROM THE NETWORK TOO!
-        error = self.network.remove_connection(output_id, output_port_id, input_id, input_port_id)
-        
-        print('Connection removed: {} to {}.'.format(self.get_full_name(output_id, output_port_id),self.get_full_name(input_id,input_port_id)))
+        error = self.network.remove_connection(
+            output_id, output_port_id, input_id, input_port_id)
+
+        print('Connection removed: {} to {}.'.format(self.get_full_name(
+            output_id, output_port_id),
+            self.get_full_name(input_id, input_port_id)))
         self.check_network()
 
         # reinitialise and refresh the combo boxes
@@ -211,7 +217,8 @@ class ConnectionsTab(wx.Panel):
 
     def refresh_combo_boxes(self):
         """Refresh `combo_names` with a list of all device names.
-        Includes the status of whether each input has been connected to at least one output.
+        Includes the status of whether each input has been connected
+        to at least one output.
         """
         # outputs: all devices (D-types, gates, switches, clocks)
         output_devices = []
@@ -236,25 +243,28 @@ class ConnectionsTab(wx.Panel):
 
     def refresh_combo_output_devices(self, output_devices):
         self.combo_output_devices.Clear()
-        for device in output_devices: 
+        for device in output_devices:
             self.combo_output_devices.Append(device)
 
     def refresh_combo_input_devices(self, input_devices):
         self.combo_input_devices.Clear()
-        for device_name in input_devices: 
+        for device_name in input_devices:
             # show a warning triangle if at least one of its input ports
             # has no connected output
             device_id = self.names.query(device_name)
             device = self.devices.get_device(device_id)
             not_all_connected = False
             for input_id in device.inputs:
-                if self.network.get_connected_output(device_id, input_id) is None:
+                if self.network.get_connected_output(device_id, input_id) \
+                        is None:
                     not_all_connected = True
 
             if not_all_connected:
-                self.combo_input_devices.Append(device_name, bitmap=self.warning_bmp)
+                self.combo_input_devices.Append(
+                    device_name, bitmap=self.warning_bmp)
             else:
-                self.combo_input_devices.Append(device_name, bitmap=self.tick_bmp)
+                self.combo_input_devices.Append(
+                    device_name, bitmap=self.tick_bmp)
 
     def on_combo_op_devices_select(self, event):
         """Handles the event when user selects an output device."""
@@ -282,30 +292,32 @@ class ConnectionsTab(wx.Panel):
         device_id = self.names.query(name)
         device = self.devices.get_device(device_id)
         self.combo_input_ports.Clear()
-        if device.device_kind == self.devices.NOT: 
+        if device.device_kind == self.devices.NOT:
             # no port selection for NOT gates
             self.combo_input_ports.Enable(False)
         elif device.device_kind == self.devices.D_TYPE:
-            possible_ports = ['DATA','CLK','SET','CLEAR']
+            possible_ports = ['DATA', 'CLK', 'SET', 'CLEAR']
             self.combo_input_ports.Enable(True)
             for port in possible_ports:
                 port_id = self.names.query(port)
                 if self.check_input_connected(device_id, port_id):
                     self.combo_input_ports.Append(port, bitmap=self.tick_bmp)
                 else:
-                    self.combo_input_ports.Append(port, bitmap=self.warning_bmp)
-        else: # some other gate
+                    self.combo_input_ports.Append(
+                        port, bitmap=self.warning_bmp)
+        else:  # some other gate
             self.combo_input_ports.Enable(True)
             # get the number of inputs the gate has
             num_inputs = len(device.inputs)
             # add the inputs to the combo box
-            for n in range(1,num_inputs+1):
+            for n in range(1, num_inputs+1):
                 port = 'I'+str(n)
                 port_id = self.names.query(port)
                 if self.check_input_connected(device_id, port_id):
                     self.combo_input_ports.Append(port, bitmap=self.tick_bmp)
                 else:
-                    self.combo_input_ports.Append(port, bitmap=self.warning_bmp)
+                    self.combo_input_ports.Append(
+                        port, bitmap=self.warning_bmp)
 
                 # self.combo_input_ports.Append('I'+str(n),
                 #     bitmap=self.warning_bmp)
@@ -349,20 +361,23 @@ class ConnectionsTab(wx.Panel):
 
             # MAKE THE ACTUAL CONNECTION
             error = self.network.make_connection(output_id, output_port_id,
-                input_id, input_port_id)
-                        
+                                                 input_id, input_port_id)
+
             if error == self.network.INPUT_CONNECTED:
                 # if so, throw a warning text
-                self.warning_text2.SetLabel('The specified input already\nhas a connection!')
+                self.warning_text2.SetLabel(
+                    'The specified input already\nhas a connection!')
             else:
                 self.warning_text2.SetLabel('')
-                print('Connection added: {} to {}.'.format(self.get_full_name(output_id, output_port_id),self.get_full_name(input_id,input_port_id)))
+                print('Connection added: {} to {}.'.format(self.get_full_name(
+                    output_id, output_port_id),
+                    self.get_full_name(input_id, input_port_id)))
 
                 self.check_network()
 
                 # append to the connections list
                 connection = (input_id,
-                    input_port_id, output_id, output_port_id)
+                              input_port_id, output_id, output_port_id)
                 self.append_to_connections_list(connection)
                 # refresh the combo boxes
                 self.refresh_combo_boxes()
@@ -372,9 +387,10 @@ class ConnectionsTab(wx.Panel):
         for _ in range(len(self.displayed_connections)):
             self.connections_list.DeleteItem(0)
         self.displayed_connections = []
-        
+
     def check_network(self):
-        print('Checking the network... {}'.format(self.network.check_network()))
+        print('Checking the network... {}'
+              .format(self.network.check_network()))
         if self.network.check_network():
             self.warning_text1.SetLabel(' All inputs connected!')
             self.warning_text1.SetForegroundColour('blue')
