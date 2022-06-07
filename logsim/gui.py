@@ -276,8 +276,8 @@ class Gui(wx.Frame):
         if Id == wx.ID_EXIT:
             self.Close(True)
         if Id == wx.ID_ABOUT:
-            wx.MessageBox(_(u"Logic Simulator\nCreated by Yi Chen Hock, ")
-                          _(u"Michael Stevens and Cindy Wu\n2022"),
+            wx.MessageBox(_(u"Logic Simulator\nCreated by Yi Chen Hock, "
+                          "Michael Stevens and Cindy Wu.\n2022"),
                           _(u"About Logsim"), wx.ICON_INFORMATION | wx.OK)
         if Id == wx.ID_SAVEAS:
             self.save_file_as()
