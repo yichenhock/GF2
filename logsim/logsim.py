@@ -78,9 +78,10 @@ def main(arg_list):
         # Initialise an instance of the gui.Gui() class and
         # wxPython translation capability
         import app_base as ab
-        app = ab.BaseApp(redirect=False)
-        app.OnInit()
-        app.doConfig()
+        # app = ab.BaseApp(redirect=False)
+        # app.OnInit()
+        # app.doConfig()
+        app = wx.App()
         gui = Gui(_(u"Logic Simulator"), path, names, devices, network,
                   monitors)
         gui.Show(True)
