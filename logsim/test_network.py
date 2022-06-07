@@ -16,17 +16,18 @@ def new_network():
 
 @pytest.fixture
 def network_with_devices():
-    """Return a Network class instance with three devices in the network."""
+    """Return a Network class instance with four devices in the network."""
     new_names = Names()
     new_devices = Devices(new_names)
     new_network = Network(new_names, new_devices)
 
-    [SW1_ID, SW2_ID, OR1_ID] = new_names.lookup(["Sw1", "Sw2", "Or1"])
+    [SW1_ID, SW2_ID, OR1_ID, NOT1_ID] = new_names.lookup(["Sw1", "Sw2", "Or1", "Not1"])
 
     # Add devices
     new_devices.make_device(SW1_ID, new_devices.SWITCH, 0)
     new_devices.make_device(SW2_ID, new_devices.SWITCH, 0)
     new_devices.make_device(OR1_ID, new_devices.OR, 2)
+    new_devices.make_device(NOT1_ID, new_devices.NOT)
 
     return new_network
 
@@ -37,18 +38,21 @@ def test_get_connected_output(network_with_devices):
     devices = network.devices
     names = devices.names
 
-    [SW1_ID, SW2_ID, OR1_ID, I1, I2] = names.lookup(["Sw1", "Sw2", "Or1", "I1",
-                                                     "I2"])
+    [SW1_ID, SW2_ID, SW3_ID, OR1_ID, NOT1_ID, I1, I2
+    ] = names.lookup(["Sw1", "Sw2", "Sw3", "Or1", "Not1", "I1", "I2"])
     # Inputs are unconnected, get_connected_output should return None
     assert network.get_connected_output(OR1_ID, I1) is None
     assert network.get_connected_output(OR1_ID, I2) is None
+    assert network.get_connected_output(NOT1_ID, None) is None
 
     # Make connections
     network.make_connection(SW1_ID, None, OR1_ID, I1)
     network.make_connection(SW2_ID, None, OR1_ID, I2)
+    network.make_connection(SW3_ID, None, NOT1_ID, None)
 
     assert network.get_connected_output(OR1_ID, I1) == (SW1_ID, None)
     assert network.get_connected_output(OR1_ID, I2) == (SW2_ID, None)
+    assert network.get_connected_output(NOT1_ID, None) == (SW3_ID, None)
 
     # Not a valid port for Sw1, get_connected_output should return None
     assert network.get_connected_output(SW1_ID, I2) is None
@@ -60,15 +64,17 @@ def test_get_input_signal(network_with_devices):
     devices = network.devices
     names = devices.names
 
-    [SW1_ID, SW2_ID, OR1_ID, I1, I2] = names.lookup(["Sw1", "Sw2", "Or1", "I1",
-                                                     "I2"])
+    [SW1_ID, SW2_ID, SW3_ID, OR1_ID, NOT1_ID, I1, I2
+    ] = names.lookup(["Sw1", "Sw2", "Sw3", "Or1", "Not1", "I1", "I2"])
     # Inputs are unconnected, get_input_signal should return None
     assert network.get_input_signal(OR1_ID, I1) is None
     assert network.get_input_signal(OR1_ID, I2) is None
+    assert network.get_connected_output(NOT1_ID, None) is None
 
     # Make connections
     network.make_connection(SW1_ID, None, OR1_ID, I1)
     network.make_connection(SW2_ID, None, OR1_ID, I2)
+    network.make_connection(SW3_ID, None, NOT1_ID, None)
 
     # Set Sw2 output to HIGH
     switch2 = devices.get_device(SW2_ID)
@@ -76,6 +82,14 @@ def test_get_input_signal(network_with_devices):
 
     assert network.get_input_signal(OR1_ID, I1) == devices.LOW
     assert network.get_input_signal(OR1_ID, I2) == devices.HIGH
+
+    assert network.get_input_signal(NOT1_ID, None) == devices.LOW
+
+    # Set Sw3 output to HIGH
+    switch3 = devices.get_decice(SW3_ID)
+    switch3.outputs[None] = devices.HIGH
+
+    assert network.get_input_signal(NOT1_ID, None) == devices.HIGH
 
 
 def test_get_output_signal(network_with_devices):
@@ -85,8 +99,10 @@ def test_get_output_signal(network_with_devices):
     names = devices.names
 
     [OR1_ID] = names.lookup(["Or1"])
+    [NOT1_ID] = names.lookup(["Not1"])
 
     assert network.get_output_signal(OR1_ID, None) == devices.LOW
+    assert network.get_output_signal(NOT1_ID, None) == devices.LOW
 
     # Set Or1 output to HIGH
     or1 = devices.get_device(OR1_ID)
@@ -94,6 +110,11 @@ def test_get_output_signal(network_with_devices):
 
     assert network.get_output_signal(OR1_ID, None) == devices.HIGH
 
+    # Set Not1 output to HIGH
+    not1 = devices.get_device(NOT1_ID)
+    not1.outputs[None] = devices.HIGH
+
+    assert network.get_output_signal(NOT1_ID, None) == devices.HIGH
 
 def test_check_network(network_with_devices):
     """Test if the signal at a given input port is correct."""

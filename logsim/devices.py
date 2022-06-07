@@ -258,6 +258,8 @@ class Devices:
         self.add_device(device_id, self.NOT)
         self.add_input(device_id, input_id=None)
         self.add_output(device_id, output_id=None)
+        device = self.get_device(device_id)
+        print(device.inputs, device.outputs)
 
     def make_d_type(self, device_id):
         """Make a D-type device."""
@@ -324,7 +326,7 @@ class Devices:
                     self.make_gate(device_id, device_kind, 2)
                     error_type = self.NO_ERROR
 
-            elif device_kind == self.NOT: #########################################################################
+            elif device_kind == self.NOT:
                 if device_property is not None:
                     error_type = self.QUALIFIER_PRESENT
                 else:
