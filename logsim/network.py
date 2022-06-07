@@ -224,13 +224,7 @@ class Network:
         else:  # first_port_id not a valid input or output port
             # print("First port absent")
             error_type = self.PORT_ABSENT
-<<<<<<< HEAD
-            # print("Port absent")
-
-        return error_type       
-=======
         return error_type
->>>>>>> 448e8f188bbe2459e8f9c25b6b3b9f182345c714
 
     def check_network(self):
         """Return True if all inputs in the network are connected."""

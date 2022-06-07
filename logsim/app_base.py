@@ -35,8 +35,6 @@ class BaseApp(wx.App, InspectionMixin):
         self.Init() # InspectionMixin
         # work around for Python stealing "_"
         sys.displayhook = _displayHook
-
-        gettext.install('logsim_chinese_translation', './locale', unicode=True)
         
         self.appName = "Logic Simulator"
         
@@ -91,8 +89,6 @@ class BaseApp(wx.App, InspectionMixin):
         # if an unsupported language is requested default to English
         if lang in appC.supLang:
             selLang = appC.supLang[lang]
-            self.presLan_zh = gettext.translation("logsim_chinese_translation", "./locale", languages=['zh'])
-            self.presLan_zh.install()
         else:
             selLang = wx.LANGUAGE_ENGLISH
             
@@ -107,6 +103,5 @@ class BaseApp(wx.App, InspectionMixin):
             self.locale = wx.Locale(selLang)
         if self.locale.IsOk():
             self.locale.AddCatalog(appC.langDomain)
-            self.locale.setlocale(self.locale.LC_ALL, 'ZH')
         else:
             self.locale = None
