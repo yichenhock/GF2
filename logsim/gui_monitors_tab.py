@@ -282,12 +282,12 @@ class MonitorsTab(wx.Panel):
 
     def enable_monitor(self, state):
         """Allow components to be added to the monitor."""
-        self.combo_types.Enable(state)
-        self.combo_names.Enable(state)
-        self.add_button.Enable(state)
-        self.add_all_button.Enable(state)
-        if state:
-            self.warning_text.SetLabel('')
-        else:
-            self.warning_text.SetLabel(
-                _(u" Reset simulation to add components!"))
+        # self.combo_types.Enable(state)
+        # self.combo_names.Enable(state)
+        # self.add_button.Enable(state)
+        # self.add_all_button.Enable(state)
+        # if state:
+        #     self.warning_text.SetLabel('')
+        # else:
+        #     self.warning_text.SetLabel(
+        #         _(u" Reset simulation to add components!"))

@@ -347,7 +347,8 @@ class ConnectionsTab(wx.Panel):
             incomplete = True
 
         if incomplete:
-            self.warning_text2.SetLabel('Output and input fields incomplete!')
+            self.warning_text2.SetLabel('Output and input fields \n'
+                                        'incomplete!')
         else:
             self.warning_text2.SetLabel('')
             output_name = self.combo_output_devices.GetValue()

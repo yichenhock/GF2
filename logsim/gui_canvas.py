@@ -244,19 +244,14 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             y_top = y + self.component_vspace * number_devices + \
                 self.clock_vspace
 
-            dashed_length = 1
-            dashed_spacing = 5
+            dashed_length = 3
+            dashed_spacing = 3
             while y_bottom <= y_top:
                 GL.glBegin(GL.GL_LINE_STRIP)
                 GL.glVertex2f(x, y_bottom)
                 GL.glVertex2f(x, y_bottom + dashed_length)
                 GL.glEnd()
                 y_bottom += dashed_length + dashed_spacing
-            # GL.glVertex2f(x, y - self.pan_y)  # account for pan
-            # y_top = y + self.component_vspace * number_devices + \
-            #     self.clock_vspace
-
-            # GL.glVertex2f(x, y_top)
 
             # Cycle labels
             self.render_text(str(i), x,
@@ -282,6 +277,13 @@ class MyGLCanvas(wxcanvas.GLCanvas):
                 (device_id, output_id)]
 
             GL.glColor3f(0.80, 0.80, 0.80)  # grid lines is light grey
+
+            cycles_monitored = len(signal_list)
+            cycles_completed = self.global_vars.cycles_completed
+            # for signals that have just been added to the monitor,
+            # you want the signals to be drawn at the end
+            blank_cycles = cycles_completed-cycles_monitored
+            x += self.curr_wavelength*blank_cycles
 
             for signal in signal_list:
                 if x < self.origin_x - self.pan_x - self.curr_wavelength:
@@ -345,6 +347,13 @@ class MyGLCanvas(wxcanvas.GLCanvas):
                 (device_id, output_id)]
             GL.glColor3f(0.0, 0.0, 1.0)  # signal trace is blue
             GL.glBegin(GL.GL_LINE_STRIP)
+
+            cycles_monitored = len(signal_list)
+            cycles_completed = self.global_vars.cycles_completed
+            # for signals that have just been added to the monitor,
+            # you want the signals to be drawn at the end
+            blank_cycles = cycles_completed-cycles_monitored
+            x += self.curr_wavelength*blank_cycles
 
             for signal in signal_list:
                 if x < self.origin_x - self.pan_x - self.curr_wavelength:
