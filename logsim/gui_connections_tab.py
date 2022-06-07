@@ -207,6 +207,11 @@ class ConnectionsTab(wx.Panel):
         error = self.network.remove_connection(
             output_id, output_port_id, input_id, input_port_id)
 
+        self.statusbar.SetStatusText('Connection removed: {} to {}.'
+                                     .format(self.get_full_name(
+                                         output_id, output_port_id),
+                                         self.get_full_name(
+                                         input_id, input_port_id)))
         print('Connection removed: {} to {}.'.format(self.get_full_name(
             output_id, output_port_id),
             self.get_full_name(input_id, input_port_id)))
@@ -369,6 +374,11 @@ class ConnectionsTab(wx.Panel):
                     'The specified input already\nhas a connection!')
             else:
                 self.warning_text2.SetLabel('')
+                self.statusbar.SetStatusText('Connection added: {} to {}.'
+                                             .format(self.get_full_name(
+                                                 output_id, output_port_id),
+                                                 self.get_full_name(
+                                                 input_id, input_port_id)))
                 print('Connection added: {} to {}.'.format(self.get_full_name(
                     output_id, output_port_id),
                     self.get_full_name(input_id, input_port_id)))
