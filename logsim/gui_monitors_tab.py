@@ -46,8 +46,11 @@ class MonitorsTab(wx.Panel):
         self.label_types = wx.StaticText(self, wx.ID_ANY, _(u"Type"))
         self.label_types.SetFont(font)
         self.combo_types = wx.ComboBox(self, wx.ID_ANY,
-                                       choices=[_(u"ALL"), _(u"GATE"), _(u"SWITCH"),
-                                                _(u"CLOCK"), _(u"D-TYPE")],
+                                       choices=[_(u"ALL"),
+                                                _(u"GATE"),
+                                                _(u"SWITCH"),
+                                                _(u"CLOCK"),
+                                                _(u"D-TYPE")],
                                        style=wx.CB_READONLY)
         self.combo_types.SetFont(font)
         self.label_names = wx.StaticText(self, wx.ID_ANY, _(u"Name"))
