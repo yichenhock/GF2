@@ -26,7 +26,6 @@ from gui_monitors_tab import MonitorsTab
 from gui_canvas import MyGLCanvas
 from global_vars import GlobalVars
 
-
 class Gui(wx.Frame):
     """Configure the main window and all the widgets.
 
@@ -55,6 +54,8 @@ class Gui(wx.Frame):
         super().__init__(parent=None, title=title, size=(1024, 768))
 
         self.SetIcon(wx.Icon('logsim/imgs/favicon.ico'))
+
+        self.SetTitle(_(u"Logic Simulator"))
 
         self.path = path
         self.names = names

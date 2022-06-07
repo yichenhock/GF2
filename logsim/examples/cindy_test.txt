@@ -1,0 +1,35 @@
+#Example circuit - divide (clock frequency) by 3;
+
+devices(
+    a is AND;
+    b, c are DTYPE;
+    sw1, sw2, sw3, sw4 are SWITCH;
+    clk1 is CLOCK;
+)
+
+initialise(
+    a has 2 inputs;
+    sw1, sw2, sw3, sw4 are LOW;
+    clk1 cycle length 2;
+)
+
+connections(
+
+        b.QBAR to a.I1;
+        c.QBAR to a.I2;
+
+        a to b.DATA;
+        clk1 to b.CLK;
+        sw1 to b.SET;
+        sw2 to b.CLEAR;
+
+        b.Q to c.DATA;
+        clk1 to c.CLK;
+        sw3 to c.SET;
+        sw4 to c.CLEAR;
+
+)
+
+monitors(
+    c.Q, clk1;
+)

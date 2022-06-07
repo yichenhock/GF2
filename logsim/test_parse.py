@@ -25,8 +25,22 @@ def new_names():
 #     path = "logsim/tests/test_scanner.txt"
 #     return Scanner(path, new_names)
 
+@pytest.fixture
+def new_scanner():
+    """Return a scanner instance"""
+    path = "logsim/test_scanner.txt"
+    return Scanner(path, names)
 
-def test_no_open_bracket():
-    "devices"
+@pytest.fixture
+def new_parser():
+    """Return a parser instance"""
+    names = new_names
+    devices = Devices(names)
+    network = Network(names, devices)
+    monitors = Monitors(names, devices, network)
+    return Parser(names, devices, network, monitors, scanner)
 
-    assert SyntaxError.NO_OPEN_BRACKET
+def test_devices_block(self):
+    scanner = new_scanner()
+    with pytest.raises(CloseBracketError):
+        

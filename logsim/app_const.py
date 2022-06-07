@@ -11,5 +11,5 @@ langDomain = "logsim_translation"
 # languages you want to support
 supLang = {u"en": wx.LANGUAGE_ENGLISH,
            u"zh": wx.LANGUAGE_CHINESE_SIMPLIFIED,
-           u"fr": wx.LANGUAGE_FRENCH
+           # u"fr": wx.LANGUAGE_FRENCH
           }
