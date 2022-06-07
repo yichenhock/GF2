@@ -68,14 +68,14 @@ class Network:
 
         [self.NO_ERROR, self.INPUT_TO_INPUT, self.OUTPUT_TO_OUTPUT,
          self.INPUT_CONNECTED, self.PORT_ABSENT,
-         self.DEVICE_ABSENT] = self.names.unique_error_codes(6)
+         self.DEVICE_ABSENT, self.CONNECTION_ABSENT] = self.names.unique_error_codes(7)
         self.steady_state = True  # for checking if signals have settled
 
         self.error_dict = {self.NO_ERROR: "No error", self.INPUT_TO_INPUT: "Input to input",
                            self.OUTPUT_TO_OUTPUT: "Output to output", self.INPUT_CONNECTED: "Input connected", self.PORT_ABSENT: "Port absent"}
         
         # list of all connections
-        self.connections = [] # (output_id, output_port_id, input_id, input_port_id)
+        self.connections = {} # {connection_id: (output_id, output_port_id, input_id, input_port_id)}
 
     def get_connected_output(self, device_id, input_id):
         """Return the output connected to the given input.
@@ -171,8 +171,69 @@ class Network:
         
         if error_type == self.NO_ERROR:
             # append the connection to the list of connections
-            self.connections.append((first_device_id, first_port_id,
-                second_device_id, second_port_id))
+            connection_id = '_'.join([str(first_device_id),
+                str(first_port_id),
+                str(second_device_id),
+                str(second_port_id)
+                ])
+            connection = (first_device_id, first_port_id,
+                second_device_id, second_port_id)
+            self.connections[connection_id] = connection
+
+        return error_type
+    
+    def remove_connection(self, first_device_id, first_port_id, second_device_id,
+                        second_port_id):
+        """Disconnect the first device from the second device.
+
+        Return self.NO_ERROR if successful, or the corresponding error if not.
+        """
+        error_type = None
+
+        first_device = self.devices.get_device(first_device_id)
+        second_device = self.devices.get_device(second_device_id)
+        if first_device is None or second_device is None:
+            error_type = self.DEVICE_ABSENT
+            # print("Device absent")
+        
+        elif first_port_id in first_device.inputs:
+            if first_device.inputs[first_port_id] is not None:
+                # Input is already in a connection
+                # REMOVE THE CONNECTION!
+                first_device.inputs[first_port_id] = None
+                del first_device.inputs[first_port_id]
+                error_type = self.NO_ERROR
+            elif (second_port_id in second_device.inputs) and (
+                second_port_id not in second_device.outputs):
+                # Both ports are inputs
+                # print("Input to input")
+                error_type = self.INPUT_TO_INPUT
+            elif second_port_id in second_device.outputs:
+                # NOTHING TO REMOVE
+                error_type = self.CONNECTION_ABSENT
+            else:  # second_port_id is not a valid input or output port
+                # print("Second port absent")
+                error_type = self.PORT_ABSENT
+
+        elif first_port_id in first_device.outputs:
+            if second_port_id in second_device.outputs and (
+                second_port_id not in second_device.inputs):
+                # Both ports are outputs
+                # print("output connected to output")
+                error_type = self.OUTPUT_TO_OUTPUT
+            elif second_port_id in second_device.inputs:
+                if second_device.inputs[second_port_id] is not None:
+                    # Input is already in a connection
+                    # REMOVE THE CONNECTION!
+                    second_device.inputs[second_port_id] = None
+                    # del second_device.inputs[second_port_id]
+                    error_type = self.NO_ERROR
+                else:
+                    # NOTHING TO REMOVE
+                    error_type = self.CONNECTION_ABSENT
+            else:
+                # print("Port absent")
+                error_type = self.PORT_ABSENT
 
         return error_type
 
