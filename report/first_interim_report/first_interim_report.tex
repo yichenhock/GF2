@@ -111,9 +111,11 @@ The logic description language will be specified using EBNF notation. The langua
     
     clock_initialisation = clock_name, ("cycle length" | "cycle"), {digit}, ";";
 
-    connection_definition = (device_name | dtype_output_name | switch_name | clock_name), ("is connected to" | "to"), {(gate_input_name | dtype_input_name)}, ";";
+    connection_definition = (device_name | dtype_output_name | switch_name | clock_name), ("is connected to" | "to"), {(gate_input_name | not_input_name | dtype_input_name)}, ";";
 
     gate_input_name = device_name, ".", "I", {digit};
+
+    not_input_name = device_name;
 
     dtype_input_name = device_name, ".", dtype_inputs;
 
