@@ -890,7 +890,6 @@ class Parser:
     def parse_network(self):
         """Parse the circuit definition file."""
         symbol = self.scanner.get_symbol()
-        print('\n'+self.scanner.path)
         print('---------- COMPILING SIMULATION ----------')
 
         # blocks need to be discovered in the right order and not repeated
@@ -943,10 +942,7 @@ class Parser:
                   'and monitors not added.')
 
         self.print_errors()
-
-        print(self.syntax_errors)
-        
-        self.scanner.file.close()
+        print("Errors:", self.syntax_errors)
 
         success = len(self.syntax_errors) == 0 and \
             len(self.semantic_errors) == 0 and \
