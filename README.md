@@ -38,7 +38,7 @@ To launch the GUI, run
 ```
 python logsim/logsim.py [<file path>]
 ```
-Note that the file path is optional here. If not provicded, the GUI will prompt the user to browse for a file. 
+Note that the file path is optional here. Example files have been prepared in logsim/examples, but users may write their own inside the GUI. If not provicded, the GUI will prompt the user to browse for a file. 
   
 Please note that the circuit definition file must be a .txt file.
   
