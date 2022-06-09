@@ -1,8 +1,8 @@
 """Test the scanner module."""
 import pytest
 
-from names import Names
-from scanner import Scanner, Symbol
+from final.names import Names
+from final.scanner import Scanner, Symbol
 
 
 @pytest.fixture
@@ -16,7 +16,7 @@ def new_test_scanner():
     """Return a new instance of the Scanner class with predefined path."""
     new_names = Names()
     # Text file containing scanner tests for get_symbol
-    path = "logsim/test_scanner.txt"
+    path = "final/tests/test_scanner.txt"
     return Scanner(path, new_names)
 
 

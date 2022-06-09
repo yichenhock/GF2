@@ -1,9 +1,9 @@
 """Test the network module."""
 import pytest
 
-from names import Names
-from devices import Devices
-from network import Network
+from final.names import Names
+from final.devices import Devices
+from final.network import Network
 
 
 @pytest.fixture

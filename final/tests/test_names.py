@@ -1,7 +1,7 @@
 """Test the names module."""
 import pytest
 
-from names import Names
+from final.names import Names
 
 
 @pytest.fixture

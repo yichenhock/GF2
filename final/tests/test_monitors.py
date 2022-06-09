@@ -1,10 +1,10 @@
 """Test the monitors module."""
 import pytest
 
-from names import Names
-from network import Network
-from devices import Devices
-from monitors import Monitors
+from final.names import Names
+from final.network import Network
+from final.devices import Devices
+from final.monitors import Monitors
 
 
 @pytest.fixture

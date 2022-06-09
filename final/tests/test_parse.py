@@ -1,15 +1,15 @@
 """Test the parse module."""
 import pytest
-from names import Names
-from string_scanner import Scanner, Symbol
-from monitors import Monitors
-from devices import Devices
-from network import Network
-from string_parser import Parser
-from global_vars import GlobalVars
+from final.names import Names
+from final.string_scanner import Scanner, Symbol
+from final.monitors import Monitors
+from final.devices import Devices
+from final.network import Network
+from final.string_parser import Parser
+from final.global_vars import GlobalVars
 
 # Syntax errors
-from error import (
+from final.error import (
     InvalidBlockHeaderOrder,
     InvalidBlockHeader,
     RedefinedError,
@@ -35,7 +35,7 @@ from error import (
 )
 
 # Semantic errors
-from error import (
+from final.error import (
     UndefinedError,
     RedefinedError,
     WrongDeviceName,
