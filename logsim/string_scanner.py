@@ -10,8 +10,7 @@ Classes
 Scanner - reads definition file and translates characters into symbols.
 Symbol - encapsulates a symbol and stores its properties.
 """
-import sys
-from names import Names
+
 
 class Symbol:
     """Encapsulate a symbol and store its properties.
@@ -68,7 +67,8 @@ class Scanner:
         self.names = names
         self.string = string
 
-        self.symbol_list = [",", ".", ";", "=", "(", ")", "keyword", "number", "name", "eof"]
+        self.symbol_list = [",", ".", ";", "=",
+                            "(", ")", "keyword", "number", "name", "eof"]
         # Define all symbol types
         self.symbol_type_list = [self.COMMA, self.DOT, self.SEMICOLON,
                                  self.EQUALS, self.OPEN_BRACKET,
@@ -214,16 +214,3 @@ class Scanner:
             self.advance()
 
         return symbol
-
-# new_names = Names()
-# scanner = Scanner(new_names, "Reading this 123 ;1n\n as a testYay it works)")
-# symbol = scanner.get_symbol()
-# while scanner.current_character != '':
-#     if symbol.type == scanner.NAME:
-#         print(new_names.get_name_string(symbol.id))
-#     elif symbol.type == scanner.NUMBER:
-#         print(symbol.id)
-#     else:
-#         print(scanner.symbol_list[symbol.type])
-#     symbol = scanner.get_symbol()
-# print(new_names.names)

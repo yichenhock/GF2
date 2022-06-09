@@ -1,8 +1,8 @@
-"""Parse the definition file and build the logic network.
+"""Parse the definition file and build the logic network.  
 
 Used in the Logic Simulator project to analyse the syntactic and semantic
 correctness of the symbols received from the scanner and then builds the
-logic network.
+logic network. Minimally edited from main parser to read strings and to output diagnostics useful for pytesting.
 
 Classes
 -------
@@ -105,6 +105,8 @@ class Parser:
         self.semantic_errors = []
         self.input_not_connected_errors = []
         self.not_initialised_errors = []
+        # To store error codes called from Network method make_connections()
+        self.connection_errors = []
 
         self.names_parsed = []
 
@@ -782,6 +784,7 @@ class Parser:
                 input_suffix = self.names.get_name_string(input_port_id)
             error = self.network.make_connection(
                 input_id, input_port_id, output_id, output_port_id)
+            self.connection_errors.append(error)
             # all possible errors should have been caught prior to this.
             # only error not caught is connecting an already connected input
             # to some output.
@@ -942,7 +945,7 @@ class Parser:
                   'and monitors not added.')
 
         self.print_errors()
-        print("Errors:", self.syntax_errors)
+        print("++++++++++++++++++++++++++Errors:", self.syntax_errors)
 
         success = len(self.syntax_errors) == 0 and \
             len(self.semantic_errors) == 0 and \

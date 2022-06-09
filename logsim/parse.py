@@ -65,7 +65,6 @@ from error import (
 
 
 class Parser:
-
     """Parse the definition file and build the logic network.
 
     The parser deals with error handling. It analyses the syntactic and
@@ -85,12 +84,39 @@ class Parser:
     Public methods
     --------------
     parse_network(self): Parses the circuit definition file.
+    devices_block(self): Checks the device block header exists, and for open and close bracket errors.
+    initialise_block(self, name): Checks the initialise block header exists, and for open and close bracket errors.
+    connections_block(self): Checks the connections block header exists, and for open and close bracket errors.
+    monitors_block(self): Checks the connections block header exists, and for open and close bracket errors.
+    monitors_subrule(self, symbol): Reads one line inside monitors block up to and including semicolon.
+
+    Private methods
+    --------------
+    devices_subrrule(self, symbol): Reads one line inside device definition block up to and including semicolon.
+    check_name_legal(self, name_symbol, component_type): Checks if names are lowercase at minimum, then calls one of the two functions below.
+    is_switch_legal(self, name): Checks if switch names begin with 'sw' and end in a number.
+    is_clock_legal(self, name): Checks if clock names begin with 'clk' and end in a number.
+    initialise_subrule(self, name): Reads one line inside initialisation block up to and including semicolon.
+    init_switch(self, name): Once first symbol of line read as switch, complete reading initialisation assuming it is for a switch.
+    init_clock(self, name): Once first symbol of line read as clock, complete reading initialisation assuming it is for a clock.
+    init_gate(self, name): Once first symbol of line read as gate, complete reading initialisation assuming it is for a gate.
+    connections_subrule(self, symbol): Reads one line inside connections block up to and including semicolon.
+    parse_output_rule(self, symbol): Check if the thing to be connected (to an input) has the form of an output.
+    parse_input_rule(self, symbol): Check if the thing to receive an input has the form of an input.
+    is_output_port(self, name_symbol, port_symbol): For d-types, check that the output port name is valid (one of Q, QBAR).
+    is_input_port(self, name_symbol, port_symbol): Check that the input port name is valid (for d-types, one of SET, CLEAR, DATA, CLK; for gates, of form 'I' followed by a number).
+    make_devices(self, symbol): Calls a method in Devices class to store information about devices.
+    make_connections(self): Calls a method in Network class to store information about device inputs, outputs and their connections.
+    make_monitor(self): Calls a method in Monitors class to store information about tracked signals to be displayed on GUI.
+    check_all_inputs_connected(self): Checks all names classed as inputs are connected to something.
+    add_error(self, error): Adds errors to the parser error list.
+    skip_error(self, error): Performs error recovery on a line and block level.
+    print_errors(self): Prints all errors caught and stored in the lists in the Parser class.
     """
 
     def __init__(self, names, devices, network, monitors,
                  scanner, global_vars):
         """Initialise constants."""
-
         # names class object
         self.names = names
         self.devices = devices
@@ -121,9 +147,7 @@ class Parser:
                                   self.scanner.NAND_id]
 
     def devices_block(self, symbol):
-        """Check if symbols form a device block.
-
-        """
+        """Check if symbols form a device block."""
         next_sym = self.scanner.get_symbol()
 
         if next_sym.type == self.scanner.OPEN_BRACKET:
@@ -140,7 +164,7 @@ class Parser:
             raise OpenBracketError(next_sym)  # raise open bracket error
         return next_sym
 
-    def devices_subrule(self, symbol):
+    def _devices_subrule(self, symbol):
         try:
             connect = [self.scanner.is_id, self.scanner.are_id]
             types = [self.scanner.AND_id,
@@ -211,7 +235,7 @@ class Parser:
 
         return next_sym
 
-    def check_name_legal(self, name_symbol, component_type):
+    def __check_name_legal(self, name_symbol, component_type):
         name = self.names.get_name_string(name_symbol.id)
         if not name.islower():  # device names have to be all lower case
             return False
@@ -227,7 +251,7 @@ class Parser:
             if self.is_switch_legal(name) or self.is_clock_legal(name):
                 raise WrongDeviceName(name_symbol, name)
 
-    def is_switch_legal(self, name):
+    def __is_switch_legal(self, name):
         # returns true if name starts with 'sw' followed by a number or nothing
         if len(name) == 2:
             if name == 'sw':
@@ -241,7 +265,7 @@ class Parser:
             else:
                 return False
 
-    def is_clock_legal(self, name):
+    def __is_clock_legal(self, name):
         # returns true if name starts with 'clk' followed
         # by a number or nothing
         if len(name) == 3:
@@ -260,9 +284,7 @@ class Parser:
 # =============================================================================
 
     def initialise_block(self, symbol):
-        """Check if symbols form a initialise block.
-
-        """
+        """Check if symbols form a initialise block."""
         initialise_symbol = symbol
         next_sym = self.scanner.get_symbol()
 
@@ -282,7 +304,7 @@ class Parser:
         self.make_devices(initialise_symbol)
         return next_sym
 
-    def initialise_subrule(self, symbol):
+    def __initialise_subrule(self, symbol):
         try:
             if symbol.type != self.scanner.NAME:
                 raise InvalidDeviceName(symbol)
@@ -310,7 +332,7 @@ class Parser:
 
         return next_sym
 
-    def init_switch(self, symbol):
+    def __init_switch(self, symbol):
         next_sym = symbol
         connect = [self.scanner.is_id, self.scanner.are_id]
         checking_devices = True
@@ -359,7 +381,7 @@ class Parser:
 
         return next_sym
 
-    def init_clock(self, symbol):
+    def __init_clock(self, symbol):
         next_sym = symbol
         connect = [self.scanner.cycle_id]
         checking_devices = True
@@ -413,7 +435,7 @@ class Parser:
 
         return next_sym
 
-    def init_gate(self, symbol):
+    def __init_gate(self, symbol):
         next_sym = symbol
         connect = [self.scanner.has_id, self.scanner.have_id]
         device_types = [self.scanner.AND_id,
@@ -495,9 +517,7 @@ class Parser:
 # ===========================================================================================================
 
     def connections_block(self, symbol):
-        """Check if symbols form a connections block.
-
-        """
+        """Check if symbols form a connections block."""
         next_sym = self.scanner.get_symbol()
 
         if next_sym.type == self.scanner.OPEN_BRACKET:
@@ -514,7 +534,7 @@ class Parser:
             raise OpenBracketError(next_sym)  # raise open bracket error
         return next_sym
 
-    def connections_subrule(self, symbol):
+    def __connections_subrule(self, symbol):
         self.input_symbols = []
         try:
             next_sym = self.parse_output_rule(symbol)
@@ -556,7 +576,7 @@ class Parser:
 
         return next_sym
 
-    def parse_output_rule(self, symbol):
+    def __parse_output_rule(self, symbol):
         """Check if the scanner symbols form an output."""
         # name, [".", output_name]
         if symbol.type == self.scanner.NAME:
@@ -592,7 +612,7 @@ class Parser:
         self.output_symbol = (name_symbol, output_port_symbol)
         return next_sym
 
-    def parse_input_rule(self, symbol):
+    def __parse_input_rule(self, symbol):
         """Check if the scanner symbols form an input."""
         # (name, ".", input_name) or (name) for NOT
 
@@ -626,7 +646,7 @@ class Parser:
         self.input_symbols.append((name_symbol, input_port_symbol))
         return next_sym
 
-    def is_output_port(self, name_symbol, port_symbol):
+    def __is_output_port(self, name_symbol, port_symbol):
         # output ports are only specified for d types
         # they can be either Q or QBAR
         try:
@@ -640,7 +660,7 @@ class Parser:
         else:  # no other gates have different output ports
             return False
 
-    def is_input_port(self, name_symbol, port_symbol):
+    def __is_input_port(self, name_symbol, port_symbol):
         # input ports
         try:
             device_type = self.device_dict[name_symbol.id]['type']
@@ -689,9 +709,7 @@ class Parser:
 # =============================================================================
 
     def monitors_block(self, symbol):
-        """Check if symbols form a monitors block.
-
-        """
+        """Check if symbols form a monitors block."""
         next_sym = self.scanner.get_symbol()
 
         if next_sym.type == self.scanner.OPEN_BRACKET:
@@ -708,7 +726,7 @@ class Parser:
             raise OpenBracketError(next_sym)  # raise open bracket error
         return next_sym
 
-    def monitors_subrule(self, symbol):
+    def __monitors_subrule(self, symbol):
         # we can only monitor outputs
         try:
             next_sym = self.parse_output_rule(symbol)
@@ -734,7 +752,7 @@ class Parser:
 # =============================================================================
 # =============================================================================
 
-    def make_devices(self, symbol):
+    def __make_devices(self, symbol):
         for device_id, device_details in self.device_dict.items():
             type = device_details['type']
             property = device_details['property']
@@ -765,7 +783,7 @@ class Parser:
             else:
                 raise NotInitialisedError(symbol)
 
-    def make_connections(self):
+    def __make_connections(self):
         for input, input_port_symbol in self.input_symbols:
             output_id = self.output_symbol[0].id
             output_port = self.output_symbol[1]
@@ -790,7 +808,7 @@ class Parser:
                 self.add_error(ConnectionPresent(
                     input_port_symbol, input_name, input_suffix))
 
-    def make_monitor(self):
+    def __make_monitor(self):
         output = self.output_symbol[0]
         output_id = output.id
 
@@ -804,10 +822,11 @@ class Parser:
 # =============================================================================
 # =============================================================================
 
-    def check_all_inputs_connected(self):
-        # check that everything that is an input has been
-        # connected to something
-        # specify exactly which input has not been connected
+    def __check_all_inputs_connected(self):
+        """Check that everything that is an input has been connected to something.
+
+        Specify exactly which input has not been connected.
+        """
         for device in self.devices.devices_list:
 
             for input_id, connection in device.inputs.items():
@@ -827,7 +846,8 @@ class Parser:
                             )
                         )
 
-    def add_error(self, error):
+    def __add_error(self, error):
+        """Add an error to the parser error list."""
         if isinstance(error, ParserSyntaxError):
             self.syntax_errors.append(error)
         elif isinstance(error, ParserSemanticError):
@@ -835,7 +855,7 @@ class Parser:
         else:
             raise error
 
-    def skip_error(self, error):  # skip to end of current statement/block
+    def __skip_error(self, error):  # skip to end of current statement/block
         next_sym = error.symbol
         if self.in_block:  # skip until next semicolon or closed bracket
             end_types = [self.scanner.SEMICOLON,
@@ -945,7 +965,7 @@ class Parser:
         self.print_errors()
 
         print(self.syntax_errors)
-        
+
         self.scanner.file.close()
 
         success = len(self.syntax_errors) == 0 and \
