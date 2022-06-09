@@ -9,7 +9,6 @@ Network - builds and executes the network.
 
 
 class Network:
-
     """Build and execute the network.
 
     This class contains many functions required for connecting devices together
@@ -211,7 +210,7 @@ class Network:
             elif (second_port_id in second_device.inputs) and (
                     second_port_id not in second_device.outputs):
                 # Both ports are inputs
-                # print("Input to input")
+                # ("Input to input")
                 error_type = self.INPUT_TO_INPUT
             elif second_port_id in second_device.outputs:
                 # NOTHING TO REMOVE

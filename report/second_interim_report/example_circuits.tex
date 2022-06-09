@@ -49,20 +49,14 @@
     )
     
     connections(
-        a(
             sw1 is connected to a.I1;
             sw2 is connected to a.I2;
-        )
-    
-        b(  
+
             sw1 is connected to b.I1;
             sw2 is connected to b.I2;
-        )
-    
-        c(  
+
             a is connected to c.I1;
             b is connected to c.I2;
-        )
     )
     
     monitors(
@@ -88,7 +82,7 @@
     #2 bit counter with outputs XOR;
     
     devices(
-        a is NOR;
+        a is NOT;
         b, c, d, e are NAND;
         f is DTYPE;
         g is XOR;
@@ -97,48 +91,33 @@
     )
     
     initialise(
-        a, b, c, d, e, g have 2 inputs;
+        b, c, d, e, g have 2 inputs;
         sw1, sw2 are LOW;
         clk1 cycle length 5;
     )
     
     connections(
-        a(
-            e to a.I1;
-            e to a.I2;
-        )
-    
-        b(  
+            e to a;
+
             e to b.I1;
             clk1 to b.I2;
-        )
-    
-        c(  
+
             clk1 to c.I1;
             a to c.I2;
-        )
-    
-        d(
+
             b to d.I1;
             e to d.I2;
-        )
-    
-        e(  
+
             d to e.I1;
             c to e.I2;
-        )
-    
-        f(
+
             f.QBAR to f.DATA;
             d to f.CLK;
             sw1 to f.SET;
             sw2 to f.CLEAR;
-        )
-    
-        g(  
+
             d to g.I1;
             f.Q to g.I2;
-        )
     )
     
     monitors(
@@ -146,53 +125,53 @@
     )
 \end{Verbatim}
 
+% \newpage
+% \subsection*{Example Circuit C --- 50 Switches}
+
+% \vspace{-0.4cm}
+% \begin{figure}[H]
+%     \begin{center}
+%     \includegraphics[width = \textwidth]{50 Switches.png}
+
+%     \caption{50 Switches}
+%     \end{center}
+%     \end{figure}
+
+% \begin{Verbatim}[numbers=left,xleftmargin=5mm]
+%     #Example circuit - 50 switches;
+
+%     devices(
+%         sw1, sw2, sw3, sw4, sw5, sw6, sw7, sw8, sw9, sw10,
+%         sw11, sw12, sw13, sw14, sw15, sw16, sw17, sw18, sw19, sw20,
+%         sw21, sw22, sw23, sw24, sw25, sw26, sw27, sw28, sw29, sw30,
+%         sw31, sw32, sw33, sw34, sw35, sw36, sw37, sw38, sw39, sw40,
+%         sw41, sw42, sw43, sw44, sw45, sw46, sw47, sw48, sw49, sw50 are SWITCH;
+%     )
+    
+%     initialise(
+%         sw1, sw2, sw3, sw4, sw5, sw6, sw7, sw8, sw9, sw10,
+%         sw11, sw12, sw13, sw14, sw15, sw16, sw17, sw18, sw19, sw20,
+%         sw21, sw22, sw23, sw24, sw25 are LOW;
+%         sw26, sw27, sw28, sw29, sw30, sw31, sw32, sw33, sw34, sw35,
+%         sw36, sw37, sw38, sw39, sw40, sw41, sw42, sw43, sw44, sw45,
+%         sw46, sw47, sw48, sw49, sw50 are HIGH;
+%     )
+    
+%     connections(
+%     )
+    
+%     monitors(
+%         sw1, sw2, sw3, sw4, sw5, sw6, sw7, sw8, sw9, sw10,
+%         sw11, sw12, sw13, sw14, sw15, sw16, sw17, sw18, sw19, sw20,
+%         sw21, sw22, sw23, sw24, sw25, sw26, sw27, sw28, sw29, sw30,
+%         sw31, sw32, sw33, sw34, sw35, sw36, sw37, sw38, sw39, sw40,
+%         sw41, sw42, sw43, sw44, sw45, sw46, sw47, sw48, sw49, sw50;
+%     )
+    
+% \end{Verbatim}
+
 \newpage
-\subsection*{Example Circuit C --- 50 Switches}
-
-\vspace{-0.4cm}
-\begin{figure}[H]
-    \begin{center}
-    \includegraphics[width = \textwidth]{50 Switches.png}
-
-    \caption{50 Switches}
-    \end{center}
-    \end{figure}
-
-\begin{Verbatim}[numbers=left,xleftmargin=5mm]
-    #Example circuit - 50 switches;
-
-    devices(
-        sw1, sw2, sw3, sw4, sw5, sw6, sw7, sw8, sw9, sw10,
-        sw11, sw12, sw13, sw14, sw15, sw16, sw17, sw18, sw19, sw20,
-        sw21, sw22, sw23, sw24, sw25, sw26, sw27, sw28, sw29, sw30,
-        sw31, sw32, sw33, sw34, sw35, sw36, sw37, sw38, sw39, sw40,
-        sw41, sw42, sw43, sw44, sw45, sw46, sw47, sw48, sw49, sw50 are SWITCH;
-    )
-    
-    initialise(
-        sw1, sw2, sw3, sw4, sw5, sw6, sw7, sw8, sw9, sw10,
-        sw11, sw12, sw13, sw14, sw15, sw16, sw17, sw18, sw19, sw20,
-        sw21, sw22, sw23, sw24, sw25 are LOW;
-        sw26, sw27, sw28, sw29, sw30, sw31, sw32, sw33, sw34, sw35,
-        sw36, sw37, sw38, sw39, sw40, sw41, sw42, sw43, sw44, sw45,
-        sw46, sw47, sw48, sw49, sw50 are HIGH;
-    )
-    
-    connections(
-    )
-    
-    monitors(
-        sw1, sw2, sw3, sw4, sw5, sw6, sw7, sw8, sw9, sw10,
-        sw11, sw12, sw13, sw14, sw15, sw16, sw17, sw18, sw19, sw20,
-        sw21, sw22, sw23, sw24, sw25, sw26, sw27, sw28, sw29, sw30,
-        sw31, sw32, sw33, sw34, sw35, sw36, sw37, sw38, sw39, sw40,
-        sw41, sw42, sw43, sw44, sw45, sw46, sw47, sw48, sw49, sw50;
-    )
-    
-\end{Verbatim}
-
-\newpage
-\subsection*{Example Circuit D --- SR Bistable}
+\subsection*{Example Circuit C --- SR Bistable}
 
 \vspace{-0.4cm}
 \begin{figure}[H]
@@ -219,25 +198,17 @@
     )
     
     connections(
-        a(
             sw1 to a.I1;
             clk1 to a.I2;
-        )
-    
-        b(  
+
             clk1 to b.I1;
             sw2 to b.I2;
-        )
-    
-        c(  
+
             a to c.I1;
             d to c.I2;
-        )
-    
-        d(  
+
             c to d.I1;
             b to d.I2;
-        )
     )
     
     monitors(
@@ -246,7 +217,7 @@
 \end{Verbatim}
 
 \newpage
-\subsection*{Example Circuit E --- Divide by 3 Circuit}
+\subsection*{Example Circuit D --- Divide by 3 Circuit}
 
 \vspace{-0.4cm}
 \begin{figure}[H]
@@ -274,24 +245,18 @@
     )
     
     connections(
-        a(
             b.QBAR to a.I1;
             c.QBAR to a.I2;
-        )
-    
-        b(  
+
             a to b.DATA;
             clk1 to b.CLK;
             sw1 to b.SET;
             sw2 to b.CLEAR;
-        )
-    
-        c(  
+
             b.Q to c.DATA;
             clk1 to c.CLK;
             sw3 to c.SET;
             sw4 to c.CLEAR;
-        )
     )
     
     monitors(
@@ -299,9 +264,9 @@
     )
 \end{Verbatim}
 
-
-\newpage
-\subsection*{Example Circuit F --- Ring Oscillator}
+\hfill\\
+\hfill\\
+\subsection*{Example Circuit E --- Ring Oscillator}
 
 \vspace{-0.4cm}
 \begin{figure}[H]
@@ -316,28 +281,18 @@
     #Example circuit - Ring Oscillator;
 
     devices(
-        a, b, c are NAND;
+        a, b, c are NOT;
     )
     
     initialise(
-        a, b, c have 2 inputs;
     )
     
     connections(
-        a(
-            c to a.I1;
-            c to a.I2;
-        )
-    
-        b(  
-            a to b.I1;
-            a to b.I2;
-        )
-    
-        c(  
-            b to c.I1;
-            b to c.I2;
-        )
+            c to a;
+
+            a to b;
+
+            b to c;
     )
     
     monitors(
@@ -347,27 +302,27 @@
 \hfill\\
 Note that this circuit will not be able to be simulated as it involves oscillating signals.
 
-\newpage
-\subsection*{Example Circuit G --- Blank Circuit}
-\hfill\\
+% \newpage
+% \subsection*{Example Circuit G --- Blank Circuit}
+% \hfill\\
 
 
-\begin{Verbatim}[numbers=left,xleftmargin=5mm]
-    #Example circuit - Blank circuit;
+% \begin{Verbatim}[numbers=left,xleftmargin=5mm]
+%     #Example circuit - Blank circuit;
 
-    devices(
-    )
+%     devices(
+%     )
     
-    initialise(
-    )
+%     initialise(
+%     )
     
-    connections(
-    )
+%     connections(
+%     )
     
-    monitors(
-    )
-\end{Verbatim}
-\hfill\\
-Alternatively, a blank .txt file will also suffice
+%     monitors(
+%     )
+% \end{Verbatim}
+% \hfill\\
+% Alternatively, a blank .txt file will also suffice
 
 \end{document}

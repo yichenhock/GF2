@@ -103,7 +103,7 @@ class Scanner:
         self.lines = self.file.read().splitlines()
         self.file.seek(0)
 
-    def advance(self):
+    def __advance(self):
         """Read next character from file."""
         self.current_character = self.file.read(1)
         if self.current_character == "\n":
@@ -116,14 +116,14 @@ class Scanner:
     def __skip_spaces(self):
         """Skips until non-space character is reached."""
         while self.current_character.isspace():
-            self.advance()
+            self.__advance()
         return
 
     def __skip_comment(self):
         """Skips the current comment (Until next semicolon or newline)."""
         while self.current_character not in [";", "\n", ""]:
-            self.advance()
-        self.advance()
+            self.__advance()
+        self.__advance()
         return
 
     def print_error_line(self, line_number, line_position, error_message=""):
@@ -138,7 +138,7 @@ class Scanner:
         name = ""
         while self.current_character.isalnum():
             name += self.current_character
-            self.advance()
+            self.__advance()
         return name
 
     def __get_number(self):
@@ -146,7 +146,7 @@ class Scanner:
         number = ""
         while self.current_character.isdigit():
             number += self.current_character
-            self.advance()
+            self.__advance()
         return int(number)
 
     def get_symbol(self):
@@ -173,27 +173,27 @@ class Scanner:
 
         elif self.current_character == ",":  # Punctuation
             symbol.type = self.COMMA
-            self.advance()
+            self.__advance()
 
         elif self.current_character == ".":
             symbol.type = self.DOT
-            self.advance()
+            self.__advance()
 
         elif self.current_character == ";":
             symbol.type = self.SEMICOLON
-            self.advance()
+            self.__advance()
 
         elif self.current_character == "=":
             symbol.type = self.EQUALS
-            self.advance()
+            self.__advance()
 
         elif self.current_character == "(":
             symbol.type = self.OPEN_BRACKET
-            self.advance()
+            self.__advance()
 
         elif self.current_character == ")":
             symbol.type = self.CLOSE_BRACKET
-            self.advance()
+            self.__advance()
 
         elif self.current_character == "":  # End of File
             symbol.type = self.EOF
@@ -203,6 +203,6 @@ class Scanner:
             symbol = self.get_symbol()
 
         else:  # Not a valid character (symbol.type == None)
-            self.advance()
+            self.__advance()
 
         return symbol

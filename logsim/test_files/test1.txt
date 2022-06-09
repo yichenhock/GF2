@@ -2,7 +2,7 @@
 
 devices(
     a is AND;
-    a, c are DTYPE;
+    b, c are DTYPE;
     sw1, sw2, sw3, sw4 are SWITCH;
     clk1 is CLOCK;
 )

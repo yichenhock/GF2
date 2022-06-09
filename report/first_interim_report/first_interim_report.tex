@@ -89,13 +89,13 @@ The logic description language will be specified using EBNF notation. The langua
 \begin{lstlisting}
     circuit_description = device_block, initialise_block, connections_block, [monitors_block];
 
-    device_block = "devices", "(", {gate_definition | dtype_definition | switch_definition | clock_definition}, ")", ";";
+    device_block = "devices", "(", {gate_definition | dtype_definition | switch_definition | clock_definition}, ")";
 
-    initialise_block = "initialise", "(", {gate_initialisation | switch_initialisation | clock_initialisation}, ")", ";";
+    initialise_block = "initialise", "(", {gate_initialisation | switch_initialisation | clock_initialisation}, ")";
 
-    connections_block = "connections", "(", {device_name, "(", {connection_definition}, ")", ";"}, ")", ";";
+    connections_block = "connections", "(", {connection_definition}, ")";
 
-    monitors_block = "monitors", "(", {device_name | dtype_output_name | switch_name | clock_name}, ")", ";";
+    monitors_block = "monitors", "(", {device_name | dtype_output_name | switch_name | clock_name}, ")";
 
     gate_definition = device_name, {[",", device_name]}, definition, gate_type, ";";
 
@@ -111,9 +111,11 @@ The logic description language will be specified using EBNF notation. The langua
     
     clock_initialisation = clock_name, ("cycle length" | "cycle"), {digit}, ";";
 
-    connection_definition = (device_name | dtype_output_name | switch_name | clock_name), ("is connected to" | "to"), {(gate_input_name | dtype_input_name)}, ";";
+    connection_definition = (device_name | dtype_output_name | switch_name | clock_name), ("is connected to" | "to"), {(gate_input_name | not_input_name | dtype_input_name)}, ";";
 
     gate_input_name = device_name, ".", "I", {digit};
+
+    not_input_name = device_name;
 
     dtype_input_name = device_name, ".", dtype_inputs;
 

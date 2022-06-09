@@ -12,7 +12,6 @@ import random
 
 
 class Device:
-
     """Store device properties.
 
     Parameters
@@ -26,7 +25,6 @@ class Device:
 
     def __init__(self, device_id):
         """Initialise device properties."""
-
         self.device_id = device_id
 
         # inputs dictionary stores
@@ -44,7 +42,6 @@ class Device:
 
 
 class Devices:
-
     """Make and store devices.
 
     This class contains many functions for making devices and ports.
@@ -99,7 +96,6 @@ class Devices:
 
     def __init__(self, names):
         """Initialise devices list and constants."""
-
         # List of names imported from names module
         # Read in from scanner
         self.names = names
@@ -256,9 +252,11 @@ class Devices:
             self.add_input(device_id, input_id)
 
     def make_not(self, device_id):
+        """Make a NOT gate device."""
         self.add_device(device_id, self.NOT)
         self.add_input(device_id, input_id=None)
         self.add_output(device_id, output_id=None)
+        device = self.get_device(device_id)
 
     def make_d_type(self, device_id):
         """Make a D-type device."""
