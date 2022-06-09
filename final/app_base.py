@@ -42,7 +42,7 @@ class BaseApp(wx.App, InspectionMixin):
         
         self.locale = None
         appFolder = os.getcwd()
-        self.catalogLocation = os.path.join(appFolder, 'logsim/locale')
+        self.catalogLocation = os.path.join(appFolder, 'final/locale')
         wx.Locale.AddCatalogLookupPathPrefix(self.catalogLocation)
         self.updateLanguage(self.appConfig.Read(u"Language"))
 

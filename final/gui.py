@@ -54,7 +54,7 @@ class Gui(wx.Frame):
         """Initialise widgets and layout."""
         super().__init__(parent=None, title=title, size=(1024, 768))
 
-        self.SetIcon(wx.Icon('logsim/imgs/favicon.ico'))
+        self.SetIcon(wx.Icon('final/imgs/favicon.ico'))
 
         self.path = path
         self.names = names
@@ -203,32 +203,32 @@ class Gui(wx.Frame):
         self.ToolBar = tb
 
         tb.AddTool(1, _(u"Browse"),
-                   wx.Image("./logsim/imgs/browse.png",
+                   wx.Image("./final/imgs/browse.png",
                             wx.BITMAP_TYPE_PNG).ConvertToBitmap(),
                    shortHelp=_(u"Browse for a file"))
         tb.AddTool(2, _(u"Save"),
-                   wx.Image("./logsim/imgs/save.png",
+                   wx.Image("./final/imgs/save.png",
                             wx.BITMAP_TYPE_PNG).ConvertToBitmap(),
                    shortHelp=_(u"Save the file"))
         tb.AddTool(3, _(u"New"),
-                   wx.Image("./logsim/imgs/new file.png",
+                   wx.Image("./final/imgs/new file.png",
                             wx.BITMAP_TYPE_PNG).ConvertToBitmap(),
                    shortHelp=_(u"Create a new file"))
         tb.AddStretchableSpace()
         tb.AddTool(4, _(u"Compile"),
-                   wx.Image("./logsim/imgs/compile.png",
+                   wx.Image("./final/imgs/compile.png",
                             wx.BITMAP_TYPE_PNG).ConvertToBitmap(),
                    shortHelp=_(u"Compile the circuit definition"))
         tb.AddTool(5, _(u"Run"),
-                   wx.Image("./logsim/imgs/run.png",
+                   wx.Image("./final/imgs/run.png",
                             wx.BITMAP_TYPE_PNG).ConvertToBitmap(),
                    shortHelp=_(u"Run the simulation"))
         tb.AddTool(6, _(u"Continue"),
-                   wx.Image("./logsim/imgs/continue.png",
+                   wx.Image("./final/imgs/continue.png",
                             wx.BITMAP_TYPE_PNG).ConvertToBitmap(),
                    shortHelp=_(u"Continue the simulation"))
         tb.AddTool(7, _(u"Reset"),
-                   wx.Image("./logsim/imgs/reset.png",
+                   wx.Image("./final/imgs/reset.png",
                             wx.BITMAP_TYPE_PNG).ConvertToBitmap(),
                    shortHelp=_(u"Reset the simulation"))
 
@@ -240,15 +240,15 @@ class Gui(wx.Frame):
 
         tb.AddStretchableSpace()
         tb.AddTool(8, _(u"Save Plot"),
-                   wx.Image("./logsim/imgs/save image.png",
+                   wx.Image("./final/imgs/save image.png",
                             wx.BITMAP_TYPE_PNG).ConvertToBitmap(),
                    shortHelp=_(u"Save signal trace as an image"))
         tb.AddTool(9, _(u"Help"),
-                   wx.Image("./logsim/imgs/help.png",
+                   wx.Image("./final/imgs/help.png",
                             wx.BITMAP_TYPE_PNG).ConvertToBitmap(),
                    shortHelp=_(u"Help"))
         tb.AddTool(10, _(u"Quit"),
-                   wx.Image("./logsim/imgs/quit.png",
+                   wx.Image("./final/imgs/quit.png",
                             wx.BITMAP_TYPE_PNG).ConvertToBitmap(),
                    shortHelp=_(u"Quit Logic Simulator"))
 
@@ -416,7 +416,7 @@ class Gui(wx.Frame):
 
     def on_help_button(self):
         """Display a helpful message box."""
-        with open('./logsim/help.txt') as f:
+        with open('./final/help.txt') as f:
             help_text = f.read()
 
         wx.MessageBox(help_text,
@@ -494,7 +494,7 @@ class Gui(wx.Frame):
                 # CREATE A NEW FILE HERE AND SET THAT AS THE NEW PATH!
                 try:
                     # open(pathname, 'w').close()
-                    with open('logsim/examples/blank.txt', 'r') \
+                    with open('final/examples/blank.txt', 'r') \
                             as examplefile, open(pathname, 'w') as newfile:
                         # read content from first file
                         for line in examplefile:

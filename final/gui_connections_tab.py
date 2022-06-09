@@ -54,8 +54,8 @@ class ConnectionsTab(wx.Panel):
         self.label_output = wx.StaticText(self, wx.ID_ANY, _(u"Output"))
         self.label_input = wx.StaticText(self, wx.ID_ANY, _(u"Input"))
 
-        self.tick_bmp = wx.Bitmap(wx.Image('./logsim/imgs/tick.png'))
-        self.warning_bmp = wx.Bitmap(wx.Image('./logsim/imgs/warning.png'))
+        self.tick_bmp = wx.Bitmap(wx.Image('./final/imgs/tick.png'))
+        self.warning_bmp = wx.Bitmap(wx.Image('./final/imgs/warning.png'))
 
         self.combo_output_devices = BitmapComboBox(self, wx.ID_ANY,
                                                    choices=[],

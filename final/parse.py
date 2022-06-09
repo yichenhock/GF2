@@ -1025,7 +1025,7 @@ class Parser:
 
         self.__print_errors()
 
-        print(self.syntax_errors)
+        # print(self.syntax_errors)
 
         self.scanner.file.close()
 
