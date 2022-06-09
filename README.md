@@ -4,7 +4,7 @@
 ### Installation and Development Setup
 In your terminal, run the following to clone the git repository
 ```
-https://github.com/yichenhock/GF2.git
+git clone https://github.com/yichenhock/GF2.git
 ```
 When using DPO computers running on Linux, run
 ```
