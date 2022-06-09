@@ -76,42 +76,102 @@ class Parser:
     Parameters
     ----------
     names: instance of the names.Names() class.
+
     devices: instance of the devices.Devices() class.
+
     network: instance of the network.Network() class.
+
     monitors: instance of the monitors.Monitors() class.
+
     scanner: instance of the scanner.Scanner() class.
 
     Public methods
     --------------
     parse_network(self): Parses the circuit definition file.
-    devices_block(self): Checks the device block header exists, and for open and close bracket errors.
-    initialise_block(self, name): Checks the initialise block header exists, and for open and close bracket errors.
-    connections_block(self): Checks the connections block header exists, and for open and close bracket errors.
-    monitors_block(self): Checks the connections block header exists, and for open and close bracket errors.
-    monitors_subrule(self, symbol): Reads one line inside monitors block up to and including semicolon.
+
+    devices_block(self): Checks the device block header exists,
+    and for open and close bracket errors.
+
+    initialise_block(self, name): Checks the initialise block
+    header exists, and for open and close bracket errors.
+
+    connections_block(self): Checks the connections block header
+    exists, and for open and close bracket errors.
+
+    monitors_block(self): Checks the connections block header
+    exists, and for open and close bracket errors.
+
+    monitors_subrule(self, symbol): Reads one line inside monitors
+    block up to and including semicolon.
 
     Private methods
     --------------
-    devices_subrrule(self, symbol): Reads one line inside device definition block up to and including semicolon.
-    check_name_legal(self, name_symbol, component_type): Checks if names are lowercase at minimum, then calls one of the two functions below.
-    is_switch_legal(self, name): Checks if switch names begin with 'sw' and end in a number.
-    is_clock_legal(self, name): Checks if clock names begin with 'clk' and end in a number.
-    initialise_subrule(self, name): Reads one line inside initialisation block up to and including semicolon.
-    init_switch(self, name): Once first symbol of line read as switch, complete reading initialisation assuming it is for a switch.
-    init_clock(self, name): Once first symbol of line read as clock, complete reading initialisation assuming it is for a clock.
-    init_gate(self, name): Once first symbol of line read as gate, complete reading initialisation assuming it is for a gate.
-    connections_subrule(self, symbol): Reads one line inside connections block up to and including semicolon.
-    parse_output_rule(self, symbol): Check if the thing to be connected (to an input) has the form of an output.
-    parse_input_rule(self, symbol): Check if the thing to receive an input has the form of an input.
-    is_output_port(self, name_symbol, port_symbol): For d-types, check that the output port name is valid (one of Q, QBAR).
-    is_input_port(self, name_symbol, port_symbol): Check that the input port name is valid (for d-types, one of SET, CLEAR, DATA, CLK; for gates, of form 'I' followed by a number).
-    make_devices(self, symbol): Calls a method in Devices class to store information about devices.
-    make_connections(self): Calls a method in Network class to store information about device inputs, outputs and their connections.
-    make_monitor(self): Calls a method in Monitors class to store information about tracked signals to be displayed on GUI.
-    check_all_inputs_connected(self): Checks all names classed as inputs are connected to something.
-    add_error(self, error): Adds errors to the parser error list.
-    skip_error(self, error): Performs error recovery on a line and block level.
-    print_errors(self): Prints all errors caught and stored in the lists in the Parser class.
+    devices_subrrule(self, symbol): Reads one line inside device
+    definition block up to and including semicolon.
+
+    check_name_legal(self, name_symbol, component_type): Checks
+    if names are lowercase at minimum, then calls one of the
+    two functions below.
+
+    is_switch_legal(self, name): Checks if switch names begin
+    with 'sw' and end in a number.
+
+    is_clock_legal(self, name): Checks if clock names begin with
+    'clk' and end in a number.
+
+    initialise_subrule(self, name): Reads one line inside
+    initialisation block up to and including semicolon.
+
+    init_switch(self, name): Once first symbol of line read as
+    switch, complete reading initialisation assuming it is for
+    a switch.
+
+    init_clock(self, name): Once first symbol of line read as
+    clock, complete reading initialisation assuming it is
+    for a clock.
+
+    init_gate(self, name): Once first symbol of line read as
+    gate, complete reading initialisation assuming it is
+    for a gate.
+
+    connections_subrule(self, symbol): Reads one line inside
+    connections block up to and including semicolon.
+
+    parse_output_rule(self, symbol): Check if the thing to be
+    connected (to an input) has the form of an output.
+
+    parse_input_rule(self, symbol): Check if the thing to
+    receive an input has the form of an input.
+
+    is_output_port(self, name_symbol, port_symbol): For d-types,
+    check that the output port name is valid (one of Q, QBAR).
+
+    is_input_port(self, name_symbol, port_symbol): Check that the
+    input port name is valid (for d-types, one of SET, CLEAR,
+    DATA, CLK; for gates, of form 'I' followed by a number).
+
+    make_devices(self, symbol): Calls a method in Devices class
+    to store information about devices.
+
+    make_connections(self): Calls a method in Network class to
+    store information about device inputs, outputs and their
+    connections.
+
+    make_monitor(self): Calls a method in Monitors class to
+    store information about tracked signals to be
+    displayed on GUI.
+
+    check_all_inputs_connected(self): Checks all names classed
+    as inputs are connected to something.
+
+    add_error(self, error): Adds errors to the parser error
+    list.
+
+    skip_error(self, error): Performs error recovery on a line
+    and block level.
+
+    print_errors(self): Prints all errors caught and stored in
+    the lists in the Parser class.
     """
 
     def __init__(self, names, devices, network, monitors,
@@ -823,7 +883,8 @@ class Parser:
 # =============================================================================
 
     def __check_all_inputs_connected(self):
-        """Check that everything that is an input has been connected to something.
+        """Check that everything that is an input
+        has been connected to something.
 
         Specify exactly which input has not been connected.
         """

@@ -113,13 +113,13 @@ class Scanner:
             self.current_character_position += 1
         return
 
-    def skip_spaces(self):
+    def __skip_spaces(self):
         """Skips until non-space character is reached."""
         while self.current_character.isspace():
             self.advance()
         return
 
-    def skip_comment(self):
+    def __skip_comment(self):
         """Skips the current comment (Until next semicolon or newline)."""
         while self.current_character not in [";", "\n", ""]:
             self.advance()
@@ -128,13 +128,12 @@ class Scanner:
 
     def print_error_line(self, line_number, line_position, error_message=""):
         """Print current line with marker pointing where the error is."""
-
         print("Line {}, {}: {}".format(line_number, line_position,
                                        error_message))
         print(self.lines[line_number])
         print(" " * (line_position) + "^ Error here")
 
-    def get_name(self):
+    def __get_name(self):
         """Read and returns the next name (word made up of only letters)."""
         name = ""
         while self.current_character.isalnum():
@@ -142,7 +141,7 @@ class Scanner:
             self.advance()
         return name
 
-    def get_number(self):
+    def __get_number(self):
         """Read and returns the next number."""
         number = ""
         while self.current_character.isdigit():
@@ -153,13 +152,13 @@ class Scanner:
     def get_symbol(self):
         """Translate the next sequence of characters into a symbol."""
         symbol = Symbol()
-        self.skip_spaces()  # Current character is now not whitespace
+        self.__skip_spaces()  # Current character is now not whitespace
 
         symbol.line_number = self.current_line
         symbol.line_position = self.current_character_position
 
         if self.current_character.isalpha():  # Name
-            name_string = self.get_name()
+            name_string = self.__get_name()
             # print(name_string) # For tests
             if name_string in self.keywords_list:
                 symbol.type = self.KEYWORD
@@ -168,7 +167,7 @@ class Scanner:
             [symbol.id] = self.names.lookup([name_string])
 
         elif self.current_character.isdigit():  # Number
-            symbol.id = self.get_number()
+            symbol.id = self.__get_number()
             # print(symbol.id) # For tests
             symbol.type = self.NUMBER
 
@@ -200,7 +199,7 @@ class Scanner:
             symbol.type = self.EOF
 
         elif self.current_character == "#":  # Comment Check
-            self.skip_comment()
+            self.__skip_comment()
             symbol = self.get_symbol()
 
         else:  # Not a valid character (symbol.type == None)
