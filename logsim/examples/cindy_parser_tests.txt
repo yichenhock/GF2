@@ -1,0 +1,17 @@
+devices(
+	a is AND;
+	sw1 is SWITCH;
+	sw2 is SWITCH;
+	)
+initialise(
+	a has 2 inputs;
+	sw1 is HIGH;
+	sw2 is LOW;
+	)
+connections(
+	sw1 to a.I1,
+	sw2 to a.I1;
+	)
+monitors(
+	a;
+)

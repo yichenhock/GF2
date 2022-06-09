@@ -5,7 +5,7 @@ devices(
     b, c are DTYPE;
     sw1, sw2, sw3, sw4 are SWITCH;
     clk1 is CLOCK;
-
+)
 
 initialise(
     a has 2 inputs;
@@ -32,3 +32,5 @@ connections(
 monitors(
     c.Q, clk1;
 )
+
+More stuff after monitors

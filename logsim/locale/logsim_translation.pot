@@ -1,0 +1,567 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2022-06-07 13:51+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=cp1252\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:69
+msgid "Application must be run with a circuit definition file."
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:139
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_connections_tab.py:39
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_connections_tab.py:47
+msgid "Output"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:140
+msgid "Definition"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:141
+msgid "Inputs"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:142
+msgid "Monitors"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:143
+msgid "Connections"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:179
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:466
+msgid ""
+"Logic Simulator: interactive graphical user interface.\n"
+"Enter 'h' for help."
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:188
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:45
+msgid "&About"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:189
+msgid "&Save As"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:190
+msgid "&Exit"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:193
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:31
+msgid "&File"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:204
+msgid "Browse"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:207
+msgid "Browse for a file"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:208
+msgid "Save"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:211
+msgid "Save the file"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:212
+msgid "New"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:215
+msgid "Create a new file"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:217
+msgid "Compile"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:220
+msgid "Compile the circuit definition"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:221
+msgid "Run"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:224
+msgid "Run the simulation"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:225
+msgid "Continue"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:228
+msgid "Continue the simulation"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:229
+msgid "Reset"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:232
+msgid "Reset the simulation"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:238
+msgid "Cycles"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:241
+msgid "Save Plot"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:244
+msgid "Save signal trace as an image"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:245
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:248
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:418
+msgid "Help"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:249
+msgid "Quit"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:252
+msgid "Quit Logic Simulator"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:278
+msgid ""
+"Logic Simulator\n"
+"Created by Yi Chen Hock, Michael Stevens and Cindy Wu\n"
+"2022"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:279
+msgid "About Logsim"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:287
+msgid "Number of simulation cycles set to: {}"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:325
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:428
+msgid "Changes you made may not be saved."
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:326
+msgid "Quit application?"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:337
+msgid "Compiling..."
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:361
+msgid "File saved and compiled successfully."
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:365
+msgid "File compiled with errors."
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:369
+msgid "Parser failed to work :("
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:375
+msgid "No monitors."
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:380
+msgid "Run button pressed."
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:387
+msgid "Continue button pressed."
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:396
+msgid "Simulation reset."
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:397
+msgid "Reset button pressed."
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:429
+msgid "Open a new file?"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:440
+msgid "Open File"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:456
+msgid "Error opening file."
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:457
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:501
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:528
+msgid "Error"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:478
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:508
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:536
+msgid "Save File"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:479
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:537
+msgid "new_definition_file"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:480
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:538
+msgid "Text documents"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:500
+msgid "Error creating file."
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:503
+msgid "File created successfully in {}"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:509
+msgid "image"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:510
+msgid "PNG files"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:527
+msgid "Error saving file."
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui.py:531
+msgid "File saved."
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_canvas.py:210
+msgid "Cycle"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_canvas.py:322
+msgid "Canvas redrawn on paint event, size is "
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_circuitdef_tab.py:62
+msgid "Reset the simulation first to edit!"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_connections_tab.py:40
+msgid "To"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_connections_tab.py:41
+msgid "Input"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_connections_tab.py:45
+msgid "Device"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_connections_tab.py:46
+msgid "Port"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_connections_tab.py:48
+msgid "Input*"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_connections_tab.py:70
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_monitors_tab.py:56
+msgid "Add"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_connections_tab.py:114
+msgid "Add Connection"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_connections_tab.py:259
+msgid " Reset simulation to add connections!"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:82
+msgid "Type commands here"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:116
+msgid "Error! Invalid command!"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:123
+msgid "User commands:"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:124
+msgid "run the simulation for N cycles"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:125
+msgid "(from scratch)"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:126
+msgid "continue the simulation for N"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:127
+msgid "cycles"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:128
+msgid "set switch X to N (0 or 1)"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:129
+msgid "clear this console"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:130
+msgid "help (this command)"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:139
+msgid "Successfully set switch."
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:142
+msgid "Error! Invalid switch."
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:154
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:155
+msgid "Error! Network oscillating."
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:170
+msgid " cycle(s)"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:170
+msgid "Running for "
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:186
+msgid "Error! Nothing to continue. Run first."
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:189
+msgid "Continuing for"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:189
+msgid "cycles."
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:190
+msgid "Total:"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:219
+msgid "Error! Expected a name."
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:237
+msgid "Error! Unknown name."
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:265
+msgid "Error! Expected a number."
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:274
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_consoleout_tab.py:279
+msgid "Number out of range."
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_inputs_tab.py:38
+msgid "Switch"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_inputs_tab.py:39
+msgid "State"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_inputs_tab.py:67
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_inputs_tab.py:101
+msgid "ON"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_inputs_tab.py:69
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_inputs_tab.py:109
+msgid "OFF"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_inputs_tab.py:102
+msgid "Set switch {} to 1."
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_inputs_tab.py:105
+msgid "Switch {} set to 1."
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_inputs_tab.py:110
+msgid "Set switch {} to 0."
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_inputs_tab.py:112
+msgid "Switch {} set to 0."
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_monitors_tab.py:46
+msgid "Type"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_monitors_tab.py:49
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_monitors_tab.py:60
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_monitors_tab.py:104
+msgid "ALL"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_monitors_tab.py:49
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_monitors_tab.py:107
+msgid "GATE"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_monitors_tab.py:49
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_monitors_tab.py:119
+msgid "SWITCH"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_monitors_tab.py:50
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_monitors_tab.py:124
+msgid "CLOCK"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_monitors_tab.py:50
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_monitors_tab.py:129
+msgid "D-TYPE"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_monitors_tab.py:53
+msgid "Name"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_monitors_tab.py:57
+msgid "Add All"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_monitors_tab.py:85
+msgid "Add Component To Monitor"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_monitors_tab.py:151
+msgid "All"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_monitors_tab.py:183
+msgid "Remove"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_monitors_tab.py:221
+msgid "Select a component first!"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_monitors_tab.py:225
+msgid "Component already added!"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_monitors_tab.py:245
+msgid "Added component to monitor."
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_monitors_tab.py:271
+msgid "Component removed from monitor."
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_monitors_tab.py:272
+msgid "{} removed from monitor."
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\gui_monitors_tab.py:289
+msgid " Reset simulation to add components!"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\logsim.py:83
+msgid "Logic Simulator"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:17
+msgid "The I18N sample application"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:28
+msgid "Close"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:29
+msgid "Close the application"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:36
+msgid "Edit something"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:37
+msgid "Edit an entry of something"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:40
+msgid "&Edit"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:46
+msgid "About the program"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:48
+msgid "&Help"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:58
+msgid "A nice label for the TextCtrl"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:63
+msgid "a search control"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:70
+msgid "Open a file dialog"
+msgstr ""
+
+#: C:\Users\Cindy\Documents\IIA\GF2\logsim\sampleapp.py:82
+msgid "Choose a file"
+msgstr ""
+
