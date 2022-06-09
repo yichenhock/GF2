@@ -1,9 +1,4 @@
-"""
-Test the devices module.
-
-Note that the bulk of this module had been provided,
-modifications have been made to implement tests for NOT devices.
-"""
+"""Test the devices module."""
 import pytest
 
 from names import Names
@@ -23,7 +18,8 @@ def devices_with_items():
     new_names = Names()
     new_devices = Devices(new_names)
 
-    [AND1_ID, NOR1_ID, SW1_ID, NOT1_ID] = new_names.lookup(["And1", "Nor1", "Sw1", "Not1"])
+    [AND1_ID, NOR1_ID, SW1_ID, NOT1_ID] = new_names.lookup(["And1", "Nor1",
+                                                            "Sw1", "Not1"])
 
     new_devices.make_device(AND1_ID, new_devices.AND, 2)
     new_devices.make_device(NOR1_ID, new_devices.NOR, 16)
@@ -48,8 +44,8 @@ def test_find_devices(devices_with_items):
     """Test if find_devices returns the correct devices of the given kind."""
     devices = devices_with_items
     names = devices.names
-    device_names = [AND1_ID, NOR1_ID, SW1_ID, NOT1_ID] = names.lookup(["And1", "Nor1",
-                                                              "Sw1", "Not1"])
+    device_names = [AND1_ID, NOR1_ID, SW1_ID, NOT1_ID
+                    ] = names.lookup(["And1", "Nor1", "Sw1", "Not1"])
 
     assert devices.find_devices() == device_names
     assert devices.find_devices(devices.AND) == [AND1_ID]
@@ -63,8 +59,8 @@ def test_make_device(new_devices):
     """Test if make_device correctly makes devices with their properties."""
     names = new_devices.names
 
-    [NAND1_ID, CLOCK1_ID, D1_ID, I1_ID,
-     I2_ID, NOT2_ID] = names.lookup(["Nand1", "Clock1", "D1", "I1", "I2", "Not2"])
+    [NAND1_ID, CLOCK1_ID, D1_ID, I1_ID, I2_ID,
+     NOT2_ID] = names.lookup(["Nand1", "Clock1", "D1", "I1", "I2", "Not2"])
     new_devices.make_device(NAND1_ID, new_devices.NAND, 2)  # 2-input NAND
     # Clock half period is 5
     new_devices.make_device(CLOCK1_ID, new_devices.CLOCK, 5)
@@ -115,8 +111,8 @@ def test_make_device(new_devices):
 def test_make_device_gives_errors(new_devices, function_args, error):
     """Test if make_device returns the appropriate errors."""
     names = new_devices.names
-    [AND1_ID, SW1_ID, CL_ID, D_ID, NOT1_ID, X1_ID, 
-     X2_ID] = names.lookup(["And1", "Sw1", "Clock1", "D1", "Not1", "Xor1", "Xor2"])
+    [AND1_ID, SW1_ID, CL_ID, D_ID, NOT1_ID, X1_ID, X2_ID
+     ] = names.lookup(["And1", "Sw1", "Clock1", "D1", "Not1", "Xor1", "Xor2"])
 
     # Add a XOR device: X2_ID
     new_devices.make_device(X2_ID, new_devices.XOR)
