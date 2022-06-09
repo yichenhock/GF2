@@ -8,11 +8,11 @@ initialise(
 )
 
 connections(
-        c to a;
+    c to a;
 
-        a to b;
+    a to b;
 
-        b to c;
+    b to c;
 )
 
 monitors(

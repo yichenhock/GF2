@@ -1,11 +1,11 @@
 """Test the parse module."""
 import pytest
 from final.names import Names
-from final.string_scanner import Scanner, Symbol
+from final.tests.string_scanner import Scanner, Symbol
 from final.monitors import Monitors
 from final.devices import Devices
 from final.network import Network
-from final.string_parser import Parser
+from final.tests.string_parser import Parser
 from final.global_vars import GlobalVars
 
 # Syntax errors

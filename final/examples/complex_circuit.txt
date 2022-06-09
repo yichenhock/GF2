@@ -11,18 +11,18 @@ initialise(
 )
 
 connections(
-        clk1 to e.CLK;
-        e.QBAR to e.DATA;
-        sw1 to e.SET;
-        sw2 to e.CLEAR;
+    clk1 to e.CLK;
+    e.QBAR to e.DATA;
+    sw1 to e.SET;
+    sw2 to e.CLEAR;
 
-        e.Q to f.CLK;
-        f.QBAR to f.DATA;
-        sw1 to f.SET;
-        sw2 to f.CLEAR;
+    e.Q to f.CLK;
+    f.QBAR to f.DATA;
+    sw1 to f.SET;
+    sw2 to f.CLEAR;
 
-        e.Q to g.I1;
-        f.Q to g.I2;
+    e.Q to g.I1;
+    f.Q to g.I2;
 )
 
 monitors(

@@ -9,17 +9,17 @@ Classes
 Parser - parses the definition file and builds the logic network.
 """
 
-from names import Names
-from scanner import Symbol, Scanner
-from devices import Device, Devices
-from network import Network
-from monitors import Monitors
+from final.names import Names
+from final.scanner import Symbol, Scanner
+from final.devices import Device, Devices
+from final.network import Network
+from final.monitors import Monitors
 
-from error import ParserError, ParserSemanticError, ParserSyntaxError
-from global_vars import GlobalVars
+from final.error import ParserError, ParserSemanticError, ParserSyntaxError
+from final.global_vars import GlobalVars
 
 # Semantic errors
-from error import (
+from final.error import (
     UndefinedError,
     RedefinedError,
     WrongDeviceName,
@@ -40,7 +40,7 @@ from error import (
 )
 
 # Syntax errors
-from error import (
+from final.error import (
     InvalidBlockHeader,
     SemicolonError,
     OpenBracketError,

@@ -14,18 +14,18 @@ initialise(
 )
 
 connections(
-        b.QBAR to a.I1;
-        c.QBAR to a.I2;
+    b.QBAR to a.I1;
+    c.QBAR to a.I2;
 
-        a to b.DATA;
-        clk1 to b.CLK;
-        sw1 to b.SET;
-        sw2 to b.CLEAR;
-        
-        b.Q to c.DATA;
-        clk1 to c.CLK;
-        sw3 to c.SET;
-        sw4 to c.CLEAR;
+    a to b.DATA;
+    clk1 to b.CLK;
+    sw1 to b.SET;
+    sw2 to b.CLEAR;
+    
+    b.Q to c.DATA;
+    clk1 to c.CLK;
+    sw3 to c.SET;
+    sw4 to c.CLEAR;
 )
 
 monitors(

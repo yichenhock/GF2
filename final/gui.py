@@ -18,12 +18,12 @@ from monitors import Monitors
 from scanner import Scanner
 from parse import Parser
 
-from gui_connections_tab import ConnectionsTab
-from gui_consoleout_tab import ConsoleOutTab
-from gui_circuitdef_tab import CircuitDefTab
-from gui_inputs_tab import InputsTab
-from gui_monitors_tab import MonitorsTab
-from gui_canvas import MyGLCanvas
+from gui_modules.gui_connections_tab import ConnectionsTab
+from gui_modules.gui_consoleout_tab import ConsoleOutTab
+from gui_modules.gui_circuitdef_tab import CircuitDefTab
+from gui_modules.gui_inputs_tab import InputsTab
+from gui_modules.gui_monitors_tab import MonitorsTab
+from gui_modules.gui_canvas import MyGLCanvas
 from global_vars import GlobalVars
 
 
@@ -416,7 +416,7 @@ class Gui(wx.Frame):
 
     def on_help_button(self):
         """Display a helpful message box."""
-        with open('./final/help.txt') as f:
+        with open('./final/gui/help.txt') as f:
             help_text = f.read()
 
         wx.MessageBox(help_text,

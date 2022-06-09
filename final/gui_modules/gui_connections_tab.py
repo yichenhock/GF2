@@ -14,7 +14,7 @@ import wx.lib.agw.ultimatelistctrl as ULC
 
 from wx.adv import BitmapComboBox
 
-from gui_listctrl import ListCtrl
+from gui_modules.gui_listctrl import ListCtrl
 
 
 class ConnectionsTab(wx.Panel):

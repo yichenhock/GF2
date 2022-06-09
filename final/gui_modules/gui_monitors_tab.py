@@ -10,7 +10,7 @@ Classes
 """
 import wx
 import wx.lib.agw.ultimatelistctrl as ULC
-from gui_listctrl import ListCtrl
+from gui_modules.gui_listctrl import ListCtrl
 
 
 class MonitorsTab(wx.Panel):
