@@ -1,5 +1,5 @@
 # Fdb version 3
-["pdflatex"] 1654721865 "d:/Files/University/Year 3/Projects/GF2 Software/logsim/GF2/report/second_interim_report/example_circuits.tex" "example_circuits.pdf" "example_circuits" 1654721867
+["pdflatex"] 1654809214 "d:/Files/University/Year 3/Projects/GF2 Software/logsim/GF2/report/second_interim_report/example_circuits.tex" "example_circuits.pdf" "example_circuits" 1654809216
   "C:/Users/micha/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1654114787 82507 a9eef8696c92627b87e9975edea03b2a ""
   "C:/Users/micha/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1652545431 10251076 1da7f618a9167204d62d180ca93442a5 ""
   "C:/Users/micha/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-ec.enc" 1254938640 2375 baa924870cfb487815765f9094cf3728 ""
@@ -57,14 +57,18 @@
   "C:/Users/micha/AppData/Local/Programs/MiKTeX/tex/latex/tools/calc.sty" 1636713860 10214 00ce62e730d0cfe22b35e8f1c84949c7 ""
   "C:/Users/micha/AppData/Local/Programs/MiKTeX/tex/latex/tools/multicol.sty" 1636713860 32262 2bb622a0aa56c4a7a5cbdfe9d122c15a ""
   "C:/Users/micha/AppData/Local/Programs/MiKTeX/tex/latex/xcolor/xcolor.sty" 1636288472 56029 3f7889dab51d620aa43177c391b7b190 ""
+  "Complex Circuit Output.png" 1654808695 3173 1749df549b16f91f80b801cbeb17f698 ""
   "Complex Circuit.png" 1654721580 16292 7aae364f62d4ffa2fb6cdced0589221c ""
+  "Divide by 3 Output.png" 1654808988 2111 c9c23f67d6f863c6acb512c92f88ad3a ""
   "Divide by 3.png" 1654112095 10671 5fee7f1727b033dfa0c794ca132b14c6 ""
   "Ring Oscillator.png" 1654721775 2337 5c3cc6e5156c7a950bc336b4d593bf89 ""
+  "SR Bistable Output.png" 1654808955 3417 7ab239a7ad96987fc855735455ef9ac8 ""
   "SR Bistable.png" 1654112169 7151 92add842f634acd583c3b6e51a353aa8 ""
+  "Simple Circuit Output.png" 1654808639 2878 1e18a481b92e0a47e7aa9027f15d8e7c ""
   "Simple Circuit.png" 1654112272 7393 942e08c4bac829c6fa86a0e3282e7d4d ""
-  "d:/Files/University/Year 3/Projects/GF2 Software/logsim/GF2/report/second_interim_report/example_circuits.tex" 1654721865 7271 0ac175eb8629493ffe14e3390a7b945a ""
-  "example_circuits.aux" 1654721866 630 7301d25879592cb847708005dae3aaa5 "pdflatex"
-  "example_circuits.tex" 1654721865 7271 0ac175eb8629493ffe14e3390a7b945a ""
+  "d:/Files/University/Year 3/Projects/GF2 Software/logsim/GF2/report/second_interim_report/example_circuits.tex" 1654809214 8011 52b6a86836f47fd0c65d847bcea1b6b6 ""
+  "example_circuits.aux" 1654809216 1121 cf5f783b8762f1dab26d13025f7c6707 "pdflatex"
+  "example_circuits.tex" 1654809214 8011 52b6a86836f47fd0c65d847bcea1b6b6 ""
   (generated)
   "example_circuits.aux"
   "example_circuits.log"
