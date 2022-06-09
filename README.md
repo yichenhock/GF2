@@ -14,7 +14,7 @@ To install required dependencies, pip should be enabled and upgraded to the late
 ```
 python -m pip install -r requirements.txt
 ```
-Required minimum versions of all software are listed in requirements.txt. Older or newer version combinations have not been tested.
+This code was developed using Python 3.7 and 3.9, and wxPython version 4.1.1. Older or newer version combinations have not been tested.
 The following code has been tested and run on Windows and Linux, except for translation, which has only been tested on Linux.
 
 ### Running the Simulator
