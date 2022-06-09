@@ -88,13 +88,10 @@ class Network:
         Return None if either of the specified IDs is invalid or the input is
         unconnected. The output is of the form (device ID, port ID).
         """
-        print(device_id, input_id)
         device = self.devices.get_device(device_id)
         if device is not None:
             if input_id in device.inputs:
-                print("hi")
                 connected_output = device.inputs[input_id]
-                print(device.inputs)
                 return connected_output
         return None
 
@@ -104,7 +101,6 @@ class Network:
         Return None if the input is unconnected or the specified IDs are
         invalid.
         """
-        print(device_id, input_id)
         connected_output = self.get_connected_output(device_id, input_id)
         if connected_output is None:  # invalid IDs or unconnected input
             return None

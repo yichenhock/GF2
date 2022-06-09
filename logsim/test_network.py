@@ -122,8 +122,8 @@ def test_check_network(network_with_devices):
     devices = network.devices
     names = devices.names
 
-    [SW1_ID, SW2_ID, OR1_ID, I1, I2] = names.lookup(["Sw1", "Sw2", "Or1", "I1",
-                                                     "I2"])
+    [SW1_ID, SW2_ID, SW3_ID, OR1_ID, NOT1_ID, I1, I2
+    ] = names.lookup(["Sw1", "Sw2", "Sw3", "Or1", "Not1", "I1", "I2"])
 
     # Inputs are unconnected, check_network() should return False
     assert not network.check_network()
@@ -131,6 +131,7 @@ def test_check_network(network_with_devices):
     # Make connections
     network.make_connection(SW1_ID, None, OR1_ID, I1)
     network.make_connection(SW2_ID, None, OR1_ID, I2)
+    network.make_connection(SW3_ID, None, NOT1_ID, None)
 
     # Inputs are now connected, check_network() should return True
     assert network.check_network()
@@ -142,22 +143,30 @@ def test_make_connection(network_with_devices):
     devices = network.devices
     names = devices.names
 
-    [SW1_ID, SW2_ID, OR1_ID, I1, I2] = names.lookup(["Sw1", "Sw2", "Or1", "I1",
-                                                     "I2"])
+    [SW1_ID, SW2_ID, SW3_ID, OR1_ID, NOT1_ID, I1, I2
+    ] = names.lookup(["Sw1", "Sw2", "Sw3", "Or1", "Not1", "I1", "I2"])
 
     or1 = devices.get_device(OR1_ID)
+    not1 = devices.get_devices(NOT1_ID)
 
     # or1 inputs are initially unconnected
     assert or1.inputs == {I1: None,
                           I2: None}
 
+    # not1 inputs are initially unconnected
+    assert not1.inputs == {None: None}
+
     # Make connections
     network.make_connection(SW1_ID, None, OR1_ID, I1)
     network.make_connection(SW2_ID, None, OR1_ID, I2)
+    network.make_connections(SW3_ID, None, NOT1_ID, None)
 
     # or1 inputs should now be connected
     assert or1.inputs == {I1: (SW1_ID, None),
                           I2: (SW2_ID, None)}
+
+    # not1 inputs should now be connected
+    assert not1.inputs == {None: (SW3_ID, None)}
 
 
 @pytest.mark.parametrize("function_args, error", [
@@ -229,6 +238,31 @@ def test_execute_xor(new_network):
     devices.set_switch(SW2_ID, devices.HIGH)
     network.execute_network()
     assert network.get_output_signal(XOR1_ID, None) == devices.LOW
+
+
+def test_execute_not(new_network):
+    """Test if execute_network returns the correct output for XOR gates."""
+    network = new_network
+    devices = network.devices
+    names = devices.names
+
+    [SW1_ID, NOT1_ID] = names.lookup(
+        ["Sw1", "Not1"])
+
+    # Make devices
+    devices.make_device(NOT1_ID, devices.NOT)
+    devices.make_device(SW1_ID, devices.SWITCH, 0)
+
+    # Make connections
+    network.make_connection(SW1_ID, None, NOT1_ID, None)
+
+    network.execute_network()
+    assert new_network.get_output_signal(NOT1_ID, None) == devices.HIGH
+
+    # Set Sw1 to HIGH
+    devices.set_switch(SW1_ID, devices.HIGH)
+    network.execute_network()
+    assert network.get_output_signal(NOT1_ID, None) == devices.LOW
 
 
 @pytest.mark.parametrize("gate_id, switch_outputs, gate_output, gate_kind", [
@@ -361,11 +395,11 @@ def test_oscillating_network(new_network):
     devices = network.devices
     names = devices.names
 
-    [NOR1, I1] = names.lookup(["Nor1", "I1"])
-    # Make NOR gate
-    devices.make_device(NOR1, devices.NOR, 1)
+    [NOT1] = names.lookup(["Not1"])
+    # Make NOT gate
+    devices.make_device(NOT1, devices.NOT, None)
 
-    # Connect the NOR gate to itself
-    network.make_connection(NOR1, None, NOR1, I1)
+    # Connect the NOT gate to itself
+    network.make_connection(NOT1, None, NOT1, None)
 
     assert not network.execute_network()

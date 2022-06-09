@@ -260,7 +260,6 @@ class Devices:
         self.add_input(device_id, input_id=None)
         self.add_output(device_id, output_id=None)
         device = self.get_device(device_id)
-        print(device.inputs, device.outputs)
 
     def make_d_type(self, device_id):
         """Make a D-type device."""

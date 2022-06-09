@@ -108,14 +108,14 @@ class AttemptToDefineDTYPEInputs(ParserSemanticError):
 
 
 class NoDTYPEOutputPortError(ParserSemanticError):
-    """User attempts to make connection from a DTYPE output port to another device without specifying which DTYPE output port it is (Q or QBAR).""""
+    """User attempts to make connection from a DTYPE output port to another device without specifying which DTYPE output port it is (Q or QBAR)."""
     def __init__(self, symbol):
         message = "D-TYPEs need an output port to be specified."
         super().__init__(symbol, message)
 
 
 class InvalidBlockHeader(ParserSemanticError):
-    """The symbol in the place of where a block header is expected is not one of 'devices', 'initialise', 'connections' or 'monitors'.""""
+    """The symbol in the place of where a block header is expected is not one of 'devices', 'initialise', 'connections' or 'monitors'."""
     def __init__(self, symbol):
         message = ("Invalid block header (expected either 'devices', "
                    "'initialise', 'connections' or 'monitor').")
@@ -146,13 +146,13 @@ class ClockNotInitialised(ParserSemanticError):
 
 
 class NotInitialisedError(ParserSemanticError):
-    """A check that all devices have been initialised has failed.""""
+    """A check that all devices have been initialised has failed."""
     def __init__(self, symbol):
         super().__init__(symbol, "")
 
 
 class ConnectionPresent(ParserSemanticError):
-    """"User attempts to make a connection to an input port that is already connected. 
+    """User attempts to make a connection to an input port that is already connected. 
     
     One input port can only receive one signal, but one output port can be split into multiple signals.
     """
@@ -170,7 +170,7 @@ class ConnectionPresent(ParserSemanticError):
 
 
 class InvalidBlockHeaderOrder(ParserSyntaxError):
-    """Headers and hence blocks (i.e. devices, initialise, connections, monitors) are not given in the required syntax order.""""
+    """Headers and hence blocks (i.e. devices, initialise, connections, monitors) are not given in the required syntax order."""
     def __init__(self, symbol):
         message = ("Block headers should be initialised in this order: "
                    "'devices', 'initialise', 'connections', 'monitor'.")
@@ -185,7 +185,7 @@ class SemicolonError(ParserSyntaxError):
 
 
 class OpenBracketError(ParserSyntaxError):
-    """Missing open bracket at start of block.""""
+    """Missing open bracket at start of block."""
     def __init__(self, symbol):
         message = "Expected a '('"
         super().__init__(symbol, message)
@@ -199,7 +199,7 @@ class CloseBracketError(ParserSyntaxError):
 
 
 class InvalidDeviceRule(ParserSyntaxError):
-    """Device definition line is missing the keywords required: 'is'/'are'.""""
+    """Device definition line is missing the keywords required: 'is'/'are'."""
     def __init__(self, symbol):
         message = "Invalid device statement (expected ',' or 'is'/'are')."
         super().__init__(symbol, message)
@@ -209,7 +209,7 @@ class InvalidInitDeviceRule(ParserSyntaxError):
     """Gate or DTYPE initialisation line is missing the keywords required: 'has'/'have'.
     
     When gates and DTYPES are initialised, the number of inputs should be defined.
-    """"
+    """
     def __init__(self, symbol):
         message = ("Invalid initialise statement (expected ',' "
                    "or 'has'/'have').")
@@ -220,7 +220,7 @@ class InvalidInitSwitchRule(ParserSyntaxError):
     """Switch initialisation line is missing the keywords required: 'is'/'are'
     
     When switches are initialised, the initial state should be defined as HIGH/LOW.
-    """"
+    """
     def __init__(self, symbol):
         message = "Invalid initialise statement (expected ',' or 'is'/'are')."
         super().__init__(symbol, message)
@@ -262,42 +262,42 @@ class InvalidClockName(ParserSyntaxError):
 
 
 class InvalidSwitchName(ParserSyntaxError):
-    """"Device defined as a switch does not have the name of the form 'sw' followed by a number.""""
+    """"Device defined as a switch does not have the name of the form 'sw' followed by a number."""
     def __init__(self, symbol):
         message = "Expected a switch name."
         super().__init__(symbol, message)
 
 
 class InvalidSwitchState(ParserSyntaxError):
-    """The symbol expected in place of a switch level is not one of 'HIGH' or 'LOW'.""""
+    """The symbol expected in place of a switch level is not one of 'HIGH' or 'LOW'."""
     def __init__(self, symbol):
         message = "Expected 'HIGH' or 'LOW'."
         super().__init__(symbol, message)
 
 
 class InputNumberMissing(ParserSyntaxError):
-    """The symbol expected in place of the number of inputs inside a device initialisation line is not a number.""""
+    """The symbol expected in place of the number of inputs inside a device initialisation line is not a number."""
     def __init__(self, symbol):
         message = "Expected an input number between 1 and 16."
         super().__init__(symbol, message)
 
 
 class InputsDefinedIncorrectly(ParserSyntaxError):
-    """The symbol expected in place of the word 'input' or 'inputs' inside a device initialisation line is not one of the two.""""
+    """The symbol expected in place of the word 'input' or 'inputs' inside a device initialisation line is not one of the two."""
     def __init__(self, symbol):
         message = "Expected 'input' or 'inputs."
         super().__init__(symbol, message)
 
 
 class ConnectedToError(ParserSyntaxError):
-    """The symbol expected in place of the words 'to' or 'is connected to' inside a device connection line is not one of the two.""""
+    """The symbol expected in place of the words 'to' or 'is connected to' inside a device connection line is not one of the two."""
     def __init__(self, symbol):
         message = "Expected 'to' or 'is connected to'."
         super().__init__(symbol, message)
 
 
 class OutputPortError(ParserSyntaxError):
-    """Defined output port is not one of 'Q' or 'QBAR' for a DTYPE device.""""
+    """Defined output port is not one of 'Q' or 'QBAR' for a DTYPE device."""
     def __init__(self, symbol):
         message = "Invalid output port."
         super().__init__(symbol, message)
@@ -325,7 +325,7 @@ class DotError(ParserSyntaxError):
 
 
 class ExtraInfoAfterMonitors(ParserSyntaxError):
-    """User attempts to include extra information after the closed bracket in the monitors section.""""
+    """User attempts to include extra information after the closed bracket in the monitors section."""
     def __init__(self, symbol):
         message = "Extra information after monitors block. Expected nothing."
         super().__init__(symbol, message)
