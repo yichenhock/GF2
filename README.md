@@ -10,10 +10,12 @@ When using DPO computers running on Linux, run
 ```
 export PATH=/usr/local/apps/anaconda3-5.3.1/bin:$PATH
 ```
-To install required dependencies, run
+To install required dependencies, pip should be enabled and upgraded to the latest version (ideally). Run
 ```
 python -m pip install -r requirements.txt
 ```
+
+The following code has been tested and run on Windows and Linux, except for translation, which has only been tested on Linux.
 
 ### Running the Simulator
 The logic simulator can be run in two modes:
@@ -44,10 +46,17 @@ The toolbar at the top has buttons to perform various functions (such as running
   
 The main canvas is shown on the left of the GUI and displays the signal levels of any monitors defined within the circuit definition file or set later within the GUI. These signal levels will be automatically drawn upon running the simulation. 
   
-The panel on the right houses 4 tabs. The "Output" tab acts as the main terminal. The "Circuit Definition" tab allows the circuit definition to be viewed and edited. The "Inputs" tab allows the state of any input devices to be changed (such as turning switches on/off). The "Monitors" tab displays all current monitored outputs and allows the user to add/remove monitors.
+The panel on the right houses 4 tabs. The "Output" tab acts as the main terminal. The "Circuit Definition" tab allows the circuit definition to be viewed and edited. The "Inputs" tab allows the state of any input devices to be changed (such as turning switches on/off). The "Monitors" tab displays all current monitored outputs and allows the user to add/remove monitors. The "Connections" tab allows existing connections between devices to be viewed and destroyed. New connections can also be created.
 
+### Translation
+
+The program supports automatic translation to simplified Chinese when the system locale is set to match. In Linux, navigate to the level above the folder named logsim and run
+	
+```LANG=zh_CH.utf8 python3 logsim/logsim.py [<file path>]```
+	
+Translation should be compatible with Windows when the locale is changed, but has not been tested. 
+	
 For further information regarding how to use the logic simulator, please consult the User Guide.
-  
   
 ### Unit Tests
 All Python modules written for this simulator have associated unit tests.
