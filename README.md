@@ -21,7 +21,7 @@ conda install -c conda-forge/label/gcc7 wxpython
 ```
 
 This code was developed using Python 3.7 and 3.9, and wxPython version 4.1.1. Older or newer version combinations have not been tested.
-The following code has been tested and run on Windows and Linux, except for translation, which has only been tested on Linux.
+The following code has been tested and run on Windows and Linux, except for translation, which has only been fully tested on Linux.
 
 ### Running the Simulator
 The logic simulator can be run in two modes:
@@ -30,36 +30,37 @@ The logic simulator can be run in two modes:
 
 To launch the simulator in the terminal, run
 ```
-python logsim/logsim.py -c <file path>
+python final/logsim.py -c <file path>
 ```
 Where <file path> refers to the circuit definition input file path.
   
 To launch the GUI, run
 ```
-python logsim/logsim.py [<file path>]
+python final/logsim.py [<file path>]
 ```
-Note that the file path is optional here. Example files have been prepared in logsim/examples, but users may write their own inside the GUI. If a file is not provided, the GUI will prompt the user to browse for a file. 
+Note that the file path is optional here. Example files have been prepared in final/examples, but users may write their own inside the GUI. If a file is not provided, the GUI will prompt the user to browse for a file. 
   
 Please note that the circuit definition file must be a .txt file.
   
 When running in text-based mode, commands can be input into the terminal to run the simulation. Entering "h" into the terminal will list the possible user commands, such as setting switches or adding/removing monitor outputs.
 
 Upon startup in graphical mode, the GUI that appears will look like this:
-![gui_screenshot](https://user-images.githubusercontent.com/35310170/171794423-ec032add-9e44-47c6-aa03-a5c8cd2b14b1.png)
-<!-- ![GUI Image](https://user-images.githubusercontent.com/73239265/171258402-575e7b14-da80-4474-a7ec-2107f4d075f9.png) -->
+	
+![image](https://user-images.githubusercontent.com/73239265/172929300-d828a143-849f-4eb4-ae3b-cf92a5925cba.png)
+
 
 The toolbar at the top has buttons to perform various functions (such as running the program or browsing for circuit defintion files). The "Help" button within the toolbar gives more detailed instructions on how to navigate the GUI.
   
 The main canvas is shown on the left of the GUI and displays the signal levels of any monitors defined within the circuit definition file or set later within the GUI. These signal levels will be automatically drawn upon running the simulation. 
   
-The panel on the right houses 4 tabs. The "Output" tab acts as the main terminal. The "Circuit Definition" tab allows the circuit definition to be viewed and edited. The "Inputs" tab allows the state of any input devices to be changed (such as turning switches on/off). The "Monitors" tab displays all current monitored outputs and allows the user to add/remove monitors. The "Connections" tab allows existing connections between devices to be viewed and destroyed. New connections can also be created.
+The panel on the right houses 5 tabs. The "Output" tab acts as the main terminal. The "Circuit Definition" tab allows the circuit definition to be viewed and edited. The "Inputs" tab allows the state of any input devices to be changed (such as turning switches on/off). The "Monitors" tab displays all current monitored outputs and allows the user to add/remove monitors. The "Connections" tab allows existing connections between devices to be viewed and destroyed. New connections can also be created.
 
 ### Translation
 
 The program supports automatic translation to simplified Chinese when the system locale is set to match. In Linux, navigate to the level above the folder named logsim and run
 	
 ```
-LANG=zh_CH.utf8 python3 logsim/logsim.py [<file path>]
+LANG=zh_CH.utf8 python3 final/logsim.py [<file path>]
 ```
 	
 Translation should be compatible with Windows when the locale is changed, but has not been tested. 
@@ -71,7 +72,7 @@ All Python modules written for this simulator have associated unit tests.
   
 To execute the unit tests, run
 ```
-python -m pytest logsim
+python -m pytest final/tests
 ```
 
 ### Code Conventions
