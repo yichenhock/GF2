@@ -1,4 +1,10 @@
-"""Test the network module."""
+"""
+Test the network module.
+
+Note that the bulk of this module had been provided.
+Modifications have been made to implement tests for NOT devices.
+Any unmodified functions from the original file have been removed.
+"""
 import pytest
 
 from names import Names
@@ -59,7 +65,7 @@ def test_get_connected_output(network_with_devices):
 
 
 def test_get_input_signal(network_with_devices):
-    """Test if the signal at a given input port is correct"""
+    """Test if the signal at a given input port is correct."""
     network = network_with_devices
     devices = network.devices
     names = devices.names

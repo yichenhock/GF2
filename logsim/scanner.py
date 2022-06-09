@@ -128,7 +128,6 @@ class Scanner:
 
     def print_error_line(self, line_number, line_position, error_message=""):
         """Print current line with marker pointing where the error is."""
-
         print("Line {}, {}: {}".format(line_number, line_position,
                                        error_message))
         print(self.lines[line_number])

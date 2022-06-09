@@ -1,4 +1,9 @@
-"""Test the devices module."""
+"""
+Test the devices module.
+
+Note that the bulk of this module had been provided,
+modifications have been made to implement tests for NOT devices.
+"""
 import pytest
 
 from names import Names

@@ -76,6 +76,7 @@ def test_scanner_init(new_test_scanner):
         "NOR",
         "XOR",
         "NAND",
+        "NOT",
         "DTYPE",
         "SWITCH",
         "CLOCK",
@@ -115,7 +116,7 @@ def test_get_symbol(new_test_scanner):
     assert scanner.get_symbol().type == scanner.NAME
     # Skip comment 2 and skip spaces + line breaks
 
-    for i in range(30):  # Test for keywords
+    for i in range(31):  # Test for keywords
         symbol = scanner.get_symbol()
         assert symbol.type == scanner.KEYWORD
         assert symbol.id == i  # Correct keyword
@@ -145,7 +146,8 @@ def test_print_error_line(new_test_scanner, capsys):
             break
         # Search for invalid character
         if symbol.type is None:
-            scanner.print_error_line("Invalid Character")
+            scanner.print_error_line(symbol.line_number, symbol.line_position,
+                                     "Invalid Character")
             captured = capsys.readouterr()
 
             # Test that pointer "^" lies directly underneath invalid character
@@ -170,10 +172,6 @@ def test_print_error_line(new_test_scanner, capsys):
 
             assert invalid_character_location == 5  # Location of "-"
             assert error_pointer_location == 5  # Location of "^"
-
-            # Test that print_error_line skips rest of line after being called
-            symbol = scanner.get_symbol()
-            assert symbol.type == scanner.DOT
 
         symbol = scanner.get_symbol()
         safety_counter += 1
