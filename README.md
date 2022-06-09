@@ -16,7 +16,9 @@ python -m pip install -r requirements.txt
 ```
 If wxpython fails to install using pip, ensure Anaconda is installed, and run
 
-```conda install -c conda-forge/label/gcc7 wxpython```
+```
+conda install -c conda-forge/label/gcc7 wxpython
+```
 
 This code was developed using Python 3.7 and 3.9, and wxPython version 4.1.1. Older or newer version combinations have not been tested.
 The following code has been tested and run on Windows and Linux, except for translation, which has only been tested on Linux.
@@ -56,7 +58,9 @@ The panel on the right houses 4 tabs. The "Output" tab acts as the main terminal
 
 The program supports automatic translation to simplified Chinese when the system locale is set to match. In Linux, navigate to the level above the folder named logsim and run
 	
-```LANG=zh_CH.utf8 python3 logsim/logsim.py [<file path>]```
+```
+LANG=zh_CH.utf8 python3 logsim/logsim.py [<file path>]
+```
 	
 Translation should be compatible with Windows when the locale is changed, but has not been tested. 
 	
