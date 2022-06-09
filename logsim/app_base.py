@@ -98,8 +98,8 @@ class BaseApp(wx.App, InspectionMixin):
         
         # create a locale object for this language
         localeLan = wx.Locale.GetSystemLanguage()
-        if localeLan != wx.LANGUAGE_CHINESE_SIMPLIFIED:
-            print("System locale detected as not Chinese")
+        # if localeLan != wx.LANGUAGE_CHINESE_SIMPLIFIED:
+        #     print("System locale detected as not Chinese")
         self.locale = wx.Locale(localeLan)
         if self.locale.IsOk():
             self.locale.AddCatalog(appC.langDomain)
