@@ -1,5 +1,6 @@
 
-"""Read the circuit definition file and translate the characters into symbols.
+"""Mock scanner class that reads a string and writes it to a file.
+Then uses original scanner code to translate the characters into symbols.
 
 Used in the Logic Simulator project to read the characters in the definition
 file and translate them into symbols that are usable by the parser.
@@ -9,7 +10,6 @@ Classes
 Scanner - reads definition file and translates characters into symbols.
 Symbol - encapsulates a symbol and stores its properties.
 """
-import sys
 
 
 class Symbol:
@@ -59,14 +59,16 @@ class Scanner:
                     the file pointer to the next line.
     """
 
-    def __init__(self, path, names):
+    def __init__(self, names, string):
         """Open specified file and initialise reserved words and IDs."""
-        if not isinstance(path, str):
-            raise TypeError("Expected path to be a string.")
+        # if not isinstance(path, str):
+        #     raise TypeError("Expected path to be a string.")
 
         self.names = names
-        self.path = path
+        self.string = string
 
+        self.symbol_list = [",", ".", ";", "=",
+                            "(", ")", "keyword", "number", "name", "eof"]
         # Define all symbol types
         self.symbol_type_list = [self.COMMA, self.DOT, self.SEMICOLON,
                                  self.EQUALS, self.OPEN_BRACKET,
@@ -94,23 +96,28 @@ class Scanner:
         self.current_line = 0
         self.current_character_position = -1
 
-        try:
-            file = open(path)
-        except OSError:
-            print("This file could not be opened, perhaps it doesn't exist")
-            sys.exit()
-        self.file = file
-        self.lines = self.file.read().splitlines()
-        self.file.seek(0)
+        # try:
+        #     file = open(path)
+        # except OSError:
+        #     print("This file could not be opened, perhaps it doesn't exist")
+        #     sys.exit()
+        # self.file = file
+        self.lines = string.split('\n')
+        self.string_position = 0
+        # self.file.seek(0)
 
     def advance(self):
         """Read next character from file."""
-        self.current_character = self.file.read(1)
+        if self.string_position >= len(self.string):
+            self.current_character = ""
+        else:
+            self.current_character = self.string[self.string_position]
         if self.current_character == "\n":
             self.current_line += 1
             self.current_character_position = -1
         else:
             self.current_character_position += 1
+        self.string_position += 1
         return
 
     def skip_spaces(self):

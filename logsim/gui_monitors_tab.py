@@ -46,8 +46,11 @@ class MonitorsTab(wx.Panel):
         self.label_types = wx.StaticText(self, wx.ID_ANY, _(u"Type"))
         self.label_types.SetFont(font)
         self.combo_types = wx.ComboBox(self, wx.ID_ANY,
-                                       choices=[_(u"ALL"), _(u"GATE"), _(u"SWITCH"),
-                                                _(u"CLOCK"), _(u"D-TYPE")],
+                                       choices=[_(u"ALL"),
+                                                _(u"GATE"),
+                                                _(u"SWITCH"),
+                                                _(u"CLOCK"),
+                                                _(u"D-TYPE")],
                                        style=wx.CB_READONLY)
         self.combo_types.SetFont(font)
         self.label_names = wx.StaticText(self, wx.ID_ANY, _(u"Name"))
@@ -279,12 +282,12 @@ class MonitorsTab(wx.Panel):
 
     def enable_monitor(self, state):
         """Allow components to be added to the monitor."""
-        self.combo_types.Enable(state)
-        self.combo_names.Enable(state)
-        self.add_button.Enable(state)
-        self.add_all_button.Enable(state)
-        if state:
-            self.warning_text.SetLabel('')
-        else:
-            self.warning_text.SetLabel(
-                _(u" Reset simulation to add components!"))
+        # self.combo_types.Enable(state)
+        # self.combo_names.Enable(state)
+        # self.add_button.Enable(state)
+        # self.add_all_button.Enable(state)
+        # if state:
+        #     self.warning_text.SetLabel('')
+        # else:
+        #     self.warning_text.SetLabel(
+        #         _(u" Reset simulation to add components!"))

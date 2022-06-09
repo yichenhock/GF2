@@ -18,6 +18,9 @@ catalog.
 
 """
 
+import subprocess
+import sys
+import os
 import app_const as appC
 
 # we remove English as source code strings are in English
@@ -26,9 +29,6 @@ for l in appC.supLang:
     if l != u"en":
         supportedLang.append(l)
 
-import os
-import sys
-import subprocess
 
 appFolder = os.getcwd()
 
@@ -49,19 +49,19 @@ tCmd = pyExe + ' ' + pyGettext + ' ' + (gtOptions % (appC.langDomain,
                                                      appC.langDomain,
                                                      outFolder,
                                                      appFolder))
-                                                     
-print ("Generating the .pot file")
-print ("cmd: %s" % tCmd)
+
+print("Generating the .pot file")
+print("cmd: %s" % tCmd)
 rCode = subprocess.call(tCmd)
-print ("return code: %s\n\n" % rCode)
+print("return code: %s\n\n" % rCode)
 
 for tLang in supportedLang:
     # build command for msgfmt
     langDir = os.path.join(appFolder, ('locale\%s\LC_MESSAGES' % tLang))
     poFile = os.path.join(langDir, appC.langDomain + '.po')
     tCmd = pyExe + ' ' + pyMsgfmt + ' ' + poFile
-    
-    print ("Generating the .mo file")
-    print ("cmd: %s" % tCmd)
+
+    print("Generating the .mo file")
+    print("cmd: %s" % tCmd)
     rCode = subprocess.call(tCmd)
-    print ("return code: %s\n\n" % rCode)
+    print("return code: %s\n\n" % rCode)

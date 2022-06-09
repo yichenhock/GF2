@@ -60,7 +60,8 @@ def main(arg_list):
         elif option == "-c":  # use the command line user interface
             global_vars = GlobalVars()
             scanner = Scanner(path, names)
-            parser = Parser(names, devices, network, monitors, scanner, global_vars)
+            parser = Parser(names, devices, network,
+                            monitors, scanner, global_vars)
 
             if parser.parse_network():
                 # Initialise an instance of the userint.UserInterface() class
@@ -74,10 +75,12 @@ def main(arg_list):
         else:
             [path] = arguments
 
-        # Initialise an instance of the gui.Gui() class and wxPython translation capability
+        # Initialise an instance of the gui.Gui() class and
+        # wxPython translation capability
         import app_base as ab
         app = ab.BaseApp(redirect=False)
-        app.updateLanguage('zh')
+        app.OnInit()
+        app.doConfig()
         # app = wx.App()
         gui = Gui(_(u"Logic Simulator"), path, names, devices, network,
                   monitors)

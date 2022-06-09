@@ -11,6 +11,7 @@ import sys
 import os
 
 import wx
+import gettext
 
 # Install a custom displayhook to keep Python from setting the global
 # _ (underscore) to the value of the last evaluated expression.  If
@@ -40,7 +41,9 @@ class BaseApp(wx.App, InspectionMixin):
         self.doConfig()
         
         self.locale = None
-        wx.Locale.AddCatalogLookupPathPrefix('locale')
+        appFolder = os.getcwd()
+        self.catalogLocation = os.path.join(appFolder, 'logsim/locale')
+        wx.Locale.AddCatalogLookupPathPrefix(self.catalogLocation)
         self.updateLanguage(self.appConfig.Read(u"Language"))
 
         return True
@@ -94,7 +97,10 @@ class BaseApp(wx.App, InspectionMixin):
             del self.locale
         
         # create a locale object for this language
-        self.locale = wx.Locale(selLang)
+        localeLan = wx.Locale.GetSystemLanguage()
+        # if localeLan != wx.LANGUAGE_CHINESE_SIMPLIFIED:
+        #     print("System locale detected as not Chinese")
+        self.locale = wx.Locale(localeLan)
         if self.locale.IsOk():
             self.locale.AddCatalog(appC.langDomain)
         else:
