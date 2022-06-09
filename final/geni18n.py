@@ -25,8 +25,8 @@ import app_const as appC
 
 # we remove English as source code strings are in English
 supportedLang = []
-for l in appC.supLang:
-    if l != u"en":
+for lang in appC.supLang:
+    if lang != u"en":
         supportedLang.append(l)
 
 

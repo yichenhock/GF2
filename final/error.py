@@ -300,7 +300,7 @@ class ClockNotInitialised(ParserSemanticError):
 
 class NotInitialisedError(ParserSemanticError):
     """A check that all devices have been initialised has failed."""
-    
+
     def __init__(self, symbol):
         """Initialise an instance of the class.
 
@@ -378,7 +378,7 @@ class SemicolonError(ParserSyntaxError):
 
 class OpenBracketError(ParserSyntaxError):
     """Missing open bracket at start of block."""
-    
+
     def __init__(self, symbol):
         """Initialise an instance of the class.
 

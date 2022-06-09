@@ -1,8 +1,9 @@
-"""Parse the definition file and build the logic network.  
+"""Parse the definition file and build the logic network.
 
 Used in the Logic Simulator project to analyse the syntactic and semantic
 correctness of the symbols received from the scanner and then builds the
-logic network. Minimally edited from main parser to read strings and to output diagnostics useful for pytesting.
+logic network. Minimally edited from main parser to read strings and to output
+diagnostics useful for pytesting.
 
 Classes
 -------
