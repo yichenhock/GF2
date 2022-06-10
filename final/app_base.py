@@ -1,11 +1,11 @@
-# -*- coding: utf-8 -*-
-#
-# Author:   Werner F. Bruhin
-# Purpose:  how to I18N enable an application
-#
-# Inspired by the I18N wxPython demo and the Internationalization page on
-# the wxPython wiki.
-#
+"""-*- coding: utf-8 -*-.
+
+Author:   Werner F. Bruhin
+Purpose:  how to I18N enable an application
+
+Inspired by the I18N wxPython demo and the Internationalization page on
+the wxPython wiki.
+"""
 
 from wx.lib.mixins.inspection import InspectionMixin
 import app_const as appC
@@ -32,7 +32,10 @@ builtins.__dict__['_'] = wx.GetTranslation
 
 
 class BaseApp(wx.App, InspectionMixin):
+    """Base App Class."""
+
     def OnInit(self):
+        """Functions run on initialisation."""
         self.Init()  # InspectionMixin
         # work around for Python stealing "_"
         sys.displayhook = _displayHook
