@@ -1,14 +1,14 @@
 
-"""Mock scanner class that reads a string and writes it to a file.
+"""String scanner class that reads a string and writes it to a file.
 
-Then uses original scanner code to translate the characters into symbols.
-
+It then uses original scanner code to translate the characters into symbols.
 Used in the Logic Simulator project to read the characters in the definition
 file and translate them into symbols that are usable by the parser.
 
 Classes
 -------
 Scanner - reads definition file and translates characters into symbols.
+
 Symbol - encapsulates a symbol and stores its properties.
 """
 
@@ -36,14 +36,15 @@ class Symbol:
 class Scanner:
     """Read circuit definition file and translate the characters into symbols.
 
-    Once supplied with the path to a valid definition file, the scanner
-    translates the sequence of characters in the definition file into symbols
+    Once supplied with a string, the string scanner
+    translates the sequence of characters in the string into symbols
     that the parser can use. It also skips over comments and irrelevant
     formatting characters, such as spaces and line breaks.
 
     Parameters
     ----------
-    path: path to the circuit definition file.
+    string: the string to be read
+
     names: instance of the names.Names() class.
 
     Public methods
@@ -61,7 +62,7 @@ class Scanner:
     """
 
     def __init__(self, names, string):
-        """Open specified file and initialise reserved words and IDs."""
+        """Read a string and initialise reserved words and IDs."""
         # if not isinstance(path, str):
         #     raise TypeError("Expected path to be a string.")
 
@@ -107,8 +108,8 @@ class Scanner:
         self.string_position = 0
         # self.file.seek(0)
 
-    def advance(self):
-        """Read next character from file."""
+    def _advance(self):
+        """Read next character from string."""
         if self.string_position >= len(self.string):
             self.current_character = ""
         else:
@@ -121,17 +122,17 @@ class Scanner:
         self.string_position += 1
         return
 
-    def skip_spaces(self):
+    def _skip_spaces(self):
         """Skips until non-space character is reached."""
         while self.current_character.isspace():
-            self.advance()
+            self._advance()
         return
 
-    def skip_comment(self):
+    def _skip_comment(self):
         """Skips the current comment (Until next semicolon or newline)."""
         while self.current_character not in [";", "\n", ""]:
-            self.advance()
-        self.advance()
+            self._advance()
+        self._advance()
         return
 
     def print_error_line(self, line_number, line_position, error_message=""):
@@ -141,32 +142,32 @@ class Scanner:
         print(self.lines[line_number])
         print(" " * (line_position) + "^ Error here")
 
-    def get_name(self):
+    def _get_name(self):
         """Read and returns the next name (word made up of only letters)."""
         name = ""
         while self.current_character.isalnum():
             name += self.current_character
-            self.advance()
+            self._advance()
         return name
 
-    def get_number(self):
+    def _get_number(self):
         """Read and returns the next number."""
         number = ""
         while self.current_character.isdigit():
             number += self.current_character
-            self.advance()
+            self._advance()
         return int(number)
 
     def get_symbol(self):
         """Translate the next sequence of characters into a symbol."""
         symbol = Symbol()
-        self.skip_spaces()  # Current character is now not whitespace
+        self._skip_spaces()  # Current character is now not whitespace
 
         symbol.line_number = self.current_line
         symbol.line_position = self.current_character_position
 
         if self.current_character.isalpha():  # Name
-            name_string = self.get_name()
+            name_string = self._get_name()
             # print(name_string) # For tests
             if name_string in self.keywords_list:
                 symbol.type = self.KEYWORD
@@ -175,42 +176,42 @@ class Scanner:
             [symbol.id] = self.names.lookup([name_string])
 
         elif self.current_character.isdigit():  # Number
-            symbol.id = self.get_number()
+            symbol.id = self._get_number()
             # print(symbol.id) # For tests
             symbol.type = self.NUMBER
 
         elif self.current_character == ",":  # Punctuation
             symbol.type = self.COMMA
-            self.advance()
+            self._advance()
 
         elif self.current_character == ".":
             symbol.type = self.DOT
-            self.advance()
+            self._advance()
 
         elif self.current_character == ";":
             symbol.type = self.SEMICOLON
-            self.advance()
+            self._advance()
 
         elif self.current_character == "=":
             symbol.type = self.EQUALS
-            self.advance()
+            self._advance()
 
         elif self.current_character == "(":
             symbol.type = self.OPEN_BRACKET
-            self.advance()
+            self._advance()
 
         elif self.current_character == ")":
             symbol.type = self.CLOSE_BRACKET
-            self.advance()
+            self._advance()
 
         elif self.current_character == "":  # End of File
             symbol.type = self.EOF
 
         elif self.current_character == "#":  # Comment Check
-            self.skip_comment()
+            self._skip_comment()
             symbol = self.get_symbol()
 
         else:  # Not a valid character (symbol.type == None)
-            self.advance()
+            self._advance()
 
         return symbol
