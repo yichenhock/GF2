@@ -6,7 +6,7 @@ Allows the state of the buttons to be toggled ON and OFF.
 
 Classes
 -------
-`InputsTab`
+InputsTab - A wx.Panel class to display a list of input switches.
 """
 import wx
 import wx.lib.agw.ultimatelistctrl as ULC
@@ -15,7 +15,26 @@ from gui_modules.gui_listctrl import ListCtrl
 
 
 class InputsTab(wx.Panel):
-    """A wx.Panel class to display a list of input switches."""
+    """A wx.Panel class to display a list of input switches.
+
+    This class contains functions for drawing onto the canvas. It
+    also contains handlers for events relating to the canvas.
+
+    Parameters
+    ----------
+    parent: parent window.
+    names: instance of the names.Names() class.
+    devices: instance of the devices.Devices() class.
+    canvas: the canvas from `gui.py`.
+    statusbar: the statusbar from `gui.py`.
+
+    Public methods
+    --------------
+    refresh_list(self): Refresh the list with inputs from last compiled file.
+
+    append_to_switch_list(self, i, switch_id, initial_state):
+                                                    Add a switch to the list.
+    """
 
     # ----------------------------------------------------------------------
 
@@ -56,8 +75,7 @@ class InputsTab(wx.Panel):
             state = self.devices.get_device(switch_id).switch_state
             self.append_to_switch_list(i, switch_id, state)
 
-    def append_to_switch_list(self, i: int, switch_id: int,
-                              initial_state: int):
+    def append_to_switch_list(self, i, switch_id, initial_state):
         """Add a switch to the list."""
         switch_name = self.names.get_name_string(switch_id)
 
@@ -86,14 +104,14 @@ class InputsTab(wx.Panel):
         # Set switch_id attribute so that event handler can access
         # the id
         button.switch_id = switch_id
-        button.Bind(wx.EVT_TOGGLEBUTTON, self.on_toggle)
+        button.Bind(wx.EVT_TOGGLEBUTTON, self._on_toggle)
 
         try:
             self.canvas.render_signals(flush_pan=True)
         except Exception as e:
             pass
 
-    def on_toggle(self, event):
+    def _on_toggle(self, event):
         """Handle event when user toggles the switch button."""
         state = event.GetEventObject().GetValue()
         switch_id = event.GetEventObject().switch_id

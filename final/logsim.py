@@ -13,8 +13,6 @@ Graphical user interface: logsim.py <file path>
 import getopt
 import sys
 
-import wx
-
 from names import Names
 from devices import Devices
 from network import Network

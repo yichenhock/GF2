@@ -34,6 +34,10 @@ class Network:
                     second_port_id): Connects the first device to the second
                                      device.
 
+    remove_connection(self, first_device_id, first_port_id, second_device_id,
+                    second_port_id): Disconnects the first device from the
+                                     second device
+
     check_network(self): Checks if all inputs in the network are connected.
 
     update_signal(self, signal, target): Updates the signal in the direction of

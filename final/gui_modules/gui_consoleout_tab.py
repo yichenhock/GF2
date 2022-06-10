@@ -3,15 +3,28 @@ Console out/Output tab.
 
 Classes:
 --------
-`RedirectText`
-`ConsoleOutTab`
+RedirectText - Redirect the console log output to the text ctrl in
+               `ConsoleOutTab`.
+ConsoleOutTab - A wx.Panel class to display the console output.
 """
 import sys
 import wx
 
 
 class RedirectText(object):
-    """Redirect the console log output to the text ctrl in `ConsoleOutTab`."""
+    """Redirect the console log output to the text ctrl in `ConsoleOutTab`.
+
+    Parameters
+    ----------
+    aWxTextCtrl: text control for console log output.
+
+    Public methods
+    --------------
+
+    write(self, string): Write to output.
+
+    flush(self): Flush output.
+    """
 
     def __init__(self, aWxTextCtrl):
         """Initialise the output text widget."""
@@ -27,7 +40,41 @@ class RedirectText(object):
 
 
 class ConsoleOutTab(wx.Panel):
-    """A wx.Panel class to display the console output."""
+    """A wx.Panel class to display the console output.
+
+    Parameters
+    ----------
+    parent: parent of the panel.
+    path: path to the current definition file.
+    names: instance of the names.Names() class.
+    devices: instance of the devices.Devices() class.
+    network: instance of the network.Network() class.
+    monitors: instance of the monitors.Monitors() class.
+    parser: instance of the parse.Parser() class.
+    inputsPanel: the inputs panel in `gui.py`.
+    set_gui_state: the `set_gui_state` function from `gui.py`.
+    global_vars: object containing the global variables.
+    canvas: the canvas from `gui.py`.
+    save_file: the `save_file` function from `gui.py`.
+
+    Public methods
+    --------------
+
+    clear_console(self): Clear console output.
+
+    help_command(self): Print a list of valid commands.
+
+    switch_command(self): Set the specified switch to the specified
+                        signal level.
+
+    run_network(self, cycles): Run the network for the specified
+                        number of simulation cycles.
+
+    run_command(self, gui, gui_cycles): Run the simulation from scratch.
+
+    continue_command(self, gui, gui_cycles): Continue a previously run
+                                            simulation.
+    """
 
     # ----------------------------------------------------------------------
 
@@ -87,24 +134,20 @@ class ConsoleOutTab(wx.Panel):
 
         self.SetSizer(sizer)
 
-        self.commands.Bind(wx.EVT_TEXT_ENTER, self.on_command_entered)
+        self.commands.Bind(wx.EVT_TEXT_ENTER, self._on_command_entered)
 
-    def on_command_entered(self, event):
+    def _on_command_entered(self, event):
         """Handle the event when the user enters text."""
         self.cursor = 0
         self.line = self.commands.GetValue()
         self.commands.Clear()  # clear the text box
 
-        command = self.read_command()  # read the first character
+        command = self._read_command()  # read the first character
 
         if command == "h":
             self.help_command()
         elif command == "s":
             self.switch_command()
-        # elif command == "m":
-        #     self.monitor_command()
-        # elif command == "z":
-        #     self.zap_command()
         elif command == "r":
             self.run_command()
         elif command == "c":
@@ -116,6 +159,7 @@ class ConsoleOutTab(wx.Panel):
                 print(_(u"Error! Invalid command!"))
 
     def clear_console(self):
+        """Clear console output."""
         self.log.SetValue('')
 
     def help_command(self):
@@ -131,9 +175,9 @@ class ConsoleOutTab(wx.Panel):
 
     def switch_command(self):
         """Set the specified switch to the specified signal level."""
-        switch_id = self.read_name()
+        switch_id = self._read_name()
         if switch_id is not None:
-            switch_state = self.read_number(0, 1)
+            switch_state = self._read_number(0, 1)
             if switch_state is not None:
                 if self.devices.set_switch(switch_id, switch_state):
                     print(_(u"Successfully set switch."))
@@ -167,7 +211,7 @@ class ConsoleOutTab(wx.Panel):
         if gui:
             cycles = gui_cycles
         else:
-            cycles = self.read_number(0, None)
+            cycles = self._read_number(0, None)
 
         if cycles is not None:  # if the number of cycles provided is valid
             self.monitors.reset_monitors()
@@ -183,7 +227,7 @@ class ConsoleOutTab(wx.Panel):
         if gui:
             cycles = gui_cycles
         else:
-            cycles = self.read_number(0, None)
+            cycles = self._read_number(0, None)
 
         if cycles is not None:  # if the number of cycles provided is valid
             if self.global_vars.cycles_completed == 0:
@@ -197,12 +241,12 @@ class ConsoleOutTab(wx.Panel):
                 self.canvas.render_signals()
                 self.set_gui_state(True)
 
-    def read_command(self):
+    def _read_command(self):
         """Return the first non-whitespace character."""
-        self.skip_spaces()
+        self._skip_spaces()
         return self.character
 
-    def get_character(self):
+    def _get_character(self):
         """Move the cursor forward by one character in the user entry."""
         if self.cursor < len(self.line):
             self.character = self.line[self.cursor]
@@ -210,30 +254,30 @@ class ConsoleOutTab(wx.Panel):
         else:  # end of the line
             self.character = ""
 
-    def skip_spaces(self):
+    def _skip_spaces(self):
         """Skip whitespace until a non-whitespace character is reached."""
-        self.get_character()
+        self._get_character()
         while self.character.isspace():
-            self.get_character()
+            self._get_character()
 
-    def read_string(self):
+    def _read_string(self):
         """Return the next alphanumeric string."""
-        self.skip_spaces()
+        self._skip_spaces()
         name_string = ""
         if not self.character.isalpha():  # the string must start with a letter
             print(_(u"Error! Expected a name."))
             return None
         while self.character.isalnum():
             name_string = "".join([name_string, self.character])
-            self.get_character()
+            self._get_character()
         return name_string
 
-    def read_name(self):
+    def _read_name(self):
         """Return the name ID of the current string if valid.
 
         Return None if the current string is not a valid name string.
         """
-        name_string = self.read_string()
+        name_string = self._read_string()
         if name_string is None:
             return None
         else:
@@ -242,36 +286,36 @@ class ConsoleOutTab(wx.Panel):
             print(_(u"Error! Unknown name."))
         return name_id
 
-    def read_signal_name(self):
+    def _read_signal_name(self):
         """Return the device and port IDs of the current signal name.
 
         Return None if either is invalid.
         """
-        device_id = self.read_name()
+        device_id = self._read_name()
         if device_id is None:
             return None
         elif self.character == ".":
-            port_id = self.read_name()
+            port_id = self._read_name()
             if port_id is None:
                 return None
         else:
             port_id = None
         return [device_id, port_id]
 
-    def read_number(self, lower_bound, upper_bound):
+    def _read_number(self, lower_bound, upper_bound):
         """Return the current number.
 
         Return None if no number is provided or if it falls outside the valid
         range.
         """
-        self.skip_spaces()
+        self._skip_spaces()
         number_string = ""
         if not self.character.isdigit():
             print(_(u"Error! Expected a number."))
             return None
         while self.character.isdigit():
             number_string = "".join([number_string, self.character])
-            self.get_character()
+            self._get_character()
         number = int(number_string)
 
         if upper_bound is not None:

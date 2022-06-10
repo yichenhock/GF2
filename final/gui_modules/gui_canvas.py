@@ -3,7 +3,7 @@ Draws signal trace plot.
 
 Classes:
 --------
-`MyGLCanvas`: handles all canvas drawing operations.
+MyGLCanvas: handles all canvas drawing operations.
 
 """
 import math
@@ -27,9 +27,11 @@ class MyGLCanvas(wxcanvas.GLCanvas):
 
     Public methods
     --------------
+    update_dimensions(self): Update the canvas dimensions.
+
     init_gl(self): Configures the OpenGL context.
 
-    render(self, text): Handles all drawing operations.
+    render_signals(self, set_scroll, flush_pan): Render the signal trace.
 
     on_paint(self, event): Handles the paint event.
 
@@ -39,6 +41,8 @@ class MyGLCanvas(wxcanvas.GLCanvas):
 
     render_text(self, text, x_pos, y_pos): Handles text drawing
                                            operations.
+
+    save(self, filename): Save the current view to a PNG image file.
     """
 
     def __init__(self, parent, devices, monitors, global_vars):
@@ -109,13 +113,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         self.Bind(wx.EVT_MOUSE_EVENTS, self.on_mouse)
 
     def update_dimensions(self) -> None:
-        """
-        Update the canvas dimensions.
-
-        Returns
-        -------
-        `None`
-        """
+        """Update the canvas dimensions."""
         size = self.GetClientSize()
         self.width, self.height = size.width, size.height
 
@@ -160,8 +158,8 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             self.global_vars.cycles_completed + self.initial_x
 
         # enforce pan limits
-        self.enforce_pan_x_limits(self.pan_x)
-        self.enforce_pan_y_limits(self.pan_y)
+        self._enforce_pan_x_limits(self.pan_x)
+        self._enforce_pan_y_limits(self.pan_y)
 
         if flush_pan:
             # flush pan to the right
@@ -190,11 +188,11 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             self.SwapBuffers()
             return
 
-        self.draw_cycle_axis()
-        self.draw_signal_grid()
+        self._draw_cycle_axis()
+        self._draw_signal_grid()
         # self.draw_signal_grid2()
         # self.draw_signal_grid3()
-        self.draw_signal_trace()
+        self._draw_signal_trace()
 
         # Set scrollbar
         if set_scroll:
@@ -205,7 +203,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         GL.glFlush()
         self.SwapBuffers()
 
-    def draw_cycle_axis(self):
+    def _draw_cycle_axis(self):
         """Draw the axis for the number of cycles."""
         cycles = len(list(self.monitors.monitors_dictionary.values())[0])
         x = self.initial_x
@@ -260,7 +258,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
                              clear=False)  # account for pan
             x += axis_interval * self.curr_wavelength
 
-    def draw_signal_grid(self):
+    def _draw_signal_grid(self):
         """Draw signal trace lines."""
         # Reset y coordinate and offset
         y = self.initial_y + self.clock_vspace
@@ -321,7 +319,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
 
             y += self.component_vspace
 
-    def draw_signal_trace(self):
+    def _draw_signal_trace(self):
         """Draw individual signal trace."""
         # Reset y coordinate and offset
         y = self.initial_y + self.clock_vspace
@@ -441,8 +439,8 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             # Enforce pan limits
             new_pan_x = self.pan_x + (event.GetX() - self.last_mouse_x)
             new_pan_y = self.pan_y - (event.GetY() - self.last_mouse_y)
-            self.enforce_pan_x_limits(new_pan_x)
-            self.enforce_pan_y_limits(new_pan_y)
+            self._enforce_pan_x_limits(new_pan_x)
+            self._enforce_pan_y_limits(new_pan_y)
 
             self.last_mouse_x = event.GetX()
             self.last_mouse_y = event.GetY()
@@ -454,7 +452,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             sign = 1 if event.GetWheelRotation() > 0 else -1
             # Enforce pan limits
             new_pan_y = self.pan_y - sign * scroll_delta
-            self.enforce_pan_y_limits(new_pan_y)
+            self._enforce_pan_y_limits(new_pan_y)
             self.init = False
 
         # Horizontal scroll (shift + scroll)
@@ -463,7 +461,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             sign = 1 if event.GetWheelRotation() < 0 else -1
             # Enforce pan limits
             new_pan_x = self.pan_x - sign * scroll_delta
-            self.enforce_pan_x_limits(new_pan_x)
+            self._enforce_pan_x_limits(new_pan_x)
             self.init = False
 
         # Horizontal zoom in (ctrl + scroll)
@@ -471,7 +469,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
                 event.GetWheelRotation() > 0:
             self.zoom /= (1.0 - (event.GetWheelRotation() / (
                           20 * event.GetWheelDelta())))
-            self.adjust_pan_x(event, old_zoom)
+            self._adjust_x_pan(event, old_zoom)
             self.init = False
 
         # Horizontal zoom out (ctrl + scroll)
@@ -479,22 +477,22 @@ class MyGLCanvas(wxcanvas.GLCanvas):
                 event.GetWheelRotation() < 0:
             self.zoom *= (1.0 + (
                 event.GetWheelRotation() / (20 * event.GetWheelDelta())))
-            self.adjust_pan_x(event, old_zoom)
+            self._adjust_x_pan(event, old_zoom)
             self.init = False
 
         self.Refresh()
 
-    def enforce_pan_y_limits(self, new_pan_y):
+    def _enforce_pan_y_limits(self, new_pan_y):
         """Limit y pan."""
         height_limit = max(0, self.plot_height - self.height)
         self.pan_y = max(min(new_pan_y, 0), - height_limit)
 
-    def enforce_pan_x_limits(self, new_pan_x):
+    def _enforce_pan_x_limits(self, new_pan_x):
         """Limit x pan."""
         width_limit = max(0, self.plot_width - self.width)
         self.pan_x = max(min(new_pan_x, 0), - width_limit)
 
-    def adjust_pan_x(self, event, old_zoom):
+    def _adjust_x_pan(self, event, old_zoom):
         """Adjust x pan."""
         offset = event.GetX() - self.pan_x - self.origin_x
         if offset > 0:
@@ -502,7 +500,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             pos = offset / old_zoom
             new_x = pos * self.zoom + self.origin_x
             new_pan_x = event.GetX() - new_x
-            self.enforce_pan_x_limits(new_pan_x)
+            self._enforce_pan_x_limits(new_pan_x)
         else:
             # Mouse is to the left of the grid
             pass

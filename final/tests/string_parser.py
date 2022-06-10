@@ -66,7 +66,6 @@ from final.error import (
 
 
 class Parser:
-
     """Parse the definition file and build the logic network.
 
     The parser deals with error handling. It analyses the syntactic and
@@ -91,7 +90,6 @@ class Parser:
     def __init__(self, names, devices, network, monitors,
                  scanner, global_vars):
         """Initialise constants."""
-
         # names class object
         self.names = names
         self.devices = devices
@@ -124,9 +122,7 @@ class Parser:
                                   self.scanner.NAND_id]
 
     def devices_block(self, symbol):
-        """Check if symbols form a device block.
-
-        """
+        """Check if symbols form a device block."""
         next_sym = self.scanner.get_symbol()
 
         if next_sym.type == self.scanner.OPEN_BRACKET:
@@ -263,9 +259,7 @@ class Parser:
 # =============================================================================
 
     def initialise_block(self, symbol):
-        """Check if symbols form a initialise block.
-
-        """
+        """Check if symbols form a initialise block."""
         initialise_symbol = symbol
         next_sym = self.scanner.get_symbol()
 
@@ -498,9 +492,7 @@ class Parser:
 # ===========================================================================================================
 
     def connections_block(self, symbol):
-        """Check if symbols form a connections block.
-
-        """
+        """Check if symbols form a connections block."""
         next_sym = self.scanner.get_symbol()
 
         if next_sym.type == self.scanner.OPEN_BRACKET:

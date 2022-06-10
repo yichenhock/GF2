@@ -1,9 +1,9 @@
 """
-Global variables defined here.
+Global variables used across the gui modules are defined here.
 
 Classes
 -------
-`GlobalVars`
+GlobalVars - a class for global variables.
 """
 
 
