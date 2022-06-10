@@ -1,6 +1,100 @@
-"""Contains inherited classes from
-Python's builtin Exceptions class,
-allowing raises to be thrown in parse.py."""
+"""
+Contains inherited classes from Python's builtin Exceptions class.
+
+Classes
+-------
+ParserError - Base class for all input file processing errors.
+
+ParserSemanticError - Base class for all semantic errors.
+
+ParserSyntaxError - Base class for all syntax errors.
+
+
+Semantic errors
+-------
+UndefinedError - Undefined device name.
+
+RedefinedError - A device is defined again in the devices block.
+
+WrongDeviceName - Device defined as a gate but has the name of a switch
+                  or clock.
+
+InvalidClockLength - Clock length needs to be an integer between 1 and 1000.
+
+WrongSwitchName - Wrong syntax for switch name.
+
+WrongClockName - Wrong syntax for clock name.
+
+InvalidInputNumber - Expected number of inputs to be between 1-16.
+
+AttemptToDefineXORInputs - User attempts to specify number of XOR inputs.
+
+AttemptToDefineNOTInputs - User attempts to specify number of NOT inputs.
+
+AttemptToDefineDTYPEInputs - User attempts to specify number of DTYPE inputs.
+
+NoDTYPEOutputPortError - Expected DTYPE output port (Q/QBAR).
+
+InvalidBlockHeader - Expected 'devices', 'initialise', 'connections' or
+                    'monitors'.
+
+DeviceNotInitialised - A device has not been initialised.
+
+SwitchNotInitialised - A switch has not been initialised.
+
+ClockNotInitialised - A clock has not been initialised.
+
+NotInitialisedError - A device has not been initialised.
+
+ConnectionPresent - User attempts to make a connection to an input port that
+                    is already connected.
+
+Syntax errors
+-------
+InvalidBlockHeaderOrder - Headers are not given in the required syntax order.
+
+SemicolonError - Missing semicolon.
+
+OpenBracketError - Missing open bracket.
+
+CloseBracketError - Missing close bracket.
+
+InvalidDeviceRule - Device definition line is missing 'is'/'are'.
+
+InvalidInitDeviceRule - Gate/DTYPE initialisation line is missing
+                        'has'/'have'.
+
+InvalidInitSwitchRule - Switch initialisation line is missing 'is'/'are'.
+
+InvalidInitClockRule - Invalid initialise statement for clocks.
+
+DeviceTypeError - Expected a device type.
+
+InvalidDeviceName - Expected a device name.
+
+InvalidClockName - Expected a clock name of the form 'clk' followed by
+                    a number.
+
+InvalidSwitchName - Expected a switch name of the form 'sw' followed
+                    by a number.
+
+InvalidSwitchState - Expected 'HIGH' or 'LOW'.
+
+InputNumberMissing - Expected an input number between 1 and 16.
+
+InputsDefinedIncorrectly - Expected 'input' or 'inputs'.
+
+ConnectedToError - Expected in 'to' or 'is connected to'.
+
+OutputPortError - Output port is not 'Q' or 'QBAR' for a DTYPE device.
+
+InputPortError - Input port is name is not valid.
+
+DotError - Missing dot.
+
+ExtraInfoAfterMonitors - Extra information after the closed bracket in the
+                        monitors section.
+"""
 
 
 class ParserError(Exception):
@@ -29,13 +123,9 @@ class ParserError(Exception):
 class ParserSemanticError(ParserError):
     """Base class for all semantic errors."""
 
-    pass
-
 
 class ParserSyntaxError(ParserError):
     """Base class for all syntax errors."""
-
-    pass
 
 # =============================================================================
 # =============================================================================
@@ -44,9 +134,7 @@ class ParserSyntaxError(ParserError):
 
 
 class UndefinedError(ParserSemanticError):
-    """Devices not defined in devices block are mentioned
-    in subsequent sections.
-    """
+    """Undefined device name."""
 
     def __init__(self, symbol, name):
         """Initialise an instance of the class.
@@ -60,7 +148,7 @@ class UndefinedError(ParserSemanticError):
 
 
 class RedefinedError(ParserSemanticError):
-    """A device is defined twice in the devices block."""
+    """A device is defined again in the devices block."""
 
     def __init__(self, symbol, name):
         """Initialise an instance of the class.
@@ -75,9 +163,7 @@ class RedefinedError(ParserSemanticError):
 
 
 class WrongDeviceName(ParserSemanticError):
-    """Device has been defined as a gate and is lowercase
-    but has the name of a switch or clock.
-    """
+    """Device defined as a gate but has the name of a switch or clock."""
 
     def __init__(self, symbol, name):
         """Initialise an instance of the class.
@@ -93,9 +179,7 @@ class WrongDeviceName(ParserSemanticError):
 
 
 class InvalidClockLength(ParserSemanticError):
-    """Clock cycle half length (the variable named 'clock length'
-    for short) not in allowed range.
-    """
+    """Clock length needs to be an integer between 1 and 1000."""
 
     def __init__(self, symbol):
         """Initialise an instance of the class.
@@ -109,9 +193,7 @@ class InvalidClockLength(ParserSemanticError):
 
 
 class WrongSwitchName(ParserSemanticError):
-    """Device has been defined as a switch but
-    does not follow switch naming syntax.
-    """
+    """Wrong syntax for switch name."""
 
     def __init__(self, symbol, name):
         """Initialise an instance of the class.
@@ -127,9 +209,7 @@ class WrongSwitchName(ParserSemanticError):
 
 
 class WrongClockName(ParserSemanticError):
-    """Device has been defined as a clock but
-    does not follow clock naming syntax.
-    """
+    """Wrong syntax for clock name."""
 
     def __init__(self, symbol, name):
         """Initialise an instance of the class.
@@ -145,10 +225,7 @@ class WrongClockName(ParserSemanticError):
 
 
 class InvalidInputNumber(ParserSemanticError):
-    """Device is a gate which is not XOR or NOT,
-    and has got less than 1 or more than 16 inputs
-    as defined in the initialise block.
-    """
+    """Expected number of inputs to be between 1-16."""
 
     def __init__(self, symbol):
         """Initialise an instance of the class.
@@ -163,6 +240,7 @@ class InvalidInputNumber(ParserSemanticError):
 
 class AttemptToDefineXORInputs(ParserSemanticError):
     """User attempts to specify number of XOR inputs.
+
     This is always 2 and does not need to be defined.
     """
 
@@ -180,6 +258,7 @@ class AttemptToDefineXORInputs(ParserSemanticError):
 
 class AttemptToDefineNOTInputs(ParserSemanticError):
     """User attempts to specify number of NOT inputs.
+
     This is always 1 and does not need to be defined.
     """
 
@@ -197,6 +276,7 @@ class AttemptToDefineNOTInputs(ParserSemanticError):
 
 class AttemptToDefineDTYPEInputs(ParserSemanticError):
     """User attempts to specify number of DTYPE inputs.
+
     This is always 4 and does not need to be defined.
     """
 
@@ -212,10 +292,7 @@ class AttemptToDefineDTYPEInputs(ParserSemanticError):
 
 
 class NoDTYPEOutputPortError(ParserSemanticError):
-    """User attempts to make connection from
-    a DTYPE output port to another device without specifying
-    which DTYPE output port it is (Q or QBAR).
-    """
+    """Expected DTYPE output port (Q/QBAR)."""
 
     def __init__(self, symbol):
         """Initialise an instance of the class.
@@ -229,9 +306,7 @@ class NoDTYPEOutputPortError(ParserSemanticError):
 
 
 class InvalidBlockHeader(ParserSemanticError):
-    """The symbol in the place of where a block header is expected
-    is not one of 'devices', 'initialise', 'connections' or 'monitors'.
-    """
+    """Expected 'devices', 'initialise', 'connections' or 'monitors'."""
 
     def __init__(self, symbol):
         """Initialise an instance of the class.
@@ -246,9 +321,7 @@ class InvalidBlockHeader(ParserSemanticError):
 
 
 class DeviceNotInitialised(ParserSemanticError):
-    """A gate or DTYPE which has been defined in the devices section
-    is skipped in the initialise section.
-    """
+    """A device has not been initialised."""
 
     def __init__(self, symbol, name):
         """Initialise an instance of the class.
@@ -264,9 +337,7 @@ class DeviceNotInitialised(ParserSemanticError):
 
 
 class SwitchNotInitialised(ParserSemanticError):
-    """A switch which has been defined in the devices section
-    is skipped in the initialise section.
-    """
+    """A switch has not been initialised."""
 
     def __init__(self, symbol, name):
         """Initialise an instance of the class.
@@ -282,9 +353,7 @@ class SwitchNotInitialised(ParserSemanticError):
 
 
 class ClockNotInitialised(ParserSemanticError):
-    """A clock which has been defined in the devices section
-    is skipped in the initialise section.
-    """
+    """A clock has not been initialised."""
 
     def __init__(self, symbol, name):
         """Initialise an instance of the class.
@@ -299,7 +368,7 @@ class ClockNotInitialised(ParserSemanticError):
 
 
 class NotInitialisedError(ParserSemanticError):
-    """A check that all devices have been initialised has failed."""
+    """A device has not been initialised."""
 
     def __init__(self, symbol):
         """Initialise an instance of the class.
@@ -312,9 +381,7 @@ class NotInitialisedError(ParserSemanticError):
 
 
 class ConnectionPresent(ParserSemanticError):
-    """User attempts to make a connection
-    to an input port that is
-    already connected.
+    """Attempt to make a connection to an already connected input port.
 
     One input port can only receive one
     signal, but one output port can be
@@ -345,10 +412,7 @@ class ConnectionPresent(ParserSemanticError):
 
 
 class InvalidBlockHeaderOrder(ParserSyntaxError):
-    """Headers and hence blocks (i.e. devices,
-    initialise, connections, monitors)
-    are not given in the required syntax order.
-    """
+    """Headers are not given in the required syntax order."""
 
     def __init__(self, symbol):
         """Initialise an instance of the class.
@@ -377,7 +441,7 @@ class SemicolonError(ParserSyntaxError):
 
 
 class OpenBracketError(ParserSyntaxError):
-    """Missing open bracket at start of block."""
+    """Missing open bracket."""
 
     def __init__(self, symbol):
         """Initialise an instance of the class.
@@ -391,7 +455,7 @@ class OpenBracketError(ParserSyntaxError):
 
 
 class CloseBracketError(ParserSyntaxError):
-    """Missing close bracket at end of block."""
+    """Missing close bracket."""
 
     def __init__(self, symbol):
         """Initialise an instance of the class.
@@ -405,9 +469,7 @@ class CloseBracketError(ParserSyntaxError):
 
 
 class InvalidDeviceRule(ParserSyntaxError):
-    """Device definition line is missing
-    the keywords required: 'is'/'are'.
-    """
+    """Device definition line is missing 'is'/'are'."""
 
     def __init__(self, symbol):
         """Initialise an instance of the class.
@@ -421,8 +483,7 @@ class InvalidDeviceRule(ParserSyntaxError):
 
 
 class InvalidInitDeviceRule(ParserSyntaxError):
-    """Gate or DTYPE initialisation line is
-    missing the keywords required: 'has'/'have'.
+    """Gate/DTYPE initialisation line is missing 'has'/'have'.
 
     When gates and DTYPES are initialised,
     the number of inputs should be defined.
@@ -434,7 +495,6 @@ class InvalidInitDeviceRule(ParserSyntaxError):
         Parameters
         ---------
         'symbol': the symbol on which the error occurs.
-
         """
         message = ("Invalid initialise statement (expected ',' "
                    "or 'has'/'have').")
@@ -442,8 +502,7 @@ class InvalidInitDeviceRule(ParserSyntaxError):
 
 
 class InvalidInitSwitchRule(ParserSyntaxError):
-    """Switch initialisation line is missing
-    the keywords required: 'is'/'are'.
+    """Switch initialisation line is missing 'is'/'are'.
 
     When switches are initialised, the
     initial state should be defined as HIGH/LOW.
@@ -461,12 +520,7 @@ class InvalidInitSwitchRule(ParserSyntaxError):
 
 
 class InvalidInitClockRule(ParserSyntaxError):
-    """Clock initialisation line is missing
-    the keywords required: 'cycle'.
-
-    When switches are initialised,
-    the initial state should be defined as HIGH/LOW.
-    """
+    """Invalid initialise statement for clocks."""
 
     def __init__(self, symbol):
         """Initialise an instance of the class.
@@ -481,10 +535,9 @@ class InvalidInitClockRule(ParserSyntaxError):
 
 
 class DeviceTypeError(ParserSyntaxError):
-    """The symbol in place of expected
-    device type keyword in a line in the
-    devices block is not in the list below.
+    """Expected a device type.
 
+    Can be one of the following:
     SWITCH, CLOCK, NOR, NOT, NAND, OR, XOR, AND, DTYPE.
     """
 
@@ -500,11 +553,7 @@ class DeviceTypeError(ParserSyntaxError):
 
 
 class InvalidDeviceName(ParserSyntaxError):
-    """The symbol in place of an expected device
-    name in a line in the devices block is not a
-    name type (lowercase, mixed letters and numbers,
-    first character is a letter).
-    """
+    """Expected a device name."""
 
     def __init__(self, symbol):
         """Initialise an instance of the class.
@@ -518,9 +567,7 @@ class InvalidDeviceName(ParserSyntaxError):
 
 
 class InvalidClockName(ParserSyntaxError):
-    """Device defined as a clock does not have a
-    name of the form 'clk' followed by a number.
-    """
+    """Expected a clock name of the form 'clk' followed by a number."""
 
     def __init__(self, symbol):
         """Initialise an instance of the class.
@@ -534,9 +581,7 @@ class InvalidClockName(ParserSyntaxError):
 
 
 class InvalidSwitchName(ParserSyntaxError):
-    """Device defined as a switch does not have
-    the name of the form 'sw' followed by a number.
-    """
+    """Expected a switch name of the form 'sw' followed by a number."""
 
     def __init__(self, symbol):
         """Initialise an instance of the class.
@@ -550,9 +595,7 @@ class InvalidSwitchName(ParserSyntaxError):
 
 
 class InvalidSwitchState(ParserSyntaxError):
-    """The symbol expected in place of a
-    switch level is not one of 'HIGH' or 'LOW'.
-    """
+    """Expected 'HIGH' or 'LOW'."""
 
     def __init__(self, symbol):
         """Initialise an instance of the class.
@@ -566,10 +609,7 @@ class InvalidSwitchState(ParserSyntaxError):
 
 
 class InputNumberMissing(ParserSyntaxError):
-    """The symbol expected in place of the
-    number of inputs inside a device initialisation
-    line is not a number.
-    """
+    """Expected an input number between 1 and 16."""
 
     def __init__(self, symbol):
         """Initialise an instance of the class.
@@ -577,17 +617,13 @@ class InputNumberMissing(ParserSyntaxError):
         Parameters
         ---------
         'symbol': the symbol on which the error occurs.
-
         """
         message = "Expected an input number between 1 and 16."
         super().__init__(symbol, message)
 
 
 class InputsDefinedIncorrectly(ParserSyntaxError):
-    """The symbol expected in place of the word
-    'input' or 'inputs' inside a device initialisation
-    line is not one of the two.
-    """
+    """Expected 'input' or 'inputs'."""
 
     def __init__(self, symbol):
         """Initialise an instance of the class.
@@ -602,10 +638,7 @@ class InputsDefinedIncorrectly(ParserSyntaxError):
 
 
 class ConnectedToError(ParserSyntaxError):
-    """The symbol expected in place of the words 'to' or
-    'is connected to' inside a device connection line
-    is not one of the two.
-    """
+    """Expected in 'to' or 'is connected to'."""
 
     def __init__(self, symbol):
         """Initialise an instance of the class.
@@ -619,8 +652,7 @@ class ConnectedToError(ParserSyntaxError):
 
 
 class OutputPortError(ParserSyntaxError):
-    """Defined output port is not one of 'Q'
-    or 'QBAR' for a DTYPE device."""
+    """Output port is not 'Q' or 'QBAR' for a DTYPE device."""
 
     def __init__(self, symbol):
         """Initialise an instance of the class.
@@ -628,7 +660,6 @@ class OutputPortError(ParserSyntaxError):
         Parameters
         ---------
         'symbol': the symbol on which the error occurs.
-        'symbol': the error message to be printed.
         """
         message = "Invalid output port."
         super().__init__(symbol, message)
@@ -636,6 +667,7 @@ class OutputPortError(ParserSyntaxError):
 
 class InputPortError(ParserSyntaxError):
     """Input port is name is not valid.
+
     This could be because it is not of the form 'I'
     followed by a number for non-DTYPES.
 
@@ -660,7 +692,7 @@ class InputPortError(ParserSyntaxError):
 
 
 class DotError(ParserSyntaxError):
-    """No dot where dot expected for input name."""
+    """Missing dot."""
 
     def __init__(self, symbol):
         """Initialise an instance of the class.
@@ -675,9 +707,7 @@ class DotError(ParserSyntaxError):
 
 
 class ExtraInfoAfterMonitors(ParserSyntaxError):
-    """User attempts to include extra information
-    after the closed bracket in the monitors section.
-    """
+    """Extra information after the closed bracket in the monitors section."""
 
     def __init__(self, symbol):
         """Initialise an instance of the class.

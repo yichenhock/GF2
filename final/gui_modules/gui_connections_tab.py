@@ -6,7 +6,7 @@ Allows the state of the buttons to be toggled ON and OFF.
 
 Classes
 -------
-`InputsTab`
+InputsTab - A wx.Panel class to display an editable list of connections.
 """
 from operator import not_
 import wx
@@ -18,7 +18,32 @@ from gui_modules.gui_listctrl import ListCtrl
 
 
 class ConnectionsTab(wx.Panel):
-    """A wx.Panel class to display an editable list of connections."""
+    """A wx.Panel class to display an editable list of connections.
+
+    Parameters
+    ----------
+    parent: parent of the panel.
+    names: instance of the names.Names() class.
+    devices: instance of the devices.Devices() class.
+    network: instance of the network.Network() class.
+    statusbar: the statusbar from `gui.py`.
+
+    Public methods
+    --------------
+
+    initialise_connections_list(self): Initialise `self.connections_list`
+                                    with circuit definition file.
+
+    append_to_connections_list(self, connection): Add an entry to
+                                    `self.connections_list`.
+
+    refresh_combo_boxes(self): Refresh `combo_names` with a list of all
+                                device names.
+
+    clear_connections_list(self): Clear monitor list before initialisation.
+
+    enable_connections(self, state): Allow connections to be added.
+    """
 
     def __init__(self, parent, names, devices, network, statusbar):
         """Initialise the panel with use variables and sub-widgets."""
@@ -130,12 +155,13 @@ class ConnectionsTab(wx.Panel):
         self.SetSizer(sizer)
 
         self.combo_output_devices.Bind(
-            wx.EVT_COMBOBOX, self.on_combo_op_devices_select)
+            wx.EVT_COMBOBOX, self._on_combo_op_devices_select)
         self.combo_input_devices.Bind(
-            wx.EVT_COMBOBOX, self.on_combo_ip_devices_select)
-        self.add_button.Bind(wx.EVT_LEFT_DOWN, self.on_add_button)
+            wx.EVT_COMBOBOX, self._on_combo_ip_devices_select)
+        self.add_button.Bind(wx.EVT_LEFT_DOWN, self._on_add_button)
 
-    def get_full_name(self, device_id, device_port_id):
+    def _get_full_name(self, device_id, device_port_id):
+        """Get the full name of the device give device id and port id."""
         device_name = self.names.get_name_string(device_id)
         if device_port_id:
             port_name = self.names.get_name_string(device_port_id)
@@ -154,8 +180,8 @@ class ConnectionsTab(wx.Panel):
     def append_to_connections_list(self, connection):
         """Add an entry to `self.connections_list`."""
         (input_id, input_port_id, output_id, output_port_id) = connection
-        output_name = self.get_full_name(output_id, output_port_id)
-        input_name = self.get_full_name(input_id, input_port_id)
+        output_name = self._get_full_name(output_id, output_port_id)
+        input_name = self._get_full_name(input_id, input_port_id)
 
         index = self.connections_list.InsertStringItem(
             len(self.displayed_connections), output_name
@@ -175,7 +201,7 @@ class ConnectionsTab(wx.Panel):
         button.output_port_id = output_port_id
         button.input_id = input_id
         button.input_port_id = input_port_id
-        button.Bind(wx.EVT_TOGGLEBUTTON, self.on_remove)
+        button.Bind(wx.EVT_TOGGLEBUTTON, self._on_remove)
         button.id = self.unique_id
 
         # Right-most cell is the remove button
@@ -185,7 +211,7 @@ class ConnectionsTab(wx.Panel):
             (self.unique_id, connection, button))
         self.unique_id += 1
 
-    def on_remove(self, event):
+    def _on_remove(self, event):
         """Handle the event when the user removes a connection."""
         button = event.GetEventObject()
         output_id = button.output_id
@@ -208,20 +234,21 @@ class ConnectionsTab(wx.Panel):
             output_id, output_port_id, input_id, input_port_id)
 
         self.statusbar.SetStatusText('Connection removed: {} to {}.'
-                                     .format(self.get_full_name(
+                                     .format(self._get_full_name(
                                          output_id, output_port_id),
-                                         self.get_full_name(
+                                         self._get_full_name(
                                          input_id, input_port_id)))
-        print('Connection removed: {} to {}.'.format(self.get_full_name(
+        print('Connection removed: {} to {}.'.format(self._get_full_name(
             output_id, output_port_id),
-            self.get_full_name(input_id, input_port_id)))
-        self.check_network()
+            self._get_full_name(input_id, input_port_id)))
+        self._check_network()
 
         # reinitialise and refresh the combo boxes
         self.refresh_combo_boxes()
 
     def refresh_combo_boxes(self):
         """Refresh `combo_names` with a list of all device names.
+
         Includes the status of whether each input has been connected
         to at least one output.
         """
@@ -230,7 +257,7 @@ class ConnectionsTab(wx.Panel):
         for device in self.devices.devices_list:
             output_devices.append(self.names.get_name_string(
                 device.device_id))
-        self.refresh_combo_output_devices(output_devices)
+        self._refresh_combo_output_devices(output_devices)
 
         # inputs: only D-types and gates
         # not switch or clock basically
@@ -240,18 +267,19 @@ class ConnectionsTab(wx.Panel):
                     device.device_kind != self.devices.CLOCK:
                 input_devices.append(self.names.get_name_string(
                     device.device_id))
-        self.refresh_combo_input_devices(input_devices)
+        self._refresh_combo_input_devices(input_devices)
         self.combo_output_ports.Clear()
         self.combo_output_ports.Enable(False)
         self.combo_input_ports.Clear()
         self.combo_input_ports.Enable(False)
 
-    def refresh_combo_output_devices(self, output_devices):
+    def _refresh_combo_output_devices(self, output_devices):
         self.combo_output_devices.Clear()
         for device in output_devices:
             self.combo_output_devices.Append(device)
 
-    def refresh_combo_input_devices(self, input_devices):
+    def _refresh_combo_input_devices(self, input_devices):
+        """Refresh `combo_input_devices`."""
         self.combo_input_devices.Clear()
         for device_name in input_devices:
             # show a warning triangle if at least one of its input ports
@@ -271,8 +299,8 @@ class ConnectionsTab(wx.Panel):
                 self.combo_input_devices.Append(
                     device_name, bitmap=self.tick_bmp)
 
-    def on_combo_op_devices_select(self, event):
-        """Handles the event when user selects an output device."""
+    def _on_combo_op_devices_select(self, event):
+        """Handle the event when user selects an output device."""
         # need to refresh output port combo box
         # only enable if its D-TYPE
         name = self.combo_output_devices.GetValue()
@@ -286,13 +314,14 @@ class ConnectionsTab(wx.Panel):
             # disable the output port
             self.combo_output_ports.Enable(False)
 
-    def check_input_connected(self, device_id, input_id):
+    def _check_input_connected(self, device_id, input_id):
+        """Check inputs are connected."""
         if self.network.get_connected_output(device_id, input_id) is None:
             return False
         return True
 
-    def on_combo_ip_devices_select(self, event):
-        """Handles the event when user selects an input device."""
+    def _on_combo_ip_devices_select(self, event):
+        """Handle the event when user selects an input device."""
         name = self.combo_input_devices.GetValue()
         device_id = self.names.query(name)
         device = self.devices.get_device(device_id)
@@ -305,7 +334,7 @@ class ConnectionsTab(wx.Panel):
             self.combo_input_ports.Enable(True)
             for port in possible_ports:
                 port_id = self.names.query(port)
-                if self.check_input_connected(device_id, port_id):
+                if self._check_input_connected(device_id, port_id):
                     self.combo_input_ports.Append(port, bitmap=self.tick_bmp)
                 else:
                     self.combo_input_ports.Append(
@@ -318,7 +347,7 @@ class ConnectionsTab(wx.Panel):
             for n in range(1, num_inputs+1):
                 port = 'I'+str(n)
                 port_id = self.names.query(port)
-                if self.check_input_connected(device_id, port_id):
+                if self._check_input_connected(device_id, port_id):
                     self.combo_input_ports.Append(port, bitmap=self.tick_bmp)
                 else:
                     self.combo_input_ports.Append(
@@ -327,7 +356,7 @@ class ConnectionsTab(wx.Panel):
                 # self.combo_input_ports.Append('I'+str(n),
                 #     bitmap=self.warning_bmp)
 
-    def on_add_button(self, event):
+    def _on_add_button(self, event):
         """Handle the event when the user adds a connection."""
         # check that the fields are valid
         # if the port fields are enabled, it means a value must be selected
@@ -376,15 +405,15 @@ class ConnectionsTab(wx.Panel):
             else:
                 self.warning_text2.SetLabel('')
                 self.statusbar.SetStatusText('Connection added: {} to {}.'
-                                             .format(self.get_full_name(
+                                             .format(self._get_full_name(
                                                  output_id, output_port_id),
-                                                 self.get_full_name(
+                                                 self._get_full_name(
                                                  input_id, input_port_id)))
-                print('Connection added: {} to {}.'.format(self.get_full_name(
+                print('Connection added: {} to {}.'.format(self._get_full_name(
                     output_id, output_port_id),
-                    self.get_full_name(input_id, input_port_id)))
+                    self._get_full_name(input_id, input_port_id)))
 
-                self.check_network()
+                self._check_network()
 
                 # append to the connections list
                 connection = (input_id,
@@ -399,7 +428,8 @@ class ConnectionsTab(wx.Panel):
             self.connections_list.DeleteItem(0)
         self.displayed_connections = []
 
-    def check_network(self):
+    def _check_network(self):
+        """Clear check all inputs are connected in the network."""
         print('Checking the network... {}'
               .format(self.network.check_network()))
         if self.network.check_network():
@@ -413,7 +443,6 @@ class ConnectionsTab(wx.Panel):
 
     def enable_connections(self, state):
         """Allow connections to be added."""
-
         self.combo_output_devices.Enable(state)
         self.combo_output_ports.Enable(False)
         self.combo_input_devices.Enable(state)
@@ -429,7 +458,7 @@ class ConnectionsTab(wx.Panel):
             button.Enable(state)
 
         if state:
-            self.check_network()
+            self._check_network()
         else:
             self.warning_text1.SetLabel(
                 _(u" Reset simulation to add/remove connections!"))

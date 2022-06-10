@@ -12,7 +12,6 @@ import collections
 
 
 class Monitors:
-
     """Record and display output signals.
 
     This class contains functions for recording and displaying the signal state

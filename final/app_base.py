@@ -50,7 +50,7 @@ class BaseApp(wx.App, InspectionMixin):
         return True
 
     def doConfig(self):
-        """Setup an application configuration file"""
+        """Set up an application configuration file."""
         # configuration folder
 
         sp = wx.StandardPaths.Get()

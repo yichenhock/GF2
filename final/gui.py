@@ -36,18 +36,35 @@ class Gui(wx.Frame):
     Parameters
     ----------
     title: title of the window.
+    names: instance of the names.Names() class.
+    devices: instance of the devices.Devices() class.
+    network: instance of the network.Network() class.
+    monitor: instance of the monitors.Monitors() class.
 
     Public methods
     --------------
-    on_menu(self, event): Event handler for the file menu.
+    compile(self): Compiles/parses the circuit definition file.
 
-    on_spin(self, event): Event handler for when the user changes the spin
-                           control value.
+    set_gui_state(self, sim_running): Sets the state of GUI widgets depending
+                                      on simulation state.
 
-    on_run_button(self, event): Event handler for when the user clicks the run
-                                button.
+    check_for_changes(self): Checks if the user has any unsaved changes.
 
-    on_text_box(self, event): Event handler for when the user enters text.
+    open_file(self): Launches a dialog to select and open a file.
+
+    load_file(self, pathname): Loads a file into the GUI.
+
+    create_file(self): Launches a dialog to select and create a new file.
+
+    save_plot(self): Launches a dialog to save the signal trace as an image.
+
+    save_file(self, pathname): Launches a dialog to save the current file.
+
+    save_file_as(self): Launches a dialog for to save the current file as a new
+                        file.
+
+    set_scroll(self, event): Sets the scrollbar position based on the canvas
+                             position.
     """
 
     def __init__(self, title, path, names, devices, network, monitors):
@@ -76,8 +93,8 @@ class Gui(wx.Frame):
                              monitors, self.scanner, self.global_vars)
 
         # Create the menu, toolbar and statusbar
-        self.create_menu()
-        self.create_tb()
+        self._create_menu()
+        self._create_tb()
         self.statusbar = self.CreateStatusBar(2)
         self.statusbar.SetStatusWidths([-2, -1])
         self.statusbar.SetStatusText(self.path, 1)
@@ -118,7 +135,7 @@ class Gui(wx.Frame):
         notebook = aui.AuiNotebook(
             self, wx.ID_ANY, agwStyle=aui.AUI_NB_CLOSE_ON_ALL_TABS)
         self.circuitDefPanel = CircuitDefTab(
-            notebook, self.path, self.statusbar, self.global_vars)
+            notebook, self.statusbar, self.global_vars)
         self.inputsPanel = InputsTab(
             notebook, names, devices, self.canvas, self.statusbar)
         self.monitorsPanel = MonitorsTab(
@@ -164,12 +181,12 @@ class Gui(wx.Frame):
 
         self.mgr.Update()
 
-        self.y_scroll.Bind(wx.EVT_SCROLL, self.on_y_scroll)
+        self.y_scroll.Bind(wx.EVT_SCROLL, self._on_y_scroll)
         self.y_scroll.Bind(wx.EVT_SIZE, self.set_scroll)  # when window resizes
-        self.x_scroll.Bind(wx.EVT_SCROLL, self.on_x_scroll)
+        self.x_scroll.Bind(wx.EVT_SCROLL, self._on_x_scroll)
         self.x_scroll.Bind(wx.EVT_SIZE, self.set_scroll)  # when window resizes
 
-        self.Bind(wx.EVT_CLOSE, self.on_close)
+        self.Bind(wx.EVT_CLOSE, self._on_close)
         self.Centre()
         self.Show(True)
 
@@ -181,9 +198,9 @@ class Gui(wx.Frame):
               "Enter 'h' for help."))
 
         # try parsing the network
-        self.parse()
+        self.compile()
 
-    def create_menu(self):
+    def _create_menu(self):
         """Create a menu."""
         fileMenu = wx.Menu()
         fileMenu.Append(wx.ID_ABOUT, _(u"&About"))
@@ -195,9 +212,9 @@ class Gui(wx.Frame):
 
         self.SetMenuBar(menuBar)
 
-        self.Bind(wx.EVT_MENU, self.on_menu)
+        self.Bind(wx.EVT_MENU, self._on_menu)
 
-    def create_tb(self):
+    def _create_tb(self):
         """Create a toolbar."""
         tb = wx.ToolBar(self, - 1, style=wx.TB_TEXT)
         self.ToolBar = tb
@@ -254,23 +271,23 @@ class Gui(wx.Frame):
 
         tb.Realize()
 
-        self.spin.Bind(wx.EVT_SPINCTRL, self.on_spin)
-        self.Bind(wx.EVT_TOOL, self.on_tool_click, id=1)
-        self.Bind(wx.EVT_TOOL, self.on_tool_click, id=2)
-        self.Bind(wx.EVT_TOOL, self.on_tool_click, id=3)
-        self.Bind(wx.EVT_TOOL, self.on_tool_click, id=4)
-        self.Bind(wx.EVT_TOOL, self.on_tool_click, id=5)
-        self.Bind(wx.EVT_TOOL, self.on_tool_click, id=6)
-        self.Bind(wx.EVT_TOOL, self.on_tool_click, id=7)
-        self.Bind(wx.EVT_TOOL, self.on_tool_click, id=8)
-        self.Bind(wx.EVT_TOOL, self.on_tool_click, id=9)
-        self.Bind(wx.EVT_TOOL, self.on_tool_click, id=10)
+        self.spin.Bind(wx.EVT_SPINCTRL, self._on_spin)
+        self.Bind(wx.EVT_TOOL, self._on_tool_click, id=1)
+        self.Bind(wx.EVT_TOOL, self._on_tool_click, id=2)
+        self.Bind(wx.EVT_TOOL, self._on_tool_click, id=3)
+        self.Bind(wx.EVT_TOOL, self._on_tool_click, id=4)
+        self.Bind(wx.EVT_TOOL, self._on_tool_click, id=5)
+        self.Bind(wx.EVT_TOOL, self._on_tool_click, id=6)
+        self.Bind(wx.EVT_TOOL, self._on_tool_click, id=7)
+        self.Bind(wx.EVT_TOOL, self._on_tool_click, id=8)
+        self.Bind(wx.EVT_TOOL, self._on_tool_click, id=9)
+        self.Bind(wx.EVT_TOOL, self._on_tool_click, id=10)
 
-    def update_statusbar(self, text):
+    def _update_statusbar(self, text):
         """Update the text on the statusbar."""
         self.statusbar.SetStatusText(text)
 
-    def on_menu(self, event):
+    def _on_menu(self, event):
         """Handle the event when the user selects a menu item."""
         Id = event.GetId()
         if Id == wx.ID_EXIT:
@@ -282,20 +299,20 @@ class Gui(wx.Frame):
         if Id == wx.ID_SAVEAS:
             self.save_file_as()
 
-    def on_spin(self, event):
+    def _on_spin(self, event):
         """Handle the event when the user changes the spin control value."""
         spin_value = self.spin.GetValue()
-        self.update_statusbar(
+        self._update_statusbar(
             _(u"Number of simulation cycles set to: {}").format(spin_value))
 
-    def on_tool_click(self, event):
+    def _on_tool_click(self, event):
         """Map toolbar buttons to functions."""
         if event.GetId() == 1:  # browse
             if self.open_file():
                 # reset the simulation
-                self.on_reset_button()
+                self._on_reset_button()
                 # parse the file
-                self.parse()
+                self.compile()
 
         elif event.GetId() == 2:  # save
             self.save_file(self.path)
@@ -304,22 +321,22 @@ class Gui(wx.Frame):
             self.create_file()
 
         elif event.GetId() == 4:  # compile aka parse file
-            self.parse()
+            self.compile()
 
         elif event.GetId() == 5:  # run
-            self.on_run_button()
+            self._on_run_button()
 
         elif event.GetId() == 6:  # continue
-            self.on_cont_button()
+            self._on_cont_button()
 
         elif event.GetId() == 7:  # reset
-            self.on_reset_button()
+            self._on_reset_button()
 
         elif event.GetId() == 8:  # save plot
             self.save_plot()
 
         elif event.GetId() == 9:  # help
-            self.on_help_button()
+            self._on_help_button()
 
         elif event.GetId() == 10:  # quit
             # check first if user has any unsaved changes!!
@@ -332,8 +349,8 @@ class Gui(wx.Frame):
             else:
                 self.Close(True)
 
-    def parse(self):
-        """Compiles/parses the circuit definition file."""
+    def compile(self):
+        """Compile/compile the circuit definition file."""
         # save the file first
         self.save_file(self.path)
         self.statusbar.SetStatusText(_(u"Compiling..."))
@@ -374,7 +391,7 @@ class Gui(wx.Frame):
             self.statusbar.SetStatusText(_(u"Parser failed to work :("))
             return False
 
-    def on_run_button(self):
+    def _on_run_button(self):
         """Run the simulation for N cycles from scratch."""
         if not self.monitors.monitors_dictionary:
             self.statusbar.SetStatusText(_(u"No monitors."))
@@ -382,24 +399,20 @@ class Gui(wx.Frame):
             return
 
         self.consoleOutPanel.run_command(True, self.spin.GetValue())
-        # self.update_statusbar(_(u"Run button pressed."))
-        # self.set_gui_state(sim_running=True)
         self.canvas.render_signals(flush_pan=True)
 
-    def on_cont_button(self):
+    def _on_cont_button(self):
         """Continue the simulation for N cycles."""
         self.consoleOutPanel.continue_command(True, self.spin.GetValue())
-        # self.update_statusbar(_(u"Continue button pressed."))
         self.canvas.render_signals(flush_pan=True)
-        # self.set_gui_state(sim_running=True)
 
-    def on_reset_button(self):
+    def _on_reset_button(self):
         """Reset the simulation."""
         self.global_vars.cycles_completed = 0
 
         self.monitors.reset_monitors()
         print(_(u"Simulation reset."))
-        self.update_statusbar(_(u"Reset button pressed."))
+        self._update_statusbar(_(u"Reset button pressed."))
         self.set_gui_state(sim_running=False)
         self.canvas.render_signals(flush_pan=True)
 
@@ -411,10 +424,9 @@ class Gui(wx.Frame):
         self.ToolBar.EnableTool(7, sim_running)  # enable reset button
         # text box only editable when the simulation is not running
         self.circuitDefPanel.set_textbox_state(not sim_running)
-        self.monitorsPanel.enable_monitor(not sim_running)
         self.connectionsPanel.enable_connections(not sim_running)
 
-    def on_help_button(self):
+    def _on_help_button(self):
         """Display a helpful message box."""
         with open('./final/gui/help.txt') as f:
             help_text = f.read()
@@ -422,7 +434,7 @@ class Gui(wx.Frame):
         wx.MessageBox(help_text,
                       _(u"Help"), wx.ICON_QUESTION | wx.OK)
 
-    def on_close(self, event):
+    def _on_close(self, event):
         """Deinitialise the frame manager on close."""
         self.mgr.UnInit()
         self.Destroy()
@@ -584,7 +596,7 @@ class Gui(wx.Frame):
 
         self.Refresh()
 
-    def on_y_scroll(self, event):
+    def _on_y_scroll(self, event):
         """Pan the canvas when the user scrolls vertically."""
         position = self.y_scroll.GetThumbPosition()
         self.canvas.pan_y = -(
@@ -592,7 +604,7 @@ class Gui(wx.Frame):
         self.canvas.init = False
         self.canvas.render_signals(set_scroll=False)
 
-    def on_x_scroll(self, event):
+    def _on_x_scroll(self, event):
         """Pan the canvas when the user scrolls horizontally."""
         x_position = self.x_scroll.GetThumbPosition()
         self.canvas.pan_x = -1 * x_position

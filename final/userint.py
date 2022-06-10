@@ -10,7 +10,6 @@ UserInterface - reads and parses user commands.
 
 
 class UserInterface:
-
     """Read and parse user commands.
 
     This class allows the user to enter certain commands.

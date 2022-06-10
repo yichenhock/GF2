@@ -3,7 +3,7 @@ List widget with buttons.
 
 Classes
 -------
-`ListCtrl`
+ListCtrl - Widget allowing a list to be created with functional buttons.
 """
 import wx
 from wx.lib.mixins.listctrl import ListCtrlAutoWidthMixin

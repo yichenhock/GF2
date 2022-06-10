@@ -1,5 +1,6 @@
 
 """Mock scanner class that reads a string and writes it to a file.
+
 Then uses original scanner code to translate the characters into symbols.
 
 Used in the Logic Simulator project to read the characters in the definition
@@ -135,7 +136,6 @@ class Scanner:
 
     def print_error_line(self, line_number, line_position, error_message=""):
         """Print current line with marker pointing where the error is."""
-
         print("Line {}, {}: {}".format(line_number, line_position,
                                        error_message))
         print(self.lines[line_number])
