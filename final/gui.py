@@ -428,7 +428,7 @@ class Gui(wx.Frame):
 
     def _on_help_button(self):
         """Display a helpful message box."""
-        with open('./final/gui/help.txt') as f:
+        with open('./final/gui_modules/help.txt') as f:
             help_text = f.read()
 
         wx.MessageBox(help_text,

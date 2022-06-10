@@ -2,6 +2,7 @@ Toolbar Buttons:
 Browse    ->  Browses for a circuit definition file (Must be .txt)
 Save      ->  Saves text in "Circuit Definition" tab to file
 New       ->  Creates a new definition file to be written to
+Compile   ->  Compiles the definition file
 Run       ->  Runs the simulation for n cycles (where n is specified in the "Cycles" box)
 			(Note that this button will be disabled after the simulation has begun)
 Continue  ->  Continues the current simulation for n cycles
@@ -30,3 +31,5 @@ Inputs -> This tab allows switch levels to be changed.
 Monitors -> This tab allows displayed monitors to be added and removed.
 	Remove monitors by clicking "Remove" next to the corresponding monitor.
 	Add monitors by clicking "Add" after selecting the desired output.
+
+Connections -> This tabs allows connections to be added and removed.
