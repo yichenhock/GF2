@@ -22,8 +22,6 @@ from final.error import (
     InvalidInitClockRule,
     DeviceTypeError,
     InvalidDeviceName,
-    InvalidClockName,
-    InvalidSwitchName,
     InvalidSwitchState,
     InputNumberMissing,
     InputsDefinedIncorrectly,
@@ -51,7 +49,6 @@ from final.error import (
     DeviceNotInitialised,
     SwitchNotInitialised,
     ClockNotInitialised,
-    NotInitialisedError,
     ConnectionPresent
 )
 
@@ -268,12 +265,6 @@ def test_initialise_block(string, error):
                                             monitors(\nsw1;\n)",
                                             SwitchNotInitialised),
 
-                                           ("devices\n(sw1 is SWITCH;\n)\
-                                            initialise(\n)\
-                                            connections(\n)\
-                                            monitors(\nsw1;\n)",
-                                            NotInitialisedError),
-
                                            ("devices\n(clk1 is CLOCK;\n)\
                                             initialise(\n)\
                                             connections(\n)\
@@ -361,16 +352,6 @@ def test_make_devices(string, error):
                                             monitors(\na;\n)",
                                             NoDTYPEOutputPortError),
 
-                                           ("devices\n(a is DTYPE;\nb is AND;\
-                                                sw1 is SWITCH;\nsw2 is SWITCH;\
-                                                b has 2 inputs\n)\
-                                            initialise(\nsw1 is HIGH;\
-                                                sw2 is LOW;\n)\
-                                            connections(\
-                                                a.EVERGREEN to b.I1;\n)\
-                                            monitors(\na;\n)",
-                                            OutputPortError),
-
                                            ("devices\n(a is AND;\
                                                 sw1 is SWITCH;\
                                                 sw2 is SWITCH;\n)\
@@ -404,16 +385,6 @@ def test_make_devices(string, error):
                                                 sw1 is HIGH;\nsw2 is LOW;\n)\
                                             connections(\nsw1 to a;\n)\
                                             monitors(\na;\n)", DotError),
-
-                                           ("devices\n(a is AND;\
-                                                sw1 is SWITCH;\
-                                                sw2 is SWITCH;\n)\
-                                            initialise(\na has 2 inputs;\
-                                                sw1 is HIGH;\nsw2 is LOW;\n)\
-                                            connections(\nsw1 to a.I1,\
-                                                sw2 to a.I1;\n)\
-                                            monitors(\na;\n)",
-                                            ConnectionPresent),
 
                                            ("devices\n(a is AND;\
                                                 sw1 is SWITCH;\
