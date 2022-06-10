@@ -1,0 +1,30 @@
+#Example circuit - Simple circuit (As per first interim report);
+#XOR gate;
+
+devices(
+    a is OR;
+    b is NAND;
+    c is AND;
+    sw1, sw2 are SWITCH;
+)
+
+initialise(
+    a has 2 inputs;
+    sw1, sw2 are HIGH;
+    a, b, c have 2 inputs;
+)
+
+connections(
+    sw1 is connected to a.I1;
+    sw2 is connected to a.I2;
+
+    sw1 is connected to b.I1;
+    sw2 is connected to b.I2;
+
+    a is connected to c.I1;
+    b is connected to c.I2;
+)
+
+monitors(
+    c;
+)
